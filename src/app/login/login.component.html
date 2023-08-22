@@ -1,4 +1,4 @@
-<section class="h-100 gradient-form" style="background-color: #eee;">
+<section class="h-100 gradient-form" style="background-color: #ffffff;">
   <div class="container py-5 h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
       <div class="col-xl-10">
@@ -8,12 +8,18 @@
               <div class="card-body p-md-5 mx-md-4">
 
                 <div class="text-center">
-                  <img src="./img/logo.jpg"
-                    style="width: 200px;" alt="logo">
+                  <img src="/assets/logo.jpg" width="200mp" alt="logo" id="logo">
                   <h4 class="mt-1 mb-5 pb-1">Planeación estratégica CCOA</h4>
                 </div>
 
-                <form>
+                <form >
+                  <div class="text-center mb-3">
+                    <p>Entrar con el correo corporativo:</p>            
+                    <button type="button" class="btn btn-outline-secondary btn-floating mx-1">
+                      <img src="/assets/google.avif" width="50mp" alt="logo" id="logo">
+                    </button>
+                  </div>
+
                   <p>Por favor, ingrese a su cuenta</p>
 
                   <div class="form-outline mb-4">
@@ -23,28 +29,27 @@
                   </div>
 
                   <div class="form-outline mb-4">
-                    <input type="password" id="form2Example22" class="form-control" />
+                    <input type="password" id="form2Example22" class="form-control" placeholder="Contraseña" />
                     <label class="form-label" for="form2Example22">Contraseña</label>
                   </div>
 
                   <div class="text-center pt-1 mb-5 pb-1">
                     <button class="btn btn-success btn-block fa-lg gradient-custom-2 mb-3" type="button">Ingresar</button>
-                    <a class="text-muted" href="#!">¿Olvidaste la contraseña?</a>
+                    <h6 class="text-muted" href="#!">¿Olvidaste la contraseña?</h6>
                   </div>
 
                   <div class="d-flex align-items-center justify-content-center pb-4">
                     <p class="mb-0 me-2">¿No tengo cuenta?</p>
-                    <button type="button" class="btn btn-outline-success">Crear</button>
+                    <button type="submit" class="btn btn-outline-success" href="/src/app/usuario/usuario.component.html">Crear</button>
                   </div>
 
-                </form>
+                </form> 
 
               </div>
             </div>
             <div class="col-lg-6 d-flex align-items-center gradient-custom-2">
               <div class="text-white px-3 py-4 p-md-5 mx-md-4">
-                <h4 class="mb-4">We are more than just a company</h4>
-                <img src="./img/logo.jpg" class="img-fluid" alt="logo">
+                <h4 class="mb-4">CCOA</h4>
               </div>
             </div>
           </div>
