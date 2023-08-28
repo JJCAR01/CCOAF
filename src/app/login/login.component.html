@@ -13,7 +13,7 @@
                 </div>
 
                 <form >
-                  <div class="text-center mb-3">
+                  <div class="text-center mb-3" >
                     <p>Entrar con el correo corporativo:</p>            
                     <button type="button" class="btn btn-outline-secondary btn-floating mx-1">
                       <img src="/assets/google.avif" width="50mp" alt="logo" id="logo">
@@ -21,20 +21,22 @@
                   </div>
 
                   <p>Por favor, ingrese a su cuenta</p>
-
+                    <div class="form-outline mb-4">
+                      <input type="email" id="form2Example11" class="form-control"
+                      [(ngModel)]="correo"
+                        placeholder="Usuario o correo" />
+                      <label class="form-label" for="form2Example11">Nombre usuario o correo</label>
+                    </div>
                   <div class="form-outline mb-4">
-                    <input type="email" id="form2Example11" class="form-control"
-                      placeholder="Usuario o correo" />
-                    <label class="form-label" for="form2Example11">Nombre usuario o correo</label>
-                  </div>
-
-                  <div class="form-outline mb-4">
-                    <input type="password" id="form2Example22" class="form-control" placeholder="Contraseña" />
+                    <input type="password" id="form2Example22" class="form-control" 
+                    [(ngModel)]="password"
+                    placeholder="Contraseña" />
                     <label class="form-label" for="form2Example22">Contraseña</label>
                   </div>
 
                   <div class="text-center pt-1 mb-5 pb-1">
-                    <button class="btn btn-success btn-block fa-lg gradient-custom-2 mb-3" type="button">Ingresar</button>
+                    <button class="btn btn-success btn-block fa-lg gradient-custom-2 mb-3" type="button"
+                    (click)="login()">Ingresar</button>
                     <h6 class="text-muted" href="#!">¿Olvidaste la contraseña?</h6>
                   </div>
 

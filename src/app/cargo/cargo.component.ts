@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./cargo.component.scss']
 })
 export class CargoComponent {
-  title = 'paccoa';
+  title = 'cargo';
 }

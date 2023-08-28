@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -8,6 +9,7 @@ import { UsuarioComponent } from './usuario/usuario.component';
 import { PanelComponent } from './panel/panel.component';
 import { CargoComponent } from './cargo/cargo.component';
 import { AreaComponent } from './area/area.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -15,9 +17,11 @@ import { AreaComponent } from './area/area.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
+    FormsModule
   ],
   providers: [],
-  bootstrap: [AreaComponent]
+  bootstrap: [LoginComponent]
 })
 export class AppModule { }
