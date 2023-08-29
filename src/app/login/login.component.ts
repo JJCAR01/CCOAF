@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
+import { LoginService } from './services/login.service';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +11,7 @@ export class LoginComponent {
   correo: string = ''; // Variable para almacenar el usuario
   password: string = ''; // Variable para almacenar la contraseña
 
-  constructor(private http: HttpClient) {}
+  constructor(private loginService: LoginService) {}
 
   login() {
     // Obtener los valores del formulario (usuario y contraseña) desde las propiedades del componente
@@ -27,18 +28,13 @@ export class LoginComponent {
       correo: correo,
       password: password
     };
+    console.log(body);
 
     // Realizar la solicitud POST al servidor
-    this.http.post('http://localhost:8081/ccoa/auth/login', body, { headers })
-      .subscribe(
-        (response) => {
-          // Manejar la respuesta exitosa del servidor aquí
-          console.log('Respuesta del servidor:', response);
-        },
-        (error) => {
-          // Manejar errores de la solicitud aquí
-          console.error('Error en la solicitud:', error);
-        }
-      );
+    this.loginService.login(body).toPromise().then(response =>{
+      console.log(response);
+    },error =>{
+      console.log(error);
+    } )
   }
 }
