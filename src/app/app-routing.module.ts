@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { FormBuilder } from '@angular/forms';
 import { LoginComponent } from "./login/login.component";
 import { UsuarioCrearComponent } from "./usuario/crear/usuario.crear.component";
 import { UsuarioListarComponent } from "./usuario/listar/usuario.listar.component";
