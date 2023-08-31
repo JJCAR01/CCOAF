@@ -43,10 +43,13 @@
                         </a>
                         <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                             <li class="sidebar-item">
-                                <a routerLink="/crearArea" class="sidebar-link">Crear Area</a>
+                                <a [routerLink]="[{ outlets: { adminOutlet: '/crearArea' } }]">Crear Área</a>
+
+
+
                             </li>
                             <li class="sidebar-item">
-                                <a routerLink="/cargo" class="sidebar-link">Listar Area</a>
+                                <a routerLink="/listarArea" class="sidebar-link">Listar Area</a>
                             </li>
                         </ul>
                     </li>
@@ -101,17 +104,15 @@
         </aside>
         <!-- Main Component -->
         <div class="main">
-            <nav class="navbar navbar-expand px-3 border-bottom">
-                <!-- Button for sidebar toggle -->
-                <button class="btn btn-outline-success" type="button" data-bs-theme="dark">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            </nav>
-            <main class="content px-3 py-2 ">
+            <main class="content px-3 py-3 ">
                 <div class="container-fluid">
-                    <div class="mb-3">
-                        <h3>Bootstrap Sidebar Tutorial</h3>
-                    </div>
+                    <div class="mb-3" style="display: flex; align-items: center; justify-content: space-between;">
+                        <h3>Planeación estratégica - Camara de Comercio del Oriente Antioqueño</h3>
+                        <button class="btn btn-outline-danger">Log out</button>
+                      </div>
+                      <div><router-outlet name="adminOutlet"></router-outlet>
+                      </div>
+                      
                 </div>
             </main>
         </div>

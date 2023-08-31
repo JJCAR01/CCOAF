@@ -25,18 +25,18 @@
                       <input type="email" id="correo" class="form-control"
                       formControlName="correo"  name="correo"
                         placeholder="Correo" />
-                      <label class="form-label" for="form2Example11">Correo</label>
+                      <label class="form-label" for="correo">Correo</label>
                     </div>
                   <div class="form-outline mb-4">
                     <input type="password" id="password" class="form-control" 
                     formControlName="password" name="password"
                     placeholder="Contraseña" />
-                    <label class="form-label" for="form2Example22">Contraseña</label>
+                    <label class="form-label" for="password">Contraseña</label>
                   </div>
 
                   <div class="text-center pt-1 mb-5 pb-1">
                     <button class="btn btn-success btn-block fa-lg gradient-custom-2 mb-3" 
-                    type="submit" [disabled]="!form.valid">Ingresar</button>
+                    type="submit" [disabled]="!form.valid" [routerLink]="['/panelAdmin']">Ingresar</button>
                     <h6 class="text-muted" href="#!">¿Olvidaste la contraseña?</h6>
                   </div>
                   

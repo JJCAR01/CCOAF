@@ -8,25 +8,10 @@
 </head>
 <body>
     <h1>Lista de Areas</h1>
-
-    <div class="container-sm">
+    <div *ngFor="let area of areas" class="container-sm">
         <ul class="list-group mt-2">
             <li class="list-group-item d-flex justify-content-between align-items-center">
-                Elemento 1
-                <span>
-                    <button class="btn btn-danger mb-10 me-2">Eliminar</button>
-                    <button class="btn btn-primary">Modificar</button>
-                </span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                Elemento 2
-                <span>
-                    <button class="btn btn-danger mb-10 me-2">Eliminar</button>
-                    <button class="btn btn-primary">Modificar</button>
-                </span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                Elemento 3
+                <span>{{ area.nombre }}</span>
                 <span>
                     <button class="btn btn-danger mb-10 me-2">Eliminar</button>
                     <button class="btn btn-primary">Modificar</button>

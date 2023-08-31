@@ -1,9 +1,10 @@
-import { NgModule,OnInit } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { SocialLoginModule, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
 import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
 import { GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
+import { RouterModule } from '@angular/router';
 
 
 
@@ -20,6 +21,7 @@ import { AreaCrearComponent } from './area/crear/area.crear.component';
 import { AreaListarComponent } from './area/listar/area.listar.component';
 
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CookieService } from 'ngx-cookie-service';
 
 
 @NgModule({
@@ -29,6 +31,7 @@ import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
   ],
   imports: [
     BrowserModule,
+    RouterModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
@@ -53,8 +56,8 @@ import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
           console.error(err);
         }
       } as SocialAuthServiceConfig,
-    }
+    },CookieService
   ],
-  bootstrap: [LoginComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

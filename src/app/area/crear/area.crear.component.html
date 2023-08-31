@@ -16,12 +16,12 @@
                         <div class="card-body p-2">
                             <h2 class="text-uppercase text-center">Crear area</h2>
   
-                            <form [formGroup]="formulario">
+                            <form [formGroup]="form">
                                 <div class="abs-center">
                                     <div class="dropdown">
                                         <div class="col-xs-4">
                                             <label class="mb-2 me-5" fxLayoutAlign="center center" for="nombre">Nombre: </label>
-                                            <input id="nombre" type="text" [formControl]="nombre">
+                                            <input id="nombre" type="text" formControlName="nombre"  name="nombre">
                                         </div>
                                     </div>
                                 </div>
