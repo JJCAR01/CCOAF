@@ -20,8 +20,8 @@ const routes: Routes = [
   { path: "listarUsuario", component: UsuarioListarComponent, pathMatch: "full" },
   { path: "crearCargo", component: CargoCrearComponent, pathMatch: "full" },
   { path: "listarCargo", component: CargoListarComponent, pathMatch: "full" },
-  { path: "crearArea", component: AreaCrearComponent, outlet: 'adminOutlet',},
-  { path: "listarArea", component: AreaListarComponent, pathMatch: "full" },
+  { path: "crearArea", component: AreaCrearComponent, pathMatch:'full'},
+  { path: "listarArea", component: AreaListarComponent,pathMatch:'full' },
   { path: "panelAdmin", component: PanelAdminComponent, pathMatch: "full" },
   { path: "panelUsuario", component: PanelUsuarioComponent, pathMatch: "full" }
 

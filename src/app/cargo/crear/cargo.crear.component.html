@@ -13,33 +13,24 @@
                     <div class="card" style="border-radius: 100px">
                         <div class="card-body p-5">
                             <h2 class="text-uppercase text-center mb-5">Crear cargo</h2>
-  
-                            <form>
+
+                            <form [formGroup]="form" (ngSubmit)="crearCargo()">
                                 <div class="form-outline mb-3">
-                                    <div class="dropdown">
-                                        <label class="form-label mb-10 me-3" for="form3Example1cg">Area: </label>                    
-                                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Area
-                                        </button>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <a class="dropdown-item" href="#">Something else here</a>
-                                            <a class="dropdown-item" href="#">Separated link</a>
-                                        </div>
-                                    </div>
-                                </div>    
-  
+                                    <label class="form-label mb-10 me-3" for="idArea">Area: </label>    
+                                    <select id="idArea" formControlName="idArea" class="btn btn-secondary dropdown-toggle">
+                                        <option value="" disabled selected>Selecciona un área</option>
+                                        <option *ngFor="let area of areas" [value]="area.id">{{ area.nombre }}</option>
+                                      </select>
+                                  </div>
                                 <div class="form-outline mb-1">
-                                    <input type="text" id="form3Example1cg" class="form-control form-control-lg" />
-                                    <label class="form-label" for="form3Example1cg">Nombre Cargo</label>
+                                  <input type="text" id="form3Example1cg" class="form-control form-control-lg" formControlName="nombre" />
+                                  <label class="form-label" for="form3Example1cg">Nombre Cargo</label>
                                 </div>
-  
                                 <div class="d-flex justify-content-center">
-                                    <button type="button" class="btn btn-success btn-block btn-lg">Registrar</button>
+                                  <button type="submit" class="btn btn-success btn-block btn-lg">Registrar</button>
                                 </div>
-                            </form>
-  
+                              </form>
+                               
                         </div>
                     </div>
                 </div>
