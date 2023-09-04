@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule,FormGroup,Validators } from '@angular/forms';
-import { AreaListarService } from './sevices/area.listar.sevice.service';
+import { AreaService } from '../services/area.service'; 
 
 
 @Component({
@@ -12,7 +12,7 @@ export class AreaListarComponent implements OnInit{
     title = 'listarArea';
     areas: any[] = [];
   
-    constructor(private areaListarService: AreaListarService) { }  
+    constructor(private areaListarService: AreaService) { }  
 
     ngOnInit() {
       this.cargarAreas();

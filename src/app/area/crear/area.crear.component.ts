@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule,FormGroup,Validators } from '@angular/forms';
 import { HttpHeaders } from '@angular/common/http';
-import { AreaCrearService } from './services/area.crear.service';
+import { AreaService } from '../services/area.service';
 import { CookieService } from 'ngx-cookie-service';
 
 
@@ -12,7 +12,7 @@ import { CookieService } from 'ngx-cookie-service';
 })
 export class AreaCrearComponent {
   title = 'crearArea';
-  constructor(private areaService: AreaCrearService,private cookieService:CookieService) 
+  constructor(private areaService: AreaService,private cookieService:CookieService) 
   {  }
 
   form = new FormGroup({

@@ -58,6 +58,6 @@ import { CookieService } from 'ngx-cookie-service';
       } as SocialAuthServiceConfig,
     },CookieService
   ],
-  bootstrap: [PanelAdminComponent]
+  bootstrap: [PanelUsuarioComponent]
 })
 export class AppModule { }

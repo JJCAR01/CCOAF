@@ -7,7 +7,7 @@ import { CookieService } from "ngx-cookie-service";
 @Injectable({
   providedIn: 'root'
 })
-export class AreaCrearService {
+export class AreaService {
   
   constructor(private http: HttpClient, private cookies:CookieService) {
    }
@@ -21,6 +21,9 @@ export class AreaCrearService {
   }
   getToken() {
     return this.cookies.get("token");
+  }
+  listarArea(){
+    return this.http.get(`${environment.apiUrl}/ccoa/areas`);
   }
 }
 

@@ -19,8 +19,8 @@
                                     <label class="form-label mb-10 me-3" for="idArea">Area: </label>    
                                     <select id="idArea" formControlName="idArea" class="btn btn-secondary dropdown-toggle">
                                         <option value="" disabled selected>Selecciona un área</option>
-                                        <option *ngFor="let area of areas" [value]="area.id">{{ area.nombre }}</option>
-                                      </select>
+                                        <option *ngFor="let area of areas" [value]="area.idArea">{{ area.nombre }}</option>
+                                      </select>                                      
                                   </div>
                                 <div class="form-outline mb-1">
                                   <input type="text" id="form3Example1cg" class="form-control form-control-lg" formControlName="nombre" />

@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, ReactiveFormsModule,FormGroup,Validators } fr
 import { HttpHeaders } from '@angular/common/http';
 import { CargoCrearService } from './services/cargo.crear.service'; 
 import { CookieService } from 'ngx-cookie-service';
-import { AreaListarService } from 'src/app/area/listar/sevices/area.listar.sevice.service'; 
+import { AreaService } from 'src/app/area/services/area.service';
 
 
 @Component({
@@ -11,17 +11,23 @@ import { AreaListarService } from 'src/app/area/listar/sevices/area.listar.sevic
   templateUrl: './cargo.crear.component.html',
   styleUrls: ['./cargo.crear.component.scss']
 })
+
 export class CargoCrearComponent {
   title = 'crearCargo';
   areas: any[] = [];
-  constructor(private cargoService: CargoCrearService,private cookieService:CookieService,
-    private areaListarService:AreaListarService) 
-  {  }
+  form:FormGroup;
+  
+  constructor(private cargoService: CargoCrearService,private formBuilder: FormBuilder,
+    private areaListarService:AreaService) 
+  { this.form = this.formBuilder.group({
+    nombre: ['', Validators.required],
+    idArea: [null, Validators.required], // Inicializado como null
+  }); }
 
-  form = new FormGroup({
+  /*form = new FormGroup({
     nombre: new FormControl('', Validators.required),
     idArea: new FormControl(null, Validators.required),
-  });
+  });*/
   ngOnInit(): void {
     this.cargarAreas();
   }
@@ -38,16 +44,21 @@ export class CargoCrearComponent {
   }
 
   crearCargo() {
+    console.log(this.form.value);
     if (this.form.valid) {
-      const nombre = this.form.get('nombre')?.value; // Agregar '?'
-      const idArea = this.form.get('idArea')?.value; 
-
-      if (nombre !== null && idArea !== undefined && idArea !== null) {
+      const nombre = this.form.get('nombre')?.value;
+      const idAreaSeleccionado = this.form.get('idArea')?.value;
+      console.log(idAreaSeleccionado)
+      // Busca el objeto de área correspondiente según el idArea seleccionado
+      const areaSeleccionada = this.areas.find(area => area.idArea === idAreaSeleccionado);
+      
+      if (nombre !== null && areaSeleccionada) {
+        console.log(nombre)
         const cargo = {
           nombre: nombre,
-          idArea: +idArea, // Convertir a número
+          idArea: areaSeleccionada.idArea,
         };
-  
+
         // Luego, envía 'cargo' al backend usando tu servicio.
         this.cargoService.crearCargo(cargo).subscribe(
           (response) => {
@@ -59,9 +70,5 @@ export class CargoCrearComponent {
         );
       }
     }
-  }
-    // Obtener los valores del formulario (usuario y contraseña) desde las propiedades del componente
-    
-
-
+}
 }
