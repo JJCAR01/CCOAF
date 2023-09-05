@@ -10,21 +10,29 @@ import { AreaCrearComponent } from "./area/crear/area.crear.component";
 import { AreaListarComponent } from "./area/listar/area.listar.component";
 import { PanelUsuarioComponent } from "./panel.usuario/panel.usuario.component";
 import { PanelAdminComponent } from "./panel.admin/panel.admin.component";
+import { PatCrearComponent } from './pat/crear/pat.crear.component';
 
 
 
 const routes: Routes = [
   { path: '',redirectTo:'login',pathMatch:"full"},
   { path: "login", component: LoginComponent, pathMatch: "full" },
-  { path: "crearUsuario", component: UsuarioCrearComponent, pathMatch: "full" },
-  { path: "listarUsuario", component: UsuarioListarComponent, pathMatch: "full" },
-  { path: "crearCargo", component: CargoCrearComponent, pathMatch: "full" },
-  { path: "listarCargo", component: CargoListarComponent, pathMatch: "full" },
-  { path: "crearArea", component: AreaCrearComponent, pathMatch:'full'},
-  { path: "listarArea", component: AreaListarComponent,pathMatch:'full' },
-  { path: "panelAdmin", component: PanelAdminComponent, pathMatch: "full" },
-  { path: "panelUsuario", component: PanelUsuarioComponent, pathMatch: "full" }
+  
+  { path: "panelAdmin", component: PanelAdminComponent, 
+  children:[
+    { path: "crearUsuario", component: UsuarioCrearComponent },
+    { path: "listarUsuario", component: UsuarioListarComponent},
+    { path: "crearCargo", component: CargoCrearComponent},
+    { path: "listarCargo", component: CargoListarComponent},
+    { path: "crearArea", component: AreaCrearComponent},
+    { path: "listarArea", component: AreaListarComponent},
+  ] },
 
+  { path: "panelUsuario", component: PanelUsuarioComponent, 
+  children:[
+    { path: "patCrear", component: PatCrearComponent }
+  ] },
+  
 
 ];
 

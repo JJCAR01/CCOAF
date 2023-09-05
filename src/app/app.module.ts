@@ -22,12 +22,14 @@ import { AreaListarComponent } from './area/listar/area.listar.component';
 
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
+import { PatCrearComponent } from './pat/crear/pat.crear.component';
+import { BuscarPipe } from 'src/pipes/buscar.pipes';
 
 
 @NgModule({
   declarations: [
     AppComponent,LoginComponent,PanelAdminComponent,AreaCrearComponent,AreaListarComponent,PanelUsuarioComponent,
-    CargoCrearComponent,CargoListarComponent,UsuarioCrearComponent,UsuarioListarComponent
+    CargoCrearComponent,CargoListarComponent,UsuarioCrearComponent,UsuarioListarComponent, PatCrearComponent,BuscarPipe
   ],
   imports: [
     BrowserModule,
@@ -58,6 +60,6 @@ import { CookieService } from 'ngx-cookie-service';
       } as SocialAuthServiceConfig,
     },CookieService
   ],
-  bootstrap: [PanelUsuarioComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

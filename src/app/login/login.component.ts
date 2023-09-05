@@ -1,7 +1,7 @@
 import { Component  } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
 import { LoginService } from './services/login.service';
-import { GoogleLoginProvider, SocialAuthService } from "@abacritt/angularx-social-login";
+import jwt_decode from "jwt-decode";
 
 import {  Validators,FormGroup,FormControl,ReactiveFormsModule } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
@@ -51,11 +51,18 @@ export class LoginComponent {
     
         const jwt = response.jwt;
         this.cookieService.set('jwt', jwt);
-
+        const decode:any = jwt_decode(jwt);
+        console.log(decode);
+        if(decode.type === 'A')
+        {
+          this.router.navigate(['/panelUsuario']);
+        }
+        else if (decode.type === 'O')
+        {
+          this.router.navigate(['/panelUsuario'])
+        }
         //const jwt = this.cookieService.get('jwt');
-
-
-        this.router.navigate([`/panelAdmin`]);
+        
       } else {
         console.log("No se recibió una respuesta válida del servidor.");
       }

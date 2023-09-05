@@ -36,7 +36,8 @@ export class CargoCrearComponent {
     this.areaListarService.listarArea().subscribe(
       (data: any) => {
         this.areas = data;
-      },
+        console.log(this.areas);
+    },
       (error) => {
         console.log(error);
       }

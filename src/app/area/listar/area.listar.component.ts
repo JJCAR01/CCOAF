@@ -11,6 +11,7 @@ import { AreaService } from '../services/area.service';
 export class AreaListarComponent implements OnInit{
     title = 'listarArea';
     areas: any[] = [];
+    busqueda: any;
   
     constructor(private areaListarService: AreaService) { }  
 
