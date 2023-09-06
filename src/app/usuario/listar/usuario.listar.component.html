@@ -4,29 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="usuario.listar.component.scss">
-    <title>Lista de Areas</title>
+    <title>Usuarios</title>
 </head>
 <body>
     <h1>Lista de Usuarios</h1>
+    <div class="text-center">
+        <div class="buscador col-lg-2">Buscar:</div>
+        <div class="col-lg-5">
+            <input type="text" [(ngModel)]="busqueda"/>
+        </div>
+    </div>
 
-    <div class="container-sm">
+    <div *ngFor="let usuario of usuarios | buscar: busqueda" class="container-sm">
         <ul class="list-group mt-2">
             <li class="list-group-item d-flex justify-content-between align-items-center">
-                Elemento 1
-                <span>
-                    <button class="btn btn-danger mb-10 me-2">Eliminar</button>
-                    <button class="btn btn-primary">Modificar</button>
-                </span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                Elemento 2
-                <span>
-                    <button class="btn btn-danger mb-10 me-2">Eliminar</button>
-                    <button class="btn btn-primary">Modificar</button>
-                </span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                Elemento 3
+                <span class="mb-0 me-2">{{ usuario.nombre }} {{ usuario.apellidos }}</span>
+                <span class="mb-0 me-2">{{ usuario.correo }}</span>
+                <span class="mb-0 me-2">{{ usuario.password }}</span>
+
                 <span>
                     <button class="btn btn-danger mb-10 me-2">Eliminar</button>
                     <button class="btn btn-primary">Modificar</button>

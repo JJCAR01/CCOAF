@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { UsuarioService } from '../services/usuario.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,24 @@ import { Component } from '@angular/core';
 })
 export class UsuarioListarComponent {
   title = 'listarUsuario';
+  usuarios: any[] = [];
+  busqueda: any;
+  
+    constructor(private usuarioService: UsuarioService) { }  
+
+    ngOnInit() {
+      this.cargarUsuarios();
+    }
+
+    cargarUsuarios() {
+      this.usuarioService.listarUsuario().toPromise().then(
+        (data: any) => {
+          this.usuarios = data; // Asigna la respuesta del servicio al arreglo de áreas
+          console.log('Usuarios cargados:', this.usuarios);
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+    }
 }

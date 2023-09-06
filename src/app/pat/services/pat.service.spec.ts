@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { CargoCrearService } from './cargo.crear.service';
+import { PatService } from './pat.service';
 
-describe('CargoCrearService', () => {
-  let service: CargoCrearService;
+describe('PatService', () => {
+  let service: PatService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(CargoCrearService);
+    service = TestBed.inject(PatService);
   });
 
   it('should be created', () => {

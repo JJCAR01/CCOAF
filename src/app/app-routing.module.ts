@@ -11,13 +11,17 @@ import { AreaListarComponent } from "./area/listar/area.listar.component";
 import { PanelUsuarioComponent } from "./panel.usuario/panel.usuario.component";
 import { PanelAdminComponent } from "./panel.admin/panel.admin.component";
 import { PatCrearComponent } from './pat/crear/pat.crear.component';
+import { PatListarComponent } from './pat/listar/pat.listar.component';
+import { ImperativoEstrategicoListarComponent } from './imperativo.estrategico/listar/imperativo.estrategico.component';
+import { ProgramaListarComponent } from './programa/listar/programa.component';
+import { LineaEstrategicaComponent } from './linea.estrategica/listar/linea.estrategica.component';
 
 
 
 const routes: Routes = [
   { path: '',redirectTo:'login',pathMatch:"full"},
   { path: "login", component: LoginComponent, pathMatch: "full" },
-  
+
   { path: "panelAdmin", component: PanelAdminComponent, 
   children:[
     { path: "crearUsuario", component: UsuarioCrearComponent },
@@ -26,11 +30,16 @@ const routes: Routes = [
     { path: "listarCargo", component: CargoListarComponent},
     { path: "crearArea", component: AreaCrearComponent},
     { path: "listarArea", component: AreaListarComponent},
+    { path: "patListar", component: PatListarComponent},
+    { path: "imperativoListar", component: ImperativoEstrategicoListarComponent},
+    { path: "programaListar", component: ProgramaListarComponent},
+    { path: "lineaeListar", component: LineaEstrategicaComponent},
   ] },
 
   { path: "panelUsuario", component: PanelUsuarioComponent, 
   children:[
-    { path: "patCrear", component: PatCrearComponent }
+    { path: "patCrear", component: PatCrearComponent },
+    
   ] },
   
 

@@ -19,17 +19,21 @@ import { CargoCrearComponent } from './cargo/crear/cargo.crear.component';
 import { CargoListarComponent } from './cargo/listar/cargo.listar.component';
 import { AreaCrearComponent } from './area/crear/area.crear.component';
 import { AreaListarComponent } from './area/listar/area.listar.component';
+import { PatListarComponent } from './pat/listar/pat.listar.component';
+import { ImperativoEstrategicoListarComponent } from './imperativo.estrategico/listar/imperativo.estrategico.component';
+import { ProgramaListarComponent } from './programa/listar/programa.component';
 
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
-import { PatCrearComponent } from './pat/crear/pat.crear.component';
 import { BuscarPipe } from 'src/pipes/buscar.pipes';
+import { LineaEstrategicaComponent } from './linea.estrategica/listar/linea.estrategica.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,LoginComponent,PanelAdminComponent,AreaCrearComponent,AreaListarComponent,PanelUsuarioComponent,
-    CargoCrearComponent,CargoListarComponent,UsuarioCrearComponent,UsuarioListarComponent, PatCrearComponent,BuscarPipe
+    CargoCrearComponent,CargoListarComponent,UsuarioCrearComponent,UsuarioListarComponent, BuscarPipe,PatListarComponent,
+    ImperativoEstrategicoListarComponent,ProgramaListarComponent, LineaEstrategicaComponent
   ],
   imports: [
     BrowserModule,

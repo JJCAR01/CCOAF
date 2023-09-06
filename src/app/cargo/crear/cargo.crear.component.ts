@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule,FormGroup,Validators } from '@angular/forms';
-import { HttpHeaders } from '@angular/common/http';
-import { CargoCrearService } from './services/cargo.crear.service'; 
+import { CargoService } from '../services/cargo.service';  
 import { CookieService } from 'ngx-cookie-service';
 import { AreaService } from 'src/app/area/services/area.service';
 
@@ -17,17 +16,13 @@ export class CargoCrearComponent {
   areas: any[] = [];
   form:FormGroup;
   
-  constructor(private cargoService: CargoCrearService,private formBuilder: FormBuilder,
+  constructor(private cargoService: CargoService,private formBuilder: FormBuilder,
     private areaListarService:AreaService) 
   { this.form = this.formBuilder.group({
     nombre: ['', Validators.required],
-    idArea: [null, Validators.required], // Inicializado como null
+    idArea: [null, Validators.required], 
   }); }
 
-  /*form = new FormGroup({
-    nombre: new FormControl('', Validators.required),
-    idArea: new FormControl(null, Validators.required),
-  });*/
   ngOnInit(): void {
     this.cargarAreas();
   }
@@ -71,5 +66,5 @@ export class CargoCrearComponent {
         );
       }
     }
-}
+  }
 }

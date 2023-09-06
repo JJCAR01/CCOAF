@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="linea.estrategica.component.scss">
+    <title>Lista de Areas</title>
+</head>
+<body>
+    <h1>Lineas </h1>
+    <main class="main text-center smaller-main">
+        
+        <div *ngFor="let linea of lineasEstrategicas | buscar: busqueda" class="container-sm">
+            <div class="widgets porcentajes">
+                    <div class="contenedor d-flex flex-wrap">
+                        <div class="caja">
+                            <h3>{{ linea.porcentajeReal }}</h3>
+                            <p>Porcentaje Real</p>
+                        </div>
+                        <div class="caja">
+                            <h3>{{ linea.porcentajeEsperado }}</h3>
+                            <p>Porcentaje Esperado</p>
+                        </div>
+                        <div class="caja">
+                            <h3>{{ linea.cumplimiento }}</h3>
+                            <p>Cumplimiento</p>
+                        </div>
+                    </div>
+            </div>
+            <div> 
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                
+                <span class="mb-0 me-2">{{ linea.nombre }}</span>
+                <span class="mb-0 me-2">{{ linea.fechaInicio }}</span>
+                <span class="mb-0 me-2">{{ linea.fechaFinal }}</span>
+                <span class="mb-0 me-2">{{ linea.fechaRegistro }}</span>
+
+              </li>
+          </div>
+        </div>
+
+    </main>
+</body>
+</html>

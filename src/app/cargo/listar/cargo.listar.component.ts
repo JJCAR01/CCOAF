@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { CargoService } from '../services/cargo.service';
 
 @Component({
   selector: 'app-root:not(c)',
@@ -7,4 +8,26 @@ import { Component } from '@angular/core';
 })
 export class CargoListarComponent {
   title = 'listarCargo';
+    cargos: any[] = [];
+    busqueda: any;
+  
+    constructor(private areaListarService: CargoService) { }  
+
+    ngOnInit() {
+      this.cargarCargos();
+    }
+
+    cargarCargos() {
+      this.areaListarService.listarCargo().toPromise().then(
+        (data: any) => {
+          this.cargos = data; // Asigna la respuesta del servicio al arreglo de áreas
+          console.log('Cargos0 cargados:', this.cargos);
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+    }
+
+
 }
