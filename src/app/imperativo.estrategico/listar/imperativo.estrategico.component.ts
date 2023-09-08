@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { ImperativoEstrategicoService } from '../services/imperativo.estrategico.service';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-imperativo-estrategico.listar',
   templateUrl: './imperativo.estrategico.component.html',
   styleUrls: ['./imperativo.estrategico.component.scss']
 })
 export class ImperativoEstrategicoListarComponent {
-  title = 'listarPat';
+  title = 'listarImperativo';
   imperativoEstrategicos: any[] = [];
   busqueda: any;
   

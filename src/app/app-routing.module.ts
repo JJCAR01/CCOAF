@@ -20,28 +20,26 @@ import { LineaEstrategicaComponent } from './linea.estrategica/listar/linea.estr
 
 const routes: Routes = [
   { path: '',redirectTo:'login',pathMatch:"full"},
-  { path: "login", component: LoginComponent, pathMatch: "full" },
+  { path: "login", component: LoginComponent},
 
-  { path: "panelAdmin", component: PanelAdminComponent, 
+  { path: "panelAdmin", component: PanelAdminComponent,
   children:[
-    { path: "crearUsuario", component: UsuarioCrearComponent },
-    { path: "listarUsuario", component: UsuarioListarComponent},
-    { path: "crearCargo", component: CargoCrearComponent},
-    { path: "listarCargo", component: CargoListarComponent},
-    { path: "crearArea", component: AreaCrearComponent},
-    { path: "listarArea", component: AreaListarComponent},
-    { path: "patListar", component: PatListarComponent},
-    { path: "imperativoListar", component: ImperativoEstrategicoListarComponent},
-    { path: "programaListar", component: ProgramaListarComponent},
-    { path: "lineaeListar", component: LineaEstrategicaComponent},
+    { path: "crearUsuario", component: UsuarioCrearComponent, outlet:"OutletAdmin" },
+    { path: `listarUsuario`, component: UsuarioListarComponent, outlet:"OutletAdmin"},
+    { path: "crearCargo", component: CargoCrearComponent, outlet:"OutletAdmin"},
+    { path: "listarCargo", component: CargoListarComponent, outlet:"OutletAdmin"},
+    { path: "crearArea", component: AreaCrearComponent, outlet:"OutletAdmin"},
+    { path: "listarArea", component: AreaListarComponent, outlet:"OutletAdmin"},
   ] },
 
   { path: "panelUsuario", component: PanelUsuarioComponent, 
   children:[
-    { path: "patCrear", component: PatCrearComponent },
+    { path: "listarPat", component: PatListarComponent, outlet:"OutletUsuario"},
+    { path: "listarImperativo", component: ImperativoEstrategicoListarComponent, outlet:"OutletUsuario"},
+    { path: "listarPrograma", component: ProgramaListarComponent, outlet:"OutletUsuario"},
+    { path: "listarLinea", component: LineaEstrategicaComponent, outlet:"OutletUsuario"},
     
   ] },
-  
 
 ];
 

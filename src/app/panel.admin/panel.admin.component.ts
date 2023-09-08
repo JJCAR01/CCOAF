@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
-import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-root',
@@ -10,11 +9,6 @@ import { Router } from '@angular/router';
 export class PanelAdminComponent {
   title = 'panelAdmin';
 
-  constructor( 
-      private cookieService:CookieService,
-      private router: Router 
-    ) {}
-
-    
+  
 
 }

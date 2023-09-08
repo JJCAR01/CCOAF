@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ProgramaService } from '../services/programa.service';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-programa.listar',
   templateUrl: './programa.component.html',
   styleUrls: ['./programa.component.scss']
 })

@@ -22,8 +22,7 @@
                     <img src="/assets/logo.jpg" width="200mp" alt="logo" id="logo">
                 </div>
                 <nav class="menu d-flex d-sm-block justify-content-center flex-wrap">
-                    <a routerLink="/pat">
-                          
+                    <a [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarPat'] } }]">
                         <span>PAT</span>
                     </a>
                     <a routerLink="/imperativoEstrategico">
@@ -52,6 +51,8 @@
                           </svg>
                     </button>
                 </div>
+
+                <router-outlet name="OutletUsuario"></router-outlet>
             </main>  
         </div>
     </div>

@@ -8,7 +8,6 @@ import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router'; 
 
 
-
 @Component({
   selector: 'app-root',
   templateUrl: './login.component.html',
@@ -52,14 +51,17 @@ export class LoginComponent {
         const jwt = response.jwt;
         this.cookieService.set('jwt', jwt);
         const decode:any = jwt_decode(jwt);
-        console.log(decode);
+        console.log(decode.type);
         if(decode.type === 'A')
-        {
-          this.router.navigate(['/panelUsuario']);
+        { // Navega a la ruta principal
+          this.router.navigate(["/panelAdmin"]);
+
+
         }
         else if (decode.type === 'O')
         {
-          this.router.navigate(['/panelUsuario'])
+          alert("Operador")
+          this.router.navigate(["/panelUsuario"]);
         }
         //const jwt = this.cookieService.get('jwt');
         

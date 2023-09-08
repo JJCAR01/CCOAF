@@ -7,7 +7,7 @@ import { LineaEstrategicaService } from '../services/linea.estrategica.service';
   styleUrls: ['./linea.estrategica.component.scss']
 })
 export class LineaEstrategicaComponent {
-  title = 'listarPat';
+  title = 'listarLinea';
   lineasEstrategicas: any[] = [];
   busqueda: any;
   
