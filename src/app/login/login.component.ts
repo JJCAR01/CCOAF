@@ -1,11 +1,14 @@
-import { Component  } from '@angular/core';
+import { Component ,OnInit } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
 import { LoginService } from './services/login.service';
 import jwt_decode from "jwt-decode";
 
+import { GoogleLoginProvider, SocialAuthService,SocialUser } from '@abacritt/angularx-social-login';
+
 import {  Validators,FormGroup,FormControl,ReactiveFormsModule } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router'; 
+
 
 
 @Component({
@@ -13,17 +16,27 @@ import { Router } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
+  user: SocialUser | undefined;
+
   constructor(
   private loginService: LoginService, 
     private cookieService:CookieService,
-    private router: Router 
+    private router: Router,
+    private authService:SocialAuthService, 
   ) {}
 
   form = new FormGroup({
     correo: new FormControl('', Validators.required),
     password: new FormControl('', Validators.required),
   });
+
+
+  ngOnInit() {
+    this.authService.authState.subscribe((user) => {
+      this.user = user;
+    });
+  }
 
   login() {
     // Obtener los valores del formulario (usuario y contraseña) desde las propiedades del componente
@@ -71,5 +84,25 @@ export class LoginComponent {
     },error =>{
       console.log(error);
     } )
+  }
+
+  signInWithGoogle(): void {
+    this.authService.signIn(GoogleLoginProvider.PROVIDER_ID).then((user) => {
+      // Aquí puedes manejar la autenticación con Google, por ejemplo, enviar los datos a tu servidor.
+      // Luego, redirige o realiza acciones según la respuesta del servidor.
+      console.log('Usuario de Google:', user);
+    }).catch((error) => {
+      console.log('Error al iniciar sesión con Google:', error);
+    });
+  }
+
+  // Agrega este método para cerrar sesión con Google
+  signOutWithGoogle(): void {
+    this.authService.signOut().then(() => {
+      this.user = undefined;
+      // Realiza acciones después de cerrar sesión con Google, si es necesario.
+    }).catch((error) => {
+      console.log('Error al cerrar sesión con Google:', error);
+    });
   }
 }

@@ -15,7 +15,7 @@
                 <form [formGroup]="form" (ngSubmit)="login()">
                   <div class="text-left mb-2" >
                     <p>Entrar directamente con el correo corporativo</p>
-                      <asl-google-signin-button  size = "medium"  type="standard" shape="circle" >
+                      <asl-google-signin-button (click)="signInWithGoogle()" rel="noopener noreferrer" size = "medium"  type="standard" shape="circle" >
                       </asl-google-signin-button>
                   </div>
                   <p class="text-center"> Ó</p>
@@ -48,6 +48,8 @@
                        Crear
                     </button>
                   </div>
+
+                  
 
                 </form> 
 
