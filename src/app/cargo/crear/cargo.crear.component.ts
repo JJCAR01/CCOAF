@@ -17,7 +17,7 @@ export class CargoCrearComponent {
   form:FormGroup;
   
   constructor(private cargoService: CargoService,private formBuilder: FormBuilder,
-    private areaListarService:AreaService) 
+    private areaService:AreaService) 
   { this.form = this.formBuilder.group({
     nombre: ['', Validators.required],
     idArea: [null, Validators.required], 
@@ -28,7 +28,7 @@ export class CargoCrearComponent {
   }
 
   cargarAreas() {
-    this.areaListarService.listarArea().subscribe(
+    this.areaService.listarArea().subscribe(
       (data: any) => {
         this.areas = data;
         console.log(this.areas);
@@ -39,22 +39,24 @@ export class CargoCrearComponent {
     );
   }
 
-  crearCargo() {
-    console.log(this.form.value);
+  crearCargo() { 
     if (this.form.valid) {
       const nombre = this.form.get('nombre')?.value;
-      const idAreaSeleccionado = this.form.get('idArea')?.value;
-      console.log(idAreaSeleccionado)
+      const idAreaSeleccionado = parseFloat(this.form.get('idArea')?.value);
+      console.log('this.areas:', this.areas);
+      console.log('idAreaSeleccionado:', idAreaSeleccionado);
+
       // Busca el objeto de área correspondiente según el idArea seleccionado
-      const areaSeleccionada = this.areas.find(area => area.idArea === idAreaSeleccionado);
-      
+      const areaSeleccionada = this.areas.find(area =>  area.idArea === idAreaSeleccionado);
+      console.log(areaSeleccionada.idArea);
+
       if (nombre !== null && areaSeleccionada) {
         console.log(nombre)
         const cargo = {
           nombre: nombre,
           idArea: areaSeleccionada.idArea,
         };
-
+        console.log(this.form.value);
         // Luego, envía 'cargo' al backend usando tu servicio.
         this.cargoService.crearCargo(cargo).subscribe(
           (response) => {

@@ -32,6 +32,10 @@ export class LoginService {
     // Realiza la autenticación en el servidor utilizando el token de Google
     return this.http.post(`${environment.apiUrl}/ccoa/auth/google-login`, { idToken });
   }
+
+  authenticateWithGoogle() {
+    return this.http.get(`${environment.apiUrl}/ccoa/auth/google/user`);
+  }
 }
 
 

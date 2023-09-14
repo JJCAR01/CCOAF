@@ -1,5 +1,5 @@
 <section class="h-100 gradient-form" style="background-color: #ffffff;">
-  <div class="container py-5 h-100">
+  <div class="container py-5 h-100" *ngIf="!loggedIn">
     <div class="row d-flex justify-content-center align-items-center h-100">
       <div class="col-xl-10">
         <div class="card rounded-3 text-black">
@@ -15,7 +15,7 @@
                 <form [formGroup]="form" (ngSubmit)="login()">
                   <div class="text-left mb-2" >
                     <p>Entrar directamente con el correo corporativo</p>
-                      <asl-google-signin-button (click)="signInWithGoogle()" rel="noopener noreferrer" size = "medium"  type="standard" shape="circle" >
+                      <asl-google-signin-button rel="noopener noreferrer" size = "medium"  type="standard" shape="circle" >
                       </asl-google-signin-button>
                   </div>
                   <p class="text-center"> Ó</p>
