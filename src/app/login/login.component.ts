@@ -48,12 +48,13 @@ export class LoginComponent implements OnInit {
       this.socialUser = user;
       this.loggedIn = true;
       console.log('Inició sesión correctamente');
-      this.router.navigate([`/panelAdmin`]);
+      this.router.navigate(["/panelUsuario"]);
 
     }).catch((error) => {
       console.log('Error al iniciar sesión con Google:', error);
     });
   }
+
 
   logOut():void{
     this.authService.signOut();
