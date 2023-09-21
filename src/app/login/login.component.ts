@@ -35,26 +35,40 @@ export class LoginComponent implements OnInit {
   });
 
 
-  ngOnInit() {
+  /*ngOnInit() {
     this.authService.authState.subscribe((user) => {
       this.user = user;
       this.loggedIn = (user != null);
     });
-  }
+  }*/
 
-  signInWithGoogle(): void {
+  /*signInWithGoogle(): void {
     this.authService.signIn(GoogleLoginProvider.PROVIDER_ID).then(
       user => {
       this.socialUser = user;
       this.loggedIn = true;
-      console.log('Inició sesión correctamente');
+      alert('Inició sesión correctamente');
       this.router.navigate(["/panelUsuario"]);
 
     }).catch((error) => {
       console.log('Error al iniciar sesión con Google:', error);
     });
+  }*/
+  ngOnInit() {
+    this.authService.authState.subscribe((user) => {
+      this.socialUser = user;
+      this.loggedIn = user != null;
+      console.log(this.socialUser);
+    });
   }
 
+  loginWithGoogle(): void {
+    this.loginService.authenticateWithGoogle().toPromise().then(
+      (data: any) => {
+        console.log(data)
+      });
+    this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
+  }
 
   logOut():void{
     this.authService.signOut();

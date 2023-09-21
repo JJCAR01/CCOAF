@@ -34,7 +34,7 @@ export class LoginService {
   }
 
   authenticateWithGoogle() {
-    return this.http.get(`${environment.apiUrl}/ccoa/auth/google/user`);
+    return this.http.get(`${environment.apiUrl}/login/oauth2/code/google`);
   }
 }
 

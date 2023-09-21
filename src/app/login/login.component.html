@@ -11,13 +11,13 @@
                   <img src="/assets/logo.jpg" width="200mp" alt="logo" id="logo">
                   <h4 class="mt-1 mb-5 pb-1">Planeación estratégica CCOA</h4>
                 </div>
-
+                <div class="text-left mb-2" >
+                  <p>Entrar directamente con el correo corporativo</p>
+                    <asl-google-signin-button (click)="loginWithGoogle()" size = "medium"  type="standard" shape="circle" >
+                    </asl-google-signin-button>
+                </div>
                 <form [formGroup]="form" (ngSubmit)="login()">
-                  <div class="text-left mb-2" >
-                    <p>Entrar directamente con el correo corporativo</p>
-                      <asl-google-signin-button rel="noopener noreferrer" size = "medium"  type="standard" shape="circle" >
-                      </asl-google-signin-button>
-                  </div>
+                  
                   <p class="text-center"> Ó</p>
 
                   <p>Ingrese su cuenta:</p>
