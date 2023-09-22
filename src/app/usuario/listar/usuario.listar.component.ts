@@ -28,4 +28,17 @@ export class UsuarioListarComponent {
         }
       );
     }
+
+    eliminarUsuario(idUsuario: number) {
+      this.usuarioService.eliminarUsuario(idUsuario).subscribe(
+        (response) => {
+          // Realizar acciones después de eliminar el usuario, si es necesario
+          console.log('Usuario eliminado con éxito', response);
+        },
+        (error) => {
+          // Manejar errores, si es necesario
+          console.error('Error al eliminar el usuario', error);
+        }
+      );
+    }
 }

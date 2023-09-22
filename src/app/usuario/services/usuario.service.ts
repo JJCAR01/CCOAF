@@ -18,4 +18,8 @@ export class UsuarioService {
   listarUsuario(){
     return this.http.get(`${environment.apiUrl}/ccoa/usuarios`);
   }
+
+  eliminarUsuario(idUsuario:number){
+    return this.http.delete(`${environment.apiUrl}/ccoa/usuarios/${idUsuario}`);
+  }
 }

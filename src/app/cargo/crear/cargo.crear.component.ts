@@ -43,20 +43,16 @@ export class CargoCrearComponent {
     if (this.form.valid) {
       const nombre = this.form.get('nombre')?.value;
       const idAreaSeleccionado = parseFloat(this.form.get('idArea')?.value);
-      console.log('this.areas:', this.areas);
-      console.log('idAreaSeleccionado:', idAreaSeleccionado);
 
       // Busca el objeto de área correspondiente según el idArea seleccionado
       const areaSeleccionada = this.areas.find(area =>  area.idArea === idAreaSeleccionado);
       console.log(areaSeleccionada.idArea);
 
       if (nombre !== null && areaSeleccionada) {
-        console.log(nombre)
         const cargo = {
           nombre: nombre,
           idArea: areaSeleccionada.idArea,
         };
-        console.log(this.form.value);
         // Luego, envía 'cargo' al backend usando tu servicio.
         this.cargoService.crearCargo(cargo).subscribe(
           (response) => {

@@ -20,11 +20,21 @@ export class PatListarComponent {
     cargarPats() {
       this.patService.listarPat().toPromise().then(
         (data: any) => {
-          this.pats = data; // Asigna la respuesta del servicio al arreglo de áreas
+          this.pats = data;
           console.log('Pts cargados:', this.pats);
         },
         (error) => {
           console.error(error);
+        }
+      );
+    }
+    eliminarPat(idPat: number) {
+      this.patService.eliminarPat(idPat).subscribe(
+        (response) => {
+          console.log('Usuario eliminado con éxito', response);
+        },
+        (error) => {
+          console.error('Error al eliminar el usuario', error);
         }
       );
     }

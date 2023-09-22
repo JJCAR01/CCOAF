@@ -58,7 +58,6 @@ export class LoginComponent implements OnInit {
     this.authService.authState.subscribe((user) => {
       this.socialUser = user;
       this.loggedIn = user != null;
-      console.log(this.socialUser);
     });
   }
 
@@ -76,35 +75,23 @@ export class LoginComponent implements OnInit {
 
 
   login() {
-    // Obtener los valores del formulario (usuario y contraseña) desde las propiedades del componente
     const correo = this.form.value.correo;
     const password = this.form.value.password;
 
-    // Construir el cuerpo de la solicitud
     const body = {
       correo: correo,
       password: password  
-    };
-    console.log(body);
-
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json' 
-    });
-    
+    };    
     this.loginService.login(body).toPromise().then((response: any) => {
-      if (response) {
-        // Manejar la respuesta del servicio de inicio de sesión
-        console.log(response);
-    
+      if (response) {    
         const jwt = response.jwt;
         this.cookieService.set('jwt', jwt);
         const decode:any = jwt_decode(jwt);
-        console.log(decode.type);
+        console.log(decode.type );
         if(decode.type === 'A')
-        { // Navega a la ruta principal
+        { 
+          this.loggedIn = response!=null;
           this.router.navigate(["/panelAdmin"]);
-
-
         }
         else if (decode.type === 'O')
         {

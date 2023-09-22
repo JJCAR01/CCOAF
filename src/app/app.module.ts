@@ -19,6 +19,7 @@ import { CargoListarComponent } from './cargo/listar/cargo.listar.component';
 import { AreaCrearComponent } from './area/crear/area.crear.component';
 import { AreaListarComponent } from './area/listar/area.listar.component';
 import { PatListarComponent } from './pat/listar/pat.listar.component';
+import { PatCrearComponent } from './pat/crear/pat.crear.component';
 import { ImperativoEstrategicoListarComponent } from './imperativo.estrategico/listar/imperativo.estrategico.component';
 import { ProgramaListarComponent } from './programa/listar/programa.component';
 
@@ -32,7 +33,7 @@ import { LineaEstrategicaComponent } from './linea.estrategica/listar/linea.estr
   declarations: [
     AppComponent,LoginComponent,PanelAdminComponent,AreaCrearComponent,AreaListarComponent,PanelUsuarioComponent,
     CargoCrearComponent,CargoListarComponent,UsuarioCrearComponent,UsuarioListarComponent, BuscarPipe,PatListarComponent,
-    ImperativoEstrategicoListarComponent,ProgramaListarComponent, LineaEstrategicaComponent
+    ImperativoEstrategicoListarComponent,ProgramaListarComponent, LineaEstrategicaComponent,PatCrearComponent
   ],
   imports: [
     BrowserModule,

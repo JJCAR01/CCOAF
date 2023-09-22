@@ -23,7 +23,7 @@
                 <span class="mb-0 me-2">{{ usuario.password }}</span>
 
                 <span>
-                    <button class="btn btn-danger mb-10 me-2">Eliminar</button>
+                    <button class="btn btn-danger mb-10 me-2" (click)="eliminarUsuario(usuario.idUsuario)">Eliminar</button>
                     <button class="btn btn-primary">Modificar</button>
                 </span>
             </li>

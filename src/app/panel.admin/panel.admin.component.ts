@@ -2,6 +2,7 @@ import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginService } from '../login/services/login.service';
+import { CookieService } from 'ngx-cookie-service';
 
 
 @Component({
@@ -13,10 +14,10 @@ export class PanelAdminComponent implements OnInit{
   title = 'panelAdmin';
 
   user: SocialUser | null = null;
-  loggedIn: boolean = false;
+  loggedIn: boolean = true;
 
   constructor(private authService:SocialAuthService,
-    private router: Router, private loginService: LoginService){}
+    private router: Router,private cookie:CookieService){}
 
   ngOnInit(): void {
     this.authService.authState.subscribe((user) => {
@@ -25,12 +26,9 @@ export class PanelAdminComponent implements OnInit{
     });
   }
 
-
-
   logOut():void{
     this.authService.signOut();
+    this.cookie.deleteAll();
     this.router.navigate(["/login"]);
   }
-  
-
 }

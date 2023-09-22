@@ -17,4 +17,7 @@ export class PatService {
   listarPat(){
     return this.http.get(`${environment.apiUrl}/ccoa/pats`);
   }
+  eliminarPat(idPat:number){
+    return this.http.delete(`${environment.apiUrl}/ccoa/pats/${idPat}`);
+  }
 }

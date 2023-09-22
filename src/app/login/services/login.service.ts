@@ -16,22 +16,19 @@ export class LoginService {
       corrreo,
       password
   });
-}*/
+}
+loginWithGoogle(idToken: string) {
+    // Realiza la autenticación en el servidor utilizando el token de Google
+    return this.http.post(`${environment.apiUrl}/ccoa/auth/google-login`, { idToken });
+  }
+*/
 
 
   login(login : any){
     return this.http.post(`${environment.apiUrl}/ccoa/auth/login`,login);
   }
 
-  getUserData() {
-    // Realiza la petición GET para obtener los datos del usuario
-    return this.http.get(`${environment.apiUrl}/ccoa/auth/user`);
-  }
-
-  loginWithGoogle(idToken: string) {
-    // Realiza la autenticación en el servidor utilizando el token de Google
-    return this.http.post(`${environment.apiUrl}/ccoa/auth/google-login`, { idToken });
-  }
+  
 
   authenticateWithGoogle() {
     return this.http.get(`${environment.apiUrl}/login/oauth2/code/google`);

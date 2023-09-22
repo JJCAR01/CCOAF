@@ -30,10 +30,11 @@ const routes: Routes = [
     { path: "listarCargo", component: CargoListarComponent, outlet:"OutletAdmin"},
     { path: "crearArea", component: AreaCrearComponent, outlet:"OutletAdmin"},
     { path: "listarArea", component: AreaListarComponent, outlet:"OutletAdmin"},
-  ] },
+  ]},
 
   { path: "panelUsuario", component: PanelUsuarioComponent, 
   children:[
+    { path: "crearPat", component: PatCrearComponent, outlet:"OutletUsuario"},
     { path: "listarPat", component: PatListarComponent, outlet:"OutletUsuario"},
     { path: "listarImperativo", component: ImperativoEstrategicoListarComponent, outlet:"OutletUsuario"},
     { path: "listarPrograma", component: ProgramaListarComponent, outlet:"OutletUsuario"},
