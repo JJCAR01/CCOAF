@@ -78,6 +78,7 @@ export class LoginComponent implements OnInit {
     const correo = this.form.value.correo;
     const password = this.form.value.password;
 
+
     const body = {
       correo: correo,
       password: password  
@@ -87,18 +88,16 @@ export class LoginComponent implements OnInit {
         const jwt = response.jwt;
         this.cookieService.set('jwt', jwt);
         const decode:any = jwt_decode(jwt);
-        console.log(decode.type );
-        if(decode.type === 'A')
+        if(decode.type === 'ADMIN')
         { 
           this.loggedIn = response!=null;
           this.router.navigate(["/panelAdmin"]);
         }
-        else if (decode.type === 'O')
+        else if (decode.type === 'OPERADOR')
         {
           alert("Operador")
           this.router.navigate(["/panelUsuario"]);
         }
-        //const jwt = this.cookieService.get('jwt');
         
       } else {
         console.log("No se recibió una respuesta válida del servidor.");

@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginService } from '../login/services/login.service';
 import { CookieService } from 'ngx-cookie-service';
+import { AuthService } from '../login/auth/auth.service';
 
 
 @Component({
@@ -17,7 +18,8 @@ export class PanelAdminComponent implements OnInit{
   loggedIn: boolean = true;
 
   constructor(private authService:SocialAuthService,
-    private router: Router,private cookie:CookieService){}
+    private router: Router,private cookie:CookieService,
+    private auth: AuthService){}
 
   ngOnInit(): void {
     this.authService.authState.subscribe((user) => {
