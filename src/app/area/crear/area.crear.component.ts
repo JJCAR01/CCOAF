@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, ReactiveFormsModule,FormGroup,Validators } fr
 import { HttpHeaders } from '@angular/common/http';
 import { AreaService } from '../services/area.service';
 import { CookieService } from 'ngx-cookie-service';
+import { AuthService } from 'src/app/login/auth/auth.service';
 
 
 @Component({
@@ -12,7 +13,8 @@ import { CookieService } from 'ngx-cookie-service';
 })
 export class AreaCrearComponent {
   title = 'crearArea';
-  constructor(private areaService: AreaService,private cookieService:CookieService) 
+  constructor(private areaService: AreaService,private cookieService:CookieService
+    ,private auth: AuthService) 
   {  }
 
   form = new FormGroup({
@@ -20,24 +22,15 @@ export class AreaCrearComponent {
   });
 
   crearArea(){
-    // Obtener los valores del formulario (usuario y contraseña) desde las propiedades del componente
     const nombre = this.form.value.nombre;
-
-    // Configurar las cabeceras de la solicitud (si es necesario)
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json' // Puedes ajustar esto según las necesidades
-    });
 
     // Construir el cuerpo de la solicitud
     const body = {
       nombre: nombre,
     };
-    console.log(body);
-
     
-    this.areaService.crearArea(body).toPromise().then(response =>{
-      this.cookieService.get('jwt');
-      console.log(response);
+    this.areaService.crearArea(body,this.auth.obtenerHeader()).toPromise().then(response =>{
+      alert("Creado!!!!!!!!!!!!!!!")
     },error =>{
       console.log(error);
     } )

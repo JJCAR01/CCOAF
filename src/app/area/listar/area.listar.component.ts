@@ -25,12 +25,8 @@ export class AreaListarComponent implements OnInit {
   }
 
   cargarAreas() {
-    const token = this.authService.getToken(); // Obtiene el token JWT del servicio AuthService
-    const headers = new HttpHeaders()
-    .set('Authorization', `Bearer ${token}`);
-
     this.areaListarService
-      .listarArea(headers) // Pasa las cabeceras con el token JWT en la solicitud
+      .listarArea(this.authService.obtenerHeader()) // Pasa las cabeceras con el token JWT en la solicitud
       .toPromise()
       .then(
         (data: any) => {

@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, ReactiveFormsModule,FormGroup,Validators } fr
 import { CargoService } from '../services/cargo.service';  
 import { CookieService } from 'ngx-cookie-service';
 import { AreaService } from 'src/app/area/services/area.service';
+import { AuthService } from 'src/app/login/auth/auth.service';
 
 
 @Component({
@@ -17,7 +18,7 @@ export class CargoCrearComponent {
   form:FormGroup;
   
   constructor(private cargoService: CargoService,private formBuilder: FormBuilder,
-    private areaService:AreaService) 
+    private areaService:AreaService, private auth:AuthService) 
   { this.form = this.formBuilder.group({
     nombre: ['', Validators.required],
     idArea: [null, Validators.required], 
@@ -28,10 +29,9 @@ export class CargoCrearComponent {
   }
 
   cargarAreas() {
-    this.areaService.listarArea().subscribe(
+    this.areaService.listarArea(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
         this.areas = data;
-        console.log(this.areas);
     },
       (error) => {
         console.log(error);
@@ -46,7 +46,6 @@ export class CargoCrearComponent {
 
       // Busca el objeto de área correspondiente según el idArea seleccionado
       const areaSeleccionada = this.areas.find(area =>  area.idArea === idAreaSeleccionado);
-      console.log(areaSeleccionada.idArea);
 
       if (nombre !== null && areaSeleccionada) {
         const cargo = {
@@ -54,7 +53,7 @@ export class CargoCrearComponent {
           idArea: areaSeleccionada.idArea,
         };
         // Luego, envía 'cargo' al backend usando tu servicio.
-        this.cargoService.crearCargo(cargo).subscribe(
+        this.cargoService.crearCargo(cargo,this.auth.obtenerHeader()).subscribe(
           (response) => {
             console.log(response);
           },

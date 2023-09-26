@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import jwtDecode from 'jwt-decode';
+import { HttpHeaders } from '@angular/common/http';
 
 
 @Injectable({
@@ -11,10 +12,8 @@ export class AuthService {
   constructor(private cookieService: CookieService) { }
 
   isAuthenticated(): boolean {
-    // Obtén el JWT almacenado en las cookies
     const jwt = this.cookieService.get('jwt');
 
-    // Verifica si el JWT existe y no está vacío
     if (jwt) {
       try {
         const decode = jwtDecode(jwt);
@@ -31,5 +30,10 @@ export class AuthService {
 
   getToken(): string | null {
     return this.cookieService.get('jwt'); 
+  }
+
+  obtenerHeader(): Headers|any{
+    const token = this.getToken(); // Obtiene el token JWT del servicio AuthService
+    return new HttpHeaders().set('Authorization', `Bearer ${token}`)
   }
 }

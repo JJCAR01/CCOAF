@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { UsuarioService } from '../services/usuario.service';
 import { CargoService } from 'src/app/cargo/services/cargo.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from 'src/app/login/auth/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +15,8 @@ export class UsuarioCrearComponent {
   roles: any[] =[];
   form:FormGroup;
   
-  constructor(private usuarioService: UsuarioService, private formBuilder: FormBuilder, private cargoService:CargoService) 
+  constructor(private usuarioService: UsuarioService, private formBuilder: FormBuilder, private cargoService:CargoService
+    ,private auth:AuthService) 
   { 
     this.form = this.formBuilder.group({
       nombre: ['', Validators.required],
@@ -31,10 +33,9 @@ export class UsuarioCrearComponent {
   }
 
   cargarCargos() {
-    this.cargoService.listarCargo().subscribe(
+    this.cargoService.listarCargo(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
         this.cargos = data;
-        console.log(this.cargos);
     },
       (error) => {
         console.log(error);
@@ -58,10 +59,9 @@ export class UsuarioCrearComponent {
         ]
       };
 
-      this.usuarioService.crearUsuario(usuarioData).subscribe(
+      this.usuarioService.crearUsuario(usuarioData,this.auth.obtenerHeader()).subscribe(
         (response) => {
           console.log(response);
-          // Realiza acciones adicionales después de crear el usuario si es necesario
         },
         (error) => {
           console.error("Error en la solicitud al backend:", error);

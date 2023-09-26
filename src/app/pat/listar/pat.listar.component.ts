@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { PatService } from '../services/pat.service';
+import { AuthService } from 'src/app/login/auth/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -11,14 +12,14 @@ export class PatListarComponent {
   pats: any[] = [];
   busqueda: any;
   
-    constructor(private patService: PatService) { }  
+    constructor(private patService: PatService,private auth:AuthService) { }  
 
     ngOnInit() {
       this.cargarPats();
     }
 
     cargarPats() {
-      this.patService.listarPat().toPromise().then(
+      this.patService.listarPat(this.auth.obtenerHeader()).toPromise().then(
         (data: any) => {
           this.pats = data;
           console.log('Pts cargados:', this.pats);
@@ -29,7 +30,7 @@ export class PatListarComponent {
       );
     }
     eliminarPat(idPat: number) {
-      this.patService.eliminarPat(idPat).subscribe(
+      this.patService.eliminarPat(idPat,this.auth.obtenerHeader()).subscribe(
         (response) => {
           console.log('Usuario eliminado con éxito', response);
         },

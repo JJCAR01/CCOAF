@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment.development';
 import { CookieService } from "ngx-cookie-service";
 
@@ -11,15 +11,15 @@ export class UsuarioService {
   constructor(private http: HttpClient, private cookies:CookieService) {
   }
 
-  crearUsuario(usuario : any){
-    return this.http.post(`${environment.apiUrl}/ccoa/usuarios`,usuario);
+  crearUsuario(usuario : any,headers?: HttpHeaders){
+    return this.http.post(`${environment.apiUrl}/ccoa/usuarios`,usuario,{headers});
   }
 
-  listarUsuario(){
-    return this.http.get(`${environment.apiUrl}/ccoa/usuarios`);
+  listarUsuario(headers?: HttpHeaders){
+    return this.http.get(`${environment.apiUrl}/ccoa/usuarios`,{headers});
   }
 
-  eliminarUsuario(idUsuario:number){
-    return this.http.delete(`${environment.apiUrl}/ccoa/usuarios/${idUsuario}`);
+  eliminarUsuario(idUsuario:number,headers?: HttpHeaders){
+    return this.http.delete(`${environment.apiUrl}/ccoa/usuarios/${idUsuario}`,{headers});
   }
 }

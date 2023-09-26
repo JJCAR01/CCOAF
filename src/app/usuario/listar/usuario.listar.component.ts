@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { UsuarioService } from '../services/usuario.service';
+import { AuthService } from 'src/app/login/auth/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -11,17 +12,16 @@ export class UsuarioListarComponent {
   usuarios: any[] = [];
   busqueda: any;
   
-    constructor(private usuarioService: UsuarioService) { }  
+    constructor(private usuarioService: UsuarioService, private auth:AuthService) { }  
 
     ngOnInit() {
       this.cargarUsuarios();
     }
 
     cargarUsuarios() {
-      this.usuarioService.listarUsuario().toPromise().then(
+      this.usuarioService.listarUsuario(this.auth.obtenerHeader()).toPromise().then(
         (data: any) => {
           this.usuarios = data; // Asigna la respuesta del servicio al arreglo de áreas
-          console.log('Usuarios cargados:', this.usuarios);
         },
         (error) => {
           console.error(error);
@@ -30,7 +30,7 @@ export class UsuarioListarComponent {
     }
 
     eliminarUsuario(idUsuario: number) {
-      this.usuarioService.eliminarUsuario(idUsuario).subscribe(
+      this.usuarioService.eliminarUsuario(idUsuario, this.auth.obtenerHeader()).subscribe(
         (response) => {
           // Realizar acciones después de eliminar el usuario, si es necesario
           console.log('Usuario eliminado con éxito', response);
