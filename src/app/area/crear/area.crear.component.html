@@ -12,7 +12,7 @@
         <div class="container">
             <div class="row d-flex justify-content-center">
                 <div class="col-12 col-md-9 col-lg-7 col-xl-6">
-                    <div class="card" style="border-radius: 100px">
+                    <div class="card" style="border-radius: 50px">
                         <div class="card-body p-2">
                             <h2 class="text-uppercase text-center">Crear area</h2>
   
@@ -25,9 +25,14 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="d-flex justify-content-center">
-                                    <button type="button" id="btnCrearArea" class="btn btn-success btn-block btn-lg" 
-                                    (click)="crearArea()">Registrar</button>
+                                <div class="row">
+                                    <div class="text-center">
+                                        <button type="button" class="btn btn-secondary btn-block me-2"
+                                        [routerLink]="['/panelAdmin', { outlets: { 'OutletAdmin': ['listarArea'] } }]"
+                                        >Atrás</button>
+                                        <button type="button" id="btnCrearArea" class="btn btn-success btn-block me-2" 
+                                        (click)="crearArea()">Registrar</button>
+                                    </div>    
                                 </div>
                             </form>
   

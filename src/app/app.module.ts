@@ -21,7 +21,6 @@ import { AreaListarComponent } from './area/listar/area.listar.component';
 import { PatListarComponent } from './pat/listar/pat.listar.component';
 import { PatCrearComponent } from './pat/crear/pat.crear.component';
 import { ImperativoEstrategicoListarComponent } from './imperativo.estrategico/listar/imperativo.estrategico.component';
-import { ProgramaListarComponent } from './programa/listar/programa.component';
 
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
@@ -33,7 +32,7 @@ import { LineaEstrategicaComponent } from './linea.estrategica/listar/linea.estr
   declarations: [
     AppComponent,LoginComponent,PanelAdminComponent,AreaCrearComponent,AreaListarComponent,PanelUsuarioComponent,
     CargoCrearComponent,CargoListarComponent,UsuarioCrearComponent,UsuarioListarComponent, BuscarPipe,PatListarComponent,
-    ImperativoEstrategicoListarComponent,ProgramaListarComponent, LineaEstrategicaComponent,PatCrearComponent
+    ImperativoEstrategicoListarComponent, LineaEstrategicaComponent,PatCrearComponent
   ],
   imports: [
     BrowserModule,

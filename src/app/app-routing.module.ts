@@ -13,7 +13,6 @@ import { PanelAdminComponent } from "./panel.admin/panel.admin.component";
 import { PatCrearComponent } from './pat/crear/pat.crear.component';
 import { PatListarComponent } from './pat/listar/pat.listar.component';
 import { ImperativoEstrategicoListarComponent } from './imperativo.estrategico/listar/imperativo.estrategico.component';
-import { ProgramaListarComponent } from './programa/listar/programa.component';
 import { LineaEstrategicaComponent } from './linea.estrategica/listar/linea.estrategica.component';
 
 
@@ -37,7 +36,6 @@ const routes: Routes = [
     { path: "crearPat", component: PatCrearComponent, outlet:"OutletUsuario"},
     { path: "listarPat", component: PatListarComponent, outlet:"OutletUsuario"},
     { path: "listarImperativo", component: ImperativoEstrategicoListarComponent, outlet:"OutletUsuario"},
-    { path: "listarPrograma", component: ProgramaListarComponent, outlet:"OutletUsuario"},
     { path: "listarLinea", component: LineaEstrategicaComponent, outlet:"OutletUsuario"},
     
   ] },

@@ -4,6 +4,8 @@ import { HttpHeaders } from '@angular/common/http';
 import { AreaService } from '../services/area.service';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from 'src/app/login/auth/auth.service';
+import { Observable } from 'rxjs';
+import swal from 'sweetalert';
 
 
 @Component({
@@ -23,17 +25,17 @@ export class AreaCrearComponent {
 
   crearArea(){
     const nombre = this.form.value.nombre;
-
-    // Construir el cuerpo de la solicitud
     const body = {
       nombre: nombre,
     };
     
     this.areaService.crearArea(body,this.auth.obtenerHeader()).toPromise().then(response =>{
-      alert("Creado!!!!!!!!!!!!!!!")
+      swal("Creado Satisfactoriamente", 'El area con el nombre' +this.form.value.nombre + 'se ha creado!!', "success");
+      this.form.reset();
     },error =>{
-      console.log(error);
+      swal("Error al Crear " + this.form.value.nombre , error.error.mensajeTecnico , "error");
     } )
   }
+  
 
 }
