@@ -17,21 +17,19 @@
                             <h2 class="text-uppercase text-center">Crear area</h2>
   
                             <form [formGroup]="form">
-                                <div class="abs-center">
                                     <div class="dropdown">
-                                        <div class="col-xs-4">
-                                            <label class="mb-2 me-5" fxLayoutAlign="center center" for="nombre">Nombre: </label>
-                                            <input id="nombre" type="text" formControlName="nombre"  name="nombre">
+                                        <div class="form-outline mb-1">
+                                            <input type="text" id="form3Example1cg" class="form-control form-control-lg" formControlName="nombre" />
+                                            <label class="form-label" for="form3Example1cg">Nombre del area</label>
                                         </div>
                                     </div>
-                                </div>
                                 <div class="row">
                                     <div class="text-center">
                                         <button type="button" class="btn btn-secondary btn-block me-2"
-                                        [routerLink]="['/panelAdmin', { outlets: { 'OutletAdmin': ['listarArea'] } }]"
-                                        >Atrás</button>
+                                            [routerLink]="['/panelAdmin', { outlets: { 'OutletAdmin': ['listarArea'] } }]"
+                                            >Atrás</button>
                                         <button type="button" id="btnCrearArea" class="btn btn-success btn-block me-2" 
-                                        (click)="crearArea()">Registrar</button>
+                                            [disabled]="!form.valid"(click)="crearArea()">Registrar</button>
                                     </div>    
                                 </div>
                             </form>

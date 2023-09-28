@@ -4,6 +4,7 @@ import { CargoService } from '../services/cargo.service';
 import { CookieService } from 'ngx-cookie-service';
 import { AreaService } from 'src/app/area/services/area.service';
 import { AuthService } from 'src/app/login/auth/auth.service';
+import swal from 'sweetalert';
 
 
 @Component({
@@ -29,7 +30,7 @@ export class CargoCrearComponent {
   }
 
   cargarAreas() {
-    this.areaService.listarArea(this.auth.obtenerHeader()).subscribe(
+    this.areaService.listar(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
         this.areas = data;
     },
@@ -44,7 +45,6 @@ export class CargoCrearComponent {
       const nombre = this.form.get('nombre')?.value;
       const idAreaSeleccionado = parseFloat(this.form.get('idArea')?.value);
 
-      // Busca el objeto de área correspondiente según el idArea seleccionado
       const areaSeleccionada = this.areas.find(area =>  area.idArea === idAreaSeleccionado);
 
       if (nombre !== null && areaSeleccionada) {
@@ -53,12 +53,14 @@ export class CargoCrearComponent {
           idArea: areaSeleccionada.idArea,
         };
         // Luego, envía 'cargo' al backend usando tu servicio.
-        this.cargoService.crearCargo(cargo,this.auth.obtenerHeader()).subscribe(
+        this.cargoService.crear(cargo,this.auth.obtenerHeader()).subscribe(
           (response) => {
+            swal("Creado Satisfactoriamente", 'El area con el nombre ' + this.form.value.nombre + ', se ha creado!!', "success");
+            this.form.reset();
             console.log(response);
           },
           (error) => {
-            console.error("Error en la solicitud al backend:", error);
+            swal("Error en la solicitud al backend:", error.error.mensajeTecnico);
           }
         );
       }

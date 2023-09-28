@@ -3,6 +3,7 @@ import { UsuarioService } from '../services/usuario.service';
 import { CargoService } from 'src/app/cargo/services/cargo.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/login/auth/auth.service';
+import swal from 'sweetalert';
 
 @Component({
   selector: 'app-root',
@@ -33,7 +34,7 @@ export class UsuarioCrearComponent {
   }
 
   cargarCargos() {
-    this.cargoService.listarCargo(this.auth.obtenerHeader()).subscribe(
+    this.cargoService.listar(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
         this.cargos = data;
     },
@@ -44,7 +45,6 @@ export class UsuarioCrearComponent {
   }
 
   crearUsuario() {
-    console.log(this.form.value);
     if (this.form.valid) {
       const usuarioData = {
         nombre: this.form.get('nombre')?.value,
@@ -61,11 +61,12 @@ export class UsuarioCrearComponent {
 
       this.usuarioService.crearUsuario(usuarioData,this.auth.obtenerHeader()).subscribe(
         (response) => {
+          swal("Creado Satisfactoriamente", 'El area con el nombre ' + this.form.value.nombre + this.form.value.apellido + ', se ha creado!!', "success");
+            this.form.reset();
           console.log(response);
         },
         (error) => {
-          console.error("Error en la solicitud al backend:", error);
-          // Maneja el error de manera adecuada
+          swal(error.error.mensajeHumano,"warning");
         }
       );
     }

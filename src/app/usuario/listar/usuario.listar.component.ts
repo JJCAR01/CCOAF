@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { UsuarioService } from '../services/usuario.service';
 import { AuthService } from 'src/app/login/auth/auth.service';
+import swal from 'sweetalert';
 
 @Component({
   selector: 'app-root',
@@ -24,20 +25,22 @@ export class UsuarioListarComponent {
           this.usuarios = data; // Asigna la respuesta del servicio al arreglo de áreas
         },
         (error) => {
-          console.error(error);
+          swal(error.error.mensajeTecnico);
         }
       );
     }
 
     eliminarUsuario(idUsuario: number) {
+      const usuarioAEliminar = this.usuarios.find(usuario => usuario.idUsuario === idUsuario);
       this.usuarioService.eliminarUsuario(idUsuario, this.auth.obtenerHeader()).subscribe(
         (response) => {
-          // Realizar acciones después de eliminar el usuario, si es necesario
-          console.log('Usuario eliminado con éxito', response);
+          swal("Eliminado Satisfactoriamente", "El usuario con el nombre " + usuarioAEliminar.nombre + ", se ha eliminado!", "success").then(() => {
+            window.location.reload();
+          });
+          console.log(response);      
         },
         (error) => {
-          // Manejar errores, si es necesario
-          console.error('Error al eliminar el usuario', error);
+          swal("Solicitud no válida",error.error.mensajeHumano,"error");
         }
       );
     }

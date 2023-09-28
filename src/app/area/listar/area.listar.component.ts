@@ -27,25 +27,31 @@ export class AreaListarComponent implements OnInit {
 
   cargarAreas() {
     this.areaService
-      .listarArea(this.auth.obtenerHeader()) // Pasa las cabeceras con el token JWT en la solicitud
+      .listar(this.auth.obtenerHeader()) // Pasa las cabeceras con el token JWT en la solicitud
       .toPromise()
       .then(
         (data: any) => {
           this.areas = data; 
         },
         (error) => {
-          console.error(error);
+          swal(error.error.mensajeTecnico)
         }
       );
   }
   eliminarArea(idArea: number) {
-    this.areaService.eliminarPat(idArea,this.auth.obtenerHeader()).subscribe(
+    const areaAEliminar = this.areas.find(area => area.idArea === idArea);
+    this.areaService.eliminar(idArea,this.auth.obtenerHeader()).subscribe(
       (response) => {
-        swal("Eliminado Satisfactoriamente", "El area con el nombre " + response + ", se ha eliminado!", "success");
+        swal("Eliminado Satisfactoriamente", "El area con el nombre " + areaAEliminar.nombre + ", se ha eliminado!", "success").then(() => {
+          window.location.reload();
+        });
+        console.log(response);
       },
       (error) => {
-        console.error('Error al eliminar el usuario', error);
+        swal(error.error.mensajeTecnico,"error");
       }
     );
   }
+
+
 }

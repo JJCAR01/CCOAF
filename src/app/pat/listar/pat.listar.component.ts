@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { PatService } from '../services/pat.service';
 import { AuthService } from 'src/app/login/auth/auth.service';
+import swal from 'sweetalert';
 
 @Component({
   selector: 'app-root',
@@ -22,20 +23,23 @@ export class PatListarComponent {
       this.patService.listarPat(this.auth.obtenerHeader()).toPromise().then(
         (data: any) => {
           this.pats = data;
-          console.log('Pts cargados:', this.pats);
         },
         (error) => {
-          console.error(error);
+          swal(error.error.mensajeTecnico);
         }
       );
     }
     eliminarPat(idPat: number) {
+      const patAEliminar = this.pats.find(pat => pat.idPat === idPat);
       this.patService.eliminarPat(idPat,this.auth.obtenerHeader()).subscribe(
         (response) => {
-          console.log('Usuario eliminado con éxito', response);
+          swal("Eliminado Satisfactoriamente", "El usuario con el nombre " + patAEliminar.nombre + ", se ha eliminado!", "success").then(() => {
+            window.location.reload();
+          });
+          console.log(response); 
         },
         (error) => {
-          console.error('Error al eliminar el usuario', error);
+          swal("Solicitud no válida",error.error.mensajeHumano,"error");
         }
       );
     }

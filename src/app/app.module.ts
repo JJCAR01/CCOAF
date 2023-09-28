@@ -26,6 +26,8 @@ import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import { BuscarPipe } from 'src/pipes/buscar.pipes';
 import { LineaEstrategicaComponent } from './linea.estrategica/listar/linea.estrategica.component';
+import swal from 'sweetalert';
+
 
 
 @NgModule({
@@ -43,6 +45,7 @@ import { LineaEstrategicaComponent } from './linea.estrategica/listar/linea.estr
     FormsModule,
     ReactiveFormsModule,
     SocialLoginModule,GoogleSigninButtonModule, 
+    
     ],
   providers: [
     {

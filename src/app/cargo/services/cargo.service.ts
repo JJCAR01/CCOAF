@@ -11,12 +11,15 @@ export class CargoService {
   constructor(private http: HttpClient, private cookies:CookieService) {
   }
 
-  crearCargo(cargo : any,headers?: HttpHeaders){
+  crear(cargo : any,headers?: HttpHeaders){
     return this.http.post(`${environment.apiUrl}/ccoa/cargos`,cargo,{headers});
   }
 
-  listarCargo(headers?: HttpHeaders){
+  listar(headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/cargos`,{headers});
+  }
+  eliminar(idCargo:number,headers?: HttpHeaders){
+    return this.http.delete(`${environment.apiUrl}/ccoa/cargos/${idCargo}`,{headers});
   }
 
 }

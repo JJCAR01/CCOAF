@@ -29,8 +29,8 @@ export class AreaCrearComponent {
       nombre: nombre,
     };
     
-    this.areaService.crearArea(body,this.auth.obtenerHeader()).toPromise().then(response =>{
-      swal("Creado Satisfactoriamente", 'El area con el nombre' +this.form.value.nombre + 'se ha creado!!', "success");
+    this.areaService.crear(body,this.auth.obtenerHeader()).toPromise().then(response =>{
+      swal("Creado Satisfactoriamente", 'El area con el nombre ' +this.form.value.nombre + ', se ha creado!!', "success");
       this.form.reset();
     },error =>{
       swal("Error al Crear " + this.form.value.nombre , error.error.mensajeTecnico , "error");

@@ -2,6 +2,7 @@ import { Component ,OnInit } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
 import { LoginService } from './services/login.service';
 import jwt_decode from "jwt-decode";
+import swal from 'sweetalert';
 
 import { GoogleLoginProvider, SocialAuthService,SocialUser } from '@abacritt/angularx-social-login';
 
@@ -98,12 +99,9 @@ export class LoginComponent implements OnInit {
           alert("Operador")
           this.router.navigate(["/panelUsuario"]);
         }
-        
-      } else {
-        console.log("No se recibió una respuesta válida del servidor.");
-      }
+      } 
     },error =>{
-      console.log(error);
+      swal('Por favor intente de nuevo',error.error.mensajeTecnico,'warning')
     } )
   }
 }

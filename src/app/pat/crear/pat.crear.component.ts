@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UsuarioService } from 'src/app/usuario/services/usuario.service';
 import { PatService } from '../services/pat.service';
 import { AuthService } from 'src/app/login/auth/auth.service';
+import swal from 'sweetalert';
 
 @Component({
   selector: 'app-root',
@@ -60,10 +61,12 @@ export class PatCrearComponent {
         // Luego, envía 'cargo' al backend usando tu servicio.
         this.patService.crearPat(cargo,this.auth.obtenerHeader()).subscribe(
           (response) => {
+            swal("Creado Satisfactoriamente", 'El PAT con el nombre ' + this.form.value.nombre + ', se ha creado!!', "success");
+            this.form.reset();
             console.log(response);
           },
           (error) => {
-            console.error("Error en la solicitud al backend:", error);
+            swal(error.error.mensajeTecnico,"warning");
           }
         );
       }
