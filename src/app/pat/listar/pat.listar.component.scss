@@ -1,3 +1,7 @@
+.body{
+    font-family: "Roboto",serif;
+}
+
 .porcentajes .contenedor {
     box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.2);
 }
@@ -31,10 +35,16 @@
     text-align: center;
 }
 h1 {
-    font-family: 'Roboto', serif  ;
+    background-color: #504f4f;
+    color: #e7e5e5;
+    padding: 5px;
+    margin: 0;
+    text-align: center;
 }
+  
+  
 h2 {
-    font-family: "Gill Sans Extrabold", fantasy;
+    font-family: "Roboto", cursive;
 }
 
 /* Estilos para el elemento .smaller-main */
@@ -52,4 +62,31 @@ h2 {
 }
 .custom-button {
     color: #fff; /* Cambia #your-desired-color por el color que desees */
+}
+
+
+.registro-pat {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #fff;
+  }
+  
+  .tabla-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .tabla {
+    text-align: left;
+    flex: 1;
+    padding: 10px;
+  }
+  
+  /* Estilos para los botones */
+  .custom-button {
+    width: auto; /* Los botones ocuparán todo el ancho de su contenedor */
   }

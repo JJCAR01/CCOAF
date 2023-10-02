@@ -1,19 +1,36 @@
 body{
     background: #ffffff;
     font-size: 16px;
-    font-family: 'Open Sans',sans-serif;
+    font-family: 'Roboto';
 }
-/*---Barra Lateral--*/
+.main {
+    justify-content: space-between;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    h3 {
+        margin: 0;
+        text-align: center;
+        font-family: 'Roboto',monospace;
+    }
+}
+button {
+    margin-left: auto; /* Mueve el botón a la derecha */
+}
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 .barra-lateral{
-    background: #ebeeeb;
-    color: #40a191;
+    background: #f1f5f4b0;
+    color: #768180;
     min-width: 300px;
     min-height: 100vh;
     padding: 0;
 }
 .barra-lateral a{
     color: #000000;
-    text-align: center;
+    text-align: left;
 }
 .barra-lateral h2{
 
@@ -22,11 +39,12 @@ body{
     margin: 0 auto;
 }
 .barra-lateral .menu a{
+    text-decoration: none;
     display: block;
     padding: 20px;
-    font-family: "Trebuchet MS", Verdana, sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: 500;
-    border-bottom: 1px solid rgba(255,255,255,.1);
+    border-bottom: 1px solid rgba(1, 15, 17, 0.1);
 }
 .barra-lateral .logo {
     display: flex;
@@ -38,8 +56,9 @@ body{
 }
 
 .barra-lateral .menu a:hover{
-    background: #a9d1a9;
+    background: #c5c4c4;
 }
+
 
 .icon-home::before {
     font-size: 24px; /* Cambia el tamaño de los iconos a 24px */
@@ -56,9 +75,6 @@ body{
     font-weight: normal;
     width: 20px;
 }
-.main {
-    margin-top: 10px; /* Añade un espacio superior de 20 píxeles (ajusta el valor según tus necesidades) */
-} 
 
 /*---QUERIES--*/
 @media screen and (max-width:1000px){

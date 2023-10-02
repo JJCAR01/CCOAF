@@ -19,33 +19,34 @@
         <div class="row">
             <div class="barra-lateral col-12 col-sm-auto">
                 <div class="logo">
-                    <img src="/assets/logo.jpg" width="200mp" alt="logo" id="logo">
+                    <img src="/assets/logo.png" width="200mp" alt="logo" id="logo">
                 </div>
                 <nav class="menu d-flex d-sm-block justify-content-center flex-wrap">
                     <a [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarPat'] } }]">
-                        <span>PAT</span>
+                        <span>Plan anual de trabajo</span>
                     </a>                  
                 </nav>
             </div> 
-            
             <main class="main col" id="main-content">
                 
-                <div class="main" style="display: flex; align-items: center; justify-content: space-between;">
-                    <h3 class="text-center">Camara de Comercio del Oriente Antioqueño - Planeación estratégica</h3>
-                    <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
-                            <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
-                          </svg>
-                    </button>
-                </div>
-                <div class="modal fade" id="exampleModal"  aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog ">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-footer" id="exampleModalLabel">Deseas Cerrar la sesión? </h5>                                    
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                                    <button class="btn btn-danger" data-bs-dismiss="modal" (click)="logOut()">Salir</button>
+                <div class="main">
+                    <div class="header">
+                        <h3>Planeación estratégica</h3>
+                        <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+                                <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="modal fade" id="exampleModal"  aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog ">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-footer" id="exampleModalLabel">Deseas Cerrar la sesión? </h5>                                    
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                                        <button class="btn btn-danger" data-bs-dismiss="modal" (click)="logOut()">Salir</button>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <link rel="stylesheet" type="text/css" href="cargo.crear.component.scss">
+    <link rel="stylesheet" type="text/css" href="gestion.crear.component.scss">
 </head>
 <body>
 
@@ -12,22 +12,22 @@
                 <div class="col-12 col-md-9 col-lg-7 col-xl-6">
                     <div class="card" style="border-radius: 100px">
                         <div class="card-body p-5">
-                            <h2 class="mb-5">Crear cargo</h2>
+                            <h2 class="text-uppercase text-center mb-5">Crear cargo</h2>
 
-                            <form [formGroup]="form" (ngSubmit)="crearCargo()">
+                            <form [formGroup]="form" (ngSubmit)="crearGestion()">
                                 <div class="form-outline mb-3">
-                                    <label class="form-label mb-10 me-3" for="idArea">Selecciona el area : </label>    
-                                    <select id="idArea" formControlName="idArea" class="btn btn-secondary dropdown-toggle">
-                                        <option *ngFor="let area of areas" [value]="area.idArea">{{area.nombre }}</option>
+                                    <label class="form-label mb-10 me-3" for="idPat">Selecciona el Pat : </label>    
+                                    <select id="idPat" formControlName="idPat" class="btn btn-secondary dropdown-toggle">
+                                        <option *ngFor="let pat of pats" [value]="pat.idPat">{{pat.nombre }}</option>
                                       </select>                                      
                                 </div>
                                 <div class="form-outline mb-1">
                                   <input type="text" id="form3Example1cg" class="form-control form-control-lg" formControlName="nombre" />
-                                  <label class="form-label" for="form3Example1cg">Nombre Cargo</label>
+                                  <label class="form-label" for="form3Example1cg">Nombre de la gestión</label>
                                 </div>
                                 <div class="d-flex justify-content-center">
                                     <button type="button" class="btn btn-secondary btn-block me-2"
-                                            [routerLink]="['/panelAdmin', { outlets: { 'OutletAdmin': ['listarCargo'] } }]"
+                                            [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarPat'] } }]"
                                             >Atrás</button>
                                     <button type="submit" class="btn btn-success btn-block btn-lg" [disabled]="!form.valid">Registrar</button>
                                 </div>

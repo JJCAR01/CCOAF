@@ -1,0 +1,16 @@
+  .tabla-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .table {
+    text-align: left;
+    flex: 1;
+    padding: 10px;
+  }
+  
+  /* Estilos para los botones */
+  .custom-button {
+    width: auto; /* Los botones ocuparán todo el ancho de su contenedor */
+  }

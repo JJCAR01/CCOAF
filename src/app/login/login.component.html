@@ -8,19 +8,19 @@
               <div class="card-body p-md-5 mx-md-4">
 
                 <div class="text-center">
-                  <img src="/assets/logo.jpg" width="200mp" alt="logo" id="logo">
+                  <img src="/assets/logo.png" width="200mp" alt="logo" id="logo">
                   <h4 class="mt-1 mb-5 pb-1">Planeación estratégica CCOA</h4>
                 </div>
                 <div class="text-left mb-2" >
-                  <p>Entrar directamente con el correo corporativo</p>
+                  <p>Ingresar con el correo corporativo</p>
                     <asl-google-signin-button (click)="loginWithGoogle()" size = "medium"  type="standard" shape="circle" >
                     </asl-google-signin-button>
                 </div>
                 <form [formGroup]="form" (ngSubmit)="login()">
                   
-                  <p class="text-center"> Ó</p>
+                  <p class="text-center"></p>
 
-                  <p>Ingrese su cuenta:</p>
+                  <p>Ingresar con cuenta asignada:</p>
                     <div class="form-outline mb-4">
                       <input type="email" id="correo" class="form-control"
                       formControlName="correo"  name="correo"
@@ -42,11 +42,14 @@
                   
 
                   <div class="d-flex align-items-center justify-content-center pb-4">
+                    <div>
                     <p class="mb-0 me-2">¿No tengo cuenta?</p>
-                    <div id="liveAlertPlaceholder"></div>
-                    <button class="btn info" onclick="alert('Por favor contactese con el administrador, dirigiendose a la mesa de ayuda para generar el Ticket');">
-                       Crear
+                  </div>
+                    <div>
+                    <button class="btn info" (click)="solicitar()">
+                       Solicitar
                     </button>
+                  </div>
                   </div>
 
                   

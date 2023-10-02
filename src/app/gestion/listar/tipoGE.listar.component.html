@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="tipoGE.listar.component.scss">
+</head>
+<body>
+  <div  class="row-with-button">
+    <div >
+      <h1 *ngFor="let pat of pats" class="mb-2"> {{ pat.nombre }} </h1>
+    </div>
+    <div class="text-center">
+      <span>
+        <button 
+          type="button" class="btn btn-success">
+          Crear Nuevo
+        </button>
+      </span>
+    </div>
+  </div>
+    
+  <main class="main text-center smaller-main">
+    <table class="table-epica table-bordered">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Duracion dias</th>
+
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let epica of epicas | buscar: busqueda">
+          <tr>
+            <td>{{ epica.nombre }}</td>
+            <td>{{ epica.duracion }}</td>
+            
+            <td>
+              <button class="btn btn-info custom-button me-1" 
+              >Ver detalle</button>
+              <button class="btn btn-primary custom-button">Modificar</button>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+    
+    <table class="table-gestion table-bordered">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let pat of gestiones | buscar: busqueda">
+          <tr>
+            <td>{{ pat.nombre }}</td>
+            
+            <td>
+              <button class="btn btn-info custom-button me-1" 
+              >Ver detalle</button>
+              <button class="btn btn-danger custom-button me-1" (click)="eliminarGestion(pat.idPat)">Eliminar</button>
+              <button class="btn btn-primary custom-button">Modificar</button>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </main>
+  
+</body>
+</html>

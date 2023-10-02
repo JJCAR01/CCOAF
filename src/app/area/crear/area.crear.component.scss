@@ -6,5 +6,23 @@
   }
 
   .abs-abajo {
-    min-height: 10vh;
+    min-height: 15vh;
   }
+
+  body {
+    font-family: 'Roboto',serif;
+    margin: 0;
+    padding: 0;
+}
+h2 {
+  border-radius: 50px;
+  text-align: center;
+  background-color: #504f4f;
+  color: #e7e5e5;
+  padding: 10px;
+  margin: 0;
+}
+.form-label {
+  text-align: right;
+  font-family: 'Roboto',monospace;
+}

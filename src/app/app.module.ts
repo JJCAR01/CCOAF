@@ -20,12 +20,12 @@ import { AreaCrearComponent } from './area/crear/area.crear.component';
 import { AreaListarComponent } from './area/listar/area.listar.component';
 import { PatListarComponent } from './pat/listar/pat.listar.component';
 import { PatCrearComponent } from './pat/crear/pat.crear.component';
-import { ImperativoEstrategicoListarComponent } from './imperativo.estrategico/listar/imperativo.estrategico.component';
+import { TipogeListarComponent } from './gestion/listar/tipoGE.listar.component';
 
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import { BuscarPipe } from 'src/pipes/buscar.pipes';
-import { LineaEstrategicaComponent } from './linea.estrategica/listar/linea.estrategica.component';
+import { EnumPipe } from 'src/pipes/enum.pipes';
 import swal from 'sweetalert';
 
 
@@ -33,8 +33,8 @@ import swal from 'sweetalert';
 @NgModule({
   declarations: [
     AppComponent,LoginComponent,PanelAdminComponent,AreaCrearComponent,AreaListarComponent,PanelUsuarioComponent,
-    CargoCrearComponent,CargoListarComponent,UsuarioCrearComponent,UsuarioListarComponent, BuscarPipe,PatListarComponent,
-    ImperativoEstrategicoListarComponent, LineaEstrategicaComponent,PatCrearComponent
+    CargoCrearComponent,CargoListarComponent,UsuarioCrearComponent,UsuarioListarComponent, BuscarPipe,EnumPipe,PatListarComponent,
+    PatCrearComponent,TipogeListarComponent
   ],
   imports: [
     BrowserModule,
@@ -44,7 +44,7 @@ import swal from 'sweetalert';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    SocialLoginModule,GoogleSigninButtonModule, 
+    SocialLoginModule,GoogleSigninButtonModule
     
     ],
   providers: [

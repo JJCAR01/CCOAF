@@ -38,3 +38,32 @@
         border-color: #007bff; /* Cambiar el color del borde cuando el input está seleccionado */
         color: #552a2a; /* Cambiar el color del texto cuando el input está seleccionado */
     }
+
+    .abs-center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 10vh;
+      }
+    
+      .abs-abajo {
+        min-height: 15vh;
+      }
+    
+      body {
+        font-family: 'Roboto',serif;
+        margin: 0;
+        padding: 0;
+    }
+    h2 {
+      border-radius: 50px;
+      text-align: center;
+      background-color: #504f4f;
+      color: #e7e5e5;
+      padding: 10px;
+      margin: 0;
+    }
+    .form-label {
+      text-align: left;
+      font-family: 'Roboto',monospace;
+    }

@@ -104,4 +104,8 @@ export class LoginComponent implements OnInit {
       swal('Por favor intente de nuevo',error.error.mensajeTecnico,'warning')
     } )
   }
+
+  solicitar(){
+    swal('Solicitar acceso', "Por favor contactese con el administrador, dirigiendose a la mesa de ayuda para generar el Ticket")
+  }
 }

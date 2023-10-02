@@ -12,8 +12,8 @@ import { PanelUsuarioComponent } from "./panel.usuario/panel.usuario.component";
 import { PanelAdminComponent } from "./panel.admin/panel.admin.component";
 import { PatCrearComponent } from './pat/crear/pat.crear.component';
 import { PatListarComponent } from './pat/listar/pat.listar.component';
-import { ImperativoEstrategicoListarComponent } from './imperativo.estrategico/listar/imperativo.estrategico.component';
-import { LineaEstrategicaComponent } from './linea.estrategica/listar/linea.estrategica.component';
+import { TipogeListarComponent } from './gestion/listar/tipoGE.listar.component';
+
 
 
 
@@ -34,10 +34,8 @@ const routes: Routes = [
   { path: "panelUsuario", component: PanelUsuarioComponent, 
   children:[
     { path: "crearPat", component: PatCrearComponent, outlet:"OutletUsuario"},
-    { path: "listarPat", component: PatListarComponent, outlet:"OutletUsuario"},
-    { path: "listarImperativo", component: ImperativoEstrategicoListarComponent, outlet:"OutletUsuario"},
-    { path: "listarLinea", component: LineaEstrategicaComponent, outlet:"OutletUsuario"},
-    
+    { path: "listarPat", component: PatListarComponent, outlet:"OutletUsuario"},  
+    { path: "listarTipoGE", component: TipogeListarComponent, outlet:"OutletUsuario"},    
   ] },
 
 ];
