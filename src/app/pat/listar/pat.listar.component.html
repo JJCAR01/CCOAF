@@ -24,10 +24,10 @@
     <table class="table table-bordered">
       <thead>
         <tr>
-          <th>Nombre</th>
-          <th>Fecha Anual</th>
+          <th>Programa</th>
+          <th>Año</th>
           <th>Proceso</th>
-          <th>Porcentaje</th>
+          <th>Porcentaje avance</th>
           <th>Responsable</th>
           <th>Acciones</th>
         </tr>
@@ -43,7 +43,7 @@
             
             <td>
               <button class="btn btn-info custom-button me-1" 
-              [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarTipoGE'] } }]"
+              [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarTipoGE,pat.idPat'] } }]"
               >Ver detalle</button>
               <button class="btn btn-danger custom-button me-1" (click)="eliminarPat(pat.idPat)">Eliminar</button>
               <button class="btn btn-primary custom-button">Modificar</button>

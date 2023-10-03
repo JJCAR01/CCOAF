@@ -60,10 +60,6 @@ export class PatListarComponent {
       );
     }
 
-    verDetalle(idPat: number) {
-      this.mostrarDetalle[idPat] = !this.mostrarDetalle[idPat];
-    }
-
     obtenerNombreUsuario(idUsuario: number) {
       const usuario = this.usuarios.find((u) => u.idUsuario === idUsuario);
       return usuario ? usuario.nombre + " " + usuario.apellidos : '';

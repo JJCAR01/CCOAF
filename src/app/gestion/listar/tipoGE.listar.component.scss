@@ -1,16 +1,60 @@
-  .tabla-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .table {
-    text-align: left;
-    flex: 1;
-    padding: 10px;
-  }
-  
-  /* Estilos para los botones */
-  .custom-button {
-    width: auto; /* Los botones ocuparán todo el ancho de su contenedor */
-  }
+.body{
+  font-family: "Roboto",serif;
+}
+
+h1 {
+  background-color: #504f4f;
+  color: #e7e5e5;
+  padding: 5px;
+  margin: 0;
+  text-align: center;
+}
+
+
+h2 {
+  font-family: "Roboto", cursive;
+}
+
+/* Estilos para el elemento .smaller-main */
+.smaller-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh; /* Establece la altura deseada */
+}
+
+.smaller-main .porcentajes {
+  width: 20%; /* Establece el ancho deseado */
+  max-width: flex; /* Establece el ancho máximo deseado */
+}
+.custom-button {
+  color: #fff; /* Cambia #your-desired-color por el color que desees */
+}
+
+
+.registro-pat {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #fff;
+}
+
+.tabla-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tabla-epica {
+  text-align: left;
+  flex: 1;
+  padding: 10px;
+}
+
+/* Estilos para los botones */
+.custom-button {
+  width: auto; /* Los botones ocuparán todo el ancho de su contenedor */
+}

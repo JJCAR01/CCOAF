@@ -3,6 +3,7 @@ import { AuthService } from 'src/app/login/auth/auth.service';
 import swal from 'sweetalert';
 import { TipoGEService } from '../services/tipoGE.service';
 import { PatService } from 'src/app/pat/services/pat.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-root:not(p)',
@@ -14,11 +15,12 @@ export class TipogeListarComponent implements OnInit {
   gestiones: any[] = [];
   epicas:any[] = [];
   pats:any[]=[];
+  idPat:any;
   busqueda: any;
 
   constructor(
     private gestionService: TipoGEService,
-    private auth: AuthService,private patService:PatService
+    private auth: AuthService,private patService:PatService, private route:ActivatedRoute
   ) {}
 
   ngOnInit() {
@@ -26,6 +28,21 @@ export class TipogeListarComponent implements OnInit {
       this.cargarGestiones();
       this.cargarPats();
       this.cargarEpicas();
+      this.route.params.subscribe(params => {
+        this.idPat = params['idPat'];
+  
+        // Obtener las gestiones relacionadas con el idPat
+        this.gestionService.listarGestionPorId(this.idPat,this.auth.obtenerHeader()).toPromise().then(
+          (data: any) => {
+            this.gestiones = data;
+          });
+  
+        // Obtener las épicas relacionadas con el idPat
+        this.gestionService.listarEpicaPorId(this.idPat,this.auth.obtenerHeader()).toPromise().then(
+          (data: any) => {
+            this.epicas = data;
+          });
+      });
     }
   }
   cargarPats() {
