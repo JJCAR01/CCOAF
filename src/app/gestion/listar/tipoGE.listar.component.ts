@@ -13,38 +13,36 @@ import { ActivatedRoute } from '@angular/router';
 export class TipogeListarComponent implements OnInit {
   title = 'listarTipoGE';
   gestiones: any[] = [];
-  epicas:any[] = [];
-  pats:any[]=[];
-  idPat:any;
+  epicas: any[] = [];
+  pats: any[] = [];
+  patNombre:any;
   busqueda: any;
 
   constructor(
     private gestionService: TipoGEService,
-    private auth: AuthService,private patService:PatService, private route:ActivatedRoute
+    private auth: AuthService,
+    private patService: PatService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
-    if (this.auth.isAuthenticated()) {
-      this.cargarGestiones();
-      this.cargarPats();
-      this.cargarEpicas();
-      this.route.params.subscribe(params => {
-        this.idPat = params['idPat'];
-  
-        // Obtener las gestiones relacionadas con el idPat
-        this.gestionService.listarGestionPorId(this.idPat,this.auth.obtenerHeader()).toPromise().then(
-          (data: any) => {
-            this.gestiones = data;
-          });
-  
-        // Obtener las épicas relacionadas con el idPat
-        this.gestionService.listarEpicaPorId(this.idPat,this.auth.obtenerHeader()).toPromise().then(
-          (data: any) => {
-            this.epicas = data;
-          });
-      });
-    }
+    // Obtén el valor de idPat de la URL
+    this.route.params.subscribe(params => {
+      const idPat = params['idPat'];
+      this.patService.listarPatPorId(idPat,this.auth.obtenerHeader()).subscribe(
+        (data: any) => {
+          this.patNombre = data.nombre; // Asignar el nombre del Pat a patNombre
+        },
+        (error) => {
+          // Manejo de errores
+        }
+      );
+
+      this.cargarGestiones(idPat);
+      this.cargarEpicas(idPat);
+    });
   }
+
   cargarPats() {
     this.patService.listarPat(this.auth.obtenerHeader()).toPromise().then(
       (data: any) => {
@@ -56,47 +54,54 @@ export class TipogeListarComponent implements OnInit {
     );
   }
 
-  cargarGestiones() {
+  cargarGestiones(idPat: number) {
+    // Utiliza idPat en tu solicitud para cargar las gestiones relacionadas
     this.gestionService
-      .listarGestion(this.auth.obtenerHeader()) // Pasa las cabeceras con el token JWT en la solicitud
+      .listarGestionPorIdPat(idPat, this.auth.obtenerHeader()) // Debes tener un método en tu servicio para listar gestiones por idPat
       .toPromise()
       .then(
         (data: any) => {
-          this.gestiones = data; 
+          this.gestiones = data;
         },
         (error) => {
-          swal(error.error.mensajeTecnico)
+          swal(error.error.mensajeTecnico);
         }
       );
   }
-  cargarEpicas() {
+
+  cargarEpicas(idPat: number) {
+    // Utiliza idPat en tu solicitud para cargar las epicas relacionadas
     this.gestionService
-      .listarEpica(this.auth.obtenerHeader()) // Pasa las cabeceras con el token JWT en la solicitud
+      .listarEpicaPorIdPat(idPat, this.auth.obtenerHeader()) // Debes tener un método en tu servicio para listar epicas por idPat
       .toPromise()
       .then(
         (data: any) => {
-          this.epicas = data; 
+          this.epicas = data;
         },
         (error) => {
-          swal(error.error.mensajeTecnico)
+          swal(error.error.mensajeTecnico);
         }
       );
   }
-  
+
   eliminarGestion(idGestion: number) {
-    const gestionEliminar = this.gestiones.find(gestion => gestion.idGestion === idGestion);
-    this.gestionService.eliminarGestion(idGestion,this.auth.obtenerHeader()).subscribe(
+    const gestionEliminar = this.gestiones.find(
+      (gestion) => gestion.idGestion === idGestion
+    );
+    this.gestionService.eliminarGestion(idGestion, this.auth.obtenerHeader()).subscribe(
       (response) => {
-        swal("Eliminado Satisfactoriamente", "La gestión con el nombre " + gestionEliminar.nombre + ", se ha eliminado!", "success").then(() => {
+        swal(
+          "Eliminado Satisfactoriamente",
+          "La gestión con el nombre " + gestionEliminar.nombre + ", se ha eliminado!",
+          "success"
+        ).then(() => {
           window.location.reload();
         });
         console.log(response);
       },
       (error) => {
-        swal(error.error.mensajeTecnico,"error");
+        swal(error.error.mensajeTecnico, "error");
       }
     );
   }
-
-
 }

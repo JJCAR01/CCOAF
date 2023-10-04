@@ -43,8 +43,9 @@
             
             <td>
               <button class="btn btn-info custom-button me-1" 
-              [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarTipoGE,pat.idPat'] } }]"
-              >Ver detalle</button>
+              [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarTipoGE', pat.idPat] } }]"
+                >Ver detalle</button>
+
               <button class="btn btn-danger custom-button me-1" (click)="eliminarPat(pat.idPat)">Eliminar</button>
               <button class="btn btn-primary custom-button">Modificar</button>
             </td>

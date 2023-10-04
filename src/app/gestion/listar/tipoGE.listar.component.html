@@ -8,7 +8,7 @@
 <body>
   <div  class="row-with-button">
     <div >
-      <h1 *ngFor="let pat of pats" class="mb-2"> {{ pat.nombre }} </h1>
+      <h1  class="mb-2"> {{ patNombre }} </h1>
     </div>
     <div class="text-center">
       <span>
@@ -26,7 +26,7 @@
         <tr>
           <th>Nombre</th>
           <th>Duracion dias</th>
-
+          <th>Pat</th>
         </tr>
       </thead>
       <tbody>
@@ -34,7 +34,7 @@
           <tr>
             <td>{{ epica.nombre }}</td>
             <td>{{ epica.duracion }}</td>
-            
+            <td>{{ epica.idPat }}</td>
             <td>
               <button class="btn btn-info custom-button me-1" 
               >Ver detalle</button>
@@ -49,17 +49,18 @@
       <thead>
         <tr>
           <th>Nombre</th>
+          <th>Pat</th>
         </tr>
       </thead>
       <tbody>
-        <ng-container *ngFor="let pat of gestiones | buscar: busqueda">
+        <ng-container *ngFor="let gestion of gestiones | buscar: busqueda">
           <tr>
-            <td>{{ pat.nombre }}</td>
-            
+            <td>{{ gestion.nombre }}</td>
+            <td>{{ gestion.idPat }}</td>
             <td>
               <button class="btn btn-info custom-button me-1" 
               >Ver detalle</button>
-              <button class="btn btn-danger custom-button me-1" (click)="eliminarGestion(pat.idPat)">Eliminar</button>
+              <button class="btn btn-danger custom-button me-1" (click)="eliminarGestion(gestion.idPat)">Eliminar</button>
               <button class="btn btn-primary custom-button">Modificar</button>
             </td>
           </tr>

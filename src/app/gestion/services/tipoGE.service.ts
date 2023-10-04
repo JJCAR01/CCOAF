@@ -23,11 +23,17 @@ export class TipoGEService {
   listarGestionPorId(idGestion:number,headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/gestiones/${idGestion}`,{headers});
   }
+  listarGestionPorIdPat(idPat:number,headers?: HttpHeaders){
+    return this.http.get(`${environment.apiUrl}/ccoa/gestiones/pat/${idPat}`,{headers});
+  }
   listarEpica(headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/epicas`,{headers});
   }
   listarEpicaPorId(idEpica:number,headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/epicas/${idEpica}`,{headers});
+  }
+  listarEpicaPorIdPat(idPat:number,headers?: HttpHeaders){
+    return this.http.get(`${environment.apiUrl}/ccoa/epicas/pat/${idPat}`,{headers});
   }
 
   eliminarGestion(idGestion:number,headers?: HttpHeaders){

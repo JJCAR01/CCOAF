@@ -34,8 +34,9 @@ const routes: Routes = [
   { path: "panelUsuario", component: PanelUsuarioComponent, 
   children:[
     { path: "crearPat", component: PatCrearComponent, outlet:"OutletUsuario"},
-    { path: "listarPat", component: PatListarComponent, outlet:"OutletUsuario"},  
-    { path: "listarTipoGE/:idPat", component: TipogeListarComponent, outlet:"OutletUsuario"},    
+    { path: "listarPat", component: PatListarComponent, outlet:"OutletUsuario"},   
+    { path: "listarTipoGE/:idPat", component: TipogeListarComponent, outlet:"OutletUsuario" }
+   
   ] },
 
 ];

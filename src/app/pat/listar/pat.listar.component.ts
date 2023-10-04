@@ -3,6 +3,7 @@ import { PatService } from '../services/pat.service';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import swal from 'sweetalert';
 import { UsuarioService } from 'src/app/usuario/services/usuario.service';
+import { ActivatedRoute } from '@angular/router'
 
 @Component({
   selector: 'app-root',
@@ -16,13 +17,14 @@ export class PatListarComponent {
   busqueda: any;
   mostrarDetalle: { [idPat: number]: boolean } = {};
   
-    constructor(private patService: PatService,private auth:AuthService,private usuarioService:UsuarioService) { }  
+    constructor(private patService: PatService,private auth:AuthService,
+      private usuarioService:UsuarioService,
+      private activatedRoute: ActivatedRoute) { }  
 
     ngOnInit() {
       this.cargarPats();
       this.cargarUsuario();
     }
-
     cargarUsuario() {
       this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
         (data: any) => {
