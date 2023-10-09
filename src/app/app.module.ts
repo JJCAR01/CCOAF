@@ -21,12 +21,16 @@ import { AreaListarComponent } from './area/listar/area.listar.component';
 import { PatListarComponent } from './pat/listar/pat.listar.component';
 import { PatCrearComponent } from './pat/crear/pat.crear.component';
 import { TipogeListarComponent } from './gestion/listar/tipoGE.listar.component';
-
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import { BuscarPipe } from 'src/pipes/buscar.pipes';
 import { EnumPipe } from 'src/pipes/enum.pipes';
 import swal from 'sweetalert';
+import { ActividadCrearComponent } from './actividad/crear/actividad.crear.component';
+import { ActividadListarComponent } from './actividad/listar/actividad.listar.component';
+import { EpicaCrearComponent } from './gestion/crear/epica/epica.crear.component';
+import { GestionCrearComponent } from './gestion/crear/gestion/gestion.crear.component';
+
 
 
 
@@ -34,7 +38,7 @@ import swal from 'sweetalert';
   declarations: [
     AppComponent,LoginComponent,PanelAdminComponent,AreaCrearComponent,AreaListarComponent,PanelUsuarioComponent,
     CargoCrearComponent,CargoListarComponent,UsuarioCrearComponent,UsuarioListarComponent, BuscarPipe,EnumPipe,PatListarComponent,
-    PatCrearComponent,TipogeListarComponent
+    PatCrearComponent,TipogeListarComponent,ActividadCrearComponent, ActividadListarComponent, EpicaCrearComponent, GestionCrearComponent  
   ],
   imports: [
     BrowserModule,

@@ -39,15 +39,14 @@
             <td>{{ pat.fechaAnual }}</td>
             <td>{{ pat.proceso | formatEnum }}</td>
             <td>{{ pat.porcentaje }}%</td>
-            <td>{{ obtenerNombreUsuario(pat.idUsuario) }} </td>
+            <td >{{ obtenerNombreUsuario(pat.idUsuario).toUpperCase() }} </td>
             
             <td>
               <button class="btn btn-info custom-button me-1" 
               [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarTipoGE', pat.idPat] } }]"
                 >Ver detalle</button>
-
+              <button class="btn btn-primary custom-button me-1">Modificar</button>
               <button class="btn btn-danger custom-button me-1" (click)="eliminarPat(pat.idPat)">Eliminar</button>
-              <button class="btn btn-primary custom-button">Modificar</button>
             </td>
           </tr>
         </ng-container>

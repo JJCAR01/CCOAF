@@ -13,7 +13,9 @@ import { PanelAdminComponent } from "./panel.admin/panel.admin.component";
 import { PatCrearComponent } from './pat/crear/pat.crear.component';
 import { PatListarComponent } from './pat/listar/pat.listar.component';
 import { TipogeListarComponent } from './gestion/listar/tipoGE.listar.component';
-
+import { ActividadCrearComponent } from './actividad/crear/actividad.crear.component';
+import { ActividadListarComponent } from './actividad/listar/actividad.listar.component';
+import { GestionCrearComponent } from './gestion/crear/gestion/gestion.crear.component';
 
 
 
@@ -35,7 +37,10 @@ const routes: Routes = [
   children:[
     { path: "crearPat", component: PatCrearComponent, outlet:"OutletUsuario"},
     { path: "listarPat", component: PatListarComponent, outlet:"OutletUsuario"},   
-    { path: "listarTipoGE/:idPat", component: TipogeListarComponent, outlet:"OutletUsuario" }
+    { path: "listarTipoGE/:idPat", component: TipogeListarComponent, outlet:"OutletUsuario" },
+    { path: "crearGestion/:idPat", component: GestionCrearComponent, outlet:"OutletUsuario" },
+    { path: "crearActividad", component: ActividadCrearComponent, outlet:"OutletUsuario"}, 
+    { path: "listarActvidad", component: ActividadListarComponent , outlet:"OutletUsuario"}, 
    
   ] },
 

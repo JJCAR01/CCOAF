@@ -12,56 +12,76 @@
     </div>
     <div class="text-center">
       <span>
-        <button 
-          type="button" class="btn btn-success">
-          Crear Nuevo
-        </button>
+        
       </span>
     </div>
   </div>  
   <main class="main text-center smaller-main">
-    <h3>Epicas</h3>
+    <div class="header">
+      <button 
+        type="button" class="btn btn-success" onclick="abrirModal()">
+          Adicionar
+      </button> 
+      <h3> Epicas</h3>
+    </div>
     <table class="table table-bordered">
       <thead>
         <tr>
           <th>Nombre</th>
-          <th>Duracion dias</th>
+          <th>Fecha Inicial</th>
+          <th>Fecha Final</th>
+          <th>Duracion</th>
+          <th>Dias Restantes</th>
+          <th>Procentaje Avance</th>
           <th>Pat</th>
+          <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
         <ng-container *ngFor="let epica of epicas | buscar: busqueda">
           <tr>
             <td>{{ epica.nombre }}</td>
+            <td>{{ epica.fechaInicial }}</td>
+            <td>{{ epica.fechaFinal }}</td>
             <td>{{ epica.duracion }}</td>
-            <td>{{ epica.idPat }}</td>
-            <td>
+            <td>{{ epica.diasRestantes }}</td>
+            <td>{{ epica.avance }}</td>
+            <td>{{ patNombre }}</td>
+            <td class="hacialaderecha">
               <button class="btn btn-info custom-button me-1" 
-              >Ver detalle</button>
-              <button class="btn btn-primary custom-button">Modificar</button>
+              >Ver </button>
+              <button class="btn btn-primary custom-button me-1">Modificar</button>
+              <button class="btn btn-danger custom-button me-1" (click)="eliminarGestion(epica.idEpica)">Eliminar</button>
             </td>
           </tr>
         </ng-container>
       </tbody>
     </table>
-    <h3>Gestión del área</h3>
+    <div class="header">
+      <button 
+        type="button" class="btn btn-success" onclick="abrirModal()">
+          Adicionar
+      </button>
+      <h3>Gestión del área</h3>
+    </div>
     <table class="table table-bordered">
       <thead>
         <tr>
           <th>Nombre</th>
           <th>Pat</th>
+          <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
         <ng-container *ngFor="let gestion of gestiones | buscar: busqueda">
           <tr>
             <td>{{ gestion.nombre }}</td>
-            <td>{{ gestion.idPat }}</td>
-            <td>
+            <td>{{ patNombre }}</td>
+            <td class="hacialaderecha">
               <button class="btn btn-info custom-button me-1" 
-              >Ver detalle</button>
-              <button class="btn btn-danger custom-button me-1" (click)="eliminarGestion(gestion.idPat)">Eliminar</button>
-              <button class="btn btn-primary custom-button">Modificar</button>
+              >Ver </button>
+              <button class="btn btn-primary custom-button me-1">Modificar</button>
+              <button class="btn btn-danger custom-button me-1" (click)="eliminarGestion(gestion.idGestion)">Eliminar</button>
             </td>
           </tr>
         </ng-container>

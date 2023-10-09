@@ -56,5 +56,33 @@ h2 {
 
 /* Estilos para los botones */
 .custom-button {
-  width: auto; /* Los botones ocuparán todo el ancho de su contenedor */
+  width: 100px; /* Ancho en píxeles */
+  height: 35px; /* Altura en píxeles */
+  text-align: center;
 }
+
+/* Estilos para alinear los botones a la derecha en la tabla */
+.button-container {
+  text-align: right;
+}
+
+.hacialaderecha{
+  text-align: right;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between; /* Alinea los elementos al inicio y al final */
+  align-items: center;
+  width: 100%; /* Ocupa todo el ancho disponible */
+}
+
+button {
+  width: auto; /* Ancho automático, ajustado al contenido */
+}
+h3 {
+  flex-grow: 1; /* Permitir que el texto "Epicas" ocupe el espacio restante */
+  text-align: center; /* Alinea el texto al centro */
+}
+
+

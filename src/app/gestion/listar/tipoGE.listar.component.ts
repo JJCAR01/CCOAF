@@ -4,6 +4,7 @@ import swal from 'sweetalert';
 import { TipoGEService } from '../services/tipoGE.service';
 import { PatService } from 'src/app/pat/services/pat.service';
 import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root:not(p)',
@@ -16,13 +17,15 @@ export class TipogeListarComponent implements OnInit {
   epicas: any[] = [];
   pats: any[] = [];
   patNombre:any;
+  idPat:any;
   busqueda: any;
 
   constructor(
     private gestionService: TipoGEService,
     private auth: AuthService,
     private patService: PatService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router:Router,
   ) {}
 
   ngOnInit() {
@@ -31,7 +34,8 @@ export class TipogeListarComponent implements OnInit {
       const idPat = params['idPat'];
       this.patService.listarPatPorId(idPat,this.auth.obtenerHeader()).subscribe(
         (data: any) => {
-          this.patNombre = data.nombre; // Asignar el nombre del Pat a patNombre
+          this.patNombre = data.nombre;
+          this.idPat = data.idPat // Asignar el nombre del Pat a patNombre
         },
         (error) => {
           // Manejo de errores
@@ -85,23 +89,61 @@ export class TipogeListarComponent implements OnInit {
   }
 
   eliminarGestion(idGestion: number) {
-    const gestionEliminar = this.gestiones.find(
-      (gestion) => gestion.idGestion === idGestion
-    );
-    this.gestionService.eliminarGestion(idGestion, this.auth.obtenerHeader()).subscribe(
-      (response) => {
-        swal(
-          "Eliminado Satisfactoriamente",
-          "La gestión con el nombre " + gestionEliminar.nombre + ", se ha eliminado!",
-          "success"
-        ).then(() => {
-          window.location.reload();
-        });
-        console.log(response);
-      },
-      (error) => {
-        swal(error.error.mensajeTecnico, "error");
+    const gestionAEliminar = this.gestiones.find(gest => gest.idGestion === idGestion);
+
+      swal({
+        title: "¿Estás seguro?",
+        text: "Una vez eliminado, no podrás recuperar este elemento.",
+        icon: "warning",
+        buttons: ["Cancelar", "Eliminar"],
+        dangerMode: true,
+      })
+      .then((confirmacion) => {
+      if (confirmacion) {
+        this.gestionService.eliminarGestion(idGestion, this.auth.obtenerHeader()).subscribe(
+          (response) => {
+            swal("Eliminado Satisfactoriamente", "La gestión del área " + gestionAEliminar.nombre + " se ha eliminado.", "success").then(() => {
+              window.location.reload();
+            });
+            console.log(response);
+          },
+          (error) => {
+            swal("Solicitud no válida", error.error.mensajeHumano, "error");
+          }
+        );
       }
-    );
+      });
   }
+  eliminarEpica(idEpica: number) {
+    const epicaAEliminar = this.epicas.find(ep => ep.idEpica === idEpica);
+
+      swal({
+        title: "¿Estás seguro?",
+        text: "Una vez eliminado, no podrás recuperar este elemento.",
+        icon: "warning",
+        buttons: ["Cancelar", "Eliminar"],
+        dangerMode: true,
+      })
+      .then((confirmacion) => {
+      if (confirmacion) {
+        this.gestionService.eliminarEpica(idEpica, this.auth.obtenerHeader()).subscribe(
+          (response) => {
+            swal("Eliminado Satisfactoriamente", "La epica con el nombre " + epicaAEliminar.nombre + " se ha eliminado.", "success").then(() => {
+              window.location.reload();
+            });
+            console.log(response);
+          },
+          (error) => {
+            swal("Solicitud no válida", error.error.mensajeHumano, "error");
+          }
+        );
+      }
+      });
+  }
+
+  navegarACrearGestion(idPat: number) {
+    // Navegar a la página de creación de gestión y pasar el idPat en la URL
+    this.router.navigate(['/crearGestion', idPat]);
+  }
+
 }

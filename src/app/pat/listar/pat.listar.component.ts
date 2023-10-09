@@ -49,17 +49,29 @@ export class PatListarComponent {
     }
     eliminarPat(idPat: number) {
       const patAEliminar = this.pats.find(pat => pat.idPat === idPat);
-      this.patService.eliminarPat(idPat,this.auth.obtenerHeader()).subscribe(
-        (response) => {
-          swal("Eliminado Satisfactoriamente", "El usuario con el nombre " + patAEliminar.nombre + ", se ha eliminado!", "success").then(() => {
-            window.location.reload();
-          });
-          console.log(response); 
-        },
-        (error) => {
-          swal("Solicitud no válida",error.error.mensajeHumano,"error");
-        }
-      );
+
+      swal({
+        title: "¿Estás seguro?",
+        text: "Una vez eliminado, no podrás recuperar este elemento.",
+        icon: "warning",
+        buttons: ["Cancelar", "Eliminar"],
+        dangerMode: true,
+      })
+      .then((confirmacion) => {
+      if (confirmacion) {
+        this.patService.eliminarPat(idPat, this.auth.obtenerHeader()).subscribe(
+          (response) => {
+            swal("Eliminado Satisfactoriamente", "El usuario con el nombre " + patAEliminar.nombre + " se ha eliminado.", "success").then(() => {
+              window.location.reload();
+            });
+            console.log(response);
+          },
+          (error) => {
+            swal("Solicitud no válida", error.error.mensajeHumano, "error");
+          }
+        );
+      }
+      });
     }
 
     obtenerNombreUsuario(idUsuario: number) {
