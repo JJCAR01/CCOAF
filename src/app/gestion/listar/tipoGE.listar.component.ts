@@ -4,7 +4,8 @@ import swal from 'sweetalert';
 import { TipoGEService } from '../services/tipoGE.service';
 import { PatService } from 'src/app/pat/services/pat.service';
 import { ActivatedRoute } from '@angular/router';
-import { Router } from '@angular/router';
+import { UsuarioService } from 'src/app/usuario/services/usuario.service';
+
 
 @Component({
   selector: 'app-root:not(p)',
@@ -16,6 +17,7 @@ export class TipogeListarComponent implements OnInit {
   gestiones: any[] = [];
   epicas: any[] = [];
   pats: any[] = [];
+  usuarios:any[] =[];
   patNombre:any;
   idPat:any;
   busqueda: any;
@@ -25,7 +27,7 @@ export class TipogeListarComponent implements OnInit {
     private auth: AuthService,
     private patService: PatService,
     private route: ActivatedRoute,
-    private router:Router,
+    private usuarioService :UsuarioService,
   ) {}
 
   ngOnInit() {
@@ -45,6 +47,17 @@ export class TipogeListarComponent implements OnInit {
       this.cargarGestiones(idPat);
       this.cargarEpicas(idPat);
     });
+    this.cargarUsuario();
+  }
+  cargarUsuario() {
+    this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
+      (data: any) => {
+        this.usuarios = data;
+    },
+      (error) => {
+        console.log(error);
+      }
+    );
   }
 
   cargarPats() {
@@ -141,9 +154,10 @@ export class TipogeListarComponent implements OnInit {
       });
   }
 
-  navegarACrearGestion(idPat: number) {
-    // Navegar a la página de creación de gestión y pasar el idPat en la URL
-    this.router.navigate(['/crearGestion', idPat]);
+  obtenerNombreUsuario(idUsuario: number) {
+    const usuario = this.usuarios.find((u) => u.idUsuario === idUsuario);
+    return usuario ? usuario.nombre + " " + usuario.apellidos : '';
   }
+  
 
 }

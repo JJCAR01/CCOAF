@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { TipoGEService } from '../../services/tipoGE.service';  
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import swal from 'sweetalert';
-import Swal from 'sweetalert2';
 import { PatService } from 'src/app/pat/services/pat.service';
 
 @Component({
@@ -74,6 +73,4 @@ export class GestionCrearComponent {
       }
     }
   }
-  
-  
 }

@@ -30,15 +30,16 @@ import { ActividadCrearComponent } from './actividad/crear/actividad.crear.compo
 import { ActividadListarComponent } from './actividad/listar/actividad.listar.component';
 import { EpicaCrearComponent } from './gestion/crear/epica/epica.crear.component';
 import { GestionCrearComponent } from './gestion/crear/gestion/gestion.crear.component';
-
-
+import { OAuthModule } from 'angular-oauth2-oidc';
+import { ProyectoListarComponent } from './proyecto/listar/proyecto.listar/proyecto.listar.component';
+import { ProyectoCrearComponent } from './proyecto/crear/proyecto.crear/proyecto.crear.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,LoginComponent,PanelAdminComponent,AreaCrearComponent,AreaListarComponent,PanelUsuarioComponent,
     CargoCrearComponent,CargoListarComponent,UsuarioCrearComponent,UsuarioListarComponent, BuscarPipe,EnumPipe,PatListarComponent,
-    PatCrearComponent,TipogeListarComponent,ActividadCrearComponent, ActividadListarComponent, EpicaCrearComponent, GestionCrearComponent  
+    PatCrearComponent,TipogeListarComponent,ActividadCrearComponent, ActividadListarComponent, EpicaCrearComponent, GestionCrearComponent, ProyectoListarComponent, ProyectoCrearComponent  
   ],
   imports: [
     BrowserModule,
@@ -48,8 +49,8 @@ import { GestionCrearComponent } from './gestion/crear/gestion/gestion.crear.com
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    SocialLoginModule,GoogleSigninButtonModule
-    
+    SocialLoginModule,GoogleSigninButtonModule,
+    OAuthModule.forRoot(),
     ],
   providers: [
     {

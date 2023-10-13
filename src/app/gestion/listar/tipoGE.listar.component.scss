@@ -21,13 +21,9 @@ h2 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 50vh; /* Establece la altura deseada */
+  height: 60vh; /* Establece la altura deseada */
 }
 
-.smaller-main .porcentajes {
-  width: 20%; /* Establece el ancho deseado */
-  max-width: flex; /* Establece el ancho máximo deseado */
-}
 .custom-button {
   color: #fff; /* Cambia #your-desired-color por el color que desees */
 }
@@ -40,18 +36,6 @@ h2 {
   padding: 10px;
   margin-bottom: 10px;
   background-color: #fff;
-}
-
-.tabla-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.tabla-epica {
-  text-align: left;
-  flex: 1;
-  padding: 10px;
 }
 
 /* Estilos para los botones */

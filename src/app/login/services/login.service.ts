@@ -10,18 +10,6 @@ export class LoginService {
   constructor(private http: HttpClient) {
   }
 
-   
-  /*login(corrreo:string,password:string){
-    return this.http.post(`${environment.apiUrl}/ccoa/auth/login`,{
-      corrreo,
-      password
-  });
-}
-loginWithGoogle(idToken: string) {
-    // Realiza la autenticación en el servidor utilizando el token de Google
-    return this.http.post(`${environment.apiUrl}/ccoa/auth/google-login`, { idToken });
-  }
-*/
 
 
   login(login : any){

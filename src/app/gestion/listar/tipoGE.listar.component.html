@@ -1,9 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
     <link rel="stylesheet" href="tipoGE.listar.component.scss">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@1&family=Roboto+Slab&display=swap" rel="stylesheet">
+    
 </head>
 <body>
   <div  class="row-with-button">
@@ -19,10 +24,11 @@
   <main class="main text-center smaller-main">
     <div class="header">
       <button 
-        type="button" class="btn btn-success" onclick="abrirModal()">
-          Adicionar
-      </button> 
-      <h3> Epicas</h3>
+        type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#dialog1">
+        Adicionar
+      </button>
+
+      <h3> Actividades Estratégicas</h3>
     </div>
     <table class="table table-bordered">
       <thead>
@@ -33,7 +39,7 @@
           <th>Duracion</th>
           <th>Dias Restantes</th>
           <th>Procentaje Avance</th>
-          <th>Pat</th>
+          <th>Responsable</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -45,8 +51,8 @@
             <td>{{ epica.fechaFinal }}</td>
             <td>{{ epica.duracion }}</td>
             <td>{{ epica.diasRestantes }}</td>
-            <td>{{ epica.avance }}</td>
-            <td>{{ patNombre }}</td>
+            <td>{{ epica.avance }} %</td>
+            <td>{{ obtenerNombreUsuario(epica.idUsuario).toLocaleUpperCase() }}</td>
             <td class="hacialaderecha">
               <button class="btn btn-info custom-button me-1" 
               >Ver </button>
@@ -59,16 +65,22 @@
     </table>
     <div class="header">
       <button 
-        type="button" class="btn btn-success" onclick="abrirModal()">
-          Adicionar
+        type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#dialog1">
+        Adicionar
       </button>
+ 
       <h3>Gestión del área</h3>
     </div>
     <table class="table table-bordered">
       <thead>
         <tr>
           <th>Nombre</th>
-          <th>Pat</th>
+          <th>Fecha Inicial</th>
+          <th>Fecha Final</th>
+          <th>Duracion</th>
+          <th>Días Restantes</th>
+          <th>Avance</th>
+          <th>Responsable</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -76,7 +88,12 @@
         <ng-container *ngFor="let gestion of gestiones | buscar: busqueda">
           <tr>
             <td>{{ gestion.nombre }}</td>
-            <td>{{ patNombre }}</td>
+            <td>{{ gestion.fechaInicial }}</td>
+            <td>{{ gestion.fechaFinal }}</td>
+            <td>{{ gestion.duracion }}</td>
+            <td>{{ gestion.diasRestantes }}</td>
+            <td>{{ gestion.avance }} %</td>
+            <td>{{ obtenerNombreUsuario(gestion.idUsuario).toLocaleUpperCase() }}</td>
             <td class="hacialaderecha">
               <button class="btn btn-info custom-button me-1" 
               >Ver </button>
@@ -88,6 +105,9 @@
       </tbody>
     </table>
   </main>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.4/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+
   
 </body>
 </html>

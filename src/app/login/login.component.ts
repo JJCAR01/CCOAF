@@ -1,16 +1,19 @@
-import { Component ,OnInit } from '@angular/core';
-import { HttpHeaders } from '@angular/common/http';
+import { Component ,OnInit,Injectable } from '@angular/core';
 import { LoginService } from './services/login.service';
 import jwt_decode from "jwt-decode";
 import swal from 'sweetalert';
 
-import { GoogleLoginProvider, SocialAuthService,SocialUser } from '@abacritt/angularx-social-login';
+import { SocialAuthService,SocialUser } from '@abacritt/angularx-social-login';
 
-import {  Validators,FormGroup,FormControl,ReactiveFormsModule } from '@angular/forms';
+import {  Validators,FormGroup,FormControl} from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router'; 
+import { GoogleService } from './google/auth.google.service';
 
 
+@Injectable({
+  providedIn:'root'
+})
 
 @Component({
   selector: 'app-root',
@@ -27,7 +30,9 @@ export class LoginComponent implements OnInit {
   private loginService: LoginService, 
     private cookieService:CookieService,
     private router: Router,
-    private authService:SocialAuthService, 
+    private authService:SocialAuthService,
+    private authGoogleService:GoogleService,
+
   ) {}
 
   form = new FormGroup({
@@ -35,26 +40,6 @@ export class LoginComponent implements OnInit {
     password: new FormControl('', Validators.required),
   });
 
-
-  /*ngOnInit() {
-    this.authService.authState.subscribe((user) => {
-      this.user = user;
-      this.loggedIn = (user != null);
-    });
-  }*/
-
-  /*signInWithGoogle(): void {
-    this.authService.signIn(GoogleLoginProvider.PROVIDER_ID).then(
-      user => {
-      this.socialUser = user;
-      this.loggedIn = true;
-      alert('Inició sesión correctamente');
-      this.router.navigate(["/panelUsuario"]);
-
-    }).catch((error) => {
-      console.log('Error al iniciar sesión con Google:', error);
-    });
-  }*/
   ngOnInit() {
     this.authService.authState.subscribe((user) => {
       this.socialUser = user;
@@ -62,17 +47,11 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  loginWithGoogle(): void {
-    this.loginService.authenticateWithGoogle().toPromise().then(
-      (data: any) => {
-        console.log(data)
-      });
-    this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
+  loginGoogle(){
+    this.authGoogleService.loging();
   }
 
-  logOut():void{
-    this.authService.signOut();
-  }
+  
 
 
   login() {
