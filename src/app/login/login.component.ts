@@ -75,7 +75,6 @@ export class LoginComponent implements OnInit {
         }
         else if (decode.type === 'OPERADOR')
         {
-          alert("Operador")
           this.router.navigate(["/panelUsuario"]);
         }
       } 

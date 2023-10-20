@@ -13,10 +13,6 @@ export class TipoGEService {
   crearGestion(gestion : any,headers?: HttpHeaders){
     return this.http.post(`${environment.apiUrl}/ccoa/gestiones`,gestion,{headers});
   }
-  crearEpica(epica : any,headers?: HttpHeaders){
-    return this.http.post(`${environment.apiUrl}/ccoa/estrategicas`,epica,{headers});
-  }
-
   listarGestion(headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/gestiones`,{headers});
   }
@@ -26,20 +22,25 @@ export class TipoGEService {
   listarGestionPorIdPat(idPat:number,headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/gestiones/pat/${idPat}`,{headers});
   }
-  listarEpica(headers?: HttpHeaders){
-    return this.http.get(`${environment.apiUrl}/ccoa/estrategicas`,{headers});
-  }
-  listarEpicaPorId(idEpica:number,headers?: HttpHeaders){
-    return this.http.get(`${environment.apiUrl}/ccoa/estrategicas/${idEpica}`,{headers});
-  }
-  listarEpicaPorIdPat(idPat:number,headers?: HttpHeaders){
-    return this.http.get(`${environment.apiUrl}/ccoa/estrategicas/pat/${idPat}`,{headers});
-  }
-
   eliminarGestion(idGestion:number,headers?: HttpHeaders){
     return this.http.delete(`${environment.apiUrl}/ccoa/gestiones/${idGestion}`,{headers});
   }
-  eliminarEpica(idEpica:number,headers?: HttpHeaders){
-    return this.http.delete(`${environment.apiUrl}/ccoa/estrategicas/${idEpica}`,{headers});
+
+
+
+  crearActividadEstrategica(actividadEstrategica : any,headers?: HttpHeaders){
+    return this.http.post(`${environment.apiUrl}/ccoa/estrategicas`,actividadEstrategica,{headers});
+  }
+  listarActividadEstrategica(headers?: HttpHeaders){
+    return this.http.get(`${environment.apiUrl}/ccoa/estrategicas`,{headers});
+  }
+  listarActividadEstrategicaPorId(idActividadEstrategica:number,headers?: HttpHeaders){
+    return this.http.get(`${environment.apiUrl}/ccoa/estrategicas/${idActividadEstrategica}`,{headers});
+  }
+  listarActividadEstrategicaPorIdPat(idPat:number,headers?: HttpHeaders){
+    return this.http.get(`${environment.apiUrl}/ccoa/estrategicas/pat/${idPat}`,{headers});
+  }
+  eliminarActividadEstrategica(idActividadEstrategica:number,headers?: HttpHeaders){
+    return this.http.delete(`${environment.apiUrl}/ccoa/estrategicas/${idActividadEstrategica}`,{headers});
   }
 }

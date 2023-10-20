@@ -68,6 +68,41 @@
     flex-grow: 1; /* Permitir que el texto "Epicas" ocupe el espacio restante */
     text-align: center; /* Alinea el texto al centro */
   }
+
+  /* Estilo para los checkboxes */
+input[type="checkbox"] {
+  /* Aumentar el tamaño del checkbox */
+  transform: scale(2);
+}
+
+.estado-backlog input[type="checkbox"] {
+  /* Estilos para el checkbox EN BACKLOG */
+  background-color: blue; /* Cambia el color de fondo */
+  border: 1px solid darkblue; /* Cambia el color del borde */
+  /* Otros estilos personalizados que desees */
+}
+
+.estado-proceso input[type="checkbox"] {
+  /* Estilos para el checkbox EN PROCESO */
+  background-color: green; /* Cambia el color de fondo */
+  border: 1px solid darkgreen; /* Cambia el color del borde */
+  /* Otros estilos personalizados que desees */
+}
+
+.estado-terminado input[type="checkbox"] {
+  /* Estilos para el checkbox TERMINADO */
+  background-color: orange; /* Cambia el color de fondo */
+  border: 1px solid darkorange; /* Cambia el color del borde */
+  /* Otros estilos personalizados que desees */
+}
+
+.estado-impedimento input[type="checkbox"] {
+  /* Estilos para el checkbox IMPEDIMENTO */
+  background-color: red; /* Cambia el color de fondo */
+  border: 1px solid darkred; /* Cambia el color del borde */
+  /* Otros estilos personalizados que desees */
+}
+
   
   
   

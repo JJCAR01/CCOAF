@@ -28,18 +28,20 @@ import { EnumPipe } from 'src/pipes/enum.pipes';
 import swal from 'sweetalert';
 import { ActividadCrearComponent } from './actividad/crear/actividad.crear.component';
 import { ActividadListarComponent } from './actividad/listar/actividad.listar.component';
-import { EpicaCrearComponent } from './gestion/crear/epica/epica.crear.component';
+import { ActividadEstrategicaCrearComponent } from './gestion/crear/actividadestrategica/actividadestrategica.crear.component';
 import { GestionCrearComponent } from './gestion/crear/gestion/gestion.crear.component';
 import { OAuthModule } from 'angular-oauth2-oidc';
-import { ProyectoListarComponent } from './proyecto/listar/proyecto.listar/proyecto.listar.component';
-import { ProyectoCrearComponent } from './proyecto/crear/proyecto.crear/proyecto.crear.component';
+import { SprintListarComponent } from './sprint/listar/sprint.listar.component';
+import { SprintCrearComponent } from './sprint/crear/sprint.crear.component';
+import { TareaListarComponent } from './tarea/listar/tarea.listar.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,LoginComponent,PanelAdminComponent,AreaCrearComponent,AreaListarComponent,PanelUsuarioComponent,
     CargoCrearComponent,CargoListarComponent,UsuarioCrearComponent,UsuarioListarComponent, BuscarPipe,EnumPipe,PatListarComponent,
-    PatCrearComponent,TipogeListarComponent,ActividadCrearComponent, ActividadListarComponent, EpicaCrearComponent, GestionCrearComponent, ProyectoListarComponent, ProyectoCrearComponent  
+    PatCrearComponent,TipogeListarComponent,ActividadCrearComponent, ActividadListarComponent, ActividadEstrategicaCrearComponent, GestionCrearComponent, 
+    SprintListarComponent,SprintCrearComponent, TareaListarComponent
   ],
   imports: [
     BrowserModule,

@@ -1,1 +1,126 @@
-<p>listar works!</p>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="actividad.listar.component.scss">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@1&family=Roboto+Slab&display=swap" rel="stylesheet">
+    
+</head>
+<body>
+  <div  class="row-with-button">
+    <div >
+      <h1  class="mb-2"> {{ actividadNombre }} </h1>
+    </div>
+    <div class="text-center">
+      <span>
+        
+      </span>
+    </div>
+  </div>  
+  <main class="main text-center smaller-main">
+    <div class="header">
+      <button 
+        type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#dialog1">
+        Adicionar
+      </button>
+
+      <h3> Proyectos </h3>
+    </div>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Nombre</th>
+          <th>Presupuesto</th>
+          <th>Modalidad</th>
+          <th>Valor Ejecutado</th>
+          <th>Estado</th>
+          <th>Fecha Inicial</th>
+          <th>Fecha Final</th>
+          <th>Duracion</th>
+          <th>Planeacion Sprint</th>
+          <th>Total Sprint</th>
+          <th>Usuario</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let proyecto of proyectos | buscar: busqueda">
+          <tr>
+            <td>{{ proyecto.idProyecto }}</td>
+            <td>{{ proyecto.nombre }}</td>
+            <td>{{ proyecto.presupuesto }}</td>
+            <td>{{ proyecto.modalidad }}</td>
+            <td>{{ proyecto.valorEjecutado }}</td>
+            <td>{{ proyecto.estado }}</td>
+            <td>{{ proyecto.fechaInicial }}</td>
+            <td>{{ proyecto.fechaFinal }}</td>
+            <td>{{ proyecto.duracion }}</td>
+            <td>{{ proyecto.planeacionSprint }}</td>
+            <td>{{ proyecto.totalSprint }}</td>
+            <td>{{ obtenerNombreUsuario(proyecto.idUsuario).toLocaleUpperCase() }}</td>
+            <td class="hacialaderecha">
+              <button class="btn btn-info custom-button me-1" 
+              [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarSprint', proyecto.idProyecto] } }]"
+                >Ver</button>
+              <button class="btn btn-primary custom-button me-1">Modificar</button>
+              <button class="btn btn-danger custom-button me-1" (click)="eliminarProyecto(proyecto.idProyecto)">Eliminar</button>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+    <div class="header">
+      <button 
+        type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#dialog1">
+        Adicionar
+      </button>
+ 
+      <h3>Actividades de gestión</h3>
+    </div>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Fecha Inicial</th>
+          <th>Fecha Final</th>
+          <th>Duracion</th>
+          <th>Días Restantes</th>
+          <th>Avance</th>
+          <th>Responsable</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let gestion of gestiones | buscar: busqueda">
+          <tr>
+            <td>{{ gestion.nombre }}</td>
+            <td>{{ gestion.fechaInicial }}</td>
+            <td>{{ gestion.fechaFinal }}</td>
+            <td>{{ gestion.duracion }}</td>
+            <td>{{ gestion.diasRestantes }}</td>
+            <td>{{ gestion.avance }} %</td>
+            <td>{{ obtenerNombreUsuario(gestion.idUsuario).toLocaleUpperCase() }}</td>
+            <td class="hacialaderecha">
+              <button class="btn btn-info custom-button me-1"
+                [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarTarea', gestion.idActividadGestionActividadEstrategica] } }]"
+                [queryParams]="{ idActividadGestionActividadEstrategica: gestion.idActividadGestionActividadEstrategica, tipoASE: 'ACTVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA' }"
+              >Ver</button>
+              <button class="btn btn-primary custom-button me-1">Modificar</button>
+              <button class="btn btn-danger custom-button me-1" (click)="eliminarGestion(gestion.idGestion)">Eliminar</button>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </main>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.4/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+
+  
+</body>
+</html>

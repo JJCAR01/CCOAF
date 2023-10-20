@@ -24,7 +24,7 @@
   <main class="main text-center smaller-main">
     <div class="header">
       <button 
-        type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#dialog1">
+        type="button" class="btn btn-success" >
         Adicionar
       </button>
 
@@ -44,30 +44,31 @@
         </tr>
       </thead>
       <tbody>
-        <ng-container *ngFor="let epica of epicas | buscar: busqueda">
+        <ng-container *ngFor="let actividad of actividades | buscar: busqueda">
           <tr>
-            <td>{{ epica.nombre }}</td>
-            <td>{{ epica.fechaInicial }}</td>
-            <td>{{ epica.fechaFinal }}</td>
-            <td>{{ epica.duracion }}</td>
-            <td>{{ epica.diasRestantes }}</td>
-            <td>{{ epica.avance }} %</td>
-            <td>{{ obtenerNombreUsuario(epica.idUsuario).toLocaleUpperCase() }}</td>
+            <td>{{ actividad.nombre }}</td>
+            <td>{{ actividad.fechaInicial }}</td>
+            <td>{{ actividad.fechaFinal }}</td>
+            <td>{{ actividad.duracion }}</td>
+            <td>{{ actividad.diasRestantes }}</td>
+            <td>{{ actividad.avance }} %</td>
+            <td>{{ obtenerNombreUsuario(actividad.idUsuario).toLocaleUpperCase() }}</td>
             <td class="hacialaderecha">
               <button class="btn btn-info custom-button me-1" 
-              >Ver </button>
+              [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarActividad', actividad.idActividadEstrategica] } }]"
+                >Ver</button>
               <button class="btn btn-primary custom-button me-1">Modificar</button>
-              <button class="btn btn-danger custom-button me-1" (click)="eliminarGestion(epica.idEpica)">Eliminar</button>
+              <button class="btn btn-danger custom-button me-1" (click)="eliminarActividadesEstrategica(actividad.idActividadEstrategica)">Eliminar</button>
             </td>
           </tr>
         </ng-container>
       </tbody>
     </table>
     <div class="header">
-      <button 
-        type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#dialog1">
-        Adicionar
-      </button>
+
+    <button type="button" class="btn btn-success" data-bs-dismiss="modal" data-bs-target="#my-modal" aria-label="Close">
+      Adicionar
+    </button>     
  
       <h3>Gestión del área</h3>
     </div>
@@ -95,10 +96,12 @@
             <td>{{ gestion.avance }} %</td>
             <td>{{ obtenerNombreUsuario(gestion.idUsuario).toLocaleUpperCase() }}</td>
             <td class="hacialaderecha">
-              <button class="btn btn-info custom-button me-1" 
-              >Ver </button>
+              <button class="btn btn-info custom-button me-1"
+                [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarTarea', gestion.idActividadGestion] } }]"
+                [queryParams]="{ idActividadGestion: gestion.idActividadGestion, tipoASE: 'ACTVIDAD_GESTION' }"
+              >Ver</button>
               <button class="btn btn-primary custom-button me-1">Modificar</button>
-              <button class="btn btn-danger custom-button me-1" (click)="eliminarGestion(gestion.idGestion)">Eliminar</button>
+              <button class="btn btn-danger custom-button me-1" (click)="eliminarGestion(gestion.idActividadGestion)">Eliminar</button>
             </td>
           </tr>
         </ng-container>

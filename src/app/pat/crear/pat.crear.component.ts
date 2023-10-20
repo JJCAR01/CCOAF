@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,OnInit  } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UsuarioService } from 'src/app/usuario/services/usuario.service';
 import { PatService } from '../services/pat.service';
@@ -10,7 +10,7 @@ import swal from 'sweetalert';
   templateUrl: './pat.crear.component.html',
   styleUrls: ['./pat.crear.component.scss']
 })
-export class PatCrearComponent {
+export class PatCrearComponent implements OnInit{
   title = 'crearPat';
   usuarios: any[] = [];
   form:FormGroup;

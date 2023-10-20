@@ -16,7 +16,9 @@ import { TipogeListarComponent } from './gestion/listar/tipoGE.listar.component'
 import { ActividadCrearComponent } from './actividad/crear/actividad.crear.component';
 import { ActividadListarComponent } from './actividad/listar/actividad.listar.component';
 import { GestionCrearComponent } from './gestion/crear/gestion/gestion.crear.component';
-import { ProyectoListarComponent } from './proyecto/listar/proyecto.listar/proyecto.listar.component';
+import { SprintListarComponent } from './sprint/listar/sprint.listar.component';
+import { TareaListarComponent } from './tarea/listar/tarea.listar.component';
+import { ActividadEstrategicaCrearComponent } from './gestion/crear/actividadestrategica/actividadestrategica.crear.component';
 
 
 
@@ -39,11 +41,13 @@ const routes: Routes = [
     { path: "crearPat", component: PatCrearComponent, outlet:"OutletUsuario"},
     { path: "listarPat", component: PatListarComponent, outlet:"OutletUsuario"},   
     { path: "listarTipoGE/:idPat", component: TipogeListarComponent, outlet:"OutletUsuario" },
+    { path: "crearActividadEstrategica", component: ActividadEstrategicaCrearComponent, outlet:"OutletUsuario"}, 
     { path: "crearGestion", component: GestionCrearComponent, outlet:"OutletUsuario" },
     { path: "crearActividad", component: ActividadCrearComponent, outlet:"OutletUsuario"}, 
-    { path: "listarActvidad", component: ActividadListarComponent , outlet:"OutletUsuario"}, 
-    { path: "listarProyecto/:idActividadEstrategica", component: ProyectoListarComponent, outlet:"OutletUsuario" },
-   
+    { path: 'listarActividad/:idActividadEstrategica', component: ActividadListarComponent, outlet: 'OutletUsuario' },
+    { path: 'listarSprint/:idProyecto', component: SprintListarComponent, outlet: 'OutletUsuario' },
+    { path: 'listarTarea/:idASE', component: TareaListarComponent, outlet: 'OutletUsuario' }
+
   ] },
 
 ];

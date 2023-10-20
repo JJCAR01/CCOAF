@@ -20,6 +20,9 @@ export class PatService {
   listarPatPorId(idPat:number,headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/pats/${idPat}`,{headers});
   }
+  modificarPat(pat : any,idPat:number,headers?: HttpHeaders){
+    return this.http.put(`${environment.apiUrl}/ccoa/pats/${idPat}`,pat,{headers});
+  }
   eliminarPat(idPat:number,headers?: HttpHeaders){
     return this.http.delete(`${environment.apiUrl}/ccoa/pats/${idPat}`,{headers});
   }

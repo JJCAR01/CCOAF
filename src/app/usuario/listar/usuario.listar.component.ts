@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,OnInit } from '@angular/core';
 import { UsuarioService } from '../services/usuario.service';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import swal from 'sweetalert';
@@ -8,7 +8,7 @@ import swal from 'sweetalert';
   templateUrl: './usuario.listar.component.html',
   styleUrls: ['./usuario.listar.component.scss']
 })
-export class UsuarioListarComponent {
+export class UsuarioListarComponent implements OnInit{
   title = 'listarUsuario';
   usuarios: any[] = [];
   busqueda: any;

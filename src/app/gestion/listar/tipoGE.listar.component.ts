@@ -15,7 +15,7 @@ import { UsuarioService } from 'src/app/usuario/services/usuario.service';
 export class TipogeListarComponent implements OnInit {
   title = 'listarTipoGE';
   gestiones: any[] = [];
-  epicas: any[] = [];
+  actividades: any[] = [];
   pats: any[] = [];
   usuarios:any[] =[];
   patNombre:any;
@@ -27,7 +27,7 @@ export class TipogeListarComponent implements OnInit {
     private auth: AuthService,
     private patService: PatService,
     private route: ActivatedRoute,
-    private usuarioService :UsuarioService,
+    private usuarioService :UsuarioService
   ) {}
 
   ngOnInit() {
@@ -45,7 +45,7 @@ export class TipogeListarComponent implements OnInit {
       );
 
       this.cargarGestiones(idPat);
-      this.cargarEpicas(idPat);
+      this.cargarActividadesEstrategicas(idPat);
     });
     this.cargarUsuario();
   }
@@ -59,18 +59,6 @@ export class TipogeListarComponent implements OnInit {
       }
     );
   }
-
-  cargarPats() {
-    this.patService.listarPat(this.auth.obtenerHeader()).toPromise().then(
-      (data: any) => {
-        this.pats = data;
-      },
-      (error) => {
-        swal(error.error.mensajeTecnico);
-      }
-    );
-  }
-
   cargarGestiones(idPat: number) {
     // Utiliza idPat en tu solicitud para cargar las gestiones relacionadas
     this.gestionService
@@ -86,14 +74,14 @@ export class TipogeListarComponent implements OnInit {
       );
   }
 
-  cargarEpicas(idPat: number) {
+  cargarActividadesEstrategicas(idPat: number) {
     // Utiliza idPat en tu solicitud para cargar las epicas relacionadas
     this.gestionService
-      .listarEpicaPorIdPat(idPat, this.auth.obtenerHeader()) // Debes tener un método en tu servicio para listar epicas por idPat
+      .listarActividadEstrategicaPorIdPat(idPat, this.auth.obtenerHeader()) // Debes tener un método en tu servicio para listar epicas por idPat
       .toPromise()
       .then(
         (data: any) => {
-          this.epicas = data;
+          this.actividades = data;
         },
         (error) => {
           swal(error.error.mensajeTecnico);
@@ -101,8 +89,8 @@ export class TipogeListarComponent implements OnInit {
       );
   }
 
-  eliminarGestion(idGestion: number) {
-    const gestionAEliminar = this.gestiones.find(gest => gest.idGestion === idGestion);
+  eliminarGestion(idActividadGestion: number) {
+    const gestionAEliminar = this.gestiones.find(gest => gest.idActividadGestion === idActividadGestion);
 
       swal({
         title: "¿Estás seguro?",
@@ -113,7 +101,7 @@ export class TipogeListarComponent implements OnInit {
       })
       .then((confirmacion) => {
       if (confirmacion) {
-        this.gestionService.eliminarGestion(idGestion, this.auth.obtenerHeader()).subscribe(
+        this.gestionService.eliminarGestion(idActividadGestion, this.auth.obtenerHeader()).subscribe(
           (response) => {
             swal("Eliminado Satisfactoriamente", "La gestión del área " + gestionAEliminar.nombre + " se ha eliminado.", "success").then(() => {
               window.location.reload();
@@ -127,8 +115,8 @@ export class TipogeListarComponent implements OnInit {
       }
       });
   }
-  eliminarEpica(idEpica: number) {
-    const epicaAEliminar = this.epicas.find(ep => ep.idEpica === idEpica);
+  eliminarActividadesEstrategica(idActividadEstrategica: number) {
+    const actividadAEliminar = this.actividades.find(a => a.idActividadEstrategica === idActividadEstrategica);
 
       swal({
         title: "¿Estás seguro?",
@@ -139,9 +127,9 @@ export class TipogeListarComponent implements OnInit {
       })
       .then((confirmacion) => {
       if (confirmacion) {
-        this.gestionService.eliminarEpica(idEpica, this.auth.obtenerHeader()).subscribe(
+        this.gestionService.eliminarActividadEstrategica(idActividadEstrategica, this.auth.obtenerHeader()).subscribe(
           (response) => {
-            swal("Eliminado Satisfactoriamente", "La epica con el nombre " + epicaAEliminar.nombre + " se ha eliminado.", "success").then(() => {
+            swal("Eliminado Satisfactoriamente", "La epica con el nombre " + actividadAEliminar.nombre + " se ha eliminado.", "success").then(() => {
               window.location.reload();
             });
             console.log(response);

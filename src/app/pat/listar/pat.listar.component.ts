@@ -4,6 +4,7 @@ import { AuthService } from 'src/app/login/auth/auth.service';
 import swal from 'sweetalert';
 import { UsuarioService } from 'src/app/usuario/services/usuario.service';
 import { ActivatedRoute } from '@angular/router'
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -15,11 +16,18 @@ export class PatListarComponent {
   pats: any[] = [];
   usuarios:any[] =[];
   busqueda: any;
-  mostrarDetalle: { [idPat: number]: boolean } = {};
+  selectedPatId: number | null = null;
+  nombrePatSeleccionado:any;
+  form:FormGroup;
   
     constructor(private patService: PatService,private auth:AuthService,
-      private usuarioService:UsuarioService,
-      private activatedRoute: ActivatedRoute) { }  
+      private usuarioService:UsuarioService, private formBuilder: FormBuilder) 
+      {
+        this.form = this.formBuilder.group({
+          fechaAnual: ['', Validators.required],
+          proceso: ['', Validators.required],
+        }); 
+       }  
 
     ngOnInit() {
       this.cargarPats();
@@ -47,6 +55,30 @@ export class PatListarComponent {
         }
       );
     }
+
+    modificarPat() {
+      if (this.form.valid && this.selectedPatId) {
+        const fechaAnual = this.form.get('fechaAnual')?.value;
+        const proceso = this.form.get('proceso')?.value;
+        const pat = {
+          fechaAnual: fechaAnual,
+          proceso: proceso,
+        };
+        this.patService
+          .modificarPat(pat, this.selectedPatId, this.auth.obtenerHeader())
+          .subscribe(
+            (response) => {
+              swal("Modificado Satisfactoriamente", "El PAT se ha modificado", "success");
+              this.form.reset();
+              window.location.reload()
+            },
+            (error) => {
+              swal(error.error.mensajeTecnico, "warning");
+            }
+          );
+      }
+    }
+    
     eliminarPat(idPat: number) {
       const patAEliminar = this.pats.find(pat => pat.idPat === idPat);
 
@@ -77,6 +109,11 @@ export class PatListarComponent {
     obtenerNombreUsuario(idUsuario: number) {
       const usuario = this.usuarios.find((u) => u.idUsuario === idUsuario);
       return usuario ? usuario.nombre + " " + usuario.apellidos : '';
+    }
+
+    setSelectedPat(idPat: number,pat:any) {
+      this.selectedPatId = idPat;
+      this.nombrePatSeleccionado = pat.nombre;
     }
     
 }
