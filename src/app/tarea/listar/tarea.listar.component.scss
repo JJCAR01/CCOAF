@@ -1,108 +1,83 @@
 .body{
     font-family: "Roboto",serif;
-  }
+}
   
-  h1 {
-    background-color: #504f4f;
-    color: #e7e5e5;
-    padding: 5px;
-    margin: 0;
-    text-align: center;
-  }
+h1 {
+  font-family: "Roboto", unset;
+  color: #000000;
+  padding: 5px;
+  margin: 0;
+  text-align: left;
+}
   
   
-  h2 {
-    font-family: "Roboto", cursive;
-  }
+h2 {
+  font-family: "Roboto", cursive;
+}
+
+h3 {
+  flex-grow: 1; /* Permitir que el texto "Epicas" ocupe el espacio restante */
+  text-align: center; /* Alinea el texto al centro */
+}
   
   /* Estilos para el elemento .smaller-main */
-  .smaller-main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 60vh; /* Establece la altura deseada */
-  }
-  
-  .custom-button {
-    color: #fff; /* Cambia #your-desired-color por el color que desees */
-  }
-  
-  
-  .registro-pat {
-    display: flex;
-    flex-direction: column;
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin-bottom: 10px;
-    background-color: #fff;
-  }
-  
-  /* Estilos para los botones */
-  .custom-button {
-    width: 100px; /* Ancho en píxeles */
-    height: 35px; /* Altura en píxeles */
-    text-align: center;
-  }
-  
-  /* Estilos para alinear los botones a la derecha en la tabla */
-  .button-container {
-    text-align: right;
-  }
-  
-  .hacialaderecha{
-    text-align: right;
-  }
-  
-  .header {
-    display: flex;
-    justify-content: space-between; /* Alinea los elementos al inicio y al final */
-    align-items: center;
-    width: 100%; /* Ocupa todo el ancho disponible */
-  }
-  
-  button {
-    width: auto; /* Ancho automático, ajustado al contenido */
-  }
-  h3 {
-    flex-grow: 1; /* Permitir que el texto "Epicas" ocupe el espacio restante */
-    text-align: center; /* Alinea el texto al centro */
-  }
+.smaller-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60vh; /* Establece la altura deseada */
+}
 
+.header {
+  display: flex;
+  justify-content: space-between; /* Alinea los elementos al inicio y al final */
+  align-items: center;
+  width: 100%; /* Ocupa todo el ancho disponible */
+}
+  
   /* Estilo para los checkboxes */
 input[type="checkbox"] {
   /* Aumentar el tamaño del checkbox */
   transform: scale(2);
 }
 
-.estado-backlog input[type="checkbox"] {
-  /* Estilos para el checkbox EN BACKLOG */
-  background-color: blue; /* Cambia el color de fondo */
-  border: 1px solid darkblue; /* Cambia el color del borde */
-  /* Otros estilos personalizados que desees */
+th,td {
+  vertical-align: middle;
+  text-align: center; /* Centra el texto horizontalmente en las celdas del encabezado */
 }
 
-.estado-proceso input[type="checkbox"] {
-  /* Estilos para el checkbox EN PROCESO */
-  background-color: green; /* Cambia el color de fondo */
-  border: 1px solid darkgreen; /* Cambia el color del borde */
-  /* Otros estilos personalizados que desees */
+.column-nombre {
+  width: 500px; 
+  
+}
+.en-backlog {
+  color: rgb(87, 97, 89); /* Color para "EN BACKLOG" */
 }
 
-.estado-terminado input[type="checkbox"] {
-  /* Estilos para el checkbox TERMINADO */
-  background-color: orange; /* Cambia el color de fondo */
-  border: 1px solid darkorange; /* Cambia el color del borde */
-  /* Otros estilos personalizados que desees */
+.en-proceso {
+  color: rgba(202, 139, 22, 0.925); /* Color para "EN PROCESO" */
 }
 
-.estado-impedimento input[type="checkbox"] {
-  /* Estilos para el checkbox IMPEDIMENTO */
-  background-color: red; /* Cambia el color de fondo */
-  border: 1px solid darkred; /* Cambia el color del borde */
-  /* Otros estilos personalizados que desees */
+.terminado {
+  color: green; /* Color para "TERMINADO" */
 }
 
+.impedimento {
+  color: rgb(206, 49, 49); /* Color para "IMPEDIMENTO" */
+}
+
+/* Estilo para los textos de estado */
+.estado-text {
+  font-size: 12px;
+}
+/* Aplicar estilos a las columnas de estado */
+th {
+  .estado-text, .estado-checkbox {
+    display: block; /* Hace que los elementos se muestren en bloques (uno debajo del otro) */
+    text-align: center; /* Centra el texto */
+  }
+}
   
   
   

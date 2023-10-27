@@ -1,27 +1,33 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PatService } from '../services/pat.service';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import swal from 'sweetalert';
 import { UsuarioService } from 'src/app/usuario/services/usuario.service';
-import { ActivatedRoute } from '@angular/router'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { TipoGEService } from 'src/app/gestion/services/tipoGE.service';
+import { ActividadService } from 'src/app/actividad/services/actividad.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './pat.listar.component.html',
   styleUrls: ['./pat.listar.component.scss']
 })
-export class PatListarComponent {
+export class PatListarComponent implements OnInit{
   title = 'listarPat';
   pats: any[] = [];
   usuarios:any[] =[];
   busqueda: any;
   selectedPatId: number | null = null;
   nombrePatSeleccionado:any;
+  cantidadPats:any;
+  cantidadProyectos:any;
+  cantidadGestiones:any;
+  cantidadEstrategicas:any;
   form:FormGroup;
   
     constructor(private patService: PatService,private auth:AuthService,
-      private usuarioService:UsuarioService, private formBuilder: FormBuilder) 
+      private usuarioService:UsuarioService, private formBuilder: FormBuilder,
+      private tipoService:TipoGEService, private actividadService:ActividadService) 
       {
         this.form = this.formBuilder.group({
           fechaAnual: ['', Validators.required],
@@ -32,6 +38,9 @@ export class PatListarComponent {
     ngOnInit() {
       this.cargarPats();
       this.cargarUsuario();
+      this.cargarActividadesEstrategica();
+      this.cargarPatsActividadGestion();
+      this.cargarPatsProyectos();
     }
     cargarUsuario() {
       this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
@@ -49,6 +58,41 @@ export class PatListarComponent {
       this.patService.listarPat(this.auth.obtenerHeader()).toPromise().then(
         (data: any) => {
           this.pats = data;
+          const numeroDeListas = Object.keys(data).length;
+          this.cantidadPats = numeroDeListas;
+        },
+        (error) => {
+          swal(error.error.mensajeTecnico);
+        }
+      );
+    }
+    cargarActividadesEstrategica() {
+      this.tipoService.listarActividadEstrategica(this.auth.obtenerHeader()).toPromise().then(
+        (data: any) => {
+          const numeroDeListas = Object.keys(data).length;
+          this.cantidadEstrategicas = numeroDeListas;
+        },
+        (error) => {
+          swal(error.error.mensajeTecnico);
+        }
+      );
+    }
+    cargarPatsActividadGestion() {
+      this.tipoService.listarGestion(this.auth.obtenerHeader()).toPromise().then(
+        (data: any) => {
+          const numeroDeListas = Object.keys(data).length;
+          this.cantidadGestiones = numeroDeListas;
+        },
+        (error) => {
+          swal(error.error.mensajeTecnico);
+        }
+      );
+    }
+    cargarPatsProyectos() {
+      this.actividadService.listarProyecto(this.auth.obtenerHeader()).toPromise().then(
+        (data: any) => {
+          const numeroDeListas = Object.keys(data).length;
+          this.cantidadProyectos = numeroDeListas;
         },
         (error) => {
           swal(error.error.mensajeTecnico);
@@ -115,5 +159,17 @@ export class PatListarComponent {
       this.selectedPatId = idPat;
       this.nombrePatSeleccionado = pat.nombre;
     }
+
+    colorPorcentaje(porcentaje: number): string {
+      if (porcentaje < 30) {
+        return 'porcentaje-bajo'; // Define las clases CSS para porcentajes bajos en tu archivo de estilos.
+      } else if (porcentaje >= 30 && porcentaje < 100){
+        return 'porcentaje-medio'; // Define las clases CSS para porcentajes normales en tu archivo de estilos.
+      } else {
+        return 'porcentaje-cien';
+      }
+    }
+    
+    
     
 }

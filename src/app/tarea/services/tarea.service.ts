@@ -10,8 +10,8 @@ export class TareaService {
   constructor(private http: HttpClient) {
   }
 
-  crearTarea(sprint : any,headers?: HttpHeaders){
-    return this.http.post(`${environment.apiUrl}/ccoa/tareas`,sprint,{headers});
+  crearTarea(tarea : any,headers?: HttpHeaders){
+    return this.http.post(`${environment.apiUrl}/ccoa/tareas`,tarea,{headers});
   }
 
   listarTarea(headers?: HttpHeaders){
@@ -30,7 +30,9 @@ export class TareaService {
   listarTareaPorActvidadGestionActividadEstrategica(idASE:number,headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/tareas/actividad/${idASE}`,{headers});
   }
-
+  modificarTarea(tarea : any,idTarea:number,headers?: HttpHeaders){
+    return this.http.put(`${environment.apiUrl}/ccoa/tareas/${idTarea}`,tarea,{headers});
+  }
   eliminarTarea(idTarea:number,headers?: HttpHeaders){
     return this.http.delete(`${environment.apiUrl}/ccoa/tareas/${idTarea}`,{headers});
   }

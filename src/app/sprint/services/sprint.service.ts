@@ -13,19 +13,18 @@ export class SprintService {
   crearSprint(sprint : any,headers?: HttpHeaders){
     return this.http.post(`${environment.apiUrl}/ccoa/sprints`,sprint,{headers});
   }
-
   listarSprint(headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/sprints`,{headers});
   }
-
   listarSprintPorId(idSprint:number,headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/sprints/${idSprint}`,{headers});
   }
-
   listarSprintPorProyecto(idProyecto:number,headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/sprints/proyecto/${idProyecto}`,{headers});
   }
-
+  modificarSprint(sprint : any,idSprint:number,headers?: HttpHeaders){
+    return this.http.put(`${environment.apiUrl}/ccoa/sprints/${idSprint}`,sprint,{headers});
+  }
   eliminarSprint(idSprint:number,headers?: HttpHeaders){
     return this.http.delete(`${environment.apiUrl}/ccoa/sprints/${idSprint}`,{headers});
   }

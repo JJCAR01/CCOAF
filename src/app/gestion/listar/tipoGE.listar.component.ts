@@ -5,6 +5,7 @@ import { TipoGEService } from '../services/tipoGE.service';
 import { PatService } from 'src/app/pat/services/pat.service';
 import { ActivatedRoute } from '@angular/router';
 import { UsuarioService } from 'src/app/usuario/services/usuario.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 
 @Component({
@@ -18,17 +19,25 @@ export class TipogeListarComponent implements OnInit {
   actividades: any[] = [];
   pats: any[] = [];
   usuarios:any[] =[];
+  usuarioPat:any;
+  porcentajePat:any;
   patNombre:any;
   idPat:any;
+  idActividadGestionSeleccionado:any;
+  nombreActividadGestion:any;
+  idActividadEstrategicaSeleccionado:any;
+  nombreActividadEstrategica:any;
+  form:FormGroup;
   busqueda: any;
 
   constructor(
-    private gestionService: TipoGEService,
-    private auth: AuthService,
-    private patService: PatService,
-    private route: ActivatedRoute,
-    private usuarioService :UsuarioService
-  ) {}
+    private gestionService: TipoGEService,private auth: AuthService,
+    private patService: PatService,private route: ActivatedRoute,
+    private usuarioService :UsuarioService,private formBuilder: FormBuilder
+  ) {this.form = this.formBuilder.group({
+    fechaInicial: ['', Validators.required],
+    fechaFinal: ['', Validators.required],
+  });}
 
   ngOnInit() {
     // Obtén el valor de idPat de la URL
@@ -38,6 +47,8 @@ export class TipogeListarComponent implements OnInit {
         (data: any) => {
           this.patNombre = data.nombre;
           this.idPat = data.idPat // Asignar el nombre del Pat a patNombre
+          this.porcentajePat = data.porcentaje
+          this.usuarioPat = data.idUsuario
         },
         (error) => {
           // Manejo de errores
@@ -90,7 +101,7 @@ export class TipogeListarComponent implements OnInit {
   }
 
   eliminarGestion(idActividadGestion: number) {
-    const gestionAEliminar = this.gestiones.find(gest => gest.idActividadGestion === idActividadGestion);
+    const gestionAEliminar = this.gestiones.find(g => g.idActividadGestion === idActividadGestion);
 
       swal({
         title: "¿Estás seguro?",
@@ -106,7 +117,6 @@ export class TipogeListarComponent implements OnInit {
             swal("Eliminado Satisfactoriamente", "La gestión del área " + gestionAEliminar.nombre + " se ha eliminado.", "success").then(() => {
               window.location.reload();
             });
-            console.log(response);
           },
           (error) => {
             swal("Solicitud no válida", error.error.mensajeHumano, "error");
@@ -132,7 +142,6 @@ export class TipogeListarComponent implements OnInit {
             swal("Eliminado Satisfactoriamente", "La epica con el nombre " + actividadAEliminar.nombre + " se ha eliminado.", "success").then(() => {
               window.location.reload();
             });
-            console.log(response);
           },
           (error) => {
             swal("Solicitud no válida", error.error.mensajeHumano, "error");
@@ -142,9 +151,88 @@ export class TipogeListarComponent implements OnInit {
       });
   }
 
+  modificarActividadGestion() {
+    if (this.form.valid && this.idActividadGestionSeleccionado) {
+      const fechaInicial = this.form.get('fechaInicial')?.value;
+      const fechaFinal = this.form.get('fechaFinal')?.value;
+      const actividadGestion = {
+        fechaInicial: fechaInicial,
+        fechaFinal: fechaFinal,
+      };
+      this.gestionService
+        .modificarActividadGestión(actividadGestion, this.idActividadGestionSeleccionado, this.auth.obtenerHeader())
+        .subscribe(
+          (response) => {
+            swal({
+              title: "Modificado Satisfactoriamente",
+              text: "La gestión del área se ha modificado",
+              icon: "success",
+            }).then((value) => {
+              location.reload();
+            });
+          },
+          (error) => {
+            swal(error.error.mensajeTecnico, "warning");
+          }
+        );
+    }
+  }
+  modificarActividadEstrategica() {
+
+    if (this.form.valid && this.idActividadEstrategicaSeleccionado) {
+      const fechaInicial = this.form.get('fechaInicial')?.value;
+      const fechaFinal = this.form.get('fechaFinal')?.value;
+      const actividadEstrategica = {
+        fechaInicial: fechaInicial,
+        fechaFinal: fechaFinal,
+      };
+
+      this.gestionService
+        .modificarActividadEstrategica(actividadEstrategica, this.idActividadEstrategicaSeleccionado, this.auth.obtenerHeader())
+        .subscribe(
+          (response) => {
+            swal({
+              title: "Modificado Satisfactoriamente",
+              text: "La actividad estrategica se ha modificado",
+              icon: "success",
+            }).then((value) => {
+              location.reload();
+            });
+          },
+          (error) => {
+            swal(error.error.mensajeTecnico, "warning");
+          }
+        );
+    }
+  }
+
+  obtenerActividadGestion(idActividadGestion: number,actividadGestion:any) {
+    this.idActividadGestionSeleccionado = idActividadGestion;
+    this.nombreActividadGestion = actividadGestion.nombre;
+  }
+  obtenerActividadEstrategica(idActividadEstrategica: number,actividadEstrategica:any) {
+    this.idActividadEstrategicaSeleccionado = idActividadEstrategica;
+    this.nombreActividadEstrategica = actividadEstrategica.nombre;
+  }
   obtenerNombreUsuario(idUsuario: number) {
     const usuario = this.usuarios.find((u) => u.idUsuario === idUsuario);
     return usuario ? usuario.nombre + " " + usuario.apellidos : '';
+  }
+  colorPorcentaje(porcentaje: number): string {
+    if (porcentaje < 30) {
+      return 'porcentaje-bajo'; // Define las clases CSS para porcentajes bajos en tu archivo de estilos.
+    } else if (porcentaje >= 30 && porcentaje < 100){
+      return 'porcentaje-medio'; // Define las clases CSS para porcentajes normales en tu archivo de estilos.
+    } else {
+      return 'porcentaje-cien';
+    }
+  }
+  colorDias(diasRestantes: number): string {
+    if (diasRestantes < 10) {
+      return 'porcentaje-bajo'; // Define las clases CSS para porcentajes bajos en tu archivo de estilos.
+    } else {
+      return 'porcentaje-normal';
+    }
   }
   
 

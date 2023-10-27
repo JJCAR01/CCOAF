@@ -5,122 +5,210 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="actividad.listar.component.scss">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@1&family=Roboto+Slab&display=swap" rel="stylesheet">
     
 </head>
 <body>
-  <div  class="row-with-button">
-    <div >
-      <h1  class="mb-2"> {{ actividadNombre }} </h1>
+  <div  class="row-with-button mb-1">  
+    <div>
+      <h1 class="mb-1"> {{ actividadNombre }} </h1>  
+      <div class="row">
+        <div class="responsable-info">
+          <h2>Porcentaje actual:</h2>
+          <p> {{ porcentajeEstrategica }} %</p>
+        </div>
+        <div class="responsable-info">
+          <h2>Responsable:</h2>
+          <p> {{ obtenerNombreUsuario(usuarioEstrategica).toLocaleUpperCase() }}</p>
+        </div>
+      </div>
     </div>
-    <div class="text-center">
-      <span>
-        
-      </span>
+  </div>
+  <ul class="nav nav-tabs header" id="myTab" role="tablist">
+    <li class="header">
+      <button title="Atrás"
+        type="button" class="btn btn-outline-dark me-1" 
+        [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarTipoGE', patEstrategica] } }]">
+        <i class="bi bi-arrow-return-left"></i>
+      </button>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link active" id="proyectos-tab" data-bs-toggle="tab" href="#proyectos" role="tab" aria-controls="proyectos" aria-selected="true">Proyectos</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="actividades-tab" data-bs-toggle="tab" href="#actividades" role="tab" aria-controls="actividades" aria-selected="false">Actividades de gestión</a>
+    </li>
+    <li class="header">
+      <button title="Agregar"
+        type="button" class="btn btn-success" >
+        <i class="bi bi-plus-lg"></i>
+      </button>
+    </li>
+  </ul>
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="proyectos" role="tabpanel" aria-labelledby="proyectos-tab">
+      <main class="main text-center smaller-main">
+        <table class="table table-responsive">
+          <thead class="table-dark">
+            <tr>
+              <th class="column-nombre">Nombre</th>
+              <th class="column-presupuesto">Presupuesto</th>
+              <th>Modalidad</th>
+              <th class="column-presupuesto">Valor Ejecutado</th>
+              <th>Estado</th>
+              <th class="column-fecha">Fecha inicial</th>
+              <th class="column-fecha">Fecha final</th>
+              <th class="column-total">Duracion (Días)</th>
+              <th>Planeación Sprint</th>
+              <th class="column-total">Total sprint</th>
+              <th class="column-acciones">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let proyecto of proyectos | buscar: busqueda">
+              <tr>
+                <td>{{ proyecto.nombre }}</td>
+                <td>{{ proyecto.presupuesto | currency : '$ ' : 'symbol' : '1.0-0' }}</td>
+                <td>{{ proyecto.modalidad }}</td>
+                <td>{{ proyecto.valorEjecutado | currency : '$ ' : 'symbol' : '1.0-0' }}</td>
+                <td>{{ proyecto.estado }}</td>
+                <td>{{ proyecto.fechaInicial }}</td>
+                <td>{{ proyecto.fechaFinal }}</td>
+                <td>{{ proyecto.duracion }}</td>
+                <td>{{ proyecto.planeacionSprint }}</td>
+                <td>{{ proyecto.totalSprint }}</td>
+                <td>
+                  <button title="Ver" class="btn btn-outline-primary me-1" 
+                  [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarSprint', proyecto.idProyecto] } }]"
+                    ><i class="bi bi-eye-fill"></i></button>
+                    <button title="Modificar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarProyecto" (click)="obtenerProyecto(proyecto.idProyecto,proyecto)">
+                      <i class="bi bi-pen-fill"></i>
+                    </button>
+                  <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarProyecto(proyecto.idProyecto)"><i class="bi bi-trash3-fill"></i></button>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </main>
+    </div>
+    <div class="tab-pane fade" id="actividades" role="tabpanel" aria-labelledby="actividades-tab">
+      <main class="main text-center smaller-main">
+        <table class="table table-hover">
+          <thead class="table-dark">
+            <tr>
+              <th class="column-nombre">Nombre</th>
+              <th>Fecha Inicial</th>
+              <th>Fecha Final</th>
+              <th>Duracion (Días)</th>
+              <th>Días Restantes</th>
+              <th>Avance</th>
+              <th>Responsable</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let gestion of gestiones | buscar: busqueda">
+              <tr>
+                <td>{{ gestion.nombre }}</td>
+                <td>{{ gestion.fechaInicial }}</td>
+                <td>{{ gestion.fechaFinal }}</td>
+                <td>{{ gestion.duracion }}</td>
+                <td [ngClass]="colorPorcentaje(gestion.avance)">
+                  <span *ngIf="gestion.avance !== 100"[ngClass]="colorDias(gestion.diasRestantes)">{{ gestion.diasRestantes }}</span>
+                  <span *ngIf="gestion.avance === 100">Finalizado</span>
+                </td>
+                <td [ngClass]="colorPorcentaje(gestion.avance)">{{ gestion.avance }} %</td>
+                <td>{{ obtenerNombreUsuario(gestion.idUsuario).toLocaleUpperCase() }}</td>
+                <td>
+                  <button title="Ver" class="btn btn-outline-primary me-1" 
+                    [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarTarea', gestion.idActividadGestionActividadEstrategica] } }]"
+                    [queryParams]="{ idActividadGestionActividadEstrategica: gestion.idActividadGestionActividadEstrategica, tipoASE: 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA' }"
+                  ><i class="bi bi-eye-fill"></i></button>
+                  <button title="Modificar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarGestion" (click)="obtenerActividadGestion(gestion.idActividadGestionActividadEstrategica,gestion)">
+                    <i class="bi bi-pen-fill"></i>
+                  </button>
+                  <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarGestion(gestion.idGestion)"><i class="bi bi-trash3-fill"></i></button>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </main>
     </div>
   </div>  
-  <main class="main text-center smaller-main">
-    <div class="header">
-      <button 
-        type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#dialog1">
-        Adicionar
-      </button>
-
-      <h3> Proyectos </h3>
-    </div>
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th>Nombre</th>
-          <th>Nombre</th>
-          <th>Presupuesto</th>
-          <th>Modalidad</th>
-          <th>Valor Ejecutado</th>
-          <th>Estado</th>
-          <th>Fecha Inicial</th>
-          <th>Fecha Final</th>
-          <th>Duracion</th>
-          <th>Planeacion Sprint</th>
-          <th>Total Sprint</th>
-          <th>Usuario</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <ng-container *ngFor="let proyecto of proyectos | buscar: busqueda">
-          <tr>
-            <td>{{ proyecto.idProyecto }}</td>
-            <td>{{ proyecto.nombre }}</td>
-            <td>{{ proyecto.presupuesto }}</td>
-            <td>{{ proyecto.modalidad }}</td>
-            <td>{{ proyecto.valorEjecutado }}</td>
-            <td>{{ proyecto.estado }}</td>
-            <td>{{ proyecto.fechaInicial }}</td>
-            <td>{{ proyecto.fechaFinal }}</td>
-            <td>{{ proyecto.duracion }}</td>
-            <td>{{ proyecto.planeacionSprint }}</td>
-            <td>{{ proyecto.totalSprint }}</td>
-            <td>{{ obtenerNombreUsuario(proyecto.idUsuario).toLocaleUpperCase() }}</td>
-            <td class="hacialaderecha">
-              <button class="btn btn-info custom-button me-1" 
-              [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarSprint', proyecto.idProyecto] } }]"
-                >Ver</button>
-              <button class="btn btn-primary custom-button me-1">Modificar</button>
-              <button class="btn btn-danger custom-button me-1" (click)="eliminarProyecto(proyecto.idProyecto)">Eliminar</button>
-            </td>
-          </tr>
-        </ng-container>
-      </tbody>
-    </table>
-    <div class="header">
-      <button 
-        type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#dialog1">
-        Adicionar
-      </button>
- 
-      <h3>Actividades de gestión</h3>
-    </div>
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th>Nombre</th>
-          <th>Fecha Inicial</th>
-          <th>Fecha Final</th>
-          <th>Duracion</th>
-          <th>Días Restantes</th>
-          <th>Avance</th>
-          <th>Responsable</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <ng-container *ngFor="let gestion of gestiones | buscar: busqueda">
-          <tr>
-            <td>{{ gestion.nombre }}</td>
-            <td>{{ gestion.fechaInicial }}</td>
-            <td>{{ gestion.fechaFinal }}</td>
-            <td>{{ gestion.duracion }}</td>
-            <td>{{ gestion.diasRestantes }}</td>
-            <td>{{ gestion.avance }} %</td>
-            <td>{{ obtenerNombreUsuario(gestion.idUsuario).toLocaleUpperCase() }}</td>
-            <td class="hacialaderecha">
-              <button class="btn btn-info custom-button me-1"
-                [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarTarea', gestion.idActividadGestionActividadEstrategica] } }]"
-                [queryParams]="{ idActividadGestionActividadEstrategica: gestion.idActividadGestionActividadEstrategica, tipoASE: 'ACTVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA' }"
-              >Ver</button>
-              <button class="btn btn-primary custom-button me-1">Modificar</button>
-              <button class="btn btn-danger custom-button me-1" (click)="eliminarGestion(gestion.idGestion)">Eliminar</button>
-            </td>
-          </tr>
-        </ng-container>
-      </tbody>
-    </table>
-  </main>
+  
+    
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.4/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 
+  <div class="modal fade" id="modalModificarProyecto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modificar Proyecto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="form" (ngSubmit)="modificarProyecto()">
+            <div class="mb-3 custom-input">
+              <label for="nombre" class="form-label">{{nombreProyecto}}</label>
+            </div>
+            <div class="mb-3">
+              <label for="presupuesto" class="form-label">Presupuesto</label>
+              <input type="text" class="form-control" id="presupuesto" formControlName="presupuesto">
+            </div>
+            <div class="mb-3">
+              <label for="fechaInicial" class="form-label">Fecha Inicial</label>
+              <input type="date" class="form-control" id="fechaInicial" formControlName="fechaInicial">
+            </div>
+            <div class="mb-3">
+              <label for="fechaFinal" class="form-label">Fecha Final</label>
+              <input type="date" class="form-control" id="fechaFinal" formControlName="fechaFinal">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+    <div class="modal fade" id="modalModificarGestion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modificar Gestion del Area</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="form" (ngSubmit)="modificarActividadGestion()">
+              <div div class="mb-3 custom-input">
+                <label for="nombre" class="form-label">{{nombreActividadGestion}}</label>
+              </div>
+              <div class="mb-3">
+                <label for="fechaInicial" class="form-label">Fecha Inicial</label>
+                <input type="date" class="form-control" id="fechaInicial" formControlName="fechaInicial">
+              </div>
+              <div class="mb-3">
+                <label for="fechaFinal" class="form-label">Fecha Final</label>
+                <input type="date" class="form-control" id="fechaFinal" formControlName="fechaFinal">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
   
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+
 </body>
 </html>

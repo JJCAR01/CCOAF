@@ -21,6 +21,9 @@ export class ActividadService {
   listarActividadGestionActividadEstrategicaPorIdActividadEstrategica(idActividadEstrategica:number,headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/gestionesestrategicas/actividad/${idActividadEstrategica}`,{headers});
   }
+  modificarActividadGestionActividadEstrategica(actividadGestionActividadEstrategica : any,idActividadGestionActividadEstrategica:number,headers?: HttpHeaders){
+    return this.http.put(`${environment.apiUrl}/ccoa/gestionesestrategicas/${idActividadGestionActividadEstrategica}`,actividadGestionActividadEstrategica,{headers});
+  }
   eliminarActividadGestionActividadEstrategica(idGestionActividadEstrategica:number,headers?: HttpHeaders){
     return this.http.delete(`${environment.apiUrl}/ccoa/gestionesestrategicas/${idGestionActividadEstrategica}`,{headers});
   }
@@ -37,6 +40,9 @@ export class ActividadService {
   }
   listarProyectoPorIdActividadEstrategica(idActividadEstrategica:number,headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/proyectos/actividad/${idActividadEstrategica}`,{headers});
+  }
+  modificarProyecto(proyecto : any,idProyecto:number,headers?: HttpHeaders){
+    return this.http.put(`${environment.apiUrl}/ccoa/proyectos/${idProyecto}`,proyecto,{headers});
   }
   eliminarProyecto(idProyecto:number,headers?: HttpHeaders){
     return this.http.delete(`${environment.apiUrl}/ccoa/proyectos/${idProyecto}`,{headers});

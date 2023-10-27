@@ -1,1 +1,3 @@
-const myModal = new bootstrap.Modal(document.getElementById('myModal'), options)
+function goBack() {
+    window.history.back();
+  }

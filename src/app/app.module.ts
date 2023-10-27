@@ -24,7 +24,7 @@ import { TipogeListarComponent } from './gestion/listar/tipoGE.listar.component'
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import { BuscarPipe } from 'src/pipes/buscar.pipes';
-import { EnumPipe } from 'src/pipes/enum.pipes';
+
 import swal from 'sweetalert';
 import { ActividadCrearComponent } from './actividad/crear/actividad.crear.component';
 import { ActividadListarComponent } from './actividad/listar/actividad.listar.component';
@@ -34,6 +34,9 @@ import { OAuthModule } from 'angular-oauth2-oidc';
 import { SprintListarComponent } from './sprint/listar/sprint.listar.component';
 import { SprintCrearComponent } from './sprint/crear/sprint.crear.component';
 import { TareaListarComponent } from './tarea/listar/tarea.listar.component';
+import { TareaCrearComponent } from './tarea/crear/tarea.crear.component';
+
+import { EnumPipe } from 'src/pipes/enum.pipes';
 
 
 @NgModule({
@@ -41,7 +44,7 @@ import { TareaListarComponent } from './tarea/listar/tarea.listar.component';
     AppComponent,LoginComponent,PanelAdminComponent,AreaCrearComponent,AreaListarComponent,PanelUsuarioComponent,
     CargoCrearComponent,CargoListarComponent,UsuarioCrearComponent,UsuarioListarComponent, BuscarPipe,EnumPipe,PatListarComponent,
     PatCrearComponent,TipogeListarComponent,ActividadCrearComponent, ActividadListarComponent, ActividadEstrategicaCrearComponent, GestionCrearComponent, 
-    SprintListarComponent,SprintCrearComponent, TareaListarComponent
+    SprintListarComponent,SprintCrearComponent, TareaListarComponent,
   ],
   imports: [
     BrowserModule,

@@ -3,28 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="pat.listar.component.scss">
 </head>
 <body>
   <div class="row-with-button">
     <div>
-      <h1 class="mb-2">Plan Anual de trabajo </h1>
-    </div>
-    <div class="text-center">
-      <span>
-        <button 
-          type="button" class="btn btn-success" [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['crearPat'] } }]">
-          Crear Nuevo
-        </button>
-      </span>
+      <h1 class="mb-2">Plan Anual de trabajo</h1>
     </div>
   </div>
-    
+  <div class="ng-container">
+    <div class="plan-cuadro">
+      <p>{{ cantidadPats}}</p>
+      <h2>Total Planes de trabajo</h2>
+    </div>
+  </div>
+  
+  <div class="cuadro-container">
+    <div class="cuadro">
+      <h2>Total actividades estratégicas</h2>
+      <p>{{cantidadEstrategicas}}</p>
+    </div>
+    <div class="cuadro">
+      <h2>Total proyectos</h2>
+      <p>{{cantidadProyectos}}</p>
+    </div>
+    <div class="cuadro">
+      <h2>Total actividades de gestión</h2>
+      <p>{{cantidadGestiones}}</p>
+    </div>
+  </div>
+
+  <div class="subcuadro-container">
+    <div class="subcuadro finalizado">
+      <h2>Finalizadas</h2>
+      <p></p>
+    </div>
+    <div class="subcuadro abierto">
+      <h2>Abiertos</h2>
+      <p></p>
+    </div>
+    <div class="subcuadro finalizado">
+      <h2>Finalizados</h2>
+      <p></p>
+    </div>
+    <div class="subcuadro abierto">
+      <h2>Abiertos</h2>
+      <p></p>
+    </div>
+    <div class="subcuadro finalizado">
+      <h2>Finalizadas</h2>
+      <p></p>
+    </div>
+    <div class="subcuadro abierto">
+      <h2>Abiertos</h2>
+      <p></p>
+    </div>
+  </div>
+  
   <main class="main text-center smaller-main">
-    <table class="table table-bordered">
-      <thead>
+    <div class="custom-button mb-1">
+        <button title="Agregar"
+          type="button" class="btn btn-success" [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['crearPat'] } }]">
+          <i class="bi bi-plus-lg"></i>
+        </button>
+    </div>
+    <table class="table table-hover">
+      <thead class="table-dark">
         <tr>
-          <th>Programa</th>
+          <th>Programa</th> 
           <th>Año</th>
           <th>Proceso</th>
           <th>Porcentaje avance</th>
@@ -38,26 +85,25 @@
             <td>{{ pat.nombre }}</td>
             <td>{{ pat.fechaAnual }}</td>
             <td>{{ pat.proceso | formatEnum }}</td>
-            <td>{{ pat.porcentaje }}%</td>
+            <td [ngClass]="colorPorcentaje(pat.porcentaje)">{{ pat.porcentaje }} %</td>
             <td >{{ obtenerNombreUsuario(pat.idUsuario).toUpperCase() }} </td>
             
             <td>
-              <button class="btn btn-info custom-button me-1" 
+              <button title="Ver" class="btn btn-outline-primary me-1" 
               [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarTipoGE', pat.idPat] } }]"
-                >Ver detalle</button>
-                <button type="button" class="btn btn-primary me-1" data-bs-toggle="modal" data-bs-target="#modalAdicionarActividad" (click)="setSelectedPat(pat.idPat,pat)">
-                  Modificar
+                ><i class="bi bi-eye-fill"></i></button>
+                <button title="Editar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalAdicionarActividad" (click)="setSelectedPat(pat.idPat,pat)">
+                  <i class="bi bi-pen-fill"></i>
                 </button>
                   
-              <button class="btn btn-danger custom-button me-1" (click)="eliminarPat(pat.idPat)">Eliminar</button>
+              <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarPat(pat.idPat)"><i class="bi bi-trash3-fill"></i></button>
             </td>
           </tr>
         </ng-container>
       </tbody>
     </table>
   </main>
-
-  <!-- ... -->
+  
   <div class="modal fade" id="modalAdicionarActividad" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">

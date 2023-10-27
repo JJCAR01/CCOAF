@@ -7,11 +7,13 @@ body{
     justify-content: space-between;
     margin-top: 10px;
     margin-bottom: 10px;
-    h3 {
-        margin: 0;
-        text-align: center;
-        font-family: 'Roboto',monospace;
-    }
+    
+}
+h3 {
+    margin: 0;
+    font-family: 'Roboto', monospace;
+    text-align: right;
+    margin-left: auto; 
 }
 button {
     margin-left: auto; /* Mueve el botón a la derecha */

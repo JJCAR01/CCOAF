@@ -7,6 +7,7 @@ import { ActividadService } from 'src/app/actividad/services/actividad.service';
 import swal from 'sweetalert';
 import { TipoGEService } from 'src/app/gestion/services/tipoGE.service';
 import { UsuarioService } from 'src/app/usuario/services/usuario.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-tarea',
@@ -21,18 +22,21 @@ export class TareaListarComponent {
   actividadNombre:any;
   sprintNombre:any;
   gestionNombre:any;
+  idSprintSeleccionado:any;
+  idActGestionSeleccionado:any;
+  idActGestionActEstrategicaSeleccionado:any;
   idASE:any;
+  form:FormGroup;
   busqueda: any;
 
   constructor(
-    private tareaService: TareaService,
-    private auth: AuthService,
-    private sprintService: SprintService,
-    private tipoService:TipoGEService,
-    private actividadService:ActividadService,
-    private usuarioService:UsuarioService,
-    private route: ActivatedRoute,
-  ) {}
+    private tareaService: TareaService,private auth: AuthService,
+    private sprintService: SprintService,private tipoService:TipoGEService,
+    private actividadService:ActividadService,private usuarioService:UsuarioService,
+    private route: ActivatedRoute,private formBuilder: FormBuilder
+  ) {this.form = this.formBuilder.group({
+    estado: ['', Validators.required],
+  });}
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
@@ -66,12 +70,23 @@ export class TareaListarComponent {
             this.cargarTareas(idActividadGestionActividadEstrategica,tipo); // Asignar el nombre del Pat a patNombre
           },
         );
+        this.tareas.forEach(tarea => {
+          tarea.estado = {
+            EN_BACKLOG: tarea.estado === 'EN_BACKLOG',
+            EN_PROCESO: tarea.estado === 'EN_PROCESO',
+            TERMINADO: tarea.estado === 'TERMINADO',
+            IMPEDIMENTO: tarea.estado === 'IMPEDIMENTO',
+          };
+        });
       }
       
 
       
     });
     this.cargarUsuario();
+  }
+  isEstado(tareaEstado:any, estado:any) {
+    return tareaEstado === estado;
   }
   cargarUsuario() {
     this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
@@ -102,7 +117,7 @@ export class TareaListarComponent {
           }
         );
     } 
-    else if(tipoASE === 'ACTVIDAD_GESTION'){
+    else if(tipoASE === 'ACTIVIDAD_GESTION'){
       this.tareaService
         .listarTareaPorActvidadGestion(idASE, this.auth.obtenerHeader()) 
         .toPromise()
@@ -115,7 +130,8 @@ export class TareaListarComponent {
           }
         );
     }
-    else if(tipoASE === 'ACTVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA'){
+    else if(tipoASE === 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA'){
+
       this.tareaService
         .listarTareaPorActvidadGestionActividadEstrategica(idASE, this.auth.obtenerHeader()) 
         .toPromise()
@@ -155,6 +171,54 @@ export class TareaListarComponent {
         );
       }
       });
+  }
+  modificarTarea() {
+    if (this.form.valid && this.idActGestionSeleccionado) {
+      const estado = this.form.get('estado')?.value;
+      const tarea = {
+        estado: estado,
+      };
+      this.tareaService
+        .modificarTarea(tarea, this.idActGestionSeleccionado, this.auth.obtenerHeader())
+        .subscribe(
+          (response) => {
+            swal({
+              title: "Modificado Satisfactoriamente",
+              text: "La gestión del área se ha modificado",
+              icon: "success",
+            }).then((value) => {
+              location.reload();
+            });
+          },
+          (error) => {
+            swal(error.error.mensajeTecnico, "warning");
+          }
+        );
+    }
+  }
+  obtenerSprint(idSprint: number,sprint:any) {
+    this.idSprintSeleccionado = idSprint;
+    this.sprintNombre = sprint.nombre;
+  }
+  obtenerActividadGestion(idActividadGestion: number,actividadGestion:any) {
+    this.idActGestionSeleccionado = idActividadGestion;
+    this.gestionNombre = actividadGestion.nombre;
+  }
+
+  obtenerActividadGestionActividadEstrategica(idActividadGestionActividadEstrategica: number,actividadGestionActividadEstrategica:any) {
+    this.idActGestionActEstrategicaSeleccionado = idActividadGestionActividadEstrategica;
+    this.actividadNombre = actividadGestionActividadEstrategica.nombre;
+  }
+
+
+  obtenerNombre() : any{
+    if(this.sprintNombre){
+      return this.sprintNombre;
+    } else if (this.actividadNombre){
+      return this.actividadNombre;
+    } else if (this.gestionNombre){
+      return this.gestionNombre;
+    }
   }
 
 }

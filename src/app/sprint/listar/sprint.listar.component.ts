@@ -18,6 +18,7 @@ export class SprintListarComponent implements OnInit {
   usuarios:any[] =[];
   proyectoNombre:any;
   idProyecto:any;
+  actividad:any;
   busqueda: any;
 
   constructor(
@@ -34,8 +35,9 @@ export class SprintListarComponent implements OnInit {
       const idProyecto = params['idProyecto'];
       this.actividadService.listarProyectoPorId(idProyecto,this.auth.obtenerHeader()).subscribe(
         (data: any) => {
-          this.proyectoNombre = data.nombre;
+          this.proyectoNombre = data.nombre
           this.idProyecto = data.idProyecto // Asignar el nombre del Pat a patNombre
+          this.actividad = data.idActividadEstrategica
         },
         (error) => {
           // Manejo de errores
@@ -103,6 +105,15 @@ export class SprintListarComponent implements OnInit {
   obtenerNombreUsuario(idUsuario: number) {
     const usuario = this.usuarios.find((u) => u.idUsuario === idUsuario);
     return usuario ? usuario.nombre + " " + usuario.apellidos : '';
+  }
+  colorPorcentaje(porcentaje: number): string {
+    if (porcentaje < 30) {
+      return 'porcentaje-bajo'; // Define las clases CSS para porcentajes bajos en tu archivo de estilos.
+    } else if (porcentaje >= 30 && porcentaje < 100){
+      return 'porcentaje-normal'; // Define las clases CSS para porcentajes normales en tu archivo de estilos.
+    } else {
+      return 'porcentaje-cien';
+    }
   }
 
 }

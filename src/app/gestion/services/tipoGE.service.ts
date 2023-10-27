@@ -22,6 +22,9 @@ export class TipoGEService {
   listarGestionPorIdPat(idPat:number,headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/gestiones/pat/${idPat}`,{headers});
   }
+  modificarActividadGestión(actividadGestion : any,idActividadGestion:number,headers?: HttpHeaders){
+    return this.http.put(`${environment.apiUrl}/ccoa/gestiones/${idActividadGestion}`,actividadGestion,{headers});
+  }
   eliminarGestion(idGestion:number,headers?: HttpHeaders){
     return this.http.delete(`${environment.apiUrl}/ccoa/gestiones/${idGestion}`,{headers});
   }
@@ -39,6 +42,9 @@ export class TipoGEService {
   }
   listarActividadEstrategicaPorIdPat(idPat:number,headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/estrategicas/pat/${idPat}`,{headers});
+  }
+  modificarActividadEstrategica(actividadEstrategica : any,idActividadEstrategica:number,headers?: HttpHeaders){
+    return this.http.put(`${environment.apiUrl}/ccoa/estrategicas/${idActividadEstrategica}`,actividadEstrategica,{headers});
   }
   eliminarActividadEstrategica(idActividadEstrategica:number,headers?: HttpHeaders){
     return this.http.delete(`${environment.apiUrl}/ccoa/estrategicas/${idActividadEstrategica}`,{headers});

@@ -6,58 +6,124 @@
     text-align: center;
 }
 h1 {
-    background-color: #504f4f;
-    color: #e7e5e5;
+    font-family: "Roboto", sans-serif;
+    color: #257236;
     padding: 5px;
     margin: 0;
-    text-align: center;
+    text-align: left;
 }
   
   
 h2 {
-    font-family: "Roboto", cursive;
+    font-family: "Roboto", initial;
+    font-size: 15px;
+    margin-bottom: 10px;
 }
 
 /* Estilos para el elemento .smaller-main */
 .smaller-main {
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
-    height: 50vh; /* Establece la altura deseada */
-}
+    margin-top: 10px;
 
-.smaller-main .porcentajes {
-    width: 20%; /* Establece el ancho deseado */
-    max-width: flex; /* Establece el ancho máximo deseado */
 }
 .custom-button {
     color: #fff; /* Cambia #your-desired-color por el color que desees */
+    margin-top: auto; /* Empuja el botón hacia la parte inferior del contenedor */
+    align-self: flex-end; /* Alinea el botón a la derecha */
 }
 
-
-.registro-pat {
-    display: flex;
-    flex-direction: column;
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin-bottom: 10px;
-    background-color: #fff;
-  }
-  
-  .tabla-row {
+.tabla-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
+}
   
-  .tabla {
+.tabla {
     text-align: left;
     flex: 1;
     padding: 10px;
-  }
+}
   
   /* Estilos para los botones */
-  .custom-button {
+.custom-button {
     width: auto; /* Los botones ocuparán todo el ancho de su contenedor */
-  }
+}
+
+.porcentaje-bajo {
+    color: red; // Define el color rojo para porcentajes bajos.
+}
+  
+.porcentaje-medio {
+    color: orange; // Define el color verde (u otro color de tu elección) para porcentajes normales.
+}
+
+.porcentaje-cien {
+    color: green; // Define el color verde (u otro color de tu elección) para porcentajes normales.
+}
+.porcentaje-normal {
+    color: #504f4f;
+}
+th,td {
+    vertical-align: middle;
+    text-align: center; /* Centra el texto horizontalmente en las celdas del encabezado */
+}
+
+.plan-cuadro {
+    background-color: #dbdbdb80;
+    padding: 1px; // Reduce el espacio interno
+    flex: 1;
+    height: 80px; // Ajusta la altura
+    text-align: center; 
+}
+.plan-cuadro p {
+    margin-bottom: 0px; //Espacio entre p y h1
+    font-size: 35px; // Tamaño de letra
+}
+.cuadro-container {
+    display: flex;
+    justify-content: center;
+    gap: 5px; // Espacio entre los cuadros
+    margin-top: 5px; // Espacio entre la sección anterior y los cuadros
+}
+.cuadro {
+    background-color: rgba(199, 199, 199, 0.514);
+    padding: 2px; // Reduce el espacio interno
+    flex: 1;
+    width: auto; // Ajusta el ancho
+    height: 75px; // Ajusta la altura
+    margin-top: 1px;
+    text-align: center; 
+}
+.cuadro h2 {
+    margin-bottom: 1px; //Espacio entre p y h1
+    font-size: px; // Tamaño de letra
+}
+
+.subcuadro-container {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    gap: 5px; // Espacio entre los cuadros
+    margin-top: 2px; // Espacio entre la sección anterior y los cuadros
+ }
+.subcuadro {
+    padding: 1px; // Reduce el espacio interno
+    flex: 1;
+    width: 10px; // Ajusta el ancho
+    height: 60px; // Ajusta la altura
+}
+.finalizado {
+    background-color: #0aec7083;
+}
+.abierto{
+    background-color: #ffb411ab;
+}
+  
+p {
+    font-family: "Roboto", unset; //Tipo de letra
+    text-align: center;
+    font-size: 30px; // Tamaño de letra
+}
+  

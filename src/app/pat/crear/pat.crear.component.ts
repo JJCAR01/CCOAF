@@ -20,7 +20,6 @@ export class PatCrearComponent implements OnInit{
   { this.form = this.formBuilder.group({
     nombre: ['', Validators.required],
     fechaAnual: ['', Validators.required],
-    porcentaje: ['', Validators.required],
     proceso: ['', Validators.required],
     idUsuario: ['', Validators.required], 
   }); }
@@ -44,7 +43,6 @@ export class PatCrearComponent implements OnInit{
     if (this.form.valid) {
       const nombre = this.form.get('nombre')?.value;
       const fechaAnual = this.form.get('fechaAnual')?.value;
-      const porcentaje = this.form.get('porcentaje')?.value;
       const proceso = this.form.get('proceso')?.value;
       const idUsuarioSeleccionado = parseInt(this.form.get('idUsuario')?.value);
 
@@ -54,7 +52,6 @@ export class PatCrearComponent implements OnInit{
         const cargo = {
           nombre: nombre,
           fechaAnual: fechaAnual,
-          porcentaje: porcentaje,
           proceso: proceso,
           idUsuario: usuarioSeleccionado.idUsuario,
         };
@@ -66,7 +63,7 @@ export class PatCrearComponent implements OnInit{
             console.log(response);
           },
           (error) => {
-            swal(error.error.mensajeTecnico,"warning");
+            swal("Error",error.error.mensajeTecnico,"error");
           }
         );
       }
