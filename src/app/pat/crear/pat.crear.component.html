@@ -6,41 +6,39 @@
 <body>
 
 <section class="gradient-form">
-    <div class="mask d-flex align-items-center">
+    <div >
         <div class="container">
-            <div class="row d-flex justify-content-center">
+            <div class="row ">
                 <div class="col-xl-9">
-                        <div class="card-body p-5">
-                            <h2 class="text-uppercase text-center">Crear plan Anual de trabajo</h2>
+                        <div class="card">
+                            <h2 class="text-center">Crear plan Anual de trabajo</h2>
 
                             <form [formGroup]="form" (ngSubmit)="crearPat()">
-                                <div class="form-floating mb-1">
+                                <div class="form-floating mb-3">
                                   <input type="text" id="nombre" class="form-control form-control-lg" formControlName="nombre" placeholder="nombre">
                                   <label class="form-label" for="nombre">Nombre</label>
                                 </div>
-                                <div class="form-floating mb-1">
+                                <div class="form-floating mb-3">
                                     <input type="text" id="fechaAnual" class="form-control form-control-lg" formControlName="fechaAnual" placeholder="Año">
                                     <label class="form-label" for="fechaAnual">Año</label>
                                 </div>
-                                <div class="form-floating mb-1">
+                                <div class="form-floating mb-3">
                                     <input type="text" id="proceso" class="form-control form-control-lg" formControlName="proceso" placeholder="proceso">
                                     <label class="form-label" for="proceso">Proceso</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <select class="form-select" id="idUsuario" formControlName="idUsuario" >
-                                        <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario" >{{ usuario.nombre  + ' ' + usuario.apellidos | formatEnum}}</option>
+                                    <select class="form-select" id="idUsuario" formControlName="idUsuario"  >
+                                        <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario"  >{{ usuario.nombre  + ' ' + usuario.apellidos | formatEnum}}</option>
                                     </select>
-                                    <label for="idUsuario">Responsable:</label>
-                                </div>
-                                
+                                    <label for="idUsuario" placeholder="usuario">Responsable:</label>
+                                </div>  
                                 <div class="d-flex justify-content-center">
                                     <button type="button" class="btn btn-secondary btn-block me-2"
                                         [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarPat'] } }]"
                                         > Atrás</button>
                                   <button type="submit" class="btn btn-success btn-block btn-lg " [disabled]="!form.valid">Registrar</button>
                                 </div>
-                              </form>
-                               
+                            </form>
                         </div>
                 </div>
             </div>

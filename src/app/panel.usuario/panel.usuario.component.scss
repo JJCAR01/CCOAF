@@ -6,8 +6,7 @@ body{
 .main {
     justify-content: space-between;
     margin-top: 10px;
-    margin-bottom: 10px;
-    
+    margin-bottom: 10px;  
 }
 h3 {
     margin: 0;
@@ -24,28 +23,24 @@ button {
     align-items: center;
 }
 .barra-lateral{
-    background: #f1f5f4b0;
+    background: #d0d1d173;
     color: #768180;
-    min-width: 300px;
+    min-width: 30px;
     min-height: 100vh;
-    padding: 0;
+    padding: 0%;
 }
 .barra-lateral a{
     color: #000000;
-    text-align: left;
 }
 .barra-lateral h2{
 
     color: #000000;
-    text-align: center;
-    margin: 0 auto;
 }
 .barra-lateral .menu a{
     text-decoration: none;
     display: block;
-    padding: 20px;
+    padding: 30px;
     font-family: 'Roboto', sans-serif;
-    font-weight: 500;
     border-bottom: 1px solid rgba(1, 15, 17, 0.1);
 }
 .barra-lateral .logo {
@@ -61,21 +56,13 @@ button {
     background: #c5c4c4;
 }
 
-
-.icon-home::before {
-    font-size: 24px; /* Cambia el tamaño de los iconos a 24px */
-}
-
-.barra-lateral .menu a svg{
-    margin-right: 20px;
-    font-weight: normal;
-    width: 20px;
-}
-
-.main .btn a span{
-    margin-left: 20px;
-    font-weight: normal;
-    width: 20px;
+.barra-lateral .submenu a{
+    display: block;
+    padding: 7px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: lighter;
+    text-align: left;
+    margin-left: 10px;
 }
 
 /*---QUERIES--*/

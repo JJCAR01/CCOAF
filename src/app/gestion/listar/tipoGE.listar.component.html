@@ -21,6 +21,10 @@
           <p> {{ porcentajePat }} %</p>
         </div>
         <div class="responsable-info">
+          <h2>Año:</h2>
+          <p> {{ anual }}</p>
+        </div>
+        <div class="responsable-info">
           <h2>Responsable:</h2>
           <p> {{ obtenerNombreUsuario(usuarioPat).toLocaleUpperCase() }}</p>
         </div>
@@ -30,20 +34,21 @@
   <ul class="nav nav-tabs header" id="myTab" role="tablist">
     <li class="header">
       <button title="Atrás"
-        type="button" class="btn btn-outline-dark" 
+        type="button" class="btn btn-outline-secondary" 
         [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarPat'] } }]">
         <i class="bi bi-arrow-return-left"></i>
       </button>
     </li>
-    <li class="nav-item">
-      <a class="nav-link active" id="actividadese-tab" data-bs-toggle="tab" href="#actividadese" role="tab" aria-controls="actividadese" aria-selected="true">Actividades Estratégicas</a>
+    <li class="nav-item" >
+      <a class="nav-link" id="actividadese-tab" data-bs-toggle="tab" href="#actividadese" role="tab" aria-controls="actividadese" aria-selected="false">Actividades Estratégicas</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" id="gestionarea-tab" data-bs-toggle="tab" href="#gestionarea" role="tab" aria-controls="gestionarea" aria-selected="false">Gestiones del Area</a>
+      <a class="nav-link active" id="gestionarea-tab" data-bs-toggle="tab" href="#gestionarea" role="tab" aria-controls="gestionarea" aria-selected="false">Gestiones del Area</a>
     </li>
     <li class="header">
       <button title="Agregar"
-        type="button" class="btn btn-success" >
+         type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregar">
+
         <i class="bi bi-plus-lg"></i>
       </button>
     </li>
@@ -51,7 +56,7 @@
   <div class="tab-content" id="myTabContent">
     <div class="tab-pane fade show active" id="actividadese" role="tabpanel" aria-labelledby="actividadese-tab">
       <main class="main text-center smaller-main">
-        <table class="table table-hover">
+        <table class="table table-bordered table-hover">
           <thead class="table-dark">
             <tr>
               <th class="column-nombre">Nombre</th>
@@ -94,7 +99,7 @@
     </div>
     <div class="tab-pane fade" id="gestionarea" role="tabpanel" aria-labelledby="gestionarea-tab">
       <main class="main text-center smaller-main">
-        <table class="table table-hover">
+        <table class="table table-bordered table-hover">
           <thead class="table-dark">
           <tr>
             <th class="column-nombre">Nombre</th>
@@ -122,11 +127,9 @@
               <td>{{ obtenerNombreUsuario(gestion.idUsuario).toLocaleUpperCase() }}</td>
               <td >
                 <button title="Ver" title="Ver" class="btn btn-outline-primary me-1"
-                  [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarTarea', gestion.idActividadGestion] } }]"
-                  [queryParams]="{ idActividadGestion: gestion.idActividadGestion, tipoASE: 'ACTIVIDAD_GESTION' }">
+                onclick="verInformacionAdicional(gestion.idActividadGestion)">
                   <i class="bi bi-eye-fill"></i>
                 </button>
-    
                 <button title="Modificar" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarGestion" (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)">
                 <i class="bi bi-pen-fill"></i>
                 </button>

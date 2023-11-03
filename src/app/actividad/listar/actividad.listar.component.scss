@@ -29,16 +29,15 @@
   .responsable-info {
     display: flex; /* Hacer que los elementos dentro de .responsable-info se muestren en línea */
     align-items: center; /* Alinear verticalmente los elementos dentro de .responsable-info */
-    margin-left: 10px; /* Agregar margen izquierdo entre los elementos si es necesario */
   }
   
   .responsable-info h2 {
-    margin-right: 0; /* Agregar margen derecho entre "Responsable:" y el nombre del usuario si es necesario */
+    margin-top: 5px;
     margin: 2px;
   }
   .responsable-info p {
-    margin-right: 0px; /* Agregar margen derecho entre "Responsable:" y el nombre del usuario si es necesario */
-    margin: 2px;
+    margin-top: 5px;
+    margin: 5px;
   }
   
   /* Estilos para el elemento .smaller-main */
@@ -62,12 +61,34 @@
     text-align: right;
   }  
   .header {
+    justify-content: center;
+    margin-top: 10px;
     display: flex;
     justify-content: space-between;
   }
   .nav-item {
+    margin-top: 10px;
     text-align: center;
-    width: 740px; /* Ajusta el ancho deseado */
+    width: 780px;
+    
+    a:active, // Aplica el estilo cuando el enlace está activo
+    a:focus {  // Aplica el estilo cuando el enlace está enfocado
+      background-color: #ece8e8;
+      color: #000000;
+    }
+  }
+  .nav-link {
+    font-family: 'Roboto', initial;
+    font-size: 20px;
+    color: rgb(0, 0, 0);
+  }
+
+  .nav {
+    .nav-link {
+      font-family: 'Roboto',initial;
+      font-size: 20px; // Establece el tamaño de fuente deseado
+      color: rgb(0, 0, 0); // Cambia el color de texto a azul (puedes ajustarlo según tus preferencias)
+    }
   }
   
   button {
@@ -98,16 +119,19 @@ th , td {
   width: 475px; /* Ajusta el ancho a tu preferencia */
 }
 .column-presupuesto {
-  width: 160px; /* Ajusta el ancho a tu preferencia */
+  width: 155px; /* Ajusta el ancho a tu preferencia */
+}
+.column-modalidad {
+  width: auto; /* Ajusta el ancho a tu preferencia */
 }
 .column-fecha {
-  width: 108px; /* Ajusta el ancho a tu preferencia */
+  width: 115px; /* Ajusta el ancho a tu preferencia */
 }
 .column-total {
   width: 50px; /* Ajusta el ancho a tu preferencia */
 }
 .column-acciones {
-  width: 154px; /* Ajusta el ancho a tu preferencia */
+  width: 170px; /* Ajusta el ancho a tu preferencia */
 }
 
   

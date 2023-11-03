@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import swal from 'sweetalert';
 import { TipoGEService } from '../services/tipoGE.service';
@@ -8,13 +8,16 @@ import { UsuarioService } from 'src/app/usuario/services/usuario.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 
+
 @Component({
   selector: 'app-root:not(p)',
   templateUrl: './tipoGE.listar.component.html',
   styleUrls: ['./tipoGE.listar.component.scss']
 })
+
 export class TipogeListarComponent implements OnInit {
   title = 'listarTipoGE';
+  elementoSeleccionado: string = 'actividadese';
   gestiones: any[] = [];
   actividades: any[] = [];
   pats: any[] = [];
@@ -22,6 +25,7 @@ export class TipogeListarComponent implements OnInit {
   usuarioPat:any;
   porcentajePat:any;
   patNombre:any;
+  anual:any;
   idPat:any;
   idActividadGestionSeleccionado:any;
   nombreActividadGestion:any;
@@ -29,6 +33,7 @@ export class TipogeListarComponent implements OnInit {
   nombreActividadEstrategica:any;
   form:FormGroup;
   busqueda: any;
+  @ViewChild('exampleModalCenter') modal: any;
 
   constructor(
     private gestionService: TipoGEService,private auth: AuthService,
@@ -38,6 +43,7 @@ export class TipogeListarComponent implements OnInit {
     fechaInicial: ['', Validators.required],
     fechaFinal: ['', Validators.required],
   });}
+  
 
   ngOnInit() {
     // Obtén el valor de idPat de la URL
@@ -48,6 +54,7 @@ export class TipogeListarComponent implements OnInit {
           this.patNombre = data.nombre;
           this.idPat = data.idPat // Asignar el nombre del Pat a patNombre
           this.porcentajePat = data.porcentaje
+          this.anual = data.fechaAnual
           this.usuarioPat = data.idUsuario
         },
         (error) => {
@@ -60,6 +67,7 @@ export class TipogeListarComponent implements OnInit {
     });
     this.cargarUsuario();
   }
+
   cargarUsuario() {
     this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
       (data: any) => {

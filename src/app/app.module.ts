@@ -4,7 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { SocialLoginModule, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
 import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
 import { GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 
 
 import { AppRoutingModule } from './app-routing.module';
@@ -28,8 +28,6 @@ import { BuscarPipe } from 'src/pipes/buscar.pipes';
 import swal from 'sweetalert';
 import { ActividadCrearComponent } from './actividad/crear/actividad.crear.component';
 import { ActividadListarComponent } from './actividad/listar/actividad.listar.component';
-import { ActividadEstrategicaCrearComponent } from './gestion/crear/actividadestrategica/actividadestrategica.crear.component';
-import { GestionCrearComponent } from './gestion/crear/gestion/gestion.crear.component';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { SprintListarComponent } from './sprint/listar/sprint.listar.component';
 import { SprintCrearComponent } from './sprint/crear/sprint.crear.component';
@@ -37,13 +35,19 @@ import { TareaListarComponent } from './tarea/listar/tarea.listar.component';
 import { TareaCrearComponent } from './tarea/crear/tarea.crear.component';
 
 import { EnumPipe } from 'src/pipes/enum.pipes';
+import { TipoGECrearComponent } from './gestion/crear/tipoGE.crear.component';
+
+const routes: Routes = [
+  // Otras rutas...
+  { path: 'crearTipoGE', component: TipoGECrearComponent }, // Aquí defines la ruta para tu componente
+];
 
 
 @NgModule({
   declarations: [
     AppComponent,LoginComponent,PanelAdminComponent,AreaCrearComponent,AreaListarComponent,PanelUsuarioComponent,
     CargoCrearComponent,CargoListarComponent,UsuarioCrearComponent,UsuarioListarComponent, BuscarPipe,EnumPipe,PatListarComponent,
-    PatCrearComponent,TipogeListarComponent,ActividadCrearComponent, ActividadListarComponent, ActividadEstrategicaCrearComponent, GestionCrearComponent, 
+    PatCrearComponent,TipogeListarComponent,ActividadCrearComponent, ActividadListarComponent,TipoGECrearComponent,
     SprintListarComponent,SprintCrearComponent, TareaListarComponent,
   ],
   imports: [

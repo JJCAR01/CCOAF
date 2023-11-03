@@ -27,7 +27,7 @@
     </div>
   </div>
   <ul class="nav nav-tabs header" id="myTab" role="tablist">
-    <li class="header">
+    <li class="header ">
       <button title="Atrás"
         type="button" class="btn btn-outline-dark me-1" 
         [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarTipoGE', patEstrategica] } }]">
@@ -50,17 +50,18 @@
   <div class="tab-content" id="myTabContent">
     <div class="tab-pane fade show active" id="proyectos" role="tabpanel" aria-labelledby="proyectos-tab">
       <main class="main text-center smaller-main">
-        <table class="table table-responsive">
+        <table class="table table-bordered table-hover">
           <thead class="table-dark">
             <tr>
               <th class="column-nombre">Nombre</th>
               <th class="column-presupuesto">Presupuesto</th>
-              <th>Modalidad</th>
+              <th class="column-modalidad">Modalidad</th>
               <th class="column-presupuesto">Valor Ejecutado</th>
               <th>Estado</th>
               <th class="column-fecha">Fecha inicial</th>
               <th class="column-fecha">Fecha final</th>
               <th class="column-total">Duracion (Días)</th>
+              <th class="column-total">Avance</th>
               <th>Planeación Sprint</th>
               <th class="column-total">Total sprint</th>
               <th class="column-acciones">Acciones</th>
@@ -77,6 +78,7 @@
                 <td>{{ proyecto.fechaInicial }}</td>
                 <td>{{ proyecto.fechaFinal }}</td>
                 <td>{{ proyecto.duracion }}</td>
+                <td [ngClass]="colorPorcentaje(proyecto.avance)">{{ proyecto.avance }} %</td>
                 <td>{{ proyecto.planeacionSprint }}</td>
                 <td>{{ proyecto.totalSprint }}</td>
                 <td>
@@ -96,7 +98,7 @@
     </div>
     <div class="tab-pane fade" id="actividades" role="tabpanel" aria-labelledby="actividades-tab">
       <main class="main text-center smaller-main">
-        <table class="table table-hover">
+        <table class="table table-bordered table-hover">
           <thead class="table-dark">
             <tr>
               <th class="column-nombre">Nombre</th>

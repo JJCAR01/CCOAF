@@ -17,6 +17,8 @@ export class SprintListarComponent implements OnInit {
   proyectos: any[] = [];
   usuarios:any[] =[];
   proyectoNombre:any;
+  proyectoPorcentaje:any;
+  proyectoUsuario:any;
   idProyecto:any;
   actividad:any;
   busqueda: any;
@@ -36,8 +38,9 @@ export class SprintListarComponent implements OnInit {
       this.actividadService.listarProyectoPorId(idProyecto,this.auth.obtenerHeader()).subscribe(
         (data: any) => {
           this.proyectoNombre = data.nombre
-          this.idProyecto = data.idProyecto // Asignar el nombre del Pat a patNombre
-          this.actividad = data.idActividadEstrategica
+          this.proyectoPorcentaje = data.avance
+          this.proyectoUsuario = data.idUsuario
+          this.idProyecto = data.idProyecto // Asignar el nombre del Pat a patNombre 
         },
         (error) => {
           // Manejo de errores

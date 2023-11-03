@@ -1,45 +1,16 @@
-.porcentajes .contenedor {
-    box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.2);
-}
-
-.porcentajes .caja {
-    width: 100px; /* Establece el ancho deseado */
-    height: 150px; /* Establece el alto deseado */
-    margin: 10px; /* Espacio entre las cajas */
-    background: #fff;
-    border: 1px solid #000000;
-    padding: 40px 20px;
-    flex: 1;
-    text-align: center;
-    font-family: 'Roboto';
-}
-
-.porcentajes .caja h3 {
-    margin-bottom: 10px;
-    color: rgb(6, 80, 28);
-}
-
-.porcentajes .caja p {
-    color: #a8a8aa;
-    margin-bottom: 0;
-}
-
-/* Estilos para el contenedor */
-.contenedor {
-    text-align: center;
-}
-
-/* Estilos para el elemento .smaller-main */
-.smaller-main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.row {
+    margin-top: 10dvh;
     justify-content: center;
-    height: 50vh; /* Establece la altura deseada */
+}
+.card {
+    border: 1px solid #838282; /* Establece un borde sólido */
+    border-radius: 30px; /* Agrega esquinas redondeadas */
+    padding: 30px; /* Agrega espacio interior para el contenido */
+    box-shadow: 0 4px 8px rgba(192, 181, 181, 0.2); /* Agrega una sombra */
+    background-color: #fff; /* Establece un fondo blanco */
 }
 
-.smaller-main .porcentajes {
-    width: 80%; /* Establece el ancho deseado */
-    max-width: flex; /* Establece el ancho máximo deseado */
-    margin: 0 auto; /* Centra el main horizontalmente */
+.card h2 {
+    margin-top: 0; /* Elimina el margen superior del título */
+    text-align: center; /* Centra el título */
 }

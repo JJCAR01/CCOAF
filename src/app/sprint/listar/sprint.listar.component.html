@@ -12,25 +12,25 @@
 </head>
 <body>
   <div  class="row-with-button">
-    <div >
-      <h1  class="mb-2"> {{ proyectoNombre }} </h1>
-    </div>
-    <div class="cuadro-container">
-      <div class="cuadro">
-        <p> %</p>
-        <h2>Porcentaje actual</h2>
-      </div>
-      <div class="cuadro">
-        <p></p>
-        <h2>Responsable</h2>
+    <div>
+      <h1 class="mb-1"> {{ proyectoNombre }} </h1>  
+      <div class="row">
+        <div class="responsable-info">
+          <h2>Porcentaje actual:</h2>
+          <p> {{ proyectoPorcentaje }} %</p>
+        </div>
+        <div class="responsable-info">
+          <h2>Responsable:</h2>
+          <p> {{ obtenerNombreUsuario(proyectoUsuario).toLocaleUpperCase() }}</p>
+        </div>
       </div>
     </div>
   </div>  
   <main class="main text-center smaller-main">
-    <div class="header mb-1">
+    <div class="header">
       <button title="Atrás"
         type="button" class="btn btn-outline-dark me-1" 
-        [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarActividad', actividad] } }]">
+        [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarActividad', idProyecto] } }]">
         <i class="bi bi-arrow-return-left"></i>
       </button>
       <h3> Sprints </h3>

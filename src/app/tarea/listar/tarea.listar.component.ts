@@ -79,12 +79,12 @@ export class TareaListarComponent {
           };
         });
       }
-      
-
-      
     });
     this.cargarUsuario();
   }
+
+
+  
   isEstado(tareaEstado:any, estado:any) {
     return tareaEstado === estado;
   }
@@ -173,13 +173,24 @@ export class TareaListarComponent {
       });
   }
   modificarTarea() {
-    if (this.form.valid && this.idActGestionSeleccionado) {
+    if (this.form.valid) {
       const estado = this.form.get('estado')?.value;
       const tarea = {
         estado: estado,
       };
+
+      let idSeleccionado: any;
+
+    // Verificar cuál de los tres identificadores está definido y asignarlo a idSeleccionado
+    if (this.idSprintSeleccionado) {
+      idSeleccionado = this.idSprintSeleccionado;
+    } else if (this.idActGestionSeleccionado) {
+      idSeleccionado = this.idActGestionSeleccionado;
+    } else if (this.idActGestionActEstrategicaSeleccionado) {
+      idSeleccionado = this.idActGestionActEstrategicaSeleccionado;
+    }
       this.tareaService
-        .modificarTarea(tarea, this.idActGestionSeleccionado, this.auth.obtenerHeader())
+        .modificarTarea(tarea, idSeleccionado, this.auth.obtenerHeader())
         .subscribe(
           (response) => {
             swal({
@@ -191,7 +202,7 @@ export class TareaListarComponent {
             });
           },
           (error) => {
-            swal(error.error.mensajeTecnico, "warning");
+            swal(error.error.mensajeTecnico,"", "warning");
           }
         );
     }

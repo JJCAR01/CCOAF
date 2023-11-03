@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link rel="stylesheet" type="text/css" href="tipoGE.crear.component.scss">
+</head>
+<body>
+
+<section class="gradient-form">
+    <div class="modal fade" id="modalAgregar"data-bs-backdrop="static" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalAgregarLabel">Elegir el tipo de actividad</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>¿Qué tipo de actividad deseas crear?</p>
+              <button type="button" class="btn btn-primary" (click)="seleccionarTipoActividad('estrategica')">Actividad Estratégica</button>
+              <button type="button" class="btn btn-primary" (click)="seleccionarTipoActividad('gestion')">Actividad de Gestión</button>
+            </div>
+            <div class="modal-body" *ngIf="tipoActividad">
+              <form [formGroup]="form">
+                <div class="mb-3 custom-input">
+                  <label for="nombre" class="form-label"></label>
+                </div>
+                <div class="mb-3">
+                  <label for="fechaInicial" class="form-label">Fecha Inicial</label>
+                  <input type="date" class="form-control" id="fechaInicial" formControlName="fechaInicial">
+                </div>
+                <div class="mb-3">
+                  <label for="fechaFinal" class="form-label">Fecha Final</label>
+                  <input type="date" class="form-control" id="fechaFinal" formControlName="fechaFinal">
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                  <button type="button" class="btn btn-primary">Guardar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+</section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.4/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+
+
+</body>
+</html>

@@ -5,6 +5,7 @@
   h1 {
     font-family: "Roboto", unset;
     color: #000000;
+    font-size: x-large;
     padding: 5px;
     margin: 0;
     text-align: left;
@@ -16,6 +17,25 @@
     font-size: 15px;
     margin-bottom: 10px;
   }
+
+  .row {
+    display: flex; /* Hacer que los elementos dentro de .row se muestren en línea */
+    align-items: center; /* Alinear verticalmente los elementos dentro de .row */
+  }
+  
+  .responsable-info {
+    display: flex; /* Hacer que los elementos dentro de .responsable-info se muestren en línea */
+    align-items: center; /* Alinear verticalmente los elementos dentro de .responsable-info */
+  }
+  
+  .responsable-info h2 {
+    margin-top: 5px;
+    margin: 2px;
+  }
+  .responsable-info p {
+    margin-top: 5px;
+    margin: 5px;
+  }
   
   /* Estilos para el elemento .smaller-main */
   .smaller-main {
@@ -23,7 +43,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 30vh; /* Establece la altura deseada */
+    height: 24vh; /* Establece la altura deseada */
   }
   
   .custom-button {
@@ -41,11 +61,7 @@
   .button-container {
     text-align: right;
   }
-  
-  .hacialaderecha{
-    text-align: right;
-  }
-  
+
   .header {
     display: flex;
     justify-content: space-between; /* Alinea los elementos al inicio y al final */
@@ -79,27 +95,6 @@ th,td {
   text-align: center; /* Centra el texto horizontalmente en las celdas del encabezado */
 }
 
-.cuadro-container {
-  display: flex;
-  justify-content: center;
-  gap: 5px; // Espacio entre los cuadros
-}
-.cuadro {
-  background-color: rgba(199, 199, 199, 0.514);
-  padding: 2px; // Reduce el espacio interno
-  flex: 1;
-  width: auto; // Ajusta el ancho
-  height: 75px; // Ajusta la altura
-  margin-top: 0px;
-  text-align: center; 
-}
-.cuadro h2 {
-  font-size: 15px; // Tamaño de letra
-}
-.cuadro p {
-  margin-bottom:1px;
-  font-size: 30px; // Tamaño de letra
-}
   
 
   
