@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PatService } from '../services/pat.service';
 import { AuthService } from 'src/app/login/auth/auth.service';
-import swal from 'sweetalert';
+import Swal from 'sweetalert2';
 import { UsuarioService } from 'src/app/usuario/services/usuario.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TipoGEService } from 'src/app/gestion/services/tipoGE.service';
@@ -62,7 +62,7 @@ export class PatListarComponent implements OnInit{
           this.cantidadPats = numeroDeListas;
         },
         (error) => {
-          swal(error.error.mensajeTecnico);
+          Swal.fire(error.error.mensajeTecnico);
         }
       );
     }
@@ -73,7 +73,7 @@ export class PatListarComponent implements OnInit{
           this.cantidadEstrategicas = numeroDeListas;
         },
         (error) => {
-          swal(error.error.mensajeTecnico);
+          Swal.fire(error.error.mensajeTecnico);
         }
       );
     }
@@ -84,7 +84,7 @@ export class PatListarComponent implements OnInit{
           this.cantidadGestiones = numeroDeListas;
         },
         (error) => {
-          swal(error.error.mensajeTecnico);
+          Swal.fire(error.error.mensajeTecnico);
         }
       );
     }
@@ -95,7 +95,7 @@ export class PatListarComponent implements OnInit{
           this.cantidadProyectos = numeroDeListas;
         },
         (error) => {
-          swal(error.error.mensajeTecnico);
+          Swal.fire(error.error.mensajeTecnico);
         }
       );
     }
@@ -112,12 +112,12 @@ export class PatListarComponent implements OnInit{
           .modificarPat(pat, this.selectedPatId, this.auth.obtenerHeader())
           .subscribe(
             (response) => {
-              swal("Modificado Satisfactoriamente", "El PAT se ha modificado", "success");
+              Swal.fire("Modificado Satisfactoriamente", "El PAT se ha modificado", "success");
               this.form.reset();
               window.location.reload()
             },
             (error) => {
-              swal(error.error.mensajeTecnico, "warning");
+              Swal.fire(error.error.mensajeTecnico, "warning");
             }
           );
       }
@@ -126,27 +126,28 @@ export class PatListarComponent implements OnInit{
     eliminarPat(idPat: number) {
       const patAEliminar = this.pats.find(pat => pat.idPat === idPat);
 
-      swal({
+      Swal.fire({
+        icon:"question",
         title: "¿Estás seguro?",
-        text: "Una vez eliminado, no podrás recuperar este elemento.",
-        icon: "warning",
-        buttons: ["Cancelar", "Eliminar"],
-        dangerMode: true,
+        text: "Una vez eliminado  el pat "  + patAEliminar.nombre + ", no podrás recuperar este elemento.",
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: "#3085d6",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
       })
       .then((confirmacion) => {
-      if (confirmacion) {
-        this.patService.eliminarPat(idPat, this.auth.obtenerHeader()).subscribe(
-          (response) => {
-            swal("Eliminado Satisfactoriamente", "El usuario con el nombre " + patAEliminar.nombre + " se ha eliminado.", "success").then(() => {
-              window.location.reload();
-            });
-            console.log(response);
-          },
-          (error) => {
-            swal("Solicitud no válida", error.error.mensajeHumano, "error");
-          }
-        );
-      }
+        if (confirmacion.isConfirmed) {
+          this.patService.eliminarPat(idPat, this.auth.obtenerHeader()).subscribe(
+            (response) => {
+              Swal.fire("Se ha eliminado satisfactoriamente", "El pat con el nombre " + patAEliminar.nombre + " se ha eliminado.", "success").then(() => {
+                window.location.reload();
+              });
+            },
+            (error) => {
+              Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
+            }
+          );
+        }
       });
     }
 
@@ -168,8 +169,5 @@ export class PatListarComponent implements OnInit{
       } else {
         return 'porcentaje-cien';
       }
-    }
-    
-    
-    
+    }   
 }

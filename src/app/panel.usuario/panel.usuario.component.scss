@@ -40,7 +40,8 @@ button {
     text-decoration: none;
     display: block;
     padding: 30px;
-    font-family: 'Roboto', sans-serif;
+    font-size: larger;
+    font-family: 'Roboto',serif;
     border-bottom: 1px solid rgba(1, 15, 17, 0.1);
 }
 .barra-lateral .logo {
@@ -57,12 +58,17 @@ button {
 }
 
 .barra-lateral .submenu a{
+    text-decoration: none;
     display: block;
     padding: 7px;
-    font-family: 'Roboto', sans-serif;
-    font-weight: lighter;
     text-align: left;
     margin-left: 10px;
+    font-family: "Roboto", serif;
+    color: #000000;
+    font-size: medium;
+}
+.barra-lateral .submenu a:hover{
+    background: #c5c4c4;
 }
 
 /*---QUERIES--*/

@@ -32,8 +32,6 @@ export class TipogeListarComponent implements OnInit {
   idActividadEstrategicaSeleccionado:any;
   nombreActividadEstrategica:any;
   form:FormGroup;
-  busqueda: any;
-  @ViewChild('exampleModalCenter') modal: any;
 
   constructor(
     private gestionService: TipoGEService,private auth: AuthService,

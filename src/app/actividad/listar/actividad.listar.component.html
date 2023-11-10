@@ -42,9 +42,9 @@
     </li>
     <li class="header">
       <button title="Agregar"
-        type="button" class="btn btn-success" >
-        <i class="bi bi-plus-lg"></i>
-      </button>
+          type="button" class="btn btn-success" [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['crearActividad'] } }]">
+          <i class="bi bi-plus-lg"></i>
+        </button>
     </li>
   </ul>
   <div class="tab-content" id="myTabContent">

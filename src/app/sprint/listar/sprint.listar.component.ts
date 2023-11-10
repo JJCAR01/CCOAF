@@ -40,7 +40,7 @@ export class SprintListarComponent implements OnInit {
           this.proyectoNombre = data.nombre
           this.proyectoPorcentaje = data.avance
           this.proyectoUsuario = data.idUsuario
-          this.idProyecto = data.idProyecto // Asignar el nombre del Pat a patNombre 
+          this.idProyecto = data.idActividadEstrategica // Asignar el nombre del Pat a patNombre 
         },
         (error) => {
           // Manejo de errores

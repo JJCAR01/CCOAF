@@ -40,17 +40,17 @@
       </button>
     </li>
     <li class="nav-item" >
-      <a class="nav-link" id="actividadese-tab" data-bs-toggle="tab" href="#actividadese" role="tab" aria-controls="actividadese" aria-selected="false">Actividades Estratégicas</a>
+      <a class="nav-link active" id="actividadese-tab" data-bs-toggle="tab" href="#actividadese" role="tab" aria-controls="actividadese" aria-selected="true">Actividades Estratégicas</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link active" id="gestionarea-tab" data-bs-toggle="tab" href="#gestionarea" role="tab" aria-controls="gestionarea" aria-selected="false">Gestiones del Area</a>
+      <a class="nav-link" id="gestionarea-tab" data-bs-toggle="tab" href="#gestionarea" role="tab" aria-controls="gestionarea" aria-selected="false">Gestiones del Area</a>
     </li>
     <li class="header">
       <button title="Agregar"
-         type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregar">
-
-        <i class="bi bi-plus-lg"></i>
-      </button>
+          type="button" class="btn btn-success" [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['crearTipoGE'] } }]"
+          [queryParams]="{ idPat , patNombre }">
+          <i class="bi bi-plus-lg"></i>
+        </button>
     </li>
   </ul>
   <div class="tab-content" id="myTabContent">
@@ -70,7 +70,7 @@
             </tr>
           </thead>
           <tbody>
-            <ng-container *ngFor="let actividad of actividades | buscar: busqueda">
+            <ng-container *ngFor="let actividad of actividades">
               <tr>
                 <td>{{ actividad.nombre }}</td>
                 <td>{{ actividad.fechaInicial }}</td>
@@ -113,31 +113,30 @@
           </tr>
         </thead>
         <tbody>
-          <ng-container *ngFor="let gestion of gestiones | buscar: busqueda">
-            <tr>
-              <td>{{ gestion.nombre }}</td>
-              <td>{{ gestion.fechaInicial }}</td>
-              <td>{{ gestion.fechaFinal }}</td>
-              <td>{{ gestion.duracion }}</td>
-              <td [ngClass]="colorPorcentaje(gestion.avance)">
-                <span *ngIf="gestion.avance !== 100"[ngClass]="colorDias(gestion.diasRestantes)">{{ gestion.diasRestantes }}</span>
-                <span *ngIf="gestion.avance === 100">Finalizado</span>
-              </td>
-              <td [ngClass]="colorPorcentaje(gestion.avance)">{{ gestion.avance }} %</td>
-              <td>{{ obtenerNombreUsuario(gestion.idUsuario).toLocaleUpperCase() }}</td>
-              <td >
-                <button title="Ver" title="Ver" class="btn btn-outline-primary me-1"
-                onclick="verInformacionAdicional(gestion.idActividadGestion)">
-                  <i class="bi bi-eye-fill"></i>
-                </button>
-                <button title="Modificar" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarGestion" (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)">
-                <i class="bi bi-pen-fill"></i>
-                </button>
-                <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarGestion(gestion.idActividadGestion)">
-                  <i class="bi bi-trash3-fill"></i>
-                </button>        
-              </td>
-              </tr>
+          <ng-container *ngFor="let gestion of gestiones">
+                <tr>
+                  <td>{{ gestion.nombre }} </td>
+                  <td>{{ gestion.fechaInicial }}</td>
+                  <td>{{ gestion.fechaFinal }}</td>
+                  <td>{{ gestion.duracion }}</td>
+                  <td [ngClass]="colorPorcentaje(gestion.avance)">
+                    <span *ngIf="gestion.avance !== 100"[ngClass]="colorDias(gestion.diasRestantes)">{{ gestion.diasRestantes }}</span>
+                    <span *ngIf="gestion.avance === 100">Finalizado</span>
+                  </td>
+                  <td [ngClass]="colorPorcentaje(gestion.avance)">{{ gestion.avance }} %</td>
+                  <td>{{ obtenerNombreUsuario(gestion.idUsuario).toLocaleUpperCase() }}</td>
+                  <td >
+                    <button title="Ver" title="Ver" class="btn btn-outline-primary me-1">
+                      <i class="bi bi-eye-fill"></i>
+                    </button>
+                    <button title="Modificar" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarGestion" (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)">
+                    <i class="bi bi-pen-fill"></i>
+                    </button>
+                    <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarGestion(gestion.idActividadGestion)">
+                      <i class="bi bi-trash3-fill"></i>
+                    </button>        
+                  </td>
+                  </tr>
             </ng-container>
           </tbody>
         </table>

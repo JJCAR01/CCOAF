@@ -15,19 +15,19 @@
 
                             <form [formGroup]="form" (ngSubmit)="crearPat()">
                                 <div class="form-floating mb-3">
-                                  <input type="text" id="nombre" class="form-control form-control-lg" formControlName="nombre" placeholder="nombre">
+                                  <input type="text" id="nombre" class="form-control form-control-lg" formControlName="nombre" placeholder="nombre" [(ngModel)]="pat.nombre" >
                                   <label class="form-label" for="nombre">Nombre</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input type="text" id="fechaAnual" class="form-control form-control-lg" formControlName="fechaAnual" placeholder="Año">
+                                    <input type="text" id="fechaAnual" class="form-control form-control-lg" formControlName="fechaAnual" placeholder="Año" [(ngModel)]="pat.fechaAnual" >
                                     <label class="form-label" for="fechaAnual">Año</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input type="text" id="proceso" class="form-control form-control-lg" formControlName="proceso" placeholder="proceso">
+                                    <input type="text" id="proceso" class="form-control form-control-lg" formControlName="proceso" placeholder="proceso" [(ngModel)]="pat.proceso">
                                     <label class="form-label" for="proceso">Proceso</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <select class="form-select" id="idUsuario" formControlName="idUsuario"  >
+                                    <select class="form-select" id="idUsuario" formControlName="idUsuario"  [(ngModel)]="pat.idUsuario">
                                         <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario"  >{{ usuario.nombre  + ' ' + usuario.apellidos | formatEnum}}</option>
                                     </select>
                                     <label for="idUsuario" placeholder="usuario">Responsable:</label>

@@ -6,7 +6,7 @@ import { environment } from 'src/environments/environment.development';
   providedIn: 'root'
 })
 export class PatService {
-
+  private nombrePat: string = '';
   constructor(private http: HttpClient) {
   }
 

@@ -21,7 +21,7 @@ import { AreaListarComponent } from './area/listar/area.listar.component';
 import { PatListarComponent } from './pat/listar/pat.listar.component';
 import { PatCrearComponent } from './pat/crear/pat.crear.component';
 import { TipogeListarComponent } from './gestion/listar/tipoGE.listar.component';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import { BuscarPipe } from 'src/pipes/buscar.pipes';
 

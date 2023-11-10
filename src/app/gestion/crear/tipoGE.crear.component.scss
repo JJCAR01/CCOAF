@@ -1,0 +1,32 @@
+.row {
+    margin-top: 10dvh;
+    justify-content: center;
+}
+.card {
+    border: 1px solid #838282; /* Establece un borde sólido */
+    border-radius: 30px; /* Agrega esquinas redondeadas */
+    padding: 30px; /* Agrega espacio interior para el contenido */
+    box-shadow: 0 4px 8px rgba(192, 181, 181, 0.2); /* Agrega una sombra */
+    background-color: #fff; /* Establece un fondo blanco */
+}
+
+.card h2 {
+    margin-top: 0; /* Elimina el margen superior del título */
+    text-align: center; /* Centra el título */
+}
+.card h3 {
+    font-size: x-large;
+    margin-top: 0; /* Elimina el margen superior del título */
+    text-align: center; /* Centra el título */
+}
+
+.form-check-input {
+    border: 2px solid #060f18; /* Cambia el color del borde según tus preferencias */
+    border-radius: 5px; /* Ajusta el radio del borde si es necesario */
+    margin-right: 5px; /* Ajusta el margen derecho según tus preferencias */
+  }
+  
+  /* Estilos para el checkbox seleccionado */
+  .form-check-input:checked {
+    border-color: #007BFF; /* Cambia el color del borde cuando el checkbox está seleccionado */
+  }
