@@ -4,8 +4,9 @@ import { AuthService } from 'src/app/login/auth/auth.service';
 import { TipoGEService } from 'src/app/gestion/services/tipoGE.service';
 import { ActivatedRoute } from '@angular/router';
 import { UsuarioService } from 'src/app/usuario/services/usuario.service';
-import swal from 'sweetalert';
+import Swal from 'sweetalert2';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Proyecto } from '../crear/proyecto';
 
 @Component({
   selector: 'app-listar',
@@ -19,6 +20,8 @@ export class ActividadListarComponent implements OnInit{
   actividades: any[] = [];
   usuarios:any[] =[];
   actividadNombre:any;
+  usuarioProyecto:any;
+  usuarioGestion:any;
   idActividadEstrategica:any;
   porcentajeEstrategica:any;
   usuarioEstrategica:any;
@@ -40,10 +43,12 @@ export class ActividadListarComponent implements OnInit{
     private formBuilder: FormBuilder
   ) {
     this.form = this.formBuilder.group({
-    fechaInicial: ['', Validators.required],
-    fechaFinal: ['', Validators.required],
+      nombre:['',Validators.required],
+      fechaInicial: ['', Validators.required],
+      fechaFinal: ['', Validators.required],
     });
     this.formProyecto = this.formBuilder.group({
+      nombre:['',Validators.required],
       presupuesto: ['', Validators.required],
       fechaInicial: ['', Validators.required],
       fechaFinal: ['', Validators.required],
@@ -90,7 +95,7 @@ export class ActividadListarComponent implements OnInit{
           this.gestiones = data;
         },
         (error) => {
-          swal(error.error.mensajeTecnico);
+          Swal.fire(error.error.mensajeTecnico,'', 'error');
         }
       );
   }
@@ -105,7 +110,7 @@ export class ActividadListarComponent implements OnInit{
           this.proyectos = data;
         },
         (error) => {
-          swal(error.error.mensajeTecnico);
+          Swal.fire(error.error.mensajeTecnico,'', 'error');
         }
       );
   }
@@ -113,24 +118,26 @@ export class ActividadListarComponent implements OnInit{
   eliminarGestion(idActividadGestionActividadEstrategica: number) {
     const gestionAEliminar = this.gestiones.find(gest => gest.idActividadGestionActividadEstrategica === idActividadGestionActividadEstrategica);
 
-      swal({
+      Swal.fire({
         title: "¿Estás seguro?",
         text: "Una vez eliminado, no podrás recuperar este elemento.",
-        icon: "warning",
-        buttons: ["Cancelar", "Eliminar"],
-        dangerMode: true,
+        icon: "question",
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: "#3085d6",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        
       })
       .then((confirmacion) => {
-      if (confirmacion) {
+        if (confirmacion.isConfirmed) {
         this.actividadService.eliminarActividadGestionActividadEstrategica(idActividadGestionActividadEstrategica, this.auth.obtenerHeader()).subscribe(
           (response) => {
-            swal("Eliminado Satisfactoriamente", "La gestión del área " + gestionAEliminar.nombre + " se ha eliminado.", "success").then(() => {
+            Swal.fire("Eliminado Satisfactoriamente", "La gestión del área " + gestionAEliminar.nombre + " se ha eliminado.", "success").then(() => {
               window.location.reload();
             });
-            console.log(response);
           },
           (error) => {
-            swal("Solicitud no válida", error.error.mensajeHumano, "error");
+            Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
           }
         );
       }
@@ -139,24 +146,26 @@ export class ActividadListarComponent implements OnInit{
   eliminarProyecto(idProyecto: number) {
     const proyectoAEliminar = this.proyectos.find(ep => ep.idProyecto === idProyecto);
 
-      swal({
+      Swal.fire({
         title: "¿Estás seguro?",
         text: "Una vez eliminado, no podrás recuperar este elemento.",
-        icon: "warning",
-        buttons: ["Cancelar", "Eliminar"],
-        dangerMode: true,
+        icon: "question",
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: "#3085d6",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
       })
       .then((confirmacion) => {
-      if (confirmacion) {
+        if (confirmacion.isConfirmed) {
         this.actividadService.eliminarProyecto(idProyecto, this.auth.obtenerHeader()).subscribe(
           (response) => {
-            swal("Eliminado Satisfactoriamente", "El proyecto con el nombre " + proyectoAEliminar.nombre + " se ha eliminado.", "success").then(() => {
+            Swal.fire("Eliminado Satisfactoriamente", "El proyecto con el nombre " + proyectoAEliminar.nombre + " se ha eliminado.", "success").then(() => {
               window.location.reload();
             });
             console.log(response);
           },
           (error) => {
-            swal("Solicitud no válida", error.error.mensajeHumano, "error");
+            Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
           }
         );
       }
@@ -164,17 +173,26 @@ export class ActividadListarComponent implements OnInit{
   }
   modificarActividadGestion() {
     if (this.form.valid && this.idActividadGestionSeleccionado) {
+      
+      const nombre = this.form.get('nombre')?.value;
       const fechaInicial = this.form.get('fechaInicial')?.value;
       const fechaFinal = this.form.get('fechaFinal')?.value;
+      const idUsuario = this.usuarioGestion;
+      const idActividadEstrategica = this.idActividadEstrategica
+      
       const actividadGestion = {
+        nombre:nombre,
         fechaInicial: fechaInicial,
         fechaFinal: fechaFinal,
+        idUsuario:idUsuario,
+        idActividadEstrategica:idActividadEstrategica
       };
+      
       this.actividadService
         .modificarActividadGestionActividadEstrategica(actividadGestion, this.idActividadGestionSeleccionado, this.auth.obtenerHeader())
         .subscribe(
           (response) => {
-            swal({
+            Swal.fire({
               title: "Modificado Satisfactoriamente",
               text: "La gestión del área se ha modificado",
               icon: "success",
@@ -183,28 +201,34 @@ export class ActividadListarComponent implements OnInit{
             });
           },
           (error) => {
-            swal(error.error.mensajeTecnico, "warning");
+            Swal.fire(error.error.mensajeTecnico, '',"warning");
           }
         );
     }
   }
   modificarProyecto() {
-
     if (this.formProyecto.valid && this.idProyectoSeleccionado) {
+      const nombre = this.formProyecto.get('nombre')?.value;
       const presupuesto = this.formProyecto.get('presupuesto')?.value;
       const fechaInicial = this.formProyecto.get('fechaInicial')?.value;
       const fechaFinal = this.formProyecto.get('fechaFinal')?.value;
-      const actividadEstrategica = {
+      const idActividadEstrategica = this.idActividadEstrategica;
+      const idUsuario = this.usuarioProyecto
+
+      const proyecto = {
+        nombre:nombre,
         presupuesto:presupuesto,
         fechaInicial: fechaInicial,
         fechaFinal: fechaFinal,
+        idUsuario : idUsuario,
+        idActividadEstrategica : idActividadEstrategica
       };
 
       this.actividadService
-        .modificarProyecto(actividadEstrategica, this.idProyectoSeleccionado, this.auth.obtenerHeader())
+        .modificarProyecto(proyecto, this.idProyectoSeleccionado, this.auth.obtenerHeader())
         .subscribe(
           (response) => {
-            swal({
+            Swal.fire({
               title: "Modificado Satisfactoriamente",
               text: "La actividad estrategica se ha modificado",
               icon: "success",
@@ -213,7 +237,7 @@ export class ActividadListarComponent implements OnInit{
             });
           },
           (error) => {
-            swal(error.error.mensajeTecnico, "warning");
+            Swal.fire(error.error.mensajeTecnico, "warning");
           }
         );
     }
@@ -222,10 +246,12 @@ export class ActividadListarComponent implements OnInit{
   obtenerActividadGestion(idActividadGestion: number,actividadGestion:any) {
     this.idActividadGestionSeleccionado = idActividadGestion;
     this.nombreActividadGestion = actividadGestion.nombre;
+    this.usuarioGestion = actividadGestion.idUsuario
   }
   obtenerProyecto(idActividadEstrategica: number,actividadEstrategica:any) {
     this.idProyectoSeleccionado = idActividadEstrategica;
     this.nombreProyecto = actividadEstrategica.nombre;
+    this.usuarioProyecto = actividadEstrategica.idUsuario;
   }
 
   obtenerNombreUsuario(idUsuario: number) {

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from 'src/app/login/auth/auth.service';
-import swal from 'sweetalert';
+import Swal from 'sweetalert2';
 import { TipoGEService } from '../services/tipoGE.service';
 import { PatService } from 'src/app/pat/services/pat.service';
 import { ActivatedRoute } from '@angular/router';
@@ -27,6 +27,8 @@ export class TipogeListarComponent implements OnInit {
   patNombre:any;
   anual:any;
   idPat:any;
+  usuarioEstrategica:any;
+  usuarioGestion:any;
   idActividadGestionSeleccionado:any;
   nombreActividadGestion:any;
   idActividadEstrategicaSeleccionado:any;
@@ -38,6 +40,7 @@ export class TipogeListarComponent implements OnInit {
     private patService: PatService,private route: ActivatedRoute,
     private usuarioService :UsuarioService,private formBuilder: FormBuilder
   ) {this.form = this.formBuilder.group({
+    nombre: ['', Validators.required],
     fechaInicial: ['', Validators.required],
     fechaFinal: ['', Validators.required],
   });}
@@ -86,7 +89,7 @@ export class TipogeListarComponent implements OnInit {
           this.gestiones = data;
         },
         (error) => {
-          swal(error.error.mensajeTecnico);
+          Swal.fire(error.error.mensajeTecnico,'','error');
         }
       );
   }
@@ -101,75 +104,95 @@ export class TipogeListarComponent implements OnInit {
           this.actividades = data;
         },
         (error) => {
-          swal(error.error.mensajeTecnico);
+          Swal.fire({
+            title : error.error.mensajeTecnico,
+            icon : 'error'});
         }
       );
   }
 
   eliminarGestion(idActividadGestion: number) {
     const gestionAEliminar = this.gestiones.find(g => g.idActividadGestion === idActividadGestion);
-
-      swal({
-        title: "¿Estás seguro?",
-        text: "Una vez eliminado, no podrás recuperar este elemento.",
-        icon: "warning",
-        buttons: ["Cancelar", "Eliminar"],
-        dangerMode: true,
-      })
-      .then((confirmacion) => {
-      if (confirmacion) {
+    Swal.fire({
+      icon:"question",
+      title: "¿Estás seguro?",
+      text: "Una vez eliminado  el pat "  + gestionAEliminar.nombre + ", no podrás recuperar este elemento.",
+      confirmButtonText: "Confirmar",
+      confirmButtonColor: "#3085d6",
+      showCancelButton: true,
+      cancelButtonText: "Cancelar",
+    })
+    .then((confirmacion) => {
+      if (confirmacion.isConfirmed) {
         this.gestionService.eliminarGestion(idActividadGestion, this.auth.obtenerHeader()).subscribe(
           (response) => {
-            swal("Eliminado Satisfactoriamente", "La gestión del área " + gestionAEliminar.nombre + " se ha eliminado.", "success").then(() => {
+            Swal.fire("Se ha eliminado satisfactoriamente", "El pat con el nombre " + gestionAEliminar.nombre + " se ha eliminado.", "success").then(() => {
               window.location.reload();
             });
           },
           (error) => {
-            swal("Solicitud no válida", error.error.mensajeHumano, "error");
+            Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
           }
         );
       }
-      });
+    });
   }
   eliminarActividadesEstrategica(idActividadEstrategica: number) {
     const actividadAEliminar = this.actividades.find(a => a.idActividadEstrategica === idActividadEstrategica);
-
-      swal({
-        title: "¿Estás seguro?",
-        text: "Una vez eliminado, no podrás recuperar este elemento.",
-        icon: "warning",
-        buttons: ["Cancelar", "Eliminar"],
-        dangerMode: true,
-      })
-      .then((confirmacion) => {
-      if (confirmacion) {
+    Swal.fire({
+      icon:"question",
+      title: "¿Estás seguro?",
+      text: "Una vez eliminado  la actividad estratégica "  + actividadAEliminar.nombre + ", NO podrás recuperarlo.",
+      confirmButtonText: "Confirmar",
+      confirmButtonColor: "#3085d6",
+      showCancelButton: true,
+      cancelButtonText: "Cancelar",
+    })
+    .then((confirmacion) => {
+      if (confirmacion.isConfirmed) {
         this.gestionService.eliminarActividadEstrategica(idActividadEstrategica, this.auth.obtenerHeader()).subscribe(
           (response) => {
-            swal("Eliminado Satisfactoriamente", "La epica con el nombre " + actividadAEliminar.nombre + " se ha eliminado.", "success").then(() => {
+            Swal.fire("Se ha eliminado satisfactoriamente", "El pat con el nombre " + actividadAEliminar.nombre + " se ha eliminado.", "success").then(() => {
               window.location.reload();
             });
           },
           (error) => {
-            swal("Solicitud no válida", error.error.mensajeHumano, "error");
+            Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
           }
         );
       }
-      });
+    });
   }
 
   modificarActividadGestion() {
     if (this.form.valid && this.idActividadGestionSeleccionado) {
+      const nombre = this.form.get('nombre')?.value;
       const fechaInicial = this.form.get('fechaInicial')?.value;
       const fechaFinal = this.form.get('fechaFinal')?.value;
+      const idUsuario = this.usuarioGestion
+      const idPat = this.idPat
       const actividadGestion = {
+        nombre: nombre,
         fechaInicial: fechaInicial,
         fechaFinal: fechaFinal,
+        idUsuario :idUsuario,
+        idPat : idPat
       };
-      this.gestionService
+      console.log(actividadGestion)
+      Swal.fire({
+        title: "¿Estás seguro de modificar?",
+        icon: "question",
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: "#3085d6",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+      }).then((confirmacion) => {
+        if (confirmacion.isConfirmed) {
+          this.gestionService
         .modificarActividadGestión(actividadGestion, this.idActividadGestionSeleccionado, this.auth.obtenerHeader())
         .subscribe(
           (response) => {
-            swal({
+            Swal.fire({
               title: "Modificado Satisfactoriamente",
               text: "La gestión del área se ha modificado",
               icon: "success",
@@ -178,26 +201,41 @@ export class TipogeListarComponent implements OnInit {
             });
           },
           (error) => {
-            swal(error.error.mensajeTecnico, "warning");
+            Swal.fire(error.error.mensajeTecnico,'' ,"warning");
           }
         );
+        }
+      }) 
     }
   }
   modificarActividadEstrategica() {
-
     if (this.form.valid && this.idActividadEstrategicaSeleccionado) {
+      const nombre = this.form.get('nombre')?.value;
       const fechaInicial = this.form.get('fechaInicial')?.value;
       const fechaFinal = this.form.get('fechaFinal')?.value;
+      const idUsuario = this.usuarioEstrategica
+      const idPat = this.idPat
       const actividadEstrategica = {
+        nombre: nombre,
         fechaInicial: fechaInicial,
         fechaFinal: fechaFinal,
+        idUsuario :idUsuario,
+        idPat : idPat
       };
-
-      this.gestionService
+      Swal.fire({
+        title: "¿Estás seguro de modificar?",
+        icon: "question",
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: "#3085d6",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+      }).then((confirmacion) => {
+        if (confirmacion.isConfirmed) {
+        this.gestionService
         .modificarActividadEstrategica(actividadEstrategica, this.idActividadEstrategicaSeleccionado, this.auth.obtenerHeader())
         .subscribe(
           (response) => {
-            swal({
+            Swal.fire({
               title: "Modificado Satisfactoriamente",
               text: "La actividad estrategica se ha modificado",
               icon: "success",
@@ -206,19 +244,23 @@ export class TipogeListarComponent implements OnInit {
             });
           },
           (error) => {
-            swal(error.error.mensajeTecnico, "warning");
+            Swal.fire(error.error.mensajeHumano,error.error.mensajeTecnico,"warning");
           }
-        );
+          );
+          }
+        }) 
     }
   }
 
   obtenerActividadGestion(idActividadGestion: number,actividadGestion:any) {
     this.idActividadGestionSeleccionado = idActividadGestion;
     this.nombreActividadGestion = actividadGestion.nombre;
+    this.usuarioGestion = actividadGestion.idUsuario
   }
   obtenerActividadEstrategica(idActividadEstrategica: number,actividadEstrategica:any) {
     this.idActividadEstrategicaSeleccionado = idActividadEstrategica;
     this.nombreActividadEstrategica = actividadEstrategica.nombre;
+    this.usuarioEstrategica = actividadEstrategica.idUsuario
   }
   obtenerNombreUsuario(idUsuario: number) {
     const usuario = this.usuarios.find((u) => u.idUsuario === idUsuario);

@@ -71,7 +71,7 @@ export class TipoGECrearComponent implements OnInit {
         if (this.tipoActividad === 'estrategica') {
           this.tipoService.crearActividadEstrategica(actividad,this.auth.obtenerHeader()).subscribe(
             (response) => {
-              swal("Creado Satisfactoriamente", 'El actividad estratégica con el nombre ' + this.form.value.nombre + ', se ha creado!!', "success");
+              swal("Creado Satisfactoriamente", 'El actividad estratégica con el nombre ' + actividad.nombre + ', se ha creado!!', "success");
               this.form.reset();
             },
             (error) => {

@@ -13,7 +13,7 @@
                     <div class="card">
                         <h2 class="text-center mb-3">Crear actividad estratégica ó gestión del área</h2>
                         <div class="mb-3">
-                            <h3>Nombre del programa : {{ patNombre }}</h3>
+                            <h3>{{ patNombre }}</h3>
                         </div>
                         <form [formGroup]="form" (ngSubmit)="crearActividad()">
 
@@ -32,7 +32,7 @@
                             </div>
                         
                             <div class="form-floating mb-3">
-                                <input type="text" id="nombre" class="form-control form-control-lg" formControlName="nombre" placeholder="Nombre" [disabled]="!tipoActividadEstrategica && !tipoActividadGestion">
+                                <textarea type="text" id="nombre" class="form-control form-control-lg" formControlName="nombre" placeholder="Nombre" [disabled]="!tipoActividadEstrategica && !tipoActividadGestion"></textarea>
                                 <label class="form-label" for="nombre">Nombre</label>
                             </div>
                             <div class="form-floating mb-3">

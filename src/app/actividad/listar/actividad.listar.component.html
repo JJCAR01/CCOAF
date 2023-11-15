@@ -42,7 +42,8 @@
     </li>
     <li class="header">
       <button title="Agregar"
-          type="button" class="btn btn-success" [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['crearActividad'] } }]">
+        type="button" class="btn btn-success" [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['crearActividad'] } }]"
+        [queryParams]="{ idActividadEstrategica , actividadNombre }">
           <i class="bi bi-plus-lg"></i>
         </button>
     </li>
@@ -132,7 +133,7 @@
                   <button title="Modificar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarGestion" (click)="obtenerActividadGestion(gestion.idActividadGestionActividadEstrategica,gestion)">
                     <i class="bi bi-pen-fill"></i>
                   </button>
-                  <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarGestion(gestion.idGestion)"><i class="bi bi-trash3-fill"></i></button>
+                  <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarGestion(gestion.idActividadGestionActividadEstrategica)"><i class="bi bi-trash3-fill"></i></button>
                 </td>
               </tr>
             </ng-container>
@@ -155,9 +156,10 @@
         </div>
         <div class="modal-body">
           <form [formGroup]="form" (ngSubmit)="modificarProyecto()">
-            <div class="mb-3 custom-input">
-              <label for="nombre" class="form-label">{{nombreProyecto}}</label>
-            </div>
+            <div class="mb-3">
+              <label class="form-label" for="nombre">Nombre</label>
+              <textarea type="text" id="nombre" class="form-control form-control-lg" [value]="nombreProyecto" formControlName="nombre" style="min-width: 100%;"></textarea>
+          </div>
             <div class="mb-3">
               <label for="presupuesto" class="form-label">Presupuesto</label>
               <input type="text" class="form-control" id="presupuesto" formControlName="presupuesto">
@@ -168,7 +170,7 @@
             </div>
             <div class="mb-3">
               <label for="fechaFinal" class="form-label">Fecha Final</label>
-              <input type="date" class="form-control" id="fechaFinal" formControlName="fechaFinal">
+              <input type="date" class="form-control" id="fechaFinal" formControlName="fechaFinal" >
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -188,9 +190,10 @@
           </div>
           <div class="modal-body">
             <form [formGroup]="form" (ngSubmit)="modificarActividadGestion()">
-              <div div class="mb-3 custom-input">
-                <label for="nombre" class="form-label">{{nombreActividadGestion}}</label>
-              </div>
+              <div class="mb-3">
+                <label class="form-label" for="nombre">Nombre</label>
+                <textarea type="text" id="nombre" class="form-control form-control-lg" [value]="nombreActividadGestion"  style="min-width: 100%;"></textarea>
+            </div>
               <div class="mb-3">
                 <label for="fechaInicial" class="form-label">Fecha Inicial</label>
                 <input type="date" class="form-control" id="fechaInicial" formControlName="fechaInicial">

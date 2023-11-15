@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import { UsuarioService } from 'src/app/usuario/services/usuario.service';
@@ -13,14 +13,14 @@ import { ActividadGestion } from './actividadgestion';
   templateUrl: './actividad.crear.component.html',
   styleUrls: ['./actividad.crear.component.scss']
 })
-export class ActividadCrearComponent {
+export class ActividadCrearComponent implements OnInit{
   title = 'crearActividad';
   proyecto:Proyecto = new Proyecto();
   actividad:ActividadGestion = new ActividadGestion();
   usuarios: any[] = [];
   form: FormGroup;
-  patNombre:any;
-  idPat:any;
+  actividadNombre:any;
+  idActividadEstrategica:any;
   tipoActividadGestionActividadEstrategica: boolean = false;
   tipoProyecto: boolean = false;
   tipo: string = ''; // Variable para rastrear el tipo de actividad
@@ -33,13 +33,17 @@ export class ActividadCrearComponent {
       fechaInicial: ['', Validators.required],
       fechaFinal: ['', Validators.required],
       idUsuario: ['', Validators.required],
+      presupuesto: ['', Validators.required], // Add project-specific fields here
+      modalidad: ['', Validators.required],
+      valorEjecutado: ['', Validators.required],
+      planeacionSprint: ['', Validators.required],
     });
   }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      this.idPat = params['idPat'];
-      this.patNombre = params['patNombre'];
+      this.idActividadEstrategica = params['idActividadEstrategica'];
+      this.actividadNombre = params['actividadNombre'];
     })
     this.cargarUsuarios();
   }
@@ -56,34 +60,54 @@ export class ActividadCrearComponent {
   }
 
   crearActividadOProyecto() {
-
-
-        if (this.tipo === 'gestion') {
-          this.actividadService.crearActividadGestionActividadEstrategica(this.actividad,this.auth.obtenerHeader()).subscribe(
-            (response) => {
-              Swal.fire("Creado Satisfactoriamente", 'El actividad estratégica con el nombre ' + this.form.value.nombre + ', se ha creado!!', "success");
-            },
-            (error) => {
-              Swal.fire("Error",error.error.mensajeTecnico,"error");
-            }
-          );
-        } else if (this.tipo === 'proyecto') {
-          this.actividadService.crearProyecto(this.proyecto,this.auth.obtenerHeader()).subscribe(
-            (response) => {
-              Swal.fire("Creado Satisfactoriamente", 'La gestión del área con el nombre ' + this.form.value.nombre + ', se ha creado!!', "success");
-            },
-            (error) => {
-              Swal.fire("Error",error.error.mensajeTecnico,"error");
-            }
-          );
-        }
-
-        Swal.fire("Creado Satisfactoriamente", `La actividad ${this.tipo} con el nombre '${this.form.value.nombre}' se ha creado!!`, "success");
+    this.actividad.idActividadEstrategica = this.idActividadEstrategica;
+    this.proyecto.idActividadEstrategica = this.idActividadEstrategica;
+    if (this.tipo === 'gestion') {
+      this.actividadService
+        .crearActividadGestionActividadEstrategica(
+          this.actividad,
+          this.auth.obtenerHeader()
+        )
+        .subscribe(
+          (response) => {
+            this.handleSuccessResponse('actividad estratégica');
+          },
+          (error) => {
+            this.handleErrorResponse(error);
+          }
+        );
+    } else if (this.tipo === 'proyecto') {
+      this.actividadService
+      .crearProyecto(this.proyecto, this.auth.obtenerHeader())
+        .subscribe(
+          (response) => {   
+            this.handleSuccessResponse('proyecto');
+          },
+          (error) => {
+            this.handleErrorResponse(error);
+          }
+        );
+    } 
         this.form.reset();
         this.tipo = ''; // Reinicia el tipo de actividad
         this.tipoActividadGestionActividadEstrategica = false; // Reinicia el estado de los checkboxes
         this.tipoProyecto = false;
-        }
+  }
+
+  handleSuccessResponse(type: string) {
+    Swal.fire(
+      'Creado Satisfactoriamente',
+      `El ${type} se ha creado!!`,
+      'success'
+    );
+    this.form.reset();
+    this.tipo = ''; // Reset the type of activity
+    this.tipoActividadGestionActividadEstrategica = false; // Reset checkbox state
+    this.tipoProyecto = false;
+  }
+  handleErrorResponse(error: any) {
+    Swal.fire('Error', error.error.mensajeTecnico, 'error');
+  }
 
 
   toggleTipoActividad(tipo: string) {

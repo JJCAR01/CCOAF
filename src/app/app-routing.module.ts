@@ -18,6 +18,7 @@ import { ActividadListarComponent } from './actividad/listar/actividad.listar.co
 import { SprintListarComponent } from './sprint/listar/sprint.listar.component';
 import { TareaListarComponent } from './tarea/listar/tarea.listar.component';
 import { TipoGECrearComponent } from './gestion/crear/tipoGE.crear.component';
+import { SprintCrearComponent } from './sprint/crear/sprint.crear.component';
 
 
 
@@ -44,6 +45,7 @@ const routes: Routes = [
     { path: "crearActividad", component: ActividadCrearComponent, outlet:"OutletUsuario"}, 
     { path: 'listarActividad/:idActividadEstrategica', component: ActividadListarComponent, outlet: 'OutletUsuario' },
     { path: 'listarSprint/:idProyecto', component: SprintListarComponent, outlet: 'OutletUsuario' },
+    { path: "crearSprint", component: SprintCrearComponent, outlet:"OutletUsuario"},
     { path: 'listarTarea/:idASE', component: TareaListarComponent, outlet: 'OutletUsuario' }
 
   ] },

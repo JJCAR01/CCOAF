@@ -1,1 +1,47 @@
-<p>sprint works!</p>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link rel="stylesheet" type="text/css" href="sprint.crear.component.scss">
+</head>
+<body>
+
+<section class="gradient-form">
+    <div >
+        <div class="container">
+            <div class="row ">
+                <div class="col-xl-9">
+                    <div class="card">
+                        <h2 class="text-center">Crear sprint</h2>
+                        <div class="mb-3">
+                            <h3>{{ proyectoNombre }}</h3>
+                        </div>
+                        <form [formGroup]="form" (ngSubmit)="crearSprint()">
+                            <div class="form-floating mb-3">
+                                <textarea type="text" id="descripcion" class="form-control form-control-lg" formControlName="descripcion" placeholder="descripcion"></textarea>
+                                <label class="form-label" for="descripcion">Descripcion</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="date" id="fechaInicial" class="form-control form-control-lg" formControlName="fechaInicial" placeholder="Fecha Inicial"  >
+                                <label class="form-label" for="fechaInicial">Fecha Inicial</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="date" id="fechaFinal" class="form-control form-control-lg" formControlName="fechaFinal" placeholder="Fecha Final" >
+                                <label class="form-label" for="fechaFinal">Fecha Final</label>
+                            </div>                        
+                            <div class="d-flex justify-content-center">
+                                <button type="button" class="btn btn-secondary btn-block me-2"
+                                    [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarSprint',idProyecto] } }]"
+                                > Atrás</button>
+                                <button type="submit" class="btn btn-success btn-block btn-lg " [disabled]="!form.valid">Registrar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

@@ -5,6 +5,7 @@ import { PatService } from '../services/pat.service';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import Swal from 'sweetalert2';
 import { Pat } from './pat';
+import { EProceso } from '../listar/eproceso';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +14,7 @@ import { Pat } from './pat';
 })
 export class PatCrearComponent implements OnInit{
   title = 'crearPat';
+  procesosEnumList: string[] = [];
   pat:Pat = new Pat();
   usuarios: any[] = [];
   form:FormGroup;
@@ -27,6 +29,7 @@ export class PatCrearComponent implements OnInit{
   }); }
 
   ngOnInit(): void {
+    this.procesosEnumList = Object.values(EProceso);
     this.cargarUsuarios();
   }
 
@@ -42,6 +45,10 @@ export class PatCrearComponent implements OnInit{
   }
 
   crearPat() { 
+    this.pat.nombre = this.form.value.nombre;
+    this.pat.fechaAnual = this.form.value.fechaAnual;
+    this.pat.proceso = this.form.value.proceso.toUpperCase().replace(/\s+/g, '_');
+    this.pat.idUsuario = this.form.value.idUsuario;
         // Luego, envía 'cargo' al backend usando tu servicio.
         this.patService.crearPat(this.pat,this.auth.obtenerHeader()).subscribe(
           (response) => {

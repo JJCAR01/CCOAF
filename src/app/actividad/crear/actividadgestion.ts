@@ -3,4 +3,5 @@ export class ActividadGestion {
     fechaInicial!:Date;
     fechaFinal!:Date;
     idUsuario!:number;
+    idActividadEstrategica!:number;
 }

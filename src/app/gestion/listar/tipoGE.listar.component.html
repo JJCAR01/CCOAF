@@ -157,13 +157,14 @@
         </div>
         <div class="modal-body">
           <form [formGroup]="form" (ngSubmit)="modificarActividadEstrategica()">
-            <div class="mb-3 custom-input">
-              <label for="nombre" class="form-label">{{nombreActividadEstrategica}}</label>
+            <div class="mb-3">
+              <label for="nombre" class="form-label">Nombre</label>
+              <textarea type="text" class="form-control" id="nombre" formControlName="nombre" [value]="nombreActividadEstrategica" style="min-width: 100%;"></textarea>
             </div>
             <div class="mb-3">
               <label for="fechaInicial" class="form-label">Fecha Inicial</label>
               <input type="date" class="form-control" id="fechaInicial" formControlName="fechaInicial">
-            </div>
+            </div>  
             <div class="mb-3">
               <label for="fechaFinal" class="form-label">Fecha Final</label>
               <input type="date" class="form-control" id="fechaFinal" formControlName="fechaFinal">
@@ -188,8 +189,9 @@
         </div>
         <div class="modal-body">
           <form [formGroup]="form" (ngSubmit)="modificarActividadGestion()">
-            <div div class="mb-3 custom-input">
-              <label for="nombre" class="form-label">{{nombreActividadGestion}}</label>
+            <div class="mb-3">
+              <label for="nombre" class="form-label">Nombre</label>
+              <input type="text" class="form-control" id="nombre" formControlName="nombre" [value]="nombreActividadGestion" style="min-width: 100%;">
             </div>
             <div class="mb-3">
               <label for="fechaInicial" class="form-label">Fecha Inicial</label>

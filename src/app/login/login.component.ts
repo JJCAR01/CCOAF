@@ -1,7 +1,7 @@
 import { Component ,OnInit,Injectable } from '@angular/core';
 import { LoginService } from './services/login.service';
 import jwt_decode from "jwt-decode";
-import swal from 'sweetalert';
+import Swal from 'sweetalert2';
 
 import { SocialAuthService,SocialUser } from '@abacritt/angularx-social-login';
 
@@ -9,6 +9,7 @@ import {  Validators,FormGroup,FormControl} from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router'; 
 import { GoogleService } from './google/auth.google.service';
+import { AuthService } from './auth/auth.service';
 
 
 @Injectable({
@@ -29,6 +30,7 @@ export class LoginComponent implements OnInit {
   constructor(
   private loginService: LoginService, 
     private cookieService:CookieService,
+    private auth:AuthService,
     private router: Router,
     private authService:SocialAuthService,
     private authGoogleService:GoogleService,
@@ -51,13 +53,9 @@ export class LoginComponent implements OnInit {
     this.authGoogleService.loging();
   }
 
-  
-
-
   login() {
     const correo = this.form.value.correo;
     const password = this.form.value.password;
-
 
     const body = {
       correo: correo,
@@ -79,11 +77,11 @@ export class LoginComponent implements OnInit {
         }
       } 
     },error =>{
-      swal('Por favor intente de nuevo',error.error.mensajeTecnico,'warning')
+      Swal.fire('Por favor intente de nuevo',error.error.mensajeTecnico,'warning')
     } )
   }
 
   solicitar(){
-    swal('Solicitar acceso', "Por favor contactese con el administrador, dirigiendose a la mesa de ayuda para generar el Ticket")
+    Swal.fire('Solicitar acceso', "Por favor contactese con el administrador, dirigiendose a la mesa de ayuda para generar el Ticket",'warning')
   }
 }

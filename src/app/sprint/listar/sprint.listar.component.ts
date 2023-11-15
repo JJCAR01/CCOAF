@@ -4,7 +4,7 @@ import { AuthService } from 'src/app/login/auth/auth.service';
 import { ActividadService } from 'src/app/actividad/services/actividad.service';
 import { ActivatedRoute } from '@angular/router';
 import { UsuarioService } from 'src/app/usuario/services/usuario.service';
-import swal from 'sweetalert';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-sprint',
@@ -16,6 +16,7 @@ export class SprintListarComponent implements OnInit {
   sprints: any[] = [];
   proyectos: any[] = [];
   usuarios:any[] =[];
+  nombreSprint:any;
   proyectoNombre:any;
   proyectoPorcentaje:any;
   proyectoUsuario:any;
@@ -40,7 +41,8 @@ export class SprintListarComponent implements OnInit {
           this.proyectoNombre = data.nombre
           this.proyectoPorcentaje = data.avance
           this.proyectoUsuario = data.idUsuario
-          this.idProyecto = data.idActividadEstrategica // Asignar el nombre del Pat a patNombre 
+          this.idProyecto = data.idProyecto 
+          this.actividad = data.idActividadEstrategica
         },
         (error) => {
           // Manejo de errores
@@ -73,7 +75,7 @@ export class SprintListarComponent implements OnInit {
           this.sprints = data;
         },
         (error) => {
-          swal(error.error.mensajeTecnico);
+          Swal.fire(error.error.mensajeTecnico);
         }
       );
   }
@@ -81,29 +83,69 @@ export class SprintListarComponent implements OnInit {
   eliminarProyecto(idSprint: number) {
     const sprintAEliminar = this.sprints.find(s => s.idSprint === idSprint);
 
-      swal({
+    Swal.fire({
         title: "¿Estás seguro?",
         text: "Una vez eliminado, no podrás recuperar este elemento.",
-        icon: "warning",
-        buttons: ["Cancelar", "Eliminar"],
-        dangerMode: true,
+        icon: "question",
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: "#3085d6",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
       })
       .then((confirmacion) => {
-      if (confirmacion) {
+        if (confirmacion.isConfirmed) {
         this.sprintService.eliminarSprint(idSprint, this.auth.obtenerHeader()).subscribe(
           (response) => {
-            swal("Eliminado Satisfactoriamente", "El proyecto con el nombre " + sprintAEliminar.nombre + " se ha eliminado.", "success").then(() => {
+            Swal.fire("Eliminado Satisfactoriamente", "El sprint se ha eliminado.", "success").then(() => {
               window.location.reload();
             });
             console.log(response);
           },
           (error) => {
-            swal("Solicitud no válida", error.error.mensajeHumano, "error");
+            Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
           }
         );
       }
       });
   }
+
+  obtenerSprint(sprint:any) {
+    this.nombreSprint = sprint.descripcion;
+  }
+
+  agregarDocumento() {
+
+    /*if (this.formProyecto.valid && this.idProyectoSeleccionado) {
+      const presupuesto = this.formProyecto.get('presupuesto')?.value;
+      const actividadEstrategica = {
+        presupuesto:presupuesto,
+        fechaInicial: fechaInicial,
+        fechaFinal: fechaFinal,
+      };
+
+      this.actividadService
+        .modificarProyecto(actividadEstrategica, this.idProyectoSeleccionado, this.auth.obtenerHeader())
+        .subscribe(
+          (response) => {
+            swal({
+              title: "Modificado Satisfactoriamente",
+              text: "La actividad estrategica se ha modificado",
+              icon: "success",
+            }).then((value) => {
+              location.reload();
+            });
+          },
+          (error) => {
+            swal(error.error.mensajeTecnico, "warning");
+          }
+        );
+    }*/
+  }
+
+  modificarSprint(){
+
+  }
+
 
   obtenerNombreUsuario(idUsuario: number) {
     const usuario = this.usuarios.find((u) => u.idUsuario === idUsuario);

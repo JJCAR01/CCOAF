@@ -37,6 +37,7 @@ import { TareaCrearComponent } from './tarea/crear/tarea.crear.component';
 import { EnumPipe } from 'src/pipes/enum.pipes';
 import { TipoGECrearComponent } from './gestion/crear/tipoGE.crear.component';
 
+
 const routes: Routes = [
   // Otras rutas...
   { path: 'crearTipoGE', component: TipoGECrearComponent }, // Aquí defines la ruta para tu componente

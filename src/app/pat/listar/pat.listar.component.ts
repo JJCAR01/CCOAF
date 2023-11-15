@@ -6,6 +6,7 @@ import { UsuarioService } from 'src/app/usuario/services/usuario.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TipoGEService } from 'src/app/gestion/services/tipoGE.service';
 import { ActividadService } from 'src/app/actividad/services/actividad.service';
+import { EProceso } from './eproceso';
 
 @Component({
   selector: 'app-root',
@@ -14,33 +15,37 @@ import { ActividadService } from 'src/app/actividad/services/actividad.service';
 })
 export class PatListarComponent implements OnInit{
   title = 'listarPat';
+  procesosEnumList: string[] = Object.values(EProceso);
   pats: any[] = [];
   usuarios:any[] =[];
   busqueda: any;
   selectedPatId: number | null = null;
   nombrePatSeleccionado:any;
+  usuario:any;
   cantidadPats:any;
   cantidadProyectos:any;
   cantidadGestiones:any;
   cantidadEstrategicas:any;
   form:FormGroup;
   
-    constructor(private patService: PatService,private auth:AuthService,
+    constructor(
+      private patService: PatService,private auth:AuthService,
       private usuarioService:UsuarioService, private formBuilder: FormBuilder,
       private tipoService:TipoGEService, private actividadService:ActividadService) 
       {
         this.form = this.formBuilder.group({
+          nombre:['', Validators.required],
           fechaAnual: ['', Validators.required],
           proceso: ['', Validators.required],
         }); 
        }  
 
     ngOnInit() {
-      this.cargarPats();
-      this.cargarUsuario();
-      this.cargarActividadesEstrategica();
-      this.cargarPatsActividadGestion();
-      this.cargarPatsProyectos();
+          this.cargarPats();
+          this.cargarUsuario();
+          this.cargarActividadesEstrategica();
+          this.cargarPatsActividadGestion();
+          this.cargarPatsProyectos();
     }
     cargarUsuario() {
       this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
@@ -48,11 +53,10 @@ export class PatListarComponent implements OnInit{
           this.usuarios = data;
       },
         (error) => {
-          console.log(error);
+          Swal.fire(error.error.mensajeTecnico);
         }
       );
     }
-
 
     cargarPats() {
       this.patService.listarPat(this.auth.obtenerHeader()).toPromise().then(
@@ -102,22 +106,31 @@ export class PatListarComponent implements OnInit{
 
     modificarPat() {
       if (this.form.valid && this.selectedPatId) {
+        const nombre = this.form.get('nombre')?.value;
         const fechaAnual = this.form.get('fechaAnual')?.value;
-        const proceso = this.form.get('proceso')?.value;
+        const proceso = this.form.get('proceso')?.value.toUpperCase().replace(/\s+/g, '_');
+        const idUsuario = this.usuario;
         const pat = {
+          nombre: nombre,
           fechaAnual: fechaAnual,
           proceso: proceso,
+          idUsuario: idUsuario
+          
         };
         this.patService
           .modificarPat(pat, this.selectedPatId, this.auth.obtenerHeader())
           .subscribe(
             (response) => {
-              Swal.fire("Modificado Satisfactoriamente", "El PAT se ha modificado", "success");
-              this.form.reset();
-              window.location.reload()
+              Swal.fire({
+                icon:'success',
+                title:'Modificado Satisfactoriamente',
+                text: pat.nombre +' se ha modificado'
+              }).then((value) => {
+                location.reload();
+              });
             },
             (error) => {
-              Swal.fire(error.error.mensajeTecnico, "warning");
+              Swal.fire(error.error.mensajeHumano,'' ,"warning");
             }
           );
       }
@@ -159,6 +172,7 @@ export class PatListarComponent implements OnInit{
     setSelectedPat(idPat: number,pat:any) {
       this.selectedPatId = idPat;
       this.nombrePatSeleccionado = pat.nombre;
+      this.usuario = pat.idUsuario
     }
 
     colorPorcentaje(porcentaje: number): string {

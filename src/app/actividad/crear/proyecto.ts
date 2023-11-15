@@ -7,4 +7,5 @@ export class Proyecto {
     valorEjecutado!:number;
     planeacionSprint!:string;
     idUsuario!:number;
+    idActividadEstrategica!:number;
 }

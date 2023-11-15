@@ -14,24 +14,31 @@
                             <h2 class="text-center">Crear plan Anual de trabajo</h2>
 
                             <form [formGroup]="form" (ngSubmit)="crearPat()">
+                                <!-- Elimina [(ngModel)] y usa solo formControlName para los campos -->
                                 <div class="form-floating mb-3">
-                                  <input type="text" id="nombre" class="form-control form-control-lg" formControlName="nombre" placeholder="nombre" [(ngModel)]="pat.nombre" >
-                                  <label class="form-label" for="nombre">Nombre</label>
+                                    <input type="text" id="nombre" class="form-control form-control-lg" formControlName="nombre" placeholder="nombre">
+                                    <label class="form-label" for="nombre">Nombre</label>
                                 </div>
+
                                 <div class="form-floating mb-3">
-                                    <input type="text" id="fechaAnual" class="form-control form-control-lg" formControlName="fechaAnual" placeholder="Año" [(ngModel)]="pat.fechaAnual" >
+                                    <input type="text" id="fechaAnual" class="form-control form-control-lg" formControlName="fechaAnual" placeholder="Año">
                                     <label class="form-label" for="fechaAnual">Año</label>
                                 </div>
+
                                 <div class="form-floating mb-3">
-                                    <input type="text" id="proceso" class="form-control form-control-lg" formControlName="proceso" placeholder="proceso" [(ngModel)]="pat.proceso">
-                                    <label class="form-label" for="proceso">Proceso</label>
+                                    <select class="form-select" id="proceso" formControlName="proceso">
+                                        <option *ngFor="let proceso of procesosEnumList" [value]="proceso">{{ proceso }}</option>
+                                    </select>
+                                    <label for="proceso" class="form-label">Proceso</label>
                                 </div>
+
                                 <div class="form-floating mb-3">
-                                    <select class="form-select" id="idUsuario" formControlName="idUsuario"  [(ngModel)]="pat.idUsuario">
-                                        <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario"  >{{ usuario.nombre  + ' ' + usuario.apellidos | formatEnum}}</option>
+                                    <select class="form-select" id="idUsuario" formControlName="idUsuario">
+                                        <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario">{{ usuario.nombre + ' ' + usuario.apellidos | formatEnum }}</option>
                                     </select>
                                     <label for="idUsuario" placeholder="usuario">Responsable:</label>
-                                </div>  
+                                </div>
+
                                 <div class="d-flex justify-content-center">
                                     <button type="button" class="btn btn-secondary btn-block me-2"
                                         [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarPat'] } }]"
