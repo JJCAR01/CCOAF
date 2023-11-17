@@ -36,12 +36,10 @@ import { TareaCrearComponent } from './tarea/crear/tarea.crear.component';
 
 import { EnumPipe } from 'src/pipes/enum.pipes';
 import { TipoGECrearComponent } from './gestion/crear/tipoGE.crear.component';
+import { AngularFireModule } from '@angular/fire/compat';
+import { environment } from 'src/environments/environment.development';
+import { AngularFireStorage, AngularFireStorageModule } from '@angular/fire/compat/storage';
 
-
-const routes: Routes = [
-  // Otras rutas...
-  { path: 'crearTipoGE', component: TipoGECrearComponent }, // Aquí defines la ruta para tu componente
-];
 
 
 @NgModule({
@@ -52,6 +50,7 @@ const routes: Routes = [
     SprintListarComponent,SprintCrearComponent, TareaListarComponent,
   ],
   imports: [
+    AngularFireModule.initializeApp(environment.firebaseConfig),
     BrowserModule,
     RouterModule,
     AppRoutingModule,
@@ -63,6 +62,7 @@ const routes: Routes = [
     OAuthModule.forRoot(),
     ],
   providers: [
+    AngularFireStorage,
     {
       provide: 'SocialAuthServiceConfig',
       useValue: {

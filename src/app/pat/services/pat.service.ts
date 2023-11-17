@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment.development';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,20 +11,20 @@ export class PatService {
   constructor(private http: HttpClient) {
   }
 
-  crearPat(pat : any,headers?: HttpHeaders){
-    return this.http.post(`${environment.apiUrl}/ccoa/pats`,pat,{headers});
+  crearPat<T>(pat : any,headers?: HttpHeaders):Observable<T> {
+    return this.http.post<T>(`${environment.apiUrl}/ccoa/pats`,pat,{headers});
   }
 
-  listarPat(headers?: HttpHeaders){
-    return this.http.get(`${environment.apiUrl}/ccoa/pats`,{headers});
+  listarPat<T>(headers?: HttpHeaders):Observable<T>{
+    return this.http.get<T>(`${environment.apiUrl}/ccoa/pats`,{headers});
   }
-  listarPatPorId(idPat:number,headers?: HttpHeaders){
-    return this.http.get(`${environment.apiUrl}/ccoa/pats/${idPat}`,{headers});
+  listarPatPorId<T>(idPat:number,headers?: HttpHeaders):Observable<T>{
+    return this.http.get<T>(`${environment.apiUrl}/ccoa/pats/${idPat}`,{headers});
   }
-  modificarPat(pat : any,idPat:number,headers?: HttpHeaders){
-    return this.http.put(`${environment.apiUrl}/ccoa/pats/${idPat}`,pat,{headers});
+  modificarPat<T>(pat : any,idPat:number,headers?: HttpHeaders):Observable<T>{
+    return this.http.put<T>(`${environment.apiUrl}/ccoa/pats/${idPat}`,pat,{headers});
   }
-  eliminarPat(idPat:number,headers?: HttpHeaders){
-    return this.http.delete(`${environment.apiUrl}/ccoa/pats/${idPat}`,{headers});
+  eliminarPat<T>(idPat:number,headers?: HttpHeaders):Observable<T>{
+    return this.http.delete<T>(`${environment.apiUrl}/ccoa/pats/${idPat}`,{headers});
   }
 }

@@ -13,6 +13,9 @@ export class SprintService {
   crearSprint(sprint : any,headers?: HttpHeaders){
     return this.http.post(`${environment.apiUrl}/ccoa/sprints`,sprint,{headers});
   }
+  guardarDocumentoSprint(documento : any,headers?: HttpHeaders){
+    return this.http.post(`${environment.apiUrl}/ccoa/sprints/archivo`,documento,{headers});
+  }
   listarSprint(headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/sprints`,{headers});
   }
