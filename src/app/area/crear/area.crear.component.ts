@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule,FormGroup,Validators } from '@angular/forms';
-import { HttpHeaders } from '@angular/common/http';
 import { AreaService } from '../services/area.service';
-import { CookieService } from 'ngx-cookie-service';
+import { CookieService } from 'ngx-cookie-service/lib/cookie.service';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import { Observable } from 'rxjs';
 import swal from 'sweetalert';

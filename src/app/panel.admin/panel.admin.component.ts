@@ -2,7 +2,7 @@ import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginService } from '../login/services/login.service';
-import { CookieService } from 'ngx-cookie-service';
+import { CookieService } from 'ngx-cookie-service/lib/cookie.service';
 import { AuthService } from '../login/auth/auth.service';
 
 

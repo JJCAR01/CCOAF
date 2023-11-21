@@ -19,6 +19,7 @@ import { SprintListarComponent } from './sprint/listar/sprint.listar.component';
 import { TareaListarComponent } from './tarea/listar/tarea.listar.component';
 import { TipoGECrearComponent } from './gestion/crear/tipoGE.crear.component';
 import { SprintCrearComponent } from './sprint/crear/sprint.crear.component';
+import { HttpClientModule } from '@angular/common/http';
 
 
 

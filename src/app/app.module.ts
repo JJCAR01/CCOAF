@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
 import { SocialLoginModule, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
 import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
 import { GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
@@ -39,6 +38,10 @@ import { TipoGECrearComponent } from './gestion/crear/tipoGE.crear.component';
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from 'src/environments/environment.development';
 import { AngularFireStorage, AngularFireStorageModule } from '@angular/fire/compat/storage';
+import { HttpClientModule } from '@angular/common/http';
+import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
+import { provideAuth,getAuth } from '@angular/fire/auth';
+import { provideStorage,getStorage } from '@angular/fire/storage';
 
 
 
@@ -47,19 +50,21 @@ import { AngularFireStorage, AngularFireStorageModule } from '@angular/fire/comp
     AppComponent,LoginComponent,PanelAdminComponent,AreaCrearComponent,AreaListarComponent,PanelUsuarioComponent,
     CargoCrearComponent,CargoListarComponent,UsuarioCrearComponent,UsuarioListarComponent, BuscarPipe,EnumPipe,PatListarComponent,
     PatCrearComponent,TipogeListarComponent,ActividadCrearComponent, ActividadListarComponent,TipoGECrearComponent,
-    SprintListarComponent,SprintCrearComponent, TareaListarComponent,
+    SprintListarComponent,SprintCrearComponent, TareaListarComponent
   ],
   imports: [
-    AngularFireModule.initializeApp(environment.firebaseConfig),
     BrowserModule,
     RouterModule,
+    HttpClientModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
     SocialLoginModule,GoogleSigninButtonModule,
     OAuthModule.forRoot(),
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideAuth(() => getAuth()),
+    provideStorage(() => getStorage()),
     ],
   providers: [
     AngularFireStorage,

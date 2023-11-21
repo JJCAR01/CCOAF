@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import { SocialAuthService,SocialUser } from '@abacritt/angularx-social-login';
 
 import {  Validators,FormGroup,FormControl} from '@angular/forms';
-import { CookieService } from 'ngx-cookie-service';
+import { CookieService } from 'ngx-cookie-service/public-api';
 import { Router } from '@angular/router'; 
 import { GoogleService } from './google/auth.google.service';
 import { AuthService } from './auth/auth.service';
