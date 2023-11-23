@@ -1,8 +1,8 @@
 import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoginService } from '../login/services/login.service';
-import { CookieService } from 'ngx-cookie-service/lib/cookie.service';
+import Swal from 'sweetalert2';
+import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from '../login/auth/auth.service';
 
 
@@ -29,8 +29,24 @@ export class PanelAdminComponent implements OnInit{
   }
 
   logOut():void{
-    this.authService.signOut();
-    this.cookie.deleteAll();
-    this.router.navigate(["/login"]);
+    Swal.fire({
+      icon:"question",
+      title: "¿Estás seguro?",
+      text: "Deseas salir de la sesión",
+      confirmButtonText: "Confirmar",
+      confirmButtonColor: "#3085d6",
+      showCancelButton: true,
+      cancelButtonText: "Cancelar",
+    })
+    .then((confirmacion) => {
+      if (confirmacion.isConfirmed) {
+        this.router.navigate(["/login"]);
+            Swal.fire("Sesión cerrada", "", "success").then(() => {
+              this.authService.signOut();
+              this.cookie.deleteAll();
+          },
+        );
+      }
+    });
   }
 }

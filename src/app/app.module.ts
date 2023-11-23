@@ -23,8 +23,8 @@ import { TipogeListarComponent } from './gestion/listar/tipoGE.listar.component'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import { BuscarPipe } from 'src/pipes/buscar.pipes';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
-import swal from 'sweetalert';
 import { ActividadCrearComponent } from './actividad/crear/actividad.crear.component';
 import { ActividadListarComponent } from './actividad/listar/actividad.listar.component';
 import { OAuthModule } from 'angular-oauth2-oidc';
@@ -35,13 +35,14 @@ import { TareaCrearComponent } from './tarea/crear/tarea.crear.component';
 
 import { EnumPipe } from 'src/pipes/enum.pipes';
 import { TipoGECrearComponent } from './gestion/crear/tipoGE.crear.component';
-import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from 'src/environments/environment.development';
 import { AngularFireStorage, AngularFireStorageModule } from '@angular/fire/compat/storage';
 import { HttpClientModule } from '@angular/common/http';
 import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
 import { provideAuth,getAuth } from '@angular/fire/auth';
 import { provideStorage,getStorage } from '@angular/fire/storage';
+
+import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 
 
 
@@ -76,7 +77,7 @@ import { provideStorage,getStorage } from '@angular/fire/storage';
           {
             id: GoogleLoginProvider.PROVIDER_ID,
             provider: new GoogleLoginProvider(
-              '659612202917-95lnaql5oq526cg8cd18li7gksjlduap.apps.googleusercontent.com'
+              '659612202917-3akn48ut0kpn8ojmneoml5ka2mp909et.apps.googleusercontent.com'
             )
           },
         ],
@@ -84,7 +85,8 @@ import { provideStorage,getStorage } from '@angular/fire/storage';
           console.error(err);
         }
       } as SocialAuthServiceConfig,
-    },CookieService
+    },CookieService,
+    { provide: FIREBASE_OPTIONS, useValue: environment.firebase }
   ],
   bootstrap: [AppComponent]
 })

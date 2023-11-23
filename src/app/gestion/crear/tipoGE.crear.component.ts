@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/login/auth/auth.service';
-import swal from 'sweetalert';
+import Swal from 'sweetalert2';
 import { TipoGEService } from '../services/tipoGE.service';
 import { UsuarioService } from 'src/app/usuario/services/usuario.service';
 import { ActivatedRoute } from '@angular/router';
@@ -71,26 +71,26 @@ export class TipoGECrearComponent implements OnInit {
         if (this.tipoActividad === 'estrategica') {
           this.tipoService.crearActividadEstrategica(actividad,this.auth.obtenerHeader()).subscribe(
             (response) => {
-              swal("Creado Satisfactoriamente", 'El actividad estratégica con el nombre ' + actividad.nombre + ', se ha creado!!', "success");
+              Swal.fire("Creado Satisfactoriamente", 'El actividad estratégica con el nombre ' + actividad.nombre + ', se ha creado!!', "success");
               this.form.reset();
             },
             (error) => {
-              swal("Error",error.error.mensajeTecnico,"error");
+              Swal.fire("Error",error.error.mensajeTecnico,"error");
             }
           );
         } else if (this.tipoActividad === 'gestion') {
           this.tipoService.crearGestion(actividad,this.auth.obtenerHeader()).subscribe(
             (response) => {
-              swal("Creado Satisfactoriamente", 'La gestión del área con el nombre ' + this.form.value.nombre + ', se ha creado!!', "success");
+              Swal.fire("Creado Satisfactoriamente", 'La gestión del área con el nombre ' + this.form.value.nombre + ', se ha creado!!', "success");
               this.form.reset();
             },
             (error) => {
-              swal("Error",error.error.mensajeTecnico,"error");
+              Swal.fire("Error",error.error.mensajeTecnico,"error");
             }
           );
         }
 
-        swal("Creado Satisfactoriamente", `La actividad ${this.tipoActividad} con el nombre '${nombre}' se ha creado!!`, "success");
+        Swal.fire("Creado Satisfactoriamente", `La actividad ${this.tipoActividad} con el nombre '${nombre}' se ha creado!!`, "success");
         this.form.reset();
         this.tipoActividad = ''; // Reinicia el tipo de actividad
         this.tipoActividadEstrategica = false; // Reinicia el estado de los checkboxes

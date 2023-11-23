@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, ReactiveFormsModule,FormGroup,Validators } from '@angular/forms';
+import { FormBuilder, FormControl, ReactiveFormsModule,FormGroup,Validators, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 import { AreaService } from '../services/area.service';
-import { CookieService } from 'ngx-cookie-service/lib/cookie.service';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import { Observable } from 'rxjs';
-import swal from 'sweetalert';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -14,7 +13,7 @@ import swal from 'sweetalert';
 })
 export class AreaCrearComponent {
   title = 'crearArea';
-  constructor(private areaService: AreaService,private cookieService:CookieService
+  constructor(private areaService: AreaService
     ,private auth: AuthService) 
   {  }
 
@@ -29,12 +28,10 @@ export class AreaCrearComponent {
     };
     
     this.areaService.crear(body,this.auth.obtenerHeader()).toPromise().then(response =>{
-      swal("Creado Satisfactoriamente", 'El area con el nombre ' +this.form.value.nombre + ', se ha creado!!', "success");
+      Swal.fire("Creado!!!", 'El area con el nombre ' +this.form.value.nombre + ',  se ha creado!!', "success");
       this.form.reset();
     },error =>{
-      swal("Error al Crear " + this.form.value.nombre , error.error.mensajeTecnico , "error");
+      Swal.fire("Error al Crear " + this.form.value.nombre , error.error.mensajeTecnico , "error");
     } )
   }
-  
-
 }

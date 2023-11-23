@@ -1,4 +1,4 @@
-import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { getStorage, ref, uploadBytes } from "firebase/storage";
 
 import { Component,Injectable,OnInit } from '@angular/core';
 import { SprintService } from '../services/sprint.service';
@@ -28,7 +28,6 @@ export class SprintListarComponent implements OnInit {
   busqueda: any;
 
   constructor(
-    private storage:AngularFireStorage,
     private sprintService: SprintService,
     private auth: AuthService,
     private actividadService: ActividadService,
@@ -59,6 +58,26 @@ export class SprintListarComponent implements OnInit {
     });
     this.cargarUsuario();
   }
+
+  documento(event: any) {
+    const file = event.target.files[0];  
+
+    /*if (file) {
+      try {
+        const path = `documento/${file.name}`;
+        // Use AngularFireStorage service methods
+        const task = this.storage.upload(path, file);
+        const url = await task.snapshotChanges().toPromise().then(() => {
+          return this.storage.ref(path).getDownloadURL();
+        });
+
+        // ... Do something with the URL if needed
+      } catch (error) {
+        console.error('Error al subir el archivo:', error);
+      }
+    }*/
+  }
+
   cargarUsuario() {
     this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
@@ -112,31 +131,13 @@ export class SprintListarComponent implements OnInit {
           }
         );
       }
-      });
+    });
   }
 
   obtenerSprint(sprint:any) {
     this.nombreSprint = sprint.descripcion;
   }
   
-  async documento(event: any) {
-    const file = event.target.files[0];
-
-    if (file) {
-      try {
-        const path = `documento/${file.name}`;
-        // Use AngularFireStorage service methods
-        const task = this.storage.upload(path, file);
-        const url = await task.snapshotChanges().toPromise().then(() => {
-          return this.storage.ref(path).getDownloadURL();
-        });
-
-        // ... Do something with the URL if needed
-      } catch (error) {
-        console.error('Error al subir el archivo:', error);
-      }
-    }
-  }
 
   agregarDocumento() {
 

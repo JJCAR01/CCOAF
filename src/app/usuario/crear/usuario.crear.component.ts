@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { UsuarioService } from '../services/usuario.service';
 import { CargoService } from 'src/app/cargo/services/cargo.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/login/auth/auth.service';
-import swal from 'sweetalert';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-root',
@@ -26,9 +26,11 @@ export class UsuarioCrearComponent {
       password: ['', Validators.required],
       idCargo: ['', Validators.required],
       rol: ['', Validators.required],
-
-  }); 
-}
+      cpassword: ['', Validators.required],  // Agrega el control para confirmar la contraseña
+    }, {
+      validators : matchpassword
+    });
+  }
   ngOnInit(): void {
     this.cargarCargos();
   }
@@ -61,15 +63,28 @@ export class UsuarioCrearComponent {
 
       this.usuarioService.crearUsuario(usuarioData,this.auth.obtenerHeader()).subscribe(
         (response) => {
-          swal("Creado Satisfactoriamente", 'El area con el nombre ' + this.form.value.nombre + this.form.value.apellido + ', se ha creado!!', "success");
+          Swal.fire("Creado Satisfactoriamente", 'El area con el nombre ' + usuarioData.nombre + ', se ha creado!!', "success");
             this.form.reset();
           console.log(response);
         },
         (error) => {
-          swal(error.error.mensajeHumano,"warning");
+          Swal.fire('Error!!!',error.error.mensajeHumano,"warning");
         }
       );
     }
     this.form.reset();
   }
+
+}
+
+const matchpassword :ValidatorFn = (control:AbstractControl):ValidationErrors|null =>{
+
+  let password = control.get('password');
+  let cpassword = control.get('cpassword');
+  if(password && cpassword && password?.value != cpassword?.value){
+    return{
+      passwordMatchError : true
+    }
+  }
+  return null;
 }

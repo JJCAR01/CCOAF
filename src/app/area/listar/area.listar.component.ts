@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AreaService } from '../services/area.service';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import { HttpHeaders } from '@angular/common/http';
-import swal from 'sweetalert';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-root:not(p)',
@@ -34,24 +34,36 @@ export class AreaListarComponent implements OnInit {
           this.areas = data; 
         },
         (error) => {
-          swal(error.error.mensajeTecnico)
+          Swal.fire('Error',error.error.mensajeTecnico,'error')
         }
       );
   }
   eliminarArea(idArea: number) {
     const areaAEliminar = this.areas.find(area => area.idArea === idArea);
-    this.areaService.eliminar(idArea,this.auth.obtenerHeader()).subscribe(
-      (response) => {
-        swal("Eliminado Satisfactoriamente", "El area con el nombre " + areaAEliminar.nombre + ", se ha eliminado!", "success").then(() => {
-          window.location.reload();
-        });
-        console.log(response);
-      },
-      (error) => {
-        swal(error.error.mensajeTecnico,"error");
-      }
-    );
+
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "Una vez eliminado, no podrás recuperar este elemento.",
+      icon: "question",
+      confirmButtonText: "Confirmar",
+      confirmButtonColor: "#3085d6",
+      showCancelButton: true,
+      cancelButtonText: "Cancelar",
+    })
+    .then((confirmacion) => {
+      if (confirmacion.isConfirmed) {
+      this.areaService.eliminar(idArea, this.auth.obtenerHeader()).subscribe(
+        (response) => {
+          Swal.fire("Eliminado!!!", "El area se ha eliminado." , "success").then(() => {
+            window.location.reload();
+          });
+          console.log(response);
+        },
+        (error) => {
+          Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
+        }
+      );
+    }
+  });
   }
-
-
 }

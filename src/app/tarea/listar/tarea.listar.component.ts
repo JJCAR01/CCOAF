@@ -4,7 +4,7 @@ import { AuthService } from 'src/app/login/auth/auth.service';
 import { SprintService } from 'src/app/sprint/services/sprint.service';
 import { ActivatedRoute } from '@angular/router';
 import { ActividadService } from 'src/app/actividad/services/actividad.service';
-import swal from 'sweetalert';
+import Swal from 'sweetalert2';
 import { TipoGEService } from 'src/app/gestion/services/tipoGE.service';
 import { UsuarioService } from 'src/app/usuario/services/usuario.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -113,7 +113,7 @@ export class TareaListarComponent {
             this.tareas = data;
           },
           (error) => {
-            swal(error.error.mensajeTecnico);
+            Swal.fire('Error',error.error.mensajeTecnico,'error');
           }
         );
     } 
@@ -126,7 +126,7 @@ export class TareaListarComponent {
             this.tareas = data;
           },
           (error) => {
-            swal(error.error.mensajeTecnico);
+            Swal.fire('Error',error.error.mensajeTecnico,'error');
           }
         );
     }
@@ -140,7 +140,7 @@ export class TareaListarComponent {
             this.tareas = data;
           },
           (error) => {
-            swal(error.error.mensajeTecnico);
+            Swal.fire(error.error.mensajeTecnico);
           }
         );
     }
@@ -149,24 +149,26 @@ export class TareaListarComponent {
   eliminar(idTarea: number) {
     const tareaAEliminar = this.tareas.find(t => t.idTarea === idTarea);
 
-      swal({
+    Swal.fire({
         title: "¿Estás seguro?",
         text: "Una vez eliminado, no podrás recuperar este elemento.",
         icon: "warning",
-        buttons: ["Cancelar", "Eliminar"],
-        dangerMode: true,
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: "#3085d6",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
       })
       .then((confirmacion) => {
-      if (confirmacion) {
+        if (confirmacion.isConfirmed) {
         this.tareaService.eliminarTarea(idTarea, this.auth.obtenerHeader()).subscribe(
           (response) => {
-            swal("Eliminado Satisfactoriamente", "El proyecto con el nombre " + tareaAEliminar.nombre + " se ha eliminado.", "success").then(() => {
+            Swal.fire("Eliminado Satisfactoriamente", "El proyecto con el nombre " + tareaAEliminar.nombre + " se ha eliminado.", "success").then(() => {
               window.location.reload();
             });
             console.log(response);
           },
           (error) => {
-            swal("Solicitud no válida", error.error.mensajeHumano, "error");
+            Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
           }
         );
       }
@@ -193,7 +195,7 @@ export class TareaListarComponent {
         .modificarTarea(tarea, idSeleccionado, this.auth.obtenerHeader())
         .subscribe(
           (response) => {
-            swal({
+            Swal.fire({
               title: "Modificado Satisfactoriamente",
               text: "La gestión del área se ha modificado",
               icon: "success",
@@ -202,7 +204,7 @@ export class TareaListarComponent {
             });
           },
           (error) => {
-            swal(error.error.mensajeTecnico,"", "warning");
+            Swal.fire('Error',error.error.mensajeTecnico, "warning");
           }
         );
     }

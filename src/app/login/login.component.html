@@ -11,15 +11,11 @@
                   <img src="/assets/logoactualizado.png" width="200mp" alt="logo" id="logo">
                   <h4 class="mt-1 mb-5 pb-1">Planeación estratégica CCOA</h4>
                 </div>
-                <div class="text-left mb-2" >
-                  <p>Ingresar con el correo corporativo</p>
-                  <asl-google-signin-button (click)="loginGoogle()" size = "medium"  type="standard" shape="circle" >
-                  </asl-google-signin-button>
-                </div>
+                  
                 <form [formGroup]="form" (ngSubmit)="login()">
                   
                   <p class="text-center"></p>
-
+                  <div id="buttonDiv"></div>
                   <p>Ingresar con cuenta asignada:</p>
                     <div class="form-outline mb-4">
                       <input type="email" id="correo" class="form-control"
@@ -27,6 +23,7 @@
                         placeholder="Correo" />
                       <label class="form-label" for="correo">Correo</label>
                     </div>
+                    
                   <div class="form-outline mb-4">
                     <input type="password" id="password" class="form-control" 
                     formControlName="password" name="password"
@@ -51,11 +48,7 @@
                     </button>
                   </div>
                   </div>
-
-                  
-
-                
-
+                  <hr>
               </div>
             </div>
             <div class="col-lg-6 d-flex align-items-center gradient-custom-2">

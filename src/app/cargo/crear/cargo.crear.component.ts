@@ -4,7 +4,7 @@ import { CargoService } from '../services/cargo.service';
 import { CookieService } from 'ngx-cookie-service';
 import { AreaService } from 'src/app/area/services/area.service';
 import { AuthService } from 'src/app/login/auth/auth.service';
-import swal from 'sweetalert';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -55,12 +55,12 @@ export class CargoCrearComponent {
         // Luego, envía 'cargo' al backend usando tu servicio.
         this.cargoService.crear(cargo,this.auth.obtenerHeader()).subscribe(
           (response) => {
-            swal("Creado Satisfactoriamente", 'El area con el nombre ' + this.form.value.nombre + ', se ha creado!!', "success");
+            Swal.fire("Creado Satisfactoriamente", 'El area con el nombre ' + this.form.value.nombre + ', se ha creado!!', "success");
             this.form.reset();
             console.log(response);
           },
           (error) => {
-            swal("Error en la solicitud al backend:", error.error.mensajeTecnico);
+            Swal.fire("Error en la solicitud al backend:", error.error.mensajeTecnico,'error');
           }
         );
       }
