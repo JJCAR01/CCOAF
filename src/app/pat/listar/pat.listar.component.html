@@ -85,7 +85,7 @@
             <td>{{ pat.nombre }}</td>
             <td>{{ pat.fechaAnual }}</td>
             <td>{{ pat.proceso | formatEnum }}</td>
-            <td [ngClass]="colorPorcentaje(pat.porcentaje)">{{ pat.porcentaje }} %</td>
+            <td [ngClass]="colorPorcentaje(pat.porcentaje)">{{ pat.porcentaje | number : '1.2-2' }} %</td>
             <td >{{ obtenerNombreUsuario(pat.idUsuario).toUpperCase() }} </td>
             
             <td>

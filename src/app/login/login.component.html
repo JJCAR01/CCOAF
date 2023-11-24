@@ -11,7 +11,11 @@
                   <img src="/assets/logoactualizado.png" width="200mp" alt="logo" id="logo">
                   <h4 class="mt-1 mb-5 pb-1">Planeación estratégica CCOA</h4>
                 </div>
-                  
+                <script src="https://accounts.google.com/gsi/client" async></script>
+                <div class="text-left mb-2" >
+                  <p>Ingresar con el correo corporativo</p>
+                  <div id="buttonDiv"></div>
+                </div>                  
                 <form [formGroup]="form" (ngSubmit)="login()">
                   
                   <p class="text-center"></p>
@@ -37,6 +41,7 @@
                     <h6 class="text-muted" href="#!">¿Olvidaste la contraseña?</h6>
                   </div>
                 </form> 
+                
 
                   <div class="d-flex align-items-center justify-content-center pb-4">
                     <div>
