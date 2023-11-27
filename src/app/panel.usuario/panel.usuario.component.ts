@@ -40,6 +40,7 @@ export class PanelUsuarioComponent implements OnInit {
             Swal.fire("Sesión cerrada", "", "success").then(() => {
               this.authService.signOut();
               this.cookie.deleteAll();
+              this.loggedIn = false;
           },
         );
       }

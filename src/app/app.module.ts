@@ -1,8 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { SocialLoginModule, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
-import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
-import { GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
 import { RouterModule, Routes } from '@angular/router';
 
 
@@ -36,13 +33,14 @@ import { TareaCrearComponent } from './tarea/crear/tarea.crear.component';
 import { EnumPipe } from 'src/pipes/enum.pipes';
 import { TipoGECrearComponent } from './gestion/crear/tipoGE.crear.component';
 import { environment } from 'src/environments/environment.development';
-import { AngularFireStorage, AngularFireStorageModule } from '@angular/fire/compat/storage';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { HttpClientModule } from '@angular/common/http';
 import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
 import { provideAuth,getAuth } from '@angular/fire/auth';
 import { provideStorage,getStorage } from '@angular/fire/storage';
 
 import { FIREBASE_OPTIONS } from '@angular/fire/compat';
+import { GoogleLoginProvider, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
 
 
 
@@ -61,14 +59,12 @@ import { FIREBASE_OPTIONS } from '@angular/fire/compat';
     FormsModule,
     FormsModule,
     ReactiveFormsModule,
-    SocialLoginModule,GoogleSigninButtonModule,
-    OAuthModule.forRoot(),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideStorage(() => getStorage()),
+    AngularFireAuthModule
     ],
   providers: [
-    AngularFireStorage,
     {
       provide: 'SocialAuthServiceConfig',
       useValue: {
@@ -77,7 +73,7 @@ import { FIREBASE_OPTIONS } from '@angular/fire/compat';
           {
             id: GoogleLoginProvider.PROVIDER_ID,
             provider: new GoogleLoginProvider(
-              '659612202917-3akn48ut0kpn8ojmneoml5ka2mp909et.apps.googleusercontent.com'
+              '121626008191-osoar9lh9u3il598ae36qfgl2e7fdlr9.apps.googleusercontent.com'
             )
           },
         ],
@@ -85,7 +81,8 @@ import { FIREBASE_OPTIONS } from '@angular/fire/compat';
           console.error(err);
         }
       } as SocialAuthServiceConfig,
-    },CookieService,
+    },
+    CookieService,
     { provide: FIREBASE_OPTIONS, useValue: environment.firebase }
   ],
   bootstrap: [AppComponent]

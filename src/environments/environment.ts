@@ -1,13 +1,12 @@
 export const environment = {
     production:true,
     apiUrl:'http://localhost:8080',
-  firebase: {
-    projectId: 'paccoa',
-    appId: '1:659612202917:web:382e29a19a043870299a4c',
-    storageBucket: 'paccoa.appspot.com',
-    locationId: 'us-central',
-    apiKey: 'AIzaSyBzHr6h_rL1AVVJsMoCro7ldTTvfzFIW_I',
-    authDomain: 'paccoa.firebaseapp.com',
-    messagingSenderId: '659612202917',
-  }
+    firebase : {
+      apiKey: "AIzaSyAGbP2elzg2fBJoLkFHpvaePsTxFBUBoqM",
+      authDomain: "ccoa-52fa5.firebaseapp.com",
+      projectId: "ccoa-52fa5",
+      storageBucket: "ccoa-52fa5.appspot.com",
+      messagingSenderId: "121626008191",
+      appId: "1:121626008191:web:7321e181f8413331e37d4a"
+    }
  };

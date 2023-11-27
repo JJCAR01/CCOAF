@@ -1,39 +1,17 @@
 import { Injectable } from '@angular/core';
-import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
+import { AngularFireAuth } from '@angular/fire/compat/auth'
+import { Auth, GoogleAuthProvider,signInWithPopup } from '@angular/fire/auth';
+import Swal from 'sweetalert2';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GoogleService {
   
-  constructor(private oauth:OAuthService,) {
-    this.iniciarLogin()
+  constructor(private fireAuth:AngularFireAuth, private auth: Auth) {
   }
 
-  iniciarLogin(){
-    const config : AuthConfig = {
-      issuer :'https://accounts.google.com',
-      strictDiscoveryDocumentValidation:false,
-      clientId:'659612202917-3akn48ut0kpn8ojmneoml5ka2mp909et.apps.googleusercontent.com',
-      redirectUri: window.location.origin + '/panelUsuario',
-      scope:'openid profile email'
-    }
-    this.oauth.configure(config);
-    this.oauth.setupAutomaticSilentRefresh();
-    this.oauth.loadDiscoveryDocumentAndTryLogin();
+  googleSignIn(){
+    return signInWithPopup(this.auth,new GoogleAuthProvider);
   }
-
-  loging(){
-    this.oauth.initLoginFlow();
-  }
-
-
-  logOut():void{
-    this.oauth.logOut();
-  }
-
-  getProfile(){
-    return this.oauth.getIdentityClaims();
-  }
-
 }

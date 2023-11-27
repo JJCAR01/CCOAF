@@ -22,6 +22,8 @@ export class LoginService {
   loginGoogle(googleUserId: string): Observable<any>{
     return this.http.post(`${environment.apiUrl}/ccoa/auth/google`, { googleUserId });
   }
+
+
 }
 
 
