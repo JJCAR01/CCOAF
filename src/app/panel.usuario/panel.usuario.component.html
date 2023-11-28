@@ -36,11 +36,15 @@
                 <nav class="submenu">
                     <a >
                         <span title="Proyectos">Proyectos</span>
+                        <a [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarProyecto'] } }]">
+                        </a> 
                     </a>                  
                 </nav>
                 <nav class="submenu">
                     <a >
                         <span title="Actividades estratégicas">Actividades estratégicas</span>
+                        <a [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarActividadesEstrategicas'] } }]">
+                        </a> 
                     </a>                  
                 </nav>
             </div> 

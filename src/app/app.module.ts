@@ -29,6 +29,7 @@ import { SprintListarComponent } from './sprint/listar/sprint.listar.component';
 import { SprintCrearComponent } from './sprint/crear/sprint.crear.component';
 import { TareaListarComponent } from './tarea/listar/tarea.listar.component';
 import { TareaCrearComponent } from './tarea/crear/tarea.crear.component';
+import { ProyectoListarComponent } from './proyecto/listar/proyecto.listar.component';
 
 import { EnumPipe } from 'src/pipes/enum.pipes';
 import { TipoGECrearComponent } from './gestion/crear/tipoGE.crear.component';
@@ -49,7 +50,7 @@ import { GoogleLoginProvider, SocialAuthServiceConfig } from '@abacritt/angularx
     AppComponent,LoginComponent,PanelAdminComponent,AreaCrearComponent,AreaListarComponent,PanelUsuarioComponent,
     CargoCrearComponent,CargoListarComponent,UsuarioCrearComponent,UsuarioListarComponent, BuscarPipe,EnumPipe,PatListarComponent,
     PatCrearComponent,TipogeListarComponent,ActividadCrearComponent, ActividadListarComponent,TipoGECrearComponent,
-    SprintListarComponent,SprintCrearComponent, TareaListarComponent
+    SprintListarComponent,SprintCrearComponent, TareaListarComponent, ProyectoListarComponent
   ],
   imports: [
     BrowserModule,

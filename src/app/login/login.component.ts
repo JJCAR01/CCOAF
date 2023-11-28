@@ -8,6 +8,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router'; 
 import { GoogleService } from './google/auth.google.service';
 import { AuthService } from './auth/auth.service';
+import { HttpHeaders } from '@angular/common/http';
 
 
 @Injectable({
@@ -46,11 +47,37 @@ export class LoginComponent implements OnInit{
     this.authGoogleService.googleSignIn().then((response  ) => {
       //this.router.navigate(["/panelUsuario"]);
       console.log(response.user)
+      response.user.getIdTokenResult()
+      .then((tokenResult) => {
+        const accessToken = tokenResult.token;
+
+        const body = {
+          googleEmail: response.user.uid,
+          googleToken: accessToken  
+        };  
+        debugger;
+        this.loginService.loginGoogle(body).toPromise().then((resp ) => {
+          debugger;
+          this.router.navigate(["/panelUsuario"]);
+        })
+        // Enviar el token al backend
+        //this.sendTokenToBackend(accessToken);
+        })
+        .catch((error) => {
+          console.error('Error al obtener el token:', error);
+        });
     })
     .catch(error => {
       console.log(error)
     })
     
+  }
+
+  sendTokenToBackend(token: string) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    });
   }
 
   login() {

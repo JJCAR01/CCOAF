@@ -21,6 +21,8 @@ import { TipoGECrearComponent } from './gestion/crear/tipoGE.crear.component';
 import { SprintCrearComponent } from './sprint/crear/sprint.crear.component';
 import { HttpClientModule } from '@angular/common/http';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { ProyectoListarComponent } from './proyecto/listar/proyecto.listar.component';
+import { ActividadestrategicaListarComponent } from './actividadestrategica/listar/actividadestrategica.listar.component';
 
 
 
@@ -41,6 +43,8 @@ const routes: Routes = [
   { path: "panelUsuario", component: PanelUsuarioComponent, 
   children:[
     { path: "dashboard", component: DashboardComponent, outlet:"OutletUsuario"},
+    { path: "listarProyecto", component: ProyectoListarComponent, outlet:"OutletUsuario"},
+    { path: "listarActividadesEstrategicas", component: ActividadestrategicaListarComponent, outlet:"OutletUsuario"},
     { path: "crearPat", component: PatCrearComponent, outlet:"OutletUsuario"},
     { path: "listarPat", component: PatListarComponent, outlet:"OutletUsuario"},   
     { path: "listarTipoGE/:idPat", component: TipogeListarComponent, outlet:"OutletUsuario" },

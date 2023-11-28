@@ -7,8 +7,6 @@ import { ActivatedRoute } from '@angular/router';
 import { UsuarioService } from 'src/app/usuario/services/usuario.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-
-
 @Component({
   selector: 'app-root:not(p)',
   templateUrl: './tipoGE.listar.component.html',

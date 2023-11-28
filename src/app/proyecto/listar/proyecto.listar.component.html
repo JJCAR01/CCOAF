@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="proyecto.listar.component.scss">
+</head>
+<body>
+  <div class="row-with-button">
+    <div>
+      <h1 class="mb-2">proyectos</h1>
+    </div>
+  </div>  
+  <main class="main text-center smaller-main">
+    <table class="table table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>Programa</th> 
+          <th>Año</th>
+          <th>Proceso</th>
+          <th>Porcentaje avance</th>
+          <th>Responsable</th>
+          <th>Acciones</th> 
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let pat of proyectos">
+          <tr>
+            <td>{{ pat.nombre }}</td>
+            <td>{{ pat.fechaAnual }}</td>
+            <td>{{ pat.proceso | formatEnum }}</td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </main>
+
+  
+</body>
+</html>
