@@ -42,6 +42,7 @@ import { provideStorage,getStorage } from '@angular/fire/storage';
 
 import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { GoogleLoginProvider, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 
@@ -63,7 +64,8 @@ import { GoogleLoginProvider, SocialAuthServiceConfig } from '@abacritt/angularx
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideStorage(() => getStorage()),
-    AngularFireAuthModule
+    AngularFireAuthModule,
+    NgbModule,
     ],
   providers: [
     {

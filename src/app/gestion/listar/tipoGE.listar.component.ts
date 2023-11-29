@@ -20,6 +20,7 @@ export class TipogeListarComponent implements OnInit {
   actividades: any[] = [];
   pats: any[] = [];
   usuarios:any[] =[];
+  tareas:any[] =[];
   usuarioPat:any;
   porcentajePat:any;
   patNombre:any;
@@ -279,6 +280,10 @@ export class TipogeListarComponent implements OnInit {
     } else {
       return 'porcentaje-normal';
     }
+  }
+  obtenerTareasPorGestion(idGestion: number): any[] {
+    // Filtra las tareas que pertenecen a la gestión actual
+    return this.tareas.filter(tarea => tarea.idGestion === idGestion);
   }
   
 

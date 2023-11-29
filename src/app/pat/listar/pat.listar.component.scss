@@ -114,6 +114,12 @@ th,td {
     width: 10px; // Ajusta el ancho
     height: 60px; // Ajusta la altura
 }
+
+.subcuadro p {
+    font-family: "Roboto", unset; //Tipo de letra
+    text-align: center;
+    font-size: 20px;
+}
 .finalizado {
     background-color: #0aec7083;
 }

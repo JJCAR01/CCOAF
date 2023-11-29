@@ -45,19 +45,12 @@ export class LoginComponent implements OnInit{
 
   loginGoogle(){
     this.authGoogleService.googleSignIn().then((response  ) => {
-      //this.router.navigate(["/panelUsuario"]);
-      console.log(response.user)
-      response.user.getIdTokenResult()
+      response.user.getIdToken(true)
       .then((tokenResult) => {
-        const accessToken = tokenResult.token;
-
         const body = {
-          googleEmail: response.user.uid,
-          googleToken: accessToken  
+          googleToken: tokenResult  
         };  
-        debugger;
         this.loginService.loginGoogle(body).toPromise().then((resp ) => {
-          debugger;
           this.router.navigate(["/panelUsuario"]);
         })
         // Enviar el token al backend

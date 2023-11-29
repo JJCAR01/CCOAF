@@ -39,6 +39,7 @@ export class DashboardComponent implements OnInit {
           this.porcentajePats.push(this.data[i].porcentaje);
         }
         this.renderChart(this.nombrePats,this.porcentajePats,'bar','chart','Total');
+        this.renderChart(this.nombrePats,this.porcentajePats,'line','chart3','Total');
       }
     })
     
@@ -57,6 +58,14 @@ export class DashboardComponent implements OnInit {
         this.label.push('Actividades gestión');
       }
       this.sumaTotal.push(this.data.length);
+    })
+    this.actividadService.listarActividadGestionActividadEstrategica(this.auth.obtenerHeader()).subscribe(result => {
+      this.data = result;
+      if(this.data != null){
+        this.label.push('Actividades de gestion de Actividades estratégicas');
+      }
+      this.sumaTotal.push(this.data.length);
+      
     })
 
     this.tipoService.listarActividadEstrategica(this.auth.obtenerHeader()).subscribe(result => {
@@ -80,7 +89,8 @@ export class DashboardComponent implements OnInit {
           backgroundColor: [
             'rgb(255, 99, 132)',
             'rgb(54, 162, 235)',
-            'rgb(255, 205, 86)'
+            'rgb(255, 205, 86)',
+            'rgb(66, 205, 86)'
           ],
         }]
       },

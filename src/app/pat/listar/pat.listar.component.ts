@@ -26,6 +26,12 @@ export class PatListarComponent implements OnInit{
   cantidadProyectos:any;
   cantidadGestiones:any;
   cantidadEstrategicas:any;
+  sumadorProyectosTerminados=0;
+  sumadorProyectosAbiertos=0;
+  sumadorActividadGestionTerminados=0;
+  sumadorActividadGestionAbiertos=0;
+  sumadorActividadEstrategicasTerminados=0;
+  sumadorActividadEstrategicasAbiertos=0;
   form:FormGroup;
   
     constructor(
@@ -43,6 +49,7 @@ export class PatListarComponent implements OnInit{
     ngOnInit() {
           this.cargarPats();
           this.cargarUsuario();
+          this.cargarActividadGestionActividadesEstrategica()
           this.cargarActividadesEstrategica();
           this.cargarPatsActividadGestion();
           this.cargarPatsProyectos();
@@ -73,8 +80,37 @@ export class PatListarComponent implements OnInit{
     cargarActividadesEstrategica() {
       this.tipoService.listarActividadEstrategica(this.auth.obtenerHeader()).toPromise().then(
         (data: any) => {
+          data.forEach((actividad:any) => {
+            const terminadas = actividad.avance;
+    
+            if (terminadas === 100) {
+              this.sumadorActividadEstrategicasTerminados += 1;
+            } else {
+              this.sumadorActividadEstrategicasAbiertos += 1;
+            }
+          });
           const numeroDeListas = Object.keys(data).length;
           this.cantidadEstrategicas = numeroDeListas;
+        },
+        (error) => {
+          Swal.fire(error.error.mensajeTecnico);
+        }
+      );
+    }
+    cargarActividadGestionActividadesEstrategica() {
+      this.actividadService.listarActividadGestionActividadEstrategica(this.auth.obtenerHeader()).toPromise().then(
+        (data: any) => {
+          data.forEach((actividad:any) => {
+            const terminadas = actividad.avance;
+    
+            if (terminadas === 100) {
+              this.sumadorActividadGestionTerminados += 1;
+            } else {
+              this.sumadorActividadGestionAbiertos += 1;
+            }
+          });
+          const numeroDeListas = Object.keys(data).length;
+          this.cantidadGestiones = numeroDeListas;
         },
         (error) => {
           Swal.fire(error.error.mensajeTecnico);
@@ -84,6 +120,15 @@ export class PatListarComponent implements OnInit{
     cargarPatsActividadGestion() {
       this.tipoService.listarGestion(this.auth.obtenerHeader()).toPromise().then(
         (data: any) => {
+          data.forEach((actividad:any) => {
+            const terminadas = actividad.avance;
+    
+            if (terminadas === 100) {
+              this.sumadorActividadGestionTerminados += 1;
+            } else {
+              this.sumadorActividadGestionAbiertos += 1;
+            }
+          });
           const numeroDeListas = Object.keys(data).length;
           this.cantidadGestiones = numeroDeListas;
         },
@@ -95,6 +140,15 @@ export class PatListarComponent implements OnInit{
     cargarPatsProyectos() {
       this.actividadService.listarProyecto(this.auth.obtenerHeader()).toPromise().then(
         (data: any) => {
+          data.forEach((actividad:any) => {
+            const terminadas = actividad.avance;
+    
+            if (terminadas === 100) {
+              this.sumadorProyectosTerminados += 1;
+            } else {
+              this.sumadorProyectosAbiertos += 1;
+            }
+          });
           const numeroDeListas = Object.keys(data).length;
           this.cantidadProyectos = numeroDeListas;
         },
@@ -164,6 +218,21 @@ export class PatListarComponent implements OnInit{
       });
     }
 
+    sumarCantidadesGestion(data: any[]) {
+      data.forEach((actividad: any) => {
+        const terminadas = actividad.avance;
+    
+        if (terminadas === 100) {
+          this.sumadorActividadGestionTerminados += 1;
+        } else {
+          this.sumadorActividadGestionAbiertos += 1;
+        }
+      });
+    
+      const numeroDeListas = data.length;
+      this.cantidadGestiones += numeroDeListas;
+    }
+
     obtenerNombreUsuario(idUsuario: number) {
       const usuario = this.usuarios.find((u) => u.idUsuario === idUsuario);
       return usuario ? usuario.nombre + " " + usuario.apellidos : '';
@@ -184,4 +253,13 @@ export class PatListarComponent implements OnInit{
         return 'porcentaje-cien';
       }
     }   
+    finalizado(porcentaje: number): string {
+      if (porcentaje == 100) {
+        return 'porcentaje-bajo'; // Define las clases CSS para porcentajes bajos en tu archivo de estilos.
+      } else if (porcentaje >= 30 && porcentaje < 100){
+        return 'porcentaje-medio'; // Define las clases CSS para porcentajes normales en tu archivo de estilos.
+      } else {
+        return 'porcentaje-cien';
+      }
+    } 
 }

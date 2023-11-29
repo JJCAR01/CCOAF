@@ -9,25 +9,35 @@
 <body>
   <div class="row-with-button">
     <div>
-      <h1 class="mb-2">Actividades Estrategicas</h1>
+      <h1 class="mb-2">Actividades Estratégicas</h1>
     </div>
   </div>  
   <main class="main text-center smaller-main">
     <table class="table table-hover">
       <thead class="table-dark">
         <tr>
-          <th>Programa</th> 
-          <th>Año</th>
-          <th>Proceso</th>
-          <th>Porcentaje avance</th>
+          <th class="column-nombre">Nombre</th>
+          <th>Fecha Inicial</th>
+          <th>Fecha Final</th>
+          <th>Duracion (Días)</th>
+          <th>Dias Restantes</th>
+          <th>Avance</th>
           <th>Responsable</th>
         </tr>
       </thead>
       <tbody>
-        <ng-container *ngFor="let pat of actividadesEstrategicas">
+        <ng-container *ngFor="let actividad of actividadesEstrategicas">
           <tr>
-            <td>{{ pat.nombre }}</td>
-            <td>{{ pat.fechaAnual }}</td>
+            <td>{{ actividad.nombre }}</td>
+            <td>{{ actividad.fechaInicial }}</td>
+            <td>{{ actividad.fechaFinal }}</td>
+            <td>{{ actividad.duracion }}</td>
+            <td [ngClass]="colorPorcentaje(actividad.avance)">
+            <span *ngIf="actividad.avance !== 100"[ngClass]="colorDias(actividad.diasRestantes)">{{ actividad.diasRestantes }}</span>
+              <span *ngIf="actividad.avance === 100">Finalizado</span>
+            </td>
+            <td [ngClass]="colorPorcentaje(actividad.avance)">{{ actividad.avance }} %</td>
+            <td>{{ obtenerNombreUsuario(actividad.idUsuario).toLocaleUpperCase() }}</td>
           </tr>
         </ng-container>
       </tbody>

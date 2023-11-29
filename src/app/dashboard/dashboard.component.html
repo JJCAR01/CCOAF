@@ -1,15 +1,26 @@
-<div class="row ">
-    <div class="col-lg-6">
-      <h2 class="text-center">Porcentaje Avance PA</h2>
+<div class="container">
+  <div class="row justify-content-center mt-2"> <!-- Añadí mt-5 para aumentar el espacio superior -->
+    <div class="col-lg-8"> <!-- Cambié a col-lg-8 para hacerlo un poco más grande -->
+      <h2 class="text-center mb-3">Gráfica de puntos de Programa</h2>
       <div class="chart-container h-100">
-        <canvas id="chart"></canvas>
+        <canvas id="chart3"></canvas>
       </div>
     </div>
-    <div class="col-lg-3">
-      <h2 class="text-center">Total</h2>
+
+    <div class="col-lg-4"> <!-- Mantuve col-lg-4 para la otra columna -->
+      <h2 class="text-center mb-3">Total</h2>
       <div class="chart-container h-100">
         <canvas id="chart2"></canvas>
       </div>
     </div>
   </div>
-  
+
+  <div class="row justify-content-center">
+    <div class="col-lg-6 mt-3">
+      <h2 class="text-center mb-3">Porcentaje Avance de planes anuales</h2>
+      <div class="chart-container h-100">
+        <canvas id="chart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>

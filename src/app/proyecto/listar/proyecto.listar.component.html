@@ -9,27 +9,38 @@
 <body>
   <div class="row-with-button">
     <div>
-      <h1 class="mb-2">proyectos</h1>
+      <h1 class="mb-2">Proyectos</h1>
     </div>
   </div>  
   <main class="main text-center smaller-main">
     <table class="table table-hover">
       <thead class="table-dark">
         <tr>
-          <th>Programa</th> 
-          <th>Año</th>
-          <th>Proceso</th>
-          <th>Porcentaje avance</th>
-          <th>Responsable</th>
-          <th>Acciones</th> 
+          <th class="column-nombre">Nombre</th>
+          <th class="column-presupuesto">Presupuesto</th>
+          <th class="column-modalidad">Modalidad</th>
+          <th class="column-presupuesto">Valor Ejecutado</th>
+          <th class="column-fecha">Fecha inicial</th>
+          <th class="column-fecha">Fecha final</th>
+          <th >Duracion (Días)</th>
+          <th >Avance</th>
+          <th class="column-totalp">Planeación Sprint</th>
+          <th >Total sprint</th>
         </tr>
       </thead>
       <tbody>
-        <ng-container *ngFor="let pat of proyectos">
+        <ng-container *ngFor="let proyecto of proyectos">
           <tr>
-            <td>{{ pat.nombre }}</td>
-            <td>{{ pat.fechaAnual }}</td>
-            <td>{{ pat.proceso | formatEnum }}</td>
+            <td>{{ proyecto.nombre }}</td>
+            <td>{{ proyecto.presupuesto | currency : '$ ' : 'symbol' : '1.0-0' }}</td>
+            <td>{{ proyecto.modalidad }}</td>
+            <td>{{ proyecto.valorEjecutado | currency : '$ ' : 'symbol' : '1.0-0' }}</td>
+            <td>{{ proyecto.fechaInicial }}</td>
+            <td>{{ proyecto.fechaFinal }}</td>
+            <td>{{ proyecto.duracion }}</td>
+            <td>{{ proyecto.avance }} %</td>
+            <td>{{ proyecto.planeacionSprint }}</td>
+            <td>{{ proyecto.totalSprint }}</td>
           </tr>
         </ng-container>
       </tbody>

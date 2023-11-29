@@ -5,7 +5,9 @@
     "module": "commonjs",
     "allowSyntheticDefaultImports": true,
     "outDir": "./out-tsc/app",
-    "types": []
+    "types": [
+      "@angular/localize"
+    ]
   },
   "files": [
     "src/main.ts"

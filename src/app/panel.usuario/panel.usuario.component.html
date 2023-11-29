@@ -28,22 +28,25 @@
                 </nav>
                 <nav class="submenu">   
                     <a >
-                        <span title="Dashboard">Dashboard</span>
+                        
                         <a [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['dashboard'] } }]">
+                            <span title="Dashboard">Dashboard</span>
                         </a>  
                     </a>                  
                 </nav>
                 <nav class="submenu">
                     <a >
-                        <span title="Proyectos">Proyectos</span>
+                        
                         <a [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarProyecto'] } }]">
+                            <span title="Proyectos">Proyectos</span>
                         </a> 
                     </a>                  
                 </nav>
                 <nav class="submenu">
                     <a >
-                        <span title="Actividades estratégicas">Actividades estratégicas</span>
+                        
                         <a [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarActividadesEstrategicas'] } }]">
+                            <span title="Actividades estratégicas">Actividades estratégicas</span>
                         </a> 
                     </a>                  
                 </nav>
