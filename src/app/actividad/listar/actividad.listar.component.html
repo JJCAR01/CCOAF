@@ -99,54 +99,119 @@
     </div>
     <div class="tab-pane fade" id="actividades" role="tabpanel" aria-labelledby="actividades-tab">
       <main class="main text-center smaller-main">
-        <table class="table table-bordered table-hover">
-          <thead class="table-dark">
-            <tr>
-              <th class="column-nombre">Nombre</th>
-              <th>Fecha Inicial</th>
-              <th>Fecha Final</th>
-              <th>Duracion (Días)</th>
-              <th>Días Restantes</th>
-              <th>Avance</th>
-              <th>Responsable</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <ng-container *ngFor="let gestion of gestiones | buscar: busqueda">
-              <tr>
-                <td>{{ gestion.nombre }}</td>
-                <td>{{ gestion.fechaInicial }}</td>
-                <td>{{ gestion.fechaFinal }}</td>
-                <td>{{ gestion.duracion }}</td>
-                <td [ngClass]="colorPorcentaje(gestion.avance)">
-                  <span *ngIf="gestion.avance !== 100"[ngClass]="colorDias(gestion.diasRestantes)">{{ gestion.diasRestantes }}</span>
-                  <span *ngIf="gestion.avance === 100">Finalizado</span>
-                </td>
-                <td [ngClass]="colorPorcentaje(gestion.avance)">{{ gestion.avance }} %</td>
-                <td>{{ obtenerNombreUsuario(gestion.idUsuario).toLocaleUpperCase() }}</td>
-                <td>
-                  <button title="Ver" class="btn btn-outline-primary me-1" 
-                    [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarTarea', gestion.idActividadGestionActividadEstrategica] } }]"
-                    [queryParams]="{ idActividadGestionActividadEstrategica: gestion.idActividadGestionActividadEstrategica, tipoASE: 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA' }"
-                  ><i class="bi bi-eye-fill"></i></button>
-                  <button title="Modificar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarGestion" (click)="obtenerActividadGestion(gestion.idActividadGestionActividadEstrategica,gestion)">
-                    <i class="bi bi-pen-fill"></i>
-                  </button>
-                  <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarGestion(gestion.idActividadGestionActividadEstrategica)"><i class="bi bi-trash3-fill"></i></button>
-                </td>
-              </tr>
-            </ng-container>
-          </tbody>
-        </table>
+        <!-- Iterar sobre las gestiones -->
+        <div *ngFor="let gestion of gestiones">
+          <div class="card mb-2">
+            <div class="card-header" role="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapse-' + gestion.idActividadGestionActividadEstrategica" (click)="cargarTareas(gestion.idActividadGestionActividadEstrategica,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')">
+              <h5 class="mb-0" >{{ gestion.nombre }}</h5>
+              <div class="card-body">
+                <div class="row justify-content-center">
+                  <div class="col-md-1">
+                    F. Inicial: {{ gestion.fechaInicial }}
+                  </div>
+                  <div class="col-md-1">
+                    F. Final: {{ gestion.fechaFinal }}
+                  </div>
+                  <div class="col-md-2">
+                    Duración: {{ gestion.duracion }}
+                  </div>
+                  <div class="col-md-2" [ngClass]="colorPorcentaje(gestion.avance)">
+                    <span *ngIf="gestion.avance !== 100" [ngClass]="colorDias(gestion.diasRestantes)">
+                      Restantes: {{ gestion.diasRestantes }}
+                    </span>
+                    <span *ngIf="gestion.avance === 100">Finalizado</span>
+                  </div>
+                  <div class="col-md-2" [ngClass]="colorPorcentaje(gestion.avance)">
+                    Avance: {{ gestion.avance }} %
+                  </div>
+                  <div class="col-md-2">
+                    Usuario: {{ obtenerNombreUsuario(gestion.idUsuario).toLocaleUpperCase() }}
+                  </div>
+                  <div class="col-md-1">
+                    <button title="Modificar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarGestion" (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)">
+                      <i class="bi bi-pen-fill"></i>
+                    </button>
+                  <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarGestion(gestion.idActividadGestion)"><i class="bi bi-trash3-fill"></i></button>
+                  </div>
+              </div>
+            </div>
+          </div>
+            <div [id]="'collapse-' + gestion.idActividadGestionActividadEstrategica" class="collapse">
+              <div class="card-body" >
+                <!-- Detalles de la gestión... -->
+      
+                <!-- Iterar sobre las tareas relacionadas con la gestión actual -->
+                <table class="table table-hover">
+                  <thead class="table-active">
+                    <tr>
+                      <th class="column-nombre">Nombre</th>
+                      <th>
+                        <div class="d-flex flex-column">
+                          <span>Estado</span>
+                          <div class="d-flex">
+                            <div class="col">
+                              <span class="estado-text en-backlog">EN BACKLOG</span>
+                            </div>
+                            <div class="col">
+                              <span class="estado-text en-proceso">EN PROCESO</span>
+                            </div>
+                            <div class="col">
+                              <span class="estado-text terminado">TERMINADO</span>
+                            </div>
+                            <div class="col">
+                              <span class="estado-text impedimento">IMPEDIMENTO</span>
+                            </div>
+                          </div>
+                        </div>
+                      </th>
+                      <th>Observacion</th>
+                      <th>Responsable</th>
+                      <th class="mb-3">Acciones </th>
+                      <th class="column-crear"><button title="Crear" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalCreartarea" (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)"
+                        ><i class="bi bi-plus-lg"></i></button></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container *ngFor="let tarea of tareas" >
+                      <tr>
+                        <td>{{ tarea.nombre }}</td>
+                        <td>
+                          <div class="d-flex">
+                            <div class="col">
+                              <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'EN_BACKLOG')" class="estado-checkbox" [disabled]="!isEstado(tarea.estado, 'EN_BACKLOG')">
+                            </div>
+                            <div class="col">
+                              <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'EN_PROCESO')" class="estado-checkbox" [disabled]="!isEstado(tarea.estado, 'EN_PROCESO')">
+                            </div>
+                            <div class="col">
+                              <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'TERMINADO')" class="estado-checkbox terminado" [disabled]="!isEstado(tarea.estado, 'TERMINADO')">
+                            </div>
+                            <div class="col">
+                              <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'IMPEDIMENTO')" class="estado-checkbox" [disabled]="!isEstado(tarea.estado, 'IMPEDIMENTO')">
+                            </div>
+                          </div>
+                        </td>
+                        
+                        
+                        <td>{{ tarea.descripcion }}</td>
+                        <td>{{ obtenerNombreUsuario(tarea.idUsuario).toLocaleUpperCase() }}</td>
+                        <td>
+                          <button title="Modificar" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarTarea" (click)="obtenerTarea(tarea.idTarea,tarea)"
+                          ><i class="bi bi-pen-fill"></i></button>
+                          <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarTarea(tarea.idTarea)"><i class="bi bi-trash3-fill"></i></button>
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
       </main>
     </div>
   </div>  
   
-    
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.4/umd/popper.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-
   <div class="modal fade" id="modalModificarProyecto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -155,7 +220,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form [formGroup]="form" (ngSubmit)="modificarProyecto()">
+          <form [formGroup]="formProyecto" (ngSubmit)="modificarProyecto()">
             <div class="mb-3">
               <label class="form-label" for="nombre">Nombre</label>
               <textarea type="text" id="nombre" class="form-control form-control-lg" [value]="nombreProyecto" formControlName="nombre" style="min-width: 100%;"></textarea>
@@ -211,9 +276,67 @@
         </div>
       </div>
     </div>
+    <div class="modal fade" id="modalModificarTarea" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Modificar Tarea</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="formTarea" (ngSubmit)="modificarTarea()">
+              <div class="mb-3 custom-input">
+                <label for="nombre" class="form-label">{{ nombreTarea }}</label>
+              </div>
+              <div class="mb-3">
+                <label for="estado" class="form-label">Estado</label>
+                <input type="text" class="form-control" id="estado" formControlName="estado">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="modalCreartarea" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Crear Tarea</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="formCrearTarea" (ngSubmit)="crearTarea()">
+              <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="nombre" formControlName="nombre">
+              </div>
+              <div class="mb-3">
+                <label for="descripcion" class="form-label">Descripcion</label>
+                <input type="text" class="form-control" id="descripcion" formControlName="descripcion">
+              </div>
+              <div class="mb-3">
+                <label for="idUsuario" placeholder="usuario">Responsable:</label>
+                <select class="form-select" id="idUsuario" formControlName="idUsuario">
+                    <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario">{{ usuario.nombre + ' ' + usuario.apellidos | formatEnum }}</option>
+                </select>
+            </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
   
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.4/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+  
 </body>
 </html>

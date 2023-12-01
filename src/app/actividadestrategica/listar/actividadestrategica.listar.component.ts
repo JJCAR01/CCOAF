@@ -24,7 +24,7 @@ export class ActividadestrategicaListarComponent implements OnInit{
   ngOnInit(): void {
     this.cargarActividadesEstrategicas();
     this.cargarUsuario();
-    throw new Error('Method not implemented.');
+
   }
 
   cargarActividadesEstrategicas(){

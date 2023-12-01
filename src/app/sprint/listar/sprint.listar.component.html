@@ -12,6 +12,13 @@
 </head>
 <body>
   <div  class="row-with-button">
+    <li class="header ">
+      <button title="Atrás"
+        type="button" class="btn btn-outline-dark me-1" 
+        [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarActividad', actividad ] } }]">
+        <i class="bi bi-arrow-return-left"></i>
+      </button>
+    </li>
     <div>
       <h1 class="mb-1"> {{ proyectoNombre }} </h1>  
       <div class="row">
@@ -23,60 +30,122 @@
           <h2>Responsable:</h2>
           <p> {{ obtenerNombreUsuario(proyectoUsuario).toLocaleUpperCase() }}</p>
         </div>
+        <li class="header">
+          <button title="Agregar"
+            type="button" class="btn btn-success" [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['crearSprint'] } }]"
+            [queryParams]="{ idProyecto , proyectoNombre }">Añadir Sprint
+              <i class="bi bi-plus-lg"></i>
+            </button>
+        </li>
       </div>
+      
     </div>
+    
   </div>  
-  <main class="main text-center smaller-main">
-    <div class="header">
-      <button title="Atrás"
-        type="button" class="btn btn-outline-dark me-1" 
-        [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarActividad', actividad] } }]">
-        <i class="bi bi-arrow-return-left"></i>
-      </button>
-      <h3> Sprints </h3>
-      <button title="Agregar"
-        type="button" class="btn btn-success" [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['crearSprint'] } }]"
-        [queryParams]="{ idProyecto , proyectoNombre }">
-          <i class="bi bi-plus-lg"></i>
-        </button>
-    </div>
-    <table class="table table-hover">
-      <thead class="table-dark">
-        <tr>
-          <th>Descripcion</th>
-          <th>Fecha Inicial</th>
-          <th>Fecha Final</th>
-          <th>Avance</th>
-          <th>Estado</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <ng-container *ngFor="let sprint of sprints | buscar: busqueda">
-          <tr>
-            <td>{{ sprint.descripcion }}</td>
-            <td>{{ sprint.fechaInicial }}</td>
-            <td>{{ sprint.fechaFinal }}</td>
-            <td [ngClass]="colorPorcentaje(sprint.avance)">{{ sprint.avance }} %</td>
-            <td>{{ sprint.estado }}</td>
-            <td>
-              <button title="Ver" class="btn btn-outline-primary me-1" 
-                [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarTarea', sprint.idSprint] } }]"
-                [queryParams]="{ idSprint: sprint.idSprint, tipoASE: 'SPRINT' }"
-              ><i class="bi bi-eye-fill"></i></button>
-              <button title="Modificar" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modificarSprint" (click)="obtenerSprint(sprint.descripcion)">
-                <i class="bi bi-pen-fill"></i>
-              </button>
-              <button title="Eliminar" class="btn btn-outline-danger me-1"  (click)="eliminarProyecto(sprint.idSprint)"><i class="bi bi-trash3-fill"></i></button>
-              <button title="Agregar documento" class="btn btn-outline-dark me-1" data-bs-toggle="modal" data-bs-target="#agregarDocumento">
-                <i class="bi bi-file-earmark-text-fill"></i>
-              </button>
-            </td>
-          </tr>
-        </ng-container>
-      </tbody>
-    </table>
-  </main>
+    <main class="main text-center smaller-main">
+      <!-- Iterar sobre las gestiones -->
+      <div *ngFor="let sprint of sprints">
+        <div class="card mb-2">
+          <div class="card-header" role="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapse-' + sprint.idSprint" (click)="cargarTareas(sprint.idSprint,'SPRINT')">
+            <h5 class="mb-0" >{{ sprint.descripcion }}</h5>
+            <div class="card-body">
+              <div class="row justify-content-center">
+                <div class="col-md-3">
+                  F. Inicial: {{ sprint.fechaInicial }}
+                </div>
+                <div class="col-md-3">
+                  F. Final: {{ sprint.fechaFinal }}
+                </div>
+                <div class="col-md-2" [ngClass]="colorPorcentaje(sprint.avance)">
+                  Avance: {{ sprint.avance }} %
+                </div>
+                <div class="col-md-2">
+                  <button title="Modificar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modificarSprint" (click)="obtenerSprint(sprint.idSprint,sprint)">
+                    <i class="bi bi-pen-fill"></i>
+                  </button>
+                  <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarSprint(sprint.idSprint)"><i class="bi bi-trash3-fill"></i></button>
+                  <button title="Ver documento" class="btn btn-outline-primary me-1"><i class="bi bi-file-earmark-check"></i></button>
+                  <div class="input-group custom-file-button">
+                    <label title="Agregar documento" class="input-group-text" for="inputGroupFile"><i class="bi bi-folder-plus"></i></label>
+                    <input title="Agregar documento" type="file" class="form-control" id="inputGroupFile" (change)="documento($event)">
+                  </div>
+                </div> 
+            </div>
+          </div>
+        </div>
+          <div [id]="'collapse-' + sprint.idSprint" class="collapse">
+            <div class="card-body" >
+              <!-- Detalles de la gestión... -->
+    
+              <!-- Iterar sobre las tareas relacionadas con la gestión actual -->
+              <table class="table table-hover">
+                <thead class="table-active">
+                  <tr>
+                    <th class="column-nombre">Nombre</th>
+                    <th>
+                      <div class="d-flex flex-column">
+                        <span>Estado</span>
+                        <div class="d-flex">
+                          <div class="col">
+                            <span class="estado-text en-backlog">EN BACKLOG</span>
+                          </div>
+                          <div class="col">
+                            <span class="estado-text en-proceso">EN PROCESO</span>
+                          </div>
+                          <div class="col">
+                            <span class="estado-text terminado">TERMINADO</span>
+                          </div>
+                          <div class="col">
+                            <span class="estado-text impedimento">IMPEDIMENTO</span>
+                          </div>
+                        </div>
+                      </div>
+                    </th>
+                    <th class="column-observacion">Observacion</th>
+                    <th>Responsable</th>
+                    <th class="mb-3">Acciones </th>
+                      <th class="column-crear"><button title="Crear" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalCreartarea" (click)="obtenerSprint(sprint.idSprint,sprint)"
+                        ><i class="bi bi-plus-lg"></i></button></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container *ngFor="let tarea of tareas" >
+                    <tr>
+                      <td>{{ tarea.nombre }}</td>
+                      <td>
+                        <div class="d-flex">
+                          <div class="col">
+                            <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'EN_BACKLOG')" class="estado-checkbox" [disabled]="!isEstado(tarea.estado, 'EN_BACKLOG')">
+                          </div>
+                          <div class="col">
+                            <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'EN_PROCESO')" class="estado-checkbox" [disabled]="!isEstado(tarea.estado, 'EN_PROCESO')">
+                          </div>
+                          <div class="col">
+                            <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'TERMINADO')" class="estado-checkbox terminado" [disabled]="!isEstado(tarea.estado, 'TERMINADO')">
+                          </div>
+                          <div class="col">
+                            <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'IMPEDIMENTO')" class="estado-checkbox" [disabled]="!isEstado(tarea.estado, 'IMPEDIMENTO')">
+                          </div>
+                        </div>
+                      </td>
+                      
+                      
+                      <td>{{ tarea.descripcion }}</td>
+                      <td>{{ obtenerNombreUsuario(tarea.idUsuario).toLocaleUpperCase() }}</td>
+                      <td>
+                        <button title="Modificar" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarTarea" (click)="obtenerTarea(tarea.idTarea,tarea)"
+                        ><i class="bi bi-pen-fill"></i></button>
+                        <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarTarea(tarea.idTarea)"><i class="bi bi-trash3-fill"></i></button>
+                      </td>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
 
   <div class="modal fade" id="agregarDocumento" tabindex="-1" aria-labelledby="modalAgregar" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -109,7 +178,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form  (ngSubmit)="modificarSprint()">
+          <form [formGroup]="formSprint"  (ngSubmit)="modificarSprint()">
             <div class="mb-3">
               <label for="descripcion" class="form-label">Descripcion</label>
               <input type="text" class="form-control" id="descripcion" formControlName="descripcion" [value]="nombreSprint">
@@ -131,10 +200,68 @@
       </div>
     </div>
   </div>
+  <div class="modal fade" id="modalModificarTarea" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modificar Tarea</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="formTarea" (ngSubmit)="modificarTarea()">
+            <div class="mb-3 custom-input">
+              <label for="nombre" class="form-label">{{ nombreTarea }}</label>
+            </div>
+            <div class="mb-3">
+              <label for="estado" class="form-label">Estado</label>
+              <input type="text" class="form-control" id="estado" formControlName="estado">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="modalCreartarea" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Crear Tarea</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="formCrearTarea" (ngSubmit)="crearTarea()">
+            <div class="mb-3">
+              <label for="nombre" class="form-label">Nombre</label>
+              <input type="text" class="form-control" id="nombre" formControlName="nombre">
+            </div>
+            <div class="mb-3">
+              <label for="descripcion" class="form-label">Descripcion</label>
+              <input type="text" class="form-control" id="descripcion" formControlName="descripcion">
+            </div>
+            <div class="mb-3">
+              <label for="idUsuario" placeholder="usuario">Responsable:</label>
+              <select class="form-select" id="idUsuario" formControlName="idUsuario">
+                  <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario">{{ usuario.nombre + ' ' + usuario.apellidos | formatEnum }}</option>
+              </select>
+          </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.4/umd/popper.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.4/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+  
   
 </body>
 </html>

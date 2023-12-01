@@ -1,101 +1,158 @@
 .body{
-    font-family: "Roboto",serif;
-  }
-  
-  h1 {
+  font-family: "Roboto";
+}
+
+h1 {
     font-family: "Roboto", unset;
     color: #000000;
-    font-size: x-large;
+    font-size: xx-large;
     padding: 5px;
     margin: 0;
     text-align: left;
-  }
-  
-  
-  h2 {
+}
+
+
+h2 {
     font-family: "Roboto", initial;
     font-size: 15px;
     margin-bottom: 10px;
-  }
+}
+h3 {
+  flex-grow: 1; /* Permitir que el texto "Epicas" ocupe el espacio restante */
+  text-align: center; /* Alinea el texto al centro */
+}
 
-  .row {
-    display: flex; /* Hacer que los elementos dentro de .row se muestren en línea */
-    align-items: center; /* Alinear verticalmente los elementos dentro de .row */
-  }
-  
-  .responsable-info {
-    display: flex; /* Hacer que los elementos dentro de .responsable-info se muestren en línea */
-    align-items: center; /* Alinear verticalmente los elementos dentro de .responsable-info */
-  }
-  
-  .responsable-info h2 {
-    margin-top: 5px;
-    margin: 2px;
-  }
-  .responsable-info p {
-    margin-top: 5px;
-    margin: 5px;
-  }
-  
-  /* Estilos para el elemento .smaller-main */
-  .smaller-main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 24vh; /* Establece la altura deseada */
-  }
-  
-  .custom-button {
-    color: #fff; /* Cambia #your-desired-color por el color que desees */
-  }
-    
-  /* Estilos para los botones */
-  .custom-button {
-    width: 100px; /* Ancho en píxeles */
-    height: 35px; /* Altura en píxeles */
-    text-align: center;
-  }
-  
-  /* Estilos para alinear los botones a la derecha en la tabla */
-  .button-container {
-    text-align: right;
-  }
+.row {
+  display: flex; /* Hacer que los elementos dentro de .row se muestren en línea */
+  align-items: center; /* Alinear verticalmente los elementos dentro de .row */
+}
 
-  .header {
-    margin-top: 2%;
-    display: flex;
-    justify-content: space-between; /* Alinea los elementos al inicio y al final */
-    align-items: center;
-    width: 100%; /* Ocupa todo el ancho disponible */
-  }
+.responsable-info {
+  display: flex; /* Hacer que los elementos dentro de .responsable-info se muestren en línea */
+  align-items: center; /* Alinear verticalmente los elementos dentro de .responsable-info */
+}
+
+.responsable-info h2 {
+  margin-top: 5px;
+  margin: 2px;
+}
+.responsable-info p {
+  margin-top: 5px;
+  margin: 5px;
+}
+
+
+/* Estilos para el elemento .smaller-main */
+.smaller-main {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+/* Estilos para los botones */
+.custom-button {
+  width: 100px; /* Ancho en píxeles */
+  height: 35px; /* Altura en píxeles */
+  text-align: center;
+}
+
+/* Estilos para alinear los botones a la derecha en la tabla */
+.button-container {
+  text-align: right;
+}
+
+.header {
+  justify-content: center;
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.nav-item {
+  margin-top: 10px;
+  text-align: center;
+  width: 780px;
   
-  button {
-    width: auto; /* Ancho automático, ajustado al contenido */
+  a:active, // Aplica el estilo cuando el enlace está activo
+  a:focus {  // Aplica el estilo cuando el enlace está enfocado
+    background-color: #ece8e8;
+    color: #000000;
   }
-  h3 {
-    flex-grow: 1; /* Permitir que el texto "Epicas" ocupe el espacio restante */
-    text-align: center; /* Alinea el texto al centro */
-  }
+}
+.nav-link {
+  font-family: 'Roboto', initial;
+  font-size: 20px;
+  color: rgb(0, 0, 0);
+}
+
+button {
+  width: auto; /* Ancho automático, ajustado al contenido */
+}
+
+.custom-eye {
+  width: auto;
+}
 .porcentaje-bajo {
-    color: red; // Define el color rojo para porcentajes bajos.
+  color: red; // Define el color rojo para porcentajes bajos.
 }
-  
-.porcentaje-normal {
-    color: orange; // Define el color verde (u otro color de tu elección) para porcentajes normales.
+.porcentaje-medio {
+  color: orange; // Define el color verde (u otro color de tu elección) para porcentajes normales.
 }
-  
 .porcentaje-cien {
-    color: green; // Define el color verde (u otro color de tu elección) para porcentajes normales.
+  color: green; // Define el color verde (u otro color de tu elección) para porcentajes normales.
 }
 .porcentaje-normal {
-    color: #504f4f;
+  color: #504f4f;
+}
+.column-nombre {
+  width: 450px; /* Ajusta el ancho a tu preferencia */
+}
+.column-observacion {
+  width: 300px; /* Ajusta el ancho a tu preferencia */
+}
+.column-estado {
+  width: 600px; /* Ajusta el ancho a tu preferencia */
+}
+.column-crear {
+  width: 10px; /* Ajusta el ancho a tu preferencia */
 }
 th,td {
   vertical-align: middle;
   text-align: center; /* Centra el texto horizontalmente en las celdas del encabezado */
 }
 
-  
+.en-backlog {
+  color: rgb(87, 97, 89); /* Color para "EN BACKLOG" */
+}
 
-  
+.en-proceso {
+  color: rgba(202, 139, 22, 0.925); /* Color para "EN PROCESO" */
+}
+
+.terminado {
+  color: green; /* Color para "TERMINADO" */
+}
+
+.impedimento {
+  color: rgb(206, 49, 49); /* Color para "IMPEDIMENTO" */
+}
+
+
+.custom-file-button input[type=file] {
+  margin-left: -2px !important;
+}
+
+.custom-file-button input[type=file]::-webkit-file-upload-button {
+  display: none;
+}
+
+.custom-file-button input[type=file]::file-selector-button {
+  display: none;
+}
+
+.custom-file-button:hover label {
+  background-color: #dde0e3;
+  cursor: pointer;
+}
+

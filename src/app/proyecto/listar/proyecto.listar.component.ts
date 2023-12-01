@@ -19,7 +19,6 @@ export class ProyectoListarComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarProyectos();
-    throw new Error('Method not implemented.');
   }
 
   cargarProyectos() {

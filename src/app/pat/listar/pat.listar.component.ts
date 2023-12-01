@@ -25,6 +25,7 @@ export class PatListarComponent implements OnInit{
   cantidadPats:any;
   cantidadProyectos:any;
   cantidadGestiones:any;
+  cantidadGestionesActividadEstrategica:any;
   cantidadEstrategicas:any;
   sumadorProyectosTerminados=0;
   sumadorProyectosAbiertos=0;
@@ -110,7 +111,7 @@ export class PatListarComponent implements OnInit{
             }
           });
           const numeroDeListas = Object.keys(data).length;
-          this.cantidadGestiones = numeroDeListas;
+          this.cantidadGestionesActividadEstrategica = numeroDeListas;
         },
         (error) => {
           Swal.fire(error.error.mensajeTecnico);

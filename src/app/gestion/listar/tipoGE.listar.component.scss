@@ -106,11 +106,36 @@ button {
   color: #504f4f;
 }
 .column-nombre {
+  width: 400px; /* Ajusta el ancho a tu preferencia */
+}
+.column-observacion {
+  width: 200px; /* Ajusta el ancho a tu preferencia */
+}
+.column-crear {
+  width: 50px; /* Ajusta el ancho a tu preferencia */
+}
+.column-estado {
   width: 500px; /* Ajusta el ancho a tu preferencia */
 }
 th,td {
   vertical-align: middle;
   text-align: center; /* Centra el texto horizontalmente en las celdas del encabezado */
+}
+
+.en-backlog {
+  color: rgb(87, 97, 89); /* Color para "EN BACKLOG" */
+}
+
+.en-proceso {
+  color: rgba(202, 139, 22, 0.925); /* Color para "EN PROCESO" */
+}
+
+.terminado {
+  color: green; /* Color para "TERMINADO" */
+}
+
+.impedimento {
+  color: rgb(206, 49, 49); /* Color para "IMPEDIMENTO" */
 }
 
 

@@ -1,20 +1,22 @@
 .body{
-    font-family: "Roboto";
-  }
-  
-  h1 {
+  font-family: "Roboto";
+}
+
+h1 {
     font-family: "Roboto", unset;
     color: #000000;
-    font-size: x-large;
+    font-size: xx-large;
     padding: 5px;
     margin: 0;
     text-align: left;
-  }
-  h2 {
+}
+
+
+h2 {
     font-family: "Roboto", initial;
     font-size: 15px;
     margin-bottom: 10px;
-  }
+}
   h3 {
     flex-grow: 1; /* Permitir que el texto "Epicas" ocupe el espacio restante */
     text-align: center; /* Alinea el texto al centro */

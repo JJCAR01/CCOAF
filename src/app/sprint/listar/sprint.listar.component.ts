@@ -7,6 +7,11 @@ import { ActividadService } from 'src/app/actividad/services/actividad.service';
 import { ActivatedRoute } from '@angular/router';
 import { UsuarioService } from 'src/app/usuario/services/usuario.service';
 import Swal from 'sweetalert2';
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { TareaService } from "src/app/tarea/services/tarea.service";
+import { EEstado } from "src/app/gestion/listar/EEstado";
+import { initializeApp } from "@angular/fire/app";
+import { environment } from "src/environments/environment.development";
 
 
 @Component({
@@ -16,8 +21,10 @@ import Swal from 'sweetalert2';
 })
 export class SprintListarComponent implements OnInit {
   title = 'listarSprint';
+  estadoEnumList: string[] = [];
   sprints: any[] = [];
   proyectos: any[] = [];
+  tareas:any[] =[];
   usuarios:any[] =[];
   nombreSprint:any;
   proyectoNombre:any;
@@ -25,7 +32,12 @@ export class SprintListarComponent implements OnInit {
   proyectoUsuario:any;
   idProyecto:any;
   actividad:any;
-  busqueda: any;
+  idSprintSeleccionado:any;
+  idTareaSeleccionado:any;
+  nombreTarea:any;
+  formTarea:FormGroup;
+  formSprint:FormGroup;
+  formCrearTarea:FormGroup
 
   constructor(
     private sprintService: SprintService,
@@ -33,8 +45,23 @@ export class SprintListarComponent implements OnInit {
     private actividadService: ActividadService,
     private route: ActivatedRoute,
     private usuarioService :UsuarioService,
+    private formBuilder: FormBuilder,
+    private tareaService: TareaService,
     
   ) { 
+    this.formSprint = this.formBuilder.group({
+      descripcion: ['', Validators.required],
+      fechaInicial: ['', Validators.required],
+      fechaFinal: ['', Validators.required],
+    });
+    this.formTarea = this.formBuilder.group({
+      estado: ['', Validators.required],
+    });
+    this.formCrearTarea = this.formBuilder.group({
+      nombre: ['', Validators.required],
+      descripcion: ['', Validators.required],
+      idUsuario: ['', Validators.required],
+    });
   }
 
   ngOnInit() {
@@ -57,25 +84,20 @@ export class SprintListarComponent implements OnInit {
       this.cargarSprints(idProyecto);
     });
     this.cargarUsuario();
+    this.crearTarea();
+    this.estadoEnumList = Object.values(EEstado);
   }
 
-  documento(event: any) {
-    const file = event.target.files[0];  
 
-    /*if (file) {
-      try {
-        const path = `documento/${file.name}`;
-        // Use AngularFireStorage service methods
-        const task = this.storage.upload(path, file);
-        const url = await task.snapshotChanges().toPromise().then(() => {
-          return this.storage.ref(path).getDownloadURL();
-        });
+  documento($event: any) {
+    const app = initializeApp(environment.firebase);
+    const storage = getStorage(app);
+    const storageRef = ref(storage, 'some-child');
+    const file = $event.target.files[0];  
 
-        // ... Do something with the URL if needed
-      } catch (error) {
-        console.error('Error al subir el archivo:', error);
-      }
-    }*/
+    uploadBytes(storageRef, file).then((snapshot) => {
+      console.log('Uploaded a blob or file!');
+    });
   }
 
   cargarUsuario() {
@@ -104,8 +126,38 @@ export class SprintListarComponent implements OnInit {
         }
       );
   }
+  modificarSprint(){
+    if (this.formSprint.valid) {
+      const descripcion = this.formSprint.get('nombre')?.value;
+      const fechaInicial = this.formSprint.get('fechaInicial')?.value;
+      const fechaFinal = this.formSprint.get('fechaFinal')?.value;
 
-  eliminarProyecto(idSprint: number) {
+      const sprint = {
+        descripcion: descripcion,
+        fechaInicial: fechaInicial,
+        fechaFinal: fechaFinal,
+        
+      };
+      this.sprintService
+        .modificarSprint(sprint, this.idSprintSeleccionado, this.auth.obtenerHeader())
+        .subscribe(
+          (response) => {
+            Swal.fire({
+              icon:'success',
+              title:'Modificado Satisfactoriamente',
+              text: 'Se ha modificado'
+            }).then((value) => {
+              location.reload();
+            });
+          },
+          (error) => {
+            Swal.fire(error.error.mensajeHumano,'' ,"warning");
+          }
+        );
+    }
+  }
+
+  eliminarSprint(idSprint: number) {
     const sprintAEliminar = this.sprints.find(s => s.idSprint === idSprint);
 
     Swal.fire({
@@ -121,7 +173,7 @@ export class SprintListarComponent implements OnInit {
         if (confirmacion.isConfirmed) {
         this.sprintService.eliminarSprint(idSprint, this.auth.obtenerHeader()).subscribe(
           (response) => {
-            Swal.fire("Eliminado Satisfactoriamente", "El sprint se ha eliminado.", "success").then(() => {
+            Swal.fire("Eliminado!!!", "El sprint se ha eliminado.", "success").then(() => {
               window.location.reload();
             });
             console.log(response);
@@ -133,18 +185,114 @@ export class SprintListarComponent implements OnInit {
       }
     });
   }
+  cargarTareas(idASE:any, tipoASE:any) {
+    if(tipoASE === 'SPRINT'){
+    this.tareaService
+      .listarTareaPorSprint(idASE,this.auth.obtenerHeader()) 
+      .toPromise()
+      .then(
+        (data: any) => {
+        this.tareas = data;
+        this.nombreTarea = data.descripcion
+        },
+        (error) => {
+          Swal.fire('Error',error.error.mensajeTecnico,'error');
+        }
+    )};
+  } 
+  crearTarea() {
+    console.log(this.tareas)
+    if (this.formCrearTarea.valid) {
+      const nombre = this.formCrearTarea.get('nombre')?.value;
+      const descripcion = this.formCrearTarea.get('descripcion')?.value;
+      const idUsuario = this.formCrearTarea.get('idUsuario')?.value;
+      
+      const tarea = {
+        nombre: nombre,
+        descripcion: descripcion,
+        estado: EEstado.EN_BACKLOG,
+        tipoASE: 'SPRINT',
+        idASE: this.idSprintSeleccionado,
+        idUsuario: idUsuario,
+      };
+      
+      this.tareaService
+        .crearTarea(tarea,this.auth.obtenerHeader())
+        .subscribe(
+          (response) => {
+            Swal.fire({
+              title: "Modificado Satisfactoriamente",
+              text: "La gestión del área se ha modificado",
+              icon: "success",
+            });
+          },
+          (error) => {
+            Swal.fire('Error',error.error.mensajeHumano, "error");
+          }
+        );
+    }
+  }
+  modificarTarea() {
+    if (this.formTarea.valid) {
+      const estado = this.formTarea.get('estado')?.value;
+      const tareaModificar = {
+        estado: estado,
+      };
+      this.tareaService
+        .modificarTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader())
+        .subscribe(
+          (response) => {
+            Swal.fire({
+              title: "Modificado!!!",
+              text: "La gestión del área se ha modificado",
+              icon: "success",
+            });
+          },
+          (error) => {
+            Swal.fire('Error',error.error.mensajeHumano, "error");
+          }
+        );
+    }
+  }
+  eliminarTarea(idTarea: number) {
+    const tareaAEliminar = this.tareas.find(t => t.idTarea === idTarea);
 
-  obtenerSprint(sprint:any) {
+    Swal.fire({
+        title: "¿Estás seguro?",
+        text: "Una vez eliminado, no podrás recuperar este elemento.",
+        icon: "warning",
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: "#3085d6",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+      })
+      .then((confirmacion) => {
+        if (confirmacion.isConfirmed) {
+        this.tareaService.eliminarTarea(idTarea, this.auth.obtenerHeader()).subscribe(
+          (response) => {
+            Swal.fire("Eliminado Satisfactoriamente", "La actividad de gestión " + tareaAEliminar.nombre + " se ha eliminado.", "success").then(() => {
+              window.location.reload();
+            });
+          },
+          (error) => {
+            Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
+          }
+        );
+      }
+      });
+  }
+
+
+
+  obtenerSprint(idSprint: number,sprint:any) {
+    this.idSprintSeleccionado = idSprint;
     this.nombreSprint = sprint.descripcion;
   }
+  obtenerTarea(idTarea: number,tarea:any) {
+    this.idTareaSeleccionado = idTarea;
+    this.nombreTarea = tarea.nombre;
+  }
   
-
-  agregarDocumento() {
-
-  }
-  modificarSprint(){
-  }
-
   obtenerNombreUsuario(idUsuario: number) {
     const usuario = this.usuarios.find((u) => u.idUsuario === idUsuario);
     return usuario ? usuario.nombre + " " + usuario.apellidos : '';
@@ -157,6 +305,16 @@ export class SprintListarComponent implements OnInit {
     } else {
       return 'porcentaje-cien';
     }
+  }
+  colorDias(diasRestantes: number): string {
+    if (diasRestantes < 10) {
+      return 'porcentaje-bajo'; // Define las clases CSS para porcentajes bajos en tu archivo de estilos.
+    } else {
+      return 'porcentaje-normal';
+    }
+  }
+  isEstado(tareaEstado:any, estado:any) {
+    return tareaEstado === estado;
   }
 
 }

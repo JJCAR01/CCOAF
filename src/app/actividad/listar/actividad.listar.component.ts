@@ -7,6 +7,8 @@ import { UsuarioService } from 'src/app/usuario/services/usuario.service';
 import Swal from 'sweetalert2';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Proyecto } from '../crear/proyecto';
+import { EEstado } from 'src/app/gestion/listar/EEstado';
+import { TareaService } from 'src/app/tarea/services/tarea.service';
 
 @Component({
   selector: 'app-listar',
@@ -15,10 +17,12 @@ import { Proyecto } from '../crear/proyecto';
 })
 export class ActividadListarComponent implements OnInit{
   title = 'listarActividad';
+  estadoEnumList: string[] = [];
   gestiones: any[] = [];
   proyectos: any[] = [];
   actividades: any[] = [];
   usuarios:any[] =[];
+  tareas:any[] =[];
   actividadNombre:any;
   usuarioProyecto:any;
   usuarioGestion:any;
@@ -30,8 +34,12 @@ export class ActividadListarComponent implements OnInit{
   nombreActividadGestion:any;
   idProyectoSeleccionado:any;
   nombreProyecto:any;
+  idTareaSeleccionado:any;
+  nombreTarea:any;
   form:FormGroup;
   formProyecto:FormGroup;
+  formTarea:FormGroup;
+  formCrearTarea:FormGroup
   busqueda: any;
 
   constructor(
@@ -40,7 +48,8 @@ export class ActividadListarComponent implements OnInit{
     private tipoService: TipoGEService,
     private route: ActivatedRoute,
     private usuarioService :UsuarioService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private tareaService: TareaService
   ) {
     this.form = this.formBuilder.group({
       nombre:['',Validators.required],
@@ -52,6 +61,14 @@ export class ActividadListarComponent implements OnInit{
       presupuesto: ['', Validators.required],
       fechaInicial: ['', Validators.required],
       fechaFinal: ['', Validators.required],
+    });
+    this.formTarea = this.formBuilder.group({
+      estado: ['', Validators.required],
+    });
+    this.formCrearTarea = this.formBuilder.group({
+      nombre: ['', Validators.required],
+      descripcion: ['', Validators.required],
+      idUsuario: ['', Validators.required],
     });
 }
 
@@ -73,6 +90,8 @@ export class ActividadListarComponent implements OnInit{
       this.cargarProyectos(idActividadEstrategica);
     });
     this.cargarUsuario();
+    this.crearTarea();
+    this.estadoEnumList = Object.values(EEstado);
   }
   cargarUsuario() {
     this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
@@ -242,16 +261,117 @@ export class ActividadListarComponent implements OnInit{
         );
     }
   }
+  cargarTareas(idASE:any, tipoASE:any) {
+    if(tipoASE === 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA'){
+    this.tareaService
+      .listarTareaPorActvidadGestionActividadEstrategica(idASE,this.auth.obtenerHeader()) 
+      .toPromise()
+      .then(
+        (data: any) => {
+        this.tareas = data;
+        this.nombreTarea = data.descripcion
+        },
+        (error) => {
+          Swal.fire('Error',error.error.mensajeTecnico,'error');
+        }
+    )};
+    console.log(this.tareas )
+  } 
+  crearTarea() {
+    console.log(this.tareas)
+    if (this.formCrearTarea.valid) {
+      const nombre = this.formCrearTarea.get('nombre')?.value;
+      const descripcion = this.formCrearTarea.get('descripcion')?.value;
+      const idUsuario = this.formCrearTarea.get('idUsuario')?.value;
+      
+      const tarea = {
+        nombre: nombre,
+        descripcion: descripcion,
+        tipoASE: 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA',
+        idASE: this.idActividadGestionSeleccionado,
+        idUsuario: idUsuario,
+      };
+      
+      this.tareaService
+        .crearTarea(tarea,this.auth.obtenerHeader())
+        .subscribe(
+          (response) => {
+            Swal.fire({
+              title: "Modificado Satisfactoriamente",
+              text: "La gestión del área se ha modificado",
+              icon: "success",
+            });
+          },
+          (error) => {
+            Swal.fire('Error',error.error.mensajeHumano, "error");
+          }
+        );
+    }
+  }
+  modificarTarea() {
+    if (this.formTarea.valid) {
+      const estado = this.formTarea.get('estado')?.value;
+      const tareaModificar = {
+        estado: estado,
+      };
+      this.tareaService
+        .modificarTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader())
+        .subscribe(
+          (response) => {
+            Swal.fire({
+              title: "Modificado!!!",
+              text: "La gestión del área se ha modificado",
+              icon: "success",
+            });
+          },
+          (error) => {
+            Swal.fire('Error',error.error.mensajeHumano, "error");
+          }
+        );
+    }
+  }
+  eliminarTarea(idTarea: number) {
+    const tareaAEliminar = this.tareas.find(t => t.idTarea === idTarea);
 
-  obtenerActividadGestion(idActividadGestion: number,actividadGestion:any) {
-    this.idActividadGestionSeleccionado = idActividadGestion;
+    Swal.fire({
+        title: "¿Estás seguro?",
+        text: "Una vez eliminado, no podrás recuperar este elemento.",
+        icon: "warning",
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: "#3085d6",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+      })
+      .then((confirmacion) => {
+        if (confirmacion.isConfirmed) {
+        this.tareaService.eliminarTarea(idTarea, this.auth.obtenerHeader()).subscribe(
+          (response) => {
+            Swal.fire("Eliminado Satisfactoriamente", "La actividad de gestión " + tareaAEliminar.nombre + " se ha eliminado.", "success").then(() => {
+              window.location.reload();
+            });
+            console.log(response);
+          },
+          (error) => {
+            Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
+          }
+        );
+      }
+      });
+  }
+
+  obtenerActividadGestion(idActividadGestionActividadEstrategica: number,actividadGestion:any) {
+    this.idActividadGestionSeleccionado = idActividadGestionActividadEstrategica;
     this.nombreActividadGestion = actividadGestion.nombre;
     this.usuarioGestion = actividadGestion.idUsuario
   }
-  obtenerProyecto(idActividadEstrategica: number,actividadEstrategica:any) {
-    this.idProyectoSeleccionado = idActividadEstrategica;
-    this.nombreProyecto = actividadEstrategica.nombre;
-    this.usuarioProyecto = actividadEstrategica.idUsuario;
+  obtenerTarea(idTarea: number,tarea:any) {
+    this.idTareaSeleccionado = idTarea;
+    this.nombreTarea = tarea.nombre;
+  }
+  obtenerProyecto(idProyecto: number,proyecto:any) {
+    this.idProyectoSeleccionado = idProyecto;
+    this.nombreProyecto = proyecto.nombre;
+    this.usuarioProyecto = proyecto.idUsuario;
   }
 
   obtenerNombreUsuario(idUsuario: number) {
@@ -273,6 +393,9 @@ export class ActividadListarComponent implements OnInit{
     } else {
       return 'porcentaje-normal';
     }
+  }
+  isEstado(tareaEstado:any, estado:any) {
+    return tareaEstado === estado;
   }
   
 }

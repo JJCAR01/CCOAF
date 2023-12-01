@@ -35,15 +35,14 @@ import { EnumPipe } from 'src/pipes/enum.pipes';
 import { TipoGECrearComponent } from './gestion/crear/tipoGE.crear.component';
 import { environment } from 'src/environments/environment.development';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 import { HttpClientModule } from '@angular/common/http';
-import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
 import { provideAuth,getAuth } from '@angular/fire/auth';
 import { provideStorage,getStorage } from '@angular/fire/storage';
 
-import { FIREBASE_OPTIONS } from '@angular/fire/compat';
+import { AngularFireModule, FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { GoogleLoginProvider, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
 
 
 @NgModule({
@@ -54,6 +53,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     SprintListarComponent,SprintCrearComponent, TareaListarComponent, ProyectoListarComponent
   ],
   imports: [
+    AngularFireModule.initializeApp(environment.firebase),
+    provideAuth(() => getAuth()),
+    provideStorage(() => getStorage()),
     BrowserModule,
     RouterModule,
     HttpClientModule,
@@ -61,10 +63,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     FormsModule,
     FormsModule,
     ReactiveFormsModule,
-    provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideAuth(() => getAuth()),
-    provideStorage(() => getStorage()),
     AngularFireAuthModule,
+    AngularFireStorageModule,
     NgbModule,
     ],
   providers: [
