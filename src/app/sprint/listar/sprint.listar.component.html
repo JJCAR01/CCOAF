@@ -30,6 +30,14 @@
           <h2>Responsable:</h2>
           <p> {{ obtenerNombreUsuario(proyectoUsuario).toLocaleUpperCase() }}</p>
         </div>
+        <div class="responsable-info">
+          <h2>Total Sprint:</h2>
+          <p> {{ totalSprint }}</p>
+        </div>
+        <div class="responsable-info">
+          <h2>Tiempo Sprint:</h2>
+          <p> {{ planeacionSprint }}</p>
+        </div>
         <li class="header">
           <button title="Agregar"
             type="button" class="btn btn-success" [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['crearSprint'] } }]"
@@ -200,8 +208,9 @@
       </div>
     </div>
   </div>
-  <div class="modal fade" id="modalModificarTarea" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+  <div class="modal fade" id="modalModificarTarea" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+  data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Modificar Tarea</h5>
@@ -213,8 +222,23 @@
               <label for="nombre" class="form-label">{{ nombreTarea }}</label>
             </div>
             <div class="mb-3">
-              <label for="estado" class="form-label">Estado</label>
-              <input type="text" class="form-control" id="estado" formControlName="estado">
+              <h6><i class="bi bi-info" data-toggle="popover" data-placement="top" data-content="Texto con información"></i> Estado: </h6>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="estado" id="en-backlog" value="EN_BACKLOG" formControlName="estado" />
+                <label class="form-check-label" for="en-backlog">EN BACKLOG</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="estado" id="en-proceso" value="EN_PROCESO" formControlName="estado" />
+                <label class="form-check-label" for="en-proceso ">EN PROCESO</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="estado" id="terminado" value="TERMINADO" formControlName="estado" />
+                <label class="form-check-label" for="terminado">TERMINADO</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="estado" id="impedimento" value="IMPEDIMENTO" formControlName="estado" />
+                <label class="form-check-label" for="impedimento">IMPEDIMENTO</label>
+              </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>

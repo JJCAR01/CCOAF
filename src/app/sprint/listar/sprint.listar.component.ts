@@ -27,6 +27,8 @@ export class SprintListarComponent implements OnInit {
   tareas:any[] =[];
   usuarios:any[] =[];
   nombreSprint:any;
+  totalSprint:any;
+  planeacionSprint:any;
   proyectoNombre:any;
   proyectoPorcentaje:any;
   proyectoUsuario:any;
@@ -75,6 +77,8 @@ export class SprintListarComponent implements OnInit {
           this.proyectoUsuario = data.idUsuario
           this.idProyecto = data.idProyecto 
           this.actividad = data.idActividadEstrategica
+          this.totalSprint = data.totalSprint
+          this.planeacionSprint = data.planeacionSprint
         },
         (error) => {
           // Manejo de errores

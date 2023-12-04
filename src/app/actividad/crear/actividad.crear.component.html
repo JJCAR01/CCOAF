@@ -28,44 +28,54 @@
                                   </div>
                             </div>
                             <div class="form-floating mb-3">
-                                <input type="text" id="nombre" class="form-control form-control-lg" formControlName="nombre" placeholder="Nombre" [(ngModel)]="proyecto.nombre" [(ngModel)]="actividad.nombre"
+                                <input type="text" id="nombre" class="form-control form-control-lg" formControlName="nombre" placeholder="Nombre"
                                 [disabled]="!tipoActividadGestionActividadEstrategica && !tipoProyecto">
                                 <label class="form-label" for="nombre">Nombre</label>
                             </div>
                             <div class="form-floating mb-3">
-                                <input type="date" id="fechaInicial" class="form-control form-control-lg" formControlName="fechaInicial" placeholder="Fecha Inicial" [(ngModel)]="proyecto.fechaInicial" [(ngModel)]="actividad.fechaInicial"
+                                <input type="date" id="fechaInicial" class="form-control form-control-lg" formControlName="fechaInicial" placeholder="Fecha Inicial" 
                                  [disabled]="!tipoActividadGestionActividadEstrategica && !tipoProyecto">
                                 <label class="form-label" for="fechaInicial">Fecha Inicial</label>
                             </div>
                             <div class="form-floating mb-3">
-                                <input type="date" id="fechaFinal" class="form-control form-control-lg" formControlName="fechaFinal" placeholder="Fecha Final" [(ngModel)]="proyecto.fechaFinal" [(ngModel)]="actividad.fechaFinal"
+                                <input type="date" id="fechaFinal" class="form-control form-control-lg" formControlName="fechaFinal" placeholder="Fecha Final" 
                                 [disabled]="!tipoActividadGestionActividadEstrategica && !tipoProyecto">
                                 <label class="form-label" for="fechaFinal">Fecha Final</label>
                             </div>
                             <div *ngIf="tipoProyecto">
-                                <div class="form-floating mb-3">
+                                <div class="form-floating mb-3" *ngIf="form.get('presupuesto')">
                                   <!-- Agrega aquí los campos adicionales que deseas mostrar para Proyecto -->
-                                  <input type="number" id="presupuesto" class="form-control form-control-lg" placeholder="Presupuesto" formControlName="presupuesto" [(ngModel)]="proyecto.presupuesto">
+                                  <input type="number" id="presupuesto" class="form-control form-control-lg" placeholder="Presupuesto" formControlName="presupuesto" >
                                   <label class="form-label" for="presupuesto">Presupuesto</label>
                                 </div>
-                                <div class="form-floating mb-3">
+                                <div class="form-floating mb-3" *ngIf="form.get('modalidad')">
                                     <!-- Agrega aquí los campos adicionales que deseas mostrar para Proyecto -->
-                                    <input type="text" id="modalidad" class="form-control form-control-lg" placeholder="Modalidad" formControlName="modalidad" [(ngModel)]="proyecto.modalidad">
+                                    <input type="text" id="modalidad" class="form-control form-control-lg" placeholder="Modalidad" formControlName="modalidad" >
                                     <label class="form-label" for="modalidad">Modalidad</label>
                                 </div>
-                                <div class="form-floating mb-3">
+                                <div class="form-floating mb-3" *ngIf="form.get('valorEjecutado')">
                                     <!-- Agrega aquí los campos adicionales que deseas mostrar para Proyecto -->
-                                    <input type="text" id="valorEjecutado" class="form-control form-control-lg" placeholder="Valor ejecutado" formControlName="valorEjecutado" [(ngModel)]="proyecto.valorEjecutado">
+                                    <input type="text" id="valorEjecutado" class="form-control form-control-lg" placeholder="Valor ejecutado" formControlName="valorEjecutado" >
                                     <label class="form-label" for="valorEjecutado">Valor Ejecutado</label>
                                 </div>
-                                <div class="form-floating mb-3">
-                                    <!-- Agrega aquí los campos adicionales que deseas mostrar para Proyecto -->
-                                    <input type="text" id="planeacionSprint" class="form-control form-control-lg" placeholder="Planeacion sprint" formControlName="planeacionSprint" [(ngModel)]="proyecto.planeacionSprint">
-                                    <label class="form-label" for="planeacionSprint">Planeación</label>
-                                </div>
+                                <div class="mb-3" *ngIf="form.get('planeacionSprint')">
+                                    <h6><i class="bi bi-info" data-toggle="popover" data-placement="top" data-content="Texto con información"></i> Planeacion: </h6>
+                                    <div class="form-check form-check-inline">
+                                      <input class="form-check-input" type="radio" name="planeacionSprint" id="semanal" value="SEMANAL" formControlName="planeacionSprint" />
+                                      <label class="form-check-label" for="semanal">SEMANAL</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                      <input class="form-check-input" type="radio" name="planeacionSprint" id="quincenal" value="QUINCENAL" formControlName="planeacionSprint" />
+                                      <label class="form-check-label" for="quincenal">QUINCENAL</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                      <input class="form-check-input" type="radio" name="planeacionSprint" id="mensual" value="MENSUAL" formControlName="planeacionSprint" />
+                                      <label class="form-check-label" for="mensual">MENSUAL</label>
+                                    </div>
+                                  </div>
                               </div>
                             <div class="form-floating mb-3">
-                                <select class="form-select" id="idUsuario" formControlName="idUsuario" [(ngModel)]="proyecto.idUsuario" [(ngModel)]="actividad.idUsuario">
+                                <select class="form-select" id="idUsuario" formControlName="idUsuario" >
                                     <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario"  >{{ usuario.nombre  + ' ' + usuario.apellidos | formatEnum}}</option>
                                 </select>
                                 <label for="idUsuario" placeholder="usuario">Responsable:</label>

@@ -138,4 +138,33 @@ th,td {
   color: rgb(206, 49, 49); /* Color para "IMPEDIMENTO" */
 }
 
+.form-check-input {
+  width: 20px; /* Ancho deseado */
+  height: 20px; /* Altura deseada */
+  margin-right: 10px; /* Espacio entre el input y la etiqueta de texto */
+  border: 1px solid #000000; /* Borde con color gris claro */
+  border-radius: 4px;  /* Espacio entre el input y la etiqueta de texto */
+}
+
+/* Estilo para el color del texto de las etiquetas de los inputs */
+.form-check-label {
+  color: #333; /* Cambiar el color de texto según tus preferencias */
+}
+
+/* Estilo para cambiar el color de fondo de los inputs seleccionados */
+.form-check-input:checked {
+  background-color: #007bff; /* Cambiar el color de fondo cuando el input está seleccionado */
+  border-color: #007bff; /* Cambiar el color del borde cuando el input está seleccionado */
+  color: #552a2a; /* Cambiar el color del texto cuando el input está seleccionado */
+}
+
+.bi-info {
+  color: #007bff;
+}
+
+.bi-info:hover {
+  color: #ff8c00;
+}
+
+
 

@@ -33,10 +33,10 @@ export class ActividadCrearComponent implements OnInit{
       fechaInicial: ['', Validators.required],
       fechaFinal: ['', Validators.required],
       idUsuario: ['', Validators.required],
-      presupuesto: ['', Validators.required], // Add project-specific fields here
-      modalidad: ['', Validators.required],
-      valorEjecutado: ['', Validators.required],
-      planeacionSprint: ['', Validators.required],
+      presupuesto: [null], // Agrega otros campos según sea necesario
+      modalidad: [''],
+      valorEjecutado: [''],
+      planeacionSprint: [''],
     });
   }
 
@@ -46,6 +46,21 @@ export class ActividadCrearComponent implements OnInit{
       this.actividadNombre = params['actividadNombre'];
     })
     this.cargarUsuarios();
+    this.iniciarFormulario();
+  }
+
+  iniciarFormulario() {
+    this.form = this.formBuilder.group({
+      idActividadEstrategica: [this.idActividadEstrategica],
+      nombre: ['', Validators.required],
+      fechaInicial: ['', Validators.required],
+      fechaFinal: ['', Validators.required],
+      idUsuario: ['', Validators.required],
+      presupuesto: [null],
+      modalidad: [''],
+      valorEjecutado: [''],
+      planeacionSprint: [''],
+    });
   }
 
   cargarUsuarios() {
@@ -62,12 +77,10 @@ export class ActividadCrearComponent implements OnInit{
   crearActividadOProyecto() {
     this.actividad.idActividadEstrategica = this.idActividadEstrategica;
     this.proyecto.idActividadEstrategica = this.idActividadEstrategica;
+
     if (this.tipo === 'gestion') {
       this.actividadService
-        .crearActividadGestionActividadEstrategica(
-          this.actividad,
-          this.auth.obtenerHeader()
-        )
+        .crearActividadGestionActividadEstrategica(this.form.value, this.auth.obtenerHeader())
         .subscribe(
           (response) => {
             this.handleSuccessResponse('actividad estratégica');
@@ -78,20 +91,20 @@ export class ActividadCrearComponent implements OnInit{
         );
     } else if (this.tipo === 'proyecto') {
       this.actividadService
-      .crearProyecto(this.proyecto, this.auth.obtenerHeader())
+        .crearProyecto(this.form.value, this.auth.obtenerHeader())
         .subscribe(
-          (response) => {   
+          (response) => {
             this.handleSuccessResponse('proyecto');
           },
           (error) => {
             this.handleErrorResponse(error);
           }
         );
-    } 
-        this.form.reset();
-        this.tipo = ''; // Reinicia el tipo de actividad
-        this.tipoActividadGestionActividadEstrategica = false; // Reinicia el estado de los checkboxes
-        this.tipoProyecto = false;
+    }
+    this.form.reset();
+    this.tipo = ''; // Reinicia el tipo de actividad
+    this.tipoActividadGestionActividadEstrategica = false; // Reinicia el estado de los checkboxes
+    this.tipoProyecto = false;
   }
 
   handleSuccessResponse(type: string) {
@@ -106,7 +119,7 @@ export class ActividadCrearComponent implements OnInit{
     this.tipoProyecto = false;
   }
   handleErrorResponse(error: any) {
-    Swal.fire('Error', error.error.mensajeTecnico, 'error');
+    Swal.fire('Error', error.error.mensajeHumano, 'error');
   }
 
 

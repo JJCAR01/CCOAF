@@ -112,6 +112,7 @@ export class ActividadListarComponent implements OnInit{
       .then(
         (data: any) => {
           this.gestiones = data;
+          console.log(data)
         },
         (error) => {
           Swal.fire(error.error.mensajeTecnico,'', 'error');
@@ -275,11 +276,11 @@ export class ActividadListarComponent implements OnInit{
           Swal.fire('Error',error.error.mensajeTecnico,'error');
         }
     )};
-    console.log(this.tareas )
   } 
   crearTarea() {
-    console.log(this.tareas)
+
     if (this.formCrearTarea.valid) {
+      
       const nombre = this.formCrearTarea.get('nombre')?.value;
       const descripcion = this.formCrearTarea.get('descripcion')?.value;
       const idUsuario = this.formCrearTarea.get('idUsuario')?.value;
@@ -287,6 +288,7 @@ export class ActividadListarComponent implements OnInit{
       const tarea = {
         nombre: nombre,
         descripcion: descripcion,
+        estado: EEstado.EN_BACKLOG,
         tipoASE: 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA',
         idASE: this.idActividadGestionSeleccionado,
         idUsuario: idUsuario,
@@ -359,10 +361,10 @@ export class ActividadListarComponent implements OnInit{
       });
   }
 
-  obtenerActividadGestion(idActividadGestionActividadEstrategica: number,actividadGestion:any) {
+  obtenerActividadGestionActividadEstrategica(idActividadGestionActividadEstrategica: number,gestion:any) {
     this.idActividadGestionSeleccionado = idActividadGestionActividadEstrategica;
-    this.nombreActividadGestion = actividadGestion.nombre;
-    this.usuarioGestion = actividadGestion.idUsuario
+    this.nombreActividadGestion = gestion.nombre;
+    this.usuarioGestion = gestion.idUsuario
   }
   obtenerTarea(idTarea: number,tarea:any) {
     this.idTareaSeleccionado = idTarea;

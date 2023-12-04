@@ -71,7 +71,7 @@ export class TipoGECrearComponent implements OnInit {
         if (this.tipoActividad === 'estrategica') {
           this.tipoService.crearActividadEstrategica(actividad,this.auth.obtenerHeader()).subscribe(
             (response) => {
-              Swal.fire("Creado Satisfactoriamente", 'El actividad estratégica con el nombre ' + actividad.nombre + ', se ha creado!!', "success");
+              Swal.fire("Creado!!!", 'El actividad estratégica con el nombre ' + actividad.nombre + ', se ha creado!!', "success");
               this.form.reset();
             },
             (error) => {
@@ -81,7 +81,7 @@ export class TipoGECrearComponent implements OnInit {
         } else if (this.tipoActividad === 'gestion') {
           this.tipoService.crearGestion(actividad,this.auth.obtenerHeader()).subscribe(
             (response) => {
-              Swal.fire("Creado Satisfactoriamente", 'La gestión del área con el nombre ' + this.form.value.nombre + ', se ha creado!!', "success");
+              Swal.fire("Creado!!!", 'La gestión del área con el nombre ' + this.form.value.nombre + ', se ha creado!!', "success");
               this.form.reset();
             },
             (error) => {
@@ -89,8 +89,6 @@ export class TipoGECrearComponent implements OnInit {
             }
           );
         }
-
-        Swal.fire("Creado Satisfactoriamente", `La actividad ${this.tipoActividad} con el nombre '${nombre}' se ha creado!!`, "success");
         this.form.reset();
         this.tipoActividad = ''; // Reinicia el tipo de actividad
         this.tipoActividadEstrategica = false; // Reinicia el estado de los checkboxes

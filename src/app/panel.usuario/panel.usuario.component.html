@@ -22,31 +22,28 @@
                     <img src="/assets/logoactualizado.png" width="200mp" alt="logo" id="logo">
                 </div>
                 <nav class="menu">
-                    <a [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarPat'] } }]">
-                        <span title="Plan anual de trabajo">Plan anual de trabajo</span>
+                    <a title="Plan anual de trabajo" [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarPat'] } }]">
+                        <span >Plan anual de trabajo</span>
                     </a>                  
                 </nav>
                 <nav class="submenu">   
                     <a >
-                        
-                        <a [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['dashboard'] } }]">
-                            <span title="Dashboard">Dashboard</span>
+                        <a title="Dashboard" [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['dashboard'] } }]">
+                            <span >Dashboard</span>
                         </a>  
                     </a>                  
                 </nav>
                 <nav class="submenu">
                     <a >
-                        
-                        <a [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarProyecto'] } }]">
-                            <span title="Proyectos">Proyectos</span>
+                        <a title="Proyectos" [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarProyecto'] } }]">
+                            <span >Proyectos</span>
                         </a> 
                     </a>                  
                 </nav>
                 <nav class="submenu">
                     <a >
-                        
-                        <a [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarActividadesEstrategicas'] } }]">
-                            <span title="Actividades estratégicas">Actividades estratégicas</span>
+                        <a title="Actividades estratégicas" [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarActividadesEstrategicas'] } }]">
+                            <span >Actividades estratégicas</span>
                         </a> 
                     </a>                  
                 </nav>

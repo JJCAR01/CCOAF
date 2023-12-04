@@ -43,6 +43,7 @@ import { provideStorage,getStorage } from '@angular/fire/storage';
 import { AngularFireModule, FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { GoogleLoginProvider, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 
 
 @NgModule({
@@ -53,15 +54,16 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     SprintListarComponent,SprintCrearComponent, TareaListarComponent, ProyectoListarComponent
   ],
   imports: [
-    AngularFireModule.initializeApp(environment.firebase),
-    provideAuth(() => getAuth()),
-    provideStorage(() => getStorage()),
+    
     BrowserModule,
     RouterModule,
     HttpClientModule,
     AppRoutingModule,
     FormsModule,
     FormsModule,
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideAuth(() => getAuth()),
+    provideStorage(() => getStorage()),
     ReactiveFormsModule,
     AngularFireAuthModule,
     AngularFireStorageModule,

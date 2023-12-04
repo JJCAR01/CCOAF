@@ -15,3 +15,4 @@
   document.querySelector('.btn-outline-primary').addEventListener('click', function () {
     cargarContenidoExterno(1); // Puedes pasar un identificador o parámetro necesario
   });
+

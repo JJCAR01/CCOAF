@@ -58,13 +58,12 @@
               <th class="column-presupuesto">Presupuesto</th>
               <th class="column-modalidad">Modalidad</th>
               <th class="column-presupuesto">Valor Ejecutado</th>
-              <th>Estado</th>
               <th class="column-fecha">Fecha inicial</th>
               <th class="column-fecha">Fecha final</th>
-              <th class="column-total">Duracion (Días)</th>
+              <th class="column-duracion">Duracion (Días)</th>
               <th class="column-total">Avance</th>
-              <th>Planeación Sprint</th>
-              <th class="column-total">Total sprint</th>
+              <th class="column-planeacion">Planeación Sprint</th>
+              <th class="column-totalsprint">Total sprint</th>
               <th class="column-acciones">Acciones</th>
             </tr>
           </thead>
@@ -75,7 +74,6 @@
                 <td>{{ proyecto.presupuesto | currency : '$ ' : 'symbol' : '1.0-0' }}</td>
                 <td>{{ proyecto.modalidad }}</td>
                 <td>{{ proyecto.valorEjecutado | currency : '$ ' : 'symbol' : '1.0-0' }}</td>
-                <td>{{ proyecto.estado }}</td>
                 <td>{{ proyecto.fechaInicial }}</td>
                 <td>{{ proyecto.fechaFinal }}</td>
                 <td>{{ proyecto.duracion }}</td>
@@ -128,10 +126,10 @@
                     Usuario: {{ obtenerNombreUsuario(gestion.idUsuario).toLocaleUpperCase() }}
                   </div>
                   <div class="col-md-1">
-                    <button title="Modificar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarGestion" (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)">
+                    <button title="Modificar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarGestion" (click)="obtenerActividadGestionActividadEstrategica(gestion.idActividadGestionActividadEstrategica,gestion)">
                       <i class="bi bi-pen-fill"></i>
                     </button>
-                  <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarGestion(gestion.idActividadGestion)"><i class="bi bi-trash3-fill"></i></button>
+                  <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarGestion(gestion.idActividadGestionActividadEstrategica)"><i class="bi bi-trash3-fill"></i></button>
                   </div>
               </div>
             </div>
@@ -167,7 +165,7 @@
                       <th>Observacion</th>
                       <th>Responsable</th>
                       <th class="mb-3">Acciones </th>
-                      <th class="column-crear"><button title="Crear" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalCreartarea" (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)"
+                      <th class="column-crear"><button title="Crear" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalCreartarea" (click)="obtenerActividadGestionActividadEstrategica(gestion.idActividadGestionActividadEstrategica,gestion)"
                         ><i class="bi bi-plus-lg"></i></button></th>
                     </tr>
                   </thead>
@@ -276,8 +274,9 @@
         </div>
       </div>
     </div>
-    <div class="modal fade" id="modalModificarTarea" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
+    <div class="modal fade" id="modalModificarTarea" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Modificar Tarea</h5>
@@ -289,8 +288,23 @@
                 <label for="nombre" class="form-label">{{ nombreTarea }}</label>
               </div>
               <div class="mb-3">
-                <label for="estado" class="form-label">Estado</label>
-                <input type="text" class="form-control" id="estado" formControlName="estado">
+                <h6><i class="bi bi-info" data-toggle="popover" data-placement="top" data-content="Texto con información"></i> Estado: </h6>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="estado" id="en-backlog" value="EN_BACKLOG" formControlName="estado" />
+                  <label class="form-check-label" for="en-backlog">EN BACKLOG</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="estado" id="en-proceso" value="EN_PROCESO" formControlName="estado" />
+                  <label class="form-check-label" for="en-proceso ">EN PROCESO</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="estado" id="terminado" value="TERMINADO" formControlName="estado" />
+                  <label class="form-check-label" for="terminado">TERMINADO</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="estado" id="impedimento" value="IMPEDIMENTO" formControlName="estado" />
+                  <label class="form-check-label" for="impedimento">IMPEDIMENTO</label>
+                </div>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>

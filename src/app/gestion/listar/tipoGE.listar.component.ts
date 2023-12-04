@@ -297,6 +297,7 @@ export class TipogeListarComponent implements OnInit {
       const tarea = {
         nombre: nombre,
         descripcion: descripcion,
+        estado: EEstado.EN_BACKLOG,
         tipoASE: 'ACTIVIDAD_GESTION',
         idASE: this.idActividadGestionSeleccionado,
         idUsuario: idUsuario,
@@ -332,6 +333,8 @@ export class TipogeListarComponent implements OnInit {
               title: "Modificado!!!",
               text: "La gestión del área se ha modificado",
               icon: "success",
+            }).then(() => {
+              window.location.reload()
             });
           },
           (error) => {
