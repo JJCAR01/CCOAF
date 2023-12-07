@@ -14,28 +14,34 @@
   <div  class="row-with-button">
     <li class="header ">
       <button title="Atrás"
-        type="button" class="btn btn-outline-dark me-1" 
-        [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarActividad', actividad ] } }]">
+        type="button" class="btn btn-outline-dark mb-1" 
+        [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarActividad', actividad, 'pat', patNombre] } }]">
         <i class="bi bi-arrow-return-left"></i>
       </button>
     </li>
     <div>
-      <h1 class="mb-1"> {{ proyectoNombre }} </h1>  
       <div class="row">
+      <div class="responsable-info">
+        <h1 ><img src="/assets/Programas.png" width="45mp" alt="logo" id="logo" title="{{ patNombre }}"> {{ patNombre }} </h1>
+      </div>
+      <div class="responsable-info">
+        <img src="/assets/proyectos.png" width="25mp" alt="logo" id="logo" title="{{ proyectoNombre }}"><h3>Proyecto:</h3>
+        <p> {{ proyectoNombre }} </p> 
+      </div> 
         <div class="responsable-info">
-          <h2>Porcentaje actual:</h2>
-          <p> {{ proyectoPorcentaje | number : '1.2-2' }} %</p>
+          <h3 title="Porcentaje Actual" ><i class="bi bi-percent me-1 tamaño-iconos color-iconoPorcentaje"></i>Porcentaje actual:</h3>
+          <p [ngClass]="colorPorcentaje(proyectoPorcentaje)">{{ proyectoPorcentaje | number : '1.2-2' }} %</p>                                                               
         </div>
         <div class="responsable-info">
-          <h2>Responsable:</h2>
+          <h3 title="Responsble"><i class="bi bi-person-circle me-1 tamaño-iconos color-iconoResponsable"></i>Responsable:</h3>
           <p> {{ obtenerNombreUsuario(proyectoUsuario).toLocaleUpperCase() }}</p>
         </div>
-        <div class="responsable-info">
-          <h2>Total Sprint:</h2>
+        <div class="responsable-info ">
+          <h3 title="Total sprint"><i class="bi bi-skip-end-circle me-1 tamaño-iconos color-iconoTotal"></i>Total Sprint:</h3>
           <p> {{ totalSprint }}</p>
         </div>
         <div class="responsable-info">
-          <h2>Tiempo Sprint:</h2>
+          <h3 title="Tiempo de planeación"> <i class="bi bi-stopwatch me-1 tamaño-iconos color-iconoTiempo"></i>Tiempo Sprint:</h3>
           <p> {{ planeacionSprint }}</p>
         </div>
         <li class="header">
@@ -52,22 +58,27 @@
   </div>  
     <main class="main text-center smaller-main">
       <!-- Iterar sobre las gestiones -->
-      <div *ngFor="let sprint of sprints">
+      <div *ngFor="let sprint of sprints ; let i = index">
         <div class="card mb-2">
           <div class="card-header" role="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapse-' + sprint.idSprint" (click)="cargarTareas(sprint.idSprint,'SPRINT')">
             <h5 class="mb-0" >{{ sprint.descripcion }}</h5>
             <div class="card-body">
               <div class="row justify-content-center">
-                <div class="col-md-3">
-                  F. Inicial: {{ sprint.fechaInicial }}
-                </div>
-                <div class="col-md-3">
-                  F. Final: {{ sprint.fechaFinal }}
-                </div>
-                <div class="col-md-2" [ngClass]="colorPorcentaje(sprint.avance)">
-                  Avance: {{ sprint.avance }} %
+                <div class="col-md-1">
+                  <h6>N°</h6>{{ i + 1 }}</div>
+                <div class="col-md-2">
+                  <h6>Fecha Inicial</h6>
+                  {{ sprint.fechaInicial }}
                 </div>
                 <div class="col-md-2">
+                  <h6>Fecha Final</h6>
+                  {{ sprint.fechaFinal }}
+                </div>
+                <div class="col-md-2" [ngClass]="colorPorcentaje(sprint.avance)">
+                  <h6>Avance</h6>
+                  {{ sprint.avance }} %
+                </div>
+                <div class="col-md-3">
                   <button title="Modificar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modificarSprint" (click)="obtenerSprint(sprint.idSprint,sprint)">
                     <i class="bi bi-pen-fill"></i>
                   </button>
@@ -86,7 +97,7 @@
               <!-- Detalles de la gestión... -->
     
               <!-- Iterar sobre las tareas relacionadas con la gestión actual -->
-              <table class="table table-hover">
+              <table class="table table-sm">
                 <thead class="table-active">
                   <tr>
                     <th class="column-nombre">Nombre</th>
@@ -112,7 +123,7 @@
                     <th class="column-observacion">Observacion</th>
                     <th>Responsable</th>
                     <th class="mb-3">Acciones </th>
-                      <th class="column-crear"><button title="Crear" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalCreartarea" (click)="obtenerSprint(sprint.idSprint,sprint)"
+                      <th class="column-crear"><button title="Crear" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalCreartarea" (click)="obtenerSprint(sprint.idSprint,sprint)"
                         ><i class="bi bi-plus-lg"></i></button></th>
                   </tr>
                 </thead>
@@ -122,17 +133,17 @@
                       <td>{{ tarea.nombre }}</td>
                       <td>
                         <div class="d-flex">
-                          <div class="col">
-                            <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'EN_BACKLOG')" class="estado-checkbox" [disabled]="!isEstado(tarea.estado, 'EN_BACKLOG')">
+                          <div class="col ">
+                            <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'EN_BACKLOG')" class="estado-checkbox form-check-input en-backlog" [disabled]="!isEstado(tarea.estado, 'EN_BACKLOG')">
                           </div>
                           <div class="col">
-                            <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'EN_PROCESO')" class="estado-checkbox" [disabled]="!isEstado(tarea.estado, 'EN_PROCESO')">
+                            <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'EN_PROCESO')" class="estado-checkbox form-check-input en-proceso" [disabled]="!isEstado(tarea.estado, 'EN_PROCESO')">
                           </div>
                           <div class="col">
-                            <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'TERMINADO')" class="estado-checkbox terminado" [disabled]="!isEstado(tarea.estado, 'TERMINADO')">
+                            <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'TERMINADO')" class="estado-checkbox form-check-input terminado" [disabled]="!isEstado(tarea.estado, 'TERMINADO')">
                           </div>
                           <div class="col">
-                            <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'IMPEDIMENTO')" class="estado-checkbox" [disabled]="!isEstado(tarea.estado, 'IMPEDIMENTO')">
+                            <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'IMPEDIMENTO')" class="estado-checkbox form-check-input impedimento" [disabled]="!isEstado(tarea.estado, 'IMPEDIMENTO')">
                           </div>
                         </div>
                       </td>
@@ -169,8 +180,8 @@
               <input  type="file" (change)="documento($event)">
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-              <button type="submit" class="btn btn-primary">Guardar</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-success">Guardar</button>
             </div>
           </form>
         </div>
@@ -200,8 +211,8 @@
               <input type="date" class="form-control" id="fechaFinal" formControlName="fechaFinal">
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-              <button type="submit" class="btn btn-primary">Guardar</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-success">Guardar</button>
             </div>
           </form>
         </div>
@@ -221,7 +232,7 @@
             <div class="mb-3 custom-input">
               <label for="nombre" class="form-label">{{ nombreTarea }}</label>
             </div>
-            <div class="mb-3">
+            <div class="mb-3" [ngModel]="estadoTarea">
               <h6><i class="bi bi-info" data-toggle="popover" data-placement="top" data-content="Texto con información"></i> Estado: </h6>
               <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="estado" id="en-backlog" value="EN_BACKLOG" formControlName="estado" />
@@ -241,8 +252,8 @@
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-              <button type="submit" class="btn btn-primary">Guardar</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-success">Guardar</button>
             </div>
           </form>
         </div>
@@ -273,8 +284,8 @@
               </select>
           </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-              <button type="submit" class="btn btn-primary">Guardar</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-success">Guardar</button>
             </div>
           </form>
         </div>

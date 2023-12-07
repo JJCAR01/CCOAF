@@ -12,20 +12,22 @@
     
 </head>
 <body>
-  <div class="row-with-button">
+  <div class="row-with-button mb-1">
     <div>
-      <h1 class="mb-1"> {{ patNombre }} </h1>
       <div class="row">
         <div class="responsable-info">
-          <h2>Porcentaje actual:</h2>
-          <p> {{ porcentajePat | number : '1.2-2' }} %</p>
+          <h1 ><img src="/assets/Programas.png" width="40mp" alt="logo" id="logo" title="{{ patNombre }}"> {{ patNombre }} </h1>
         </div>
         <div class="responsable-info">
-          <h2>Año:</h2>
+          <h2 title="Porcentaje Actual" ><i class="bi bi-percent tamaño-iconos color-iconoPorcentaje"></i> Porcentaje actual:</h2>
+          <p [ngClass]="colorPorcentaje(porcentajePat)">{{ porcentajePat | number : '1.2-2' }} %</p>
+        </div>
+        <div class="responsable-info">
+          <h2 title="Año"><i class="bi bi-calendar3 tamaño-iconos color-iconoFechaAnual"></i> Año:</h2>
           <p> {{ anual }}</p>
         </div>
         <div class="responsable-info">
-          <h2>Responsable:</h2>
+          <h2 title="Responsble"><i class="bi bi-person-circle tamaño-iconos color-iconoResponsable"></i> Responsable:</h2>
           <p> {{ obtenerNombreUsuario(usuarioPat).toLocaleUpperCase() }}</p>
         </div>
       </div>
@@ -33,17 +35,17 @@
   </div>
   <ul class="nav nav-tabs header" id="myTab" role="tablist">
     <li class="header">
-      <button title="Atrás"
-        type="button" class="btn btn-outline-secondary" 
+      <button title="Volver"
+        type="button" class="btn btn-outline-dark" 
         [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarPat'] } }]">
         <i class="bi bi-arrow-return-left"></i>
       </button>
     </li>
-    <li class="nav-item" >
+    <li class="nav-item" title="Actividades estratégicas">
       <a class="nav-link active" id="actividadese-tab" data-bs-toggle="tab" href="#actividadese" role="tab" aria-controls="actividadese" aria-selected="true">Actividades Estratégicas</a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link" id="gestionarea-tab" data-bs-toggle="tab" href="#gestionarea" role="tab" aria-controls="gestionarea" aria-selected="false">Gestiones del Area</a>
+    <li class="nav-item" title="Gestiones del área">
+      <a class="nav-link" id="gestionarea-tab" data-bs-toggle="tab" href="#gestionarea" role="tab" aria-controls="gestionarea" aria-selected="false">Gestiones del área</a>
     </li>
     <li class="header">
       <button title="Agregar"
@@ -60,19 +62,19 @@
           <thead class="table-dark">
             <tr>
               <th class="column-nombre">Nombre</th>
-              <th>Fecha Inicial</th>
-              <th>Fecha Final</th>
-              <th>Duracion (Días)</th>
-              <th>Dias Restantes</th>
+              <th class="column-fecha">Fecha Inicial</th>
+              <th class="column-fecha">Fecha Final</th>
+              <th class="column-duracion">Duracion (Días)</th>
+              <th class="column-dias">Dias Restantes</th>
               <th>Avance</th>
-              <th>Responsable</th>
+              <th class="column-responsable">Responsable</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
             <ng-container *ngFor="let actividad of actividades">
               <tr>
-                <td>{{ actividad.nombre }}</td>
+                <td class="fila-nombre">{{ actividad.nombre }}</td>
                 <td>{{ actividad.fechaInicial }}</td>
                 <td>{{ actividad.fechaFinal }}</td>
                 <td>{{ actividad.duracion }}</td>
@@ -84,12 +86,12 @@
                 <td>{{ obtenerNombreUsuario(actividad.idUsuario).toLocaleUpperCase() }}</td>
                 <td >
                   <button title="Ver" class="btn btn-outline-primary me-1" 
-                  [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarActividad', actividad.idActividadEstrategica] } }]"
+                  [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]"
                     ><i class="bi bi-eye-fill"></i></button>
                     <button title="Modificar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificar" (click)="obtenerActividadEstrategica(actividad.idActividadEstrategica,actividad)">
                       <i class="bi bi-pen-fill"></i>
                     </button>
-                  <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarActividadesEstrategica(actividad.idActividadEstrategica)"><i class="bi bi-trash3-fill"></i></button>
+                  <button title="Eliminar" class="btn btn-outline-danger" (click)="eliminarActividadesEstrategica(actividad.idActividadEstrategica)"><i class="bi bi-trash3-fill"></i></button>
                 </td>
               </tr>
             </ng-container>
@@ -107,25 +109,32 @@
               <div class="card-body">
                 <div class="row justify-content-center">
                   <div class="col-md-2">
-                    F. Inicial: {{ gestion.fechaInicial }}
+                    <h6>Fecha Inicial</h6>
+                    {{ gestion.fechaInicial }}
+                  </div>
+                  <div class="col-md-2">
+                    <h6>Fecha Final</h6>
+                    {{ gestion.fechaFinal }}
                   </div>
                   <div class="col-md-1">
-                    F. Final: {{ gestion.fechaFinal }}
-                  </div>
-                  <div class="col-md-1">
-                    Duración: {{ gestion.duracion }}
+                    <h6>Duración</h6>
+                    {{ gestion.duracion }}    
                   </div>
                   <div class="col-md-1" [ngClass]="colorPorcentaje(gestion.avance)">
                     <span *ngIf="gestion.avance !== 100" [ngClass]="colorDias(gestion.diasRestantes)">
-                      Restantes: {{ gestion.diasRestantes }}
+                      <h6>Dias restantes</h6>
+                      {{ gestion.diasRestantes }}
+                      
                     </span>
                     <span *ngIf="gestion.avance === 100">Finalizado</span>
                   </div>
                   <div class="col-md-1" [ngClass]="colorPorcentaje(gestion.avance)">
-                    Avance: {{ gestion.avance }} %
+                    <h6>Avance</h6>
+                    {{ gestion.avance }} %
                   </div>
-                  <div class="col-md-1">
-                    Usuario: {{ obtenerNombreUsuario(gestion.idUsuario).toLocaleUpperCase() }}
+                  <div class="col-md-3">
+                    <h6>Usuario</h6>
+                    {{ obtenerNombreUsuario(gestion.idUsuario).toLocaleUpperCase() }}
                   </div>
                   <div class="col-md-1">
                     <button title="Modificar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarGestion" (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)">
@@ -142,10 +151,10 @@
                 <!-- Detalles de la gestión... -->
       
                 <!-- Iterar sobre las tareas relacionadas con la gestión actual -->
-                <table class="table table-hover">
+                <table class="table table-sm">
                   <thead class="table-active">
                     <tr>
-                      <th class="column-nombre">Nombre</th>
+                      <th class="column-nombreTarea">Nombre</th>
                       <th>
                         <div class="d-flex flex-column">
                           <span>Estado</span>
@@ -165,41 +174,40 @@
                           </div>
                         </div>
                       </th>
-                      <th>Observacion</th>
+                      <th class="column-observacion">Observacion</th>
                       <th>Responsable</th>
                       <th class="mb-3">Acciones </th>
-                      <th class="column-crear"><button title="Crear" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalCreartarea" (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)"
+                      <th class="column-crear"><button title="Crear" class="btn btn-success me-1" data-bs-toggle="modal" data-bs-target="#modalCreartarea" (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)"
                         ><i class="bi bi-plus-lg"></i></button></th>
                     </tr>
                   </thead>
                   <tbody>
                     <ng-container *ngFor="let tarea of tareas" >
                       <tr>
-                        <td>{{ tarea.nombre }}</td>
+                        <td >{{ tarea.nombre }}</td>
                         <td>
                           <div class="d-flex">
-                            <div class="col">
-                              <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'EN_BACKLOG')" class="estado-checkbox" [disabled]="!isEstado(tarea.estado, 'EN_BACKLOG')">
+                            <div class="col ">
+                              <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'EN_BACKLOG')" class="estado-checkbox form-check-input en-backlog" [disabled]="!isEstado(tarea.estado, 'EN_BACKLOG')">
                             </div>
                             <div class="col">
-                              <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'EN_PROCESO')" class="estado-checkbox" [disabled]="!isEstado(tarea.estado, 'EN_PROCESO')">
+                              <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'EN_PROCESO')" class="estado-checkbox form-check-input en-proceso" [disabled]="!isEstado(tarea.estado, 'EN_PROCESO')">
                             </div>
                             <div class="col">
-                              <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'TERMINADO')" class="estado-checkbox terminado" [disabled]="!isEstado(tarea.estado, 'TERMINADO')">
+                              <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'TERMINADO')" class="estado-checkbox form-check-input terminado" [disabled]="!isEstado(tarea.estado, 'TERMINADO')">
                             </div>
                             <div class="col">
-                              <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'IMPEDIMENTO')" class="estado-checkbox" [disabled]="!isEstado(tarea.estado, 'IMPEDIMENTO')">
+                              <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'IMPEDIMENTO')" class="estado-checkbox form-check-input impedimento" [disabled]="!isEstado(tarea.estado, 'IMPEDIMENTO')">
                             </div>
                           </div>
                         </td>
-                        
-                        
+
                         <td>{{ tarea.descripcion }}</td>
                         <td>{{ obtenerNombreUsuario(tarea.idUsuario).toLocaleUpperCase() }}</td>
                         <td>
                           <button title="Modificar" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarTarea" (click)="obtenerTarea(tarea.idTarea,tarea)"
                           ><i class="bi bi-pen-fill"></i></button>
-                          <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarTarea(tarea.idTarea)"><i class="bi bi-trash3-fill"></i></button>
+                          <button title="Eliminar" class="btn btn-outline-danger" (click)="eliminarTarea(tarea.idTarea)"><i class="bi bi-trash3-fill"></i></button>
                         </td>
                       </tr>
                     </ng-container>
@@ -214,29 +222,29 @@
   </div> 
    
   <div class="modal fade" id="modalModificar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Modificar Actividad estrategica</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Modificar actividad estratégica</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form [formGroup]="form" (ngSubmit)="modificarActividadEstrategica()">
+          <form [formGroup]="formEstrategica" (ngSubmit)="modificarActividadEstrategica()">
             <div class="mb-3">
               <label for="nombre" class="form-label">Nombre</label>
-              <textarea type="text" class="form-control" id="nombre" formControlName="nombre" [value]="nombreActividadEstrategica" style="min-width: 100%;"></textarea>
+              <textarea type="text" class="form-control" id="nombre" formControlName="nombre" [ngModel]="nombreActividadEstrategica" ></textarea>
             </div>
             <div class="mb-3">
               <label for="fechaInicial" class="form-label">Fecha Inicial</label>
-              <input type="date" class="form-control" id="fechaInicial" formControlName="fechaInicial">
+              <input type="date" class="form-control" id="fechaInicial" formControlName="fechaInicial" [ngModel]="fechaInicialEstrategica">
             </div>  
             <div class="mb-3">
               <label for="fechaFinal" class="form-label">Fecha Final</label>
-              <input type="date" class="form-control" id="fechaFinal" formControlName="fechaFinal">
+              <input type="date" class="form-control" id="fechaFinal" formControlName="fechaFinal" [ngModel]="fechaFinalEstrategica">
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-              <button type="submit" class="btn btn-primary">Guardar</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-success">Guardar</button>
             </div>
           </form>
         </div>
@@ -253,31 +261,30 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form [formGroup]="form" (ngSubmit)="modificarActividadGestion()">
+          <form [formGroup]="formGestion" (ngSubmit)="modificarActividadGestion()">
             <div class="mb-3">
               <label for="nombre" class="form-label">Nombre</label>
-              <input type="text" class="form-control" id="nombre" formControlName="nombre" [value]="nombreActividadGestion" style="min-width: 100%;">
+              <input type="text" class="form-control" id="nombre" formControlName="nombre" [ngModel]="nombreActividadGestion" style="min-width: 100%;">
             </div>
             <div class="mb-3">
               <label for="fechaInicial" class="form-label">Fecha Inicial</label>
-              <input type="date" class="form-control" id="fechaInicial" formControlName="fechaInicial">
+              <input type="date" class="form-control" id="fechaInicial" formControlName="fechaInicial" [ngModel]="fechaInicialGestion">
             </div>
             <div class="mb-3">
               <label for="fechaFinal" class="form-label">Fecha Final</label>
-              <input type="date" class="form-control" id="fechaFinal" formControlName="fechaFinal">
+              <input type="date" class="form-control" id="fechaFinal" formControlName="fechaFinal" [ngModel]="fechaFinalGestion">
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-              <button type="submit" class="btn btn-primary">Guardar</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-success">Guardar</button>
             </div>
           </form>
         </div>
       </div>
     </div>
   </div>
-  <div class="modal fade" id="modalModificarTarea" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
-  data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+  <div class="modal fade" id="modalModificarTarea" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered  modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Modificar Tarea</h5>
@@ -288,7 +295,7 @@
             <div class="mb-3 custom-input">
               <label for="nombre" class="form-label">{{ nombreTarea }}</label>
             </div>
-            <div class="mb-3">
+            <div class="mb-3" [ngModel]="estadoTarea">
               <h6><i class="bi bi-info" data-toggle="popover" data-placement="top" data-content="Texto con información"></i> Estado: </h6>
               <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="estado" id="en-backlog" value="EN_BACKLOG" formControlName="estado" />
@@ -308,8 +315,8 @@
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-              <button type="submit" class="btn btn-primary">Guardar</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-success">Guardar</button>
             </div>
           </form>
         </div>
@@ -317,7 +324,7 @@
     </div>
   </div>
   <div class="modal fade" id="modalCreartarea" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Crear Tarea</h5>
@@ -340,8 +347,8 @@
               </select>
           </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-              <button type="submit" class="btn btn-primary">Guardar</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-success">Guardar</button>
             </div>
           </form>
         </div>

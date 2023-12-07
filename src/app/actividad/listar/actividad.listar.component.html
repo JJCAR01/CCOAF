@@ -12,15 +12,21 @@
 </head>
 <body>
   <div  class="row-with-button mb-1">  
-    <div>
-      <h1 class="mb-1"> {{ actividadNombre }} </h1>  
+    <div> 
       <div class="row">
         <div class="responsable-info">
-          <h2>Porcentaje actual:</h2>
-          <p> {{ porcentajeEstrategica | number : '1.2-2' }} %</p>
+          <h1 ><img src="/assets/Programas.png" width="40mp" alt="logo" id="logo" title="{{ patNombre }}"> {{ patNombre }} </h1>
         </div>
         <div class="responsable-info">
-          <h2>Responsable:</h2>
+          <img src="/assets/tareas de proceso.png" width="20mp" alt="logo" id="logo" title="{{ actividadNombre }}"><h3>Actividad estratégica:</h3>
+          <p> {{ actividadNombre }} </p> 
+        </div>
+        <div class="responsable-info">
+          <h3 title="Porcentaje Actual" ><i class="bi bi-percent me-1 tamaño-iconos color-iconoPorcentaje"></i>Porcentaje actual:</h3>
+          <p [ngClass]="colorPorcentaje(porcentajeEstrategica)">{{ porcentajeEstrategica | number : '1.2-2' }} %</p>                                                               
+        </div>
+        <div class="responsable-info">
+          <h3 title="Responsble"><i class="bi bi-person-circle me-1 tamaño-iconos color-iconoResponsable"></i>Responsable:</h3>
           <p> {{ obtenerNombreUsuario(usuarioEstrategica).toLocaleUpperCase() }}</p>
         </div>
       </div>
@@ -29,7 +35,7 @@
   <ul class="nav nav-tabs header" id="myTab" role="tablist">
     <li class="header ">
       <button title="Atrás"
-        type="button" class="btn btn-outline-dark me-1" 
+        type="button" class="btn btn-outline-dark" 
         [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarTipoGE', patEstrategica] } }]">
         <i class="bi bi-arrow-return-left"></i>
       </button>
@@ -68,11 +74,11 @@
             </tr>
           </thead>
           <tbody>
-            <ng-container *ngFor="let proyecto of proyectos | buscar: busqueda">
+            <ng-container *ngFor="let proyecto of proyectos">
               <tr>
-                <td>{{ proyecto.nombre }}</td>
+                <td class="fila-nombre">{{ proyecto.nombre }}</td>
                 <td>{{ proyecto.presupuesto | currency : '$ ' : 'symbol' : '1.0-0' }}</td>
-                <td>{{ proyecto.modalidad }}</td>
+                <td>{{ verModalidad(proyecto.modalidad) }}</td>
                 <td>{{ proyecto.valorEjecutado | currency : '$ ' : 'symbol' : '1.0-0' }}</td>
                 <td>{{ proyecto.fechaInicial }}</td>
                 <td>{{ proyecto.fechaFinal }}</td>
@@ -82,7 +88,7 @@
                 <td>{{ proyecto.totalSprint }}</td>
                 <td>
                   <button title="Ver" class="btn btn-outline-primary me-1" 
-                  [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarSprint', proyecto.idProyecto] } }]"
+                  [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]"
                     ><i class="bi bi-eye-fill"></i></button>
                     <button title="Modificar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarProyecto" (click)="obtenerProyecto(proyecto.idProyecto,proyecto)">
                       <i class="bi bi-pen-fill"></i>
@@ -104,32 +110,38 @@
               <h5 class="mb-0" >{{ gestion.nombre }}</h5>
               <div class="card-body">
                 <div class="row justify-content-center">
-                  <div class="col-md-1">
-                    F. Inicial: {{ gestion.fechaInicial }}
-                  </div>
-                  <div class="col-md-1">
-                    F. Final: {{ gestion.fechaFinal }}
+                  <div class="col-md-2">
+                    <h6>Fecha Inicial</h6>
+                    {{ gestion.fechaInicial }}
                   </div>
                   <div class="col-md-2">
-                    Duración: {{ gestion.duracion }}
+                    <h6>Fecha Final</h6>
+                    {{ gestion.fechaFinal }}
                   </div>
-                  <div class="col-md-2" [ngClass]="colorPorcentaje(gestion.avance)">
+                  <div class="col-md-1">
+                    <h6>Duración</h6> 
+                    {{ gestion.duracion }}
+                  </div>
+                  <div class="col-md-1" [ngClass]="colorPorcentaje(gestion.avance)">
                     <span *ngIf="gestion.avance !== 100" [ngClass]="colorDias(gestion.diasRestantes)">
-                      Restantes: {{ gestion.diasRestantes }}
+                      <h6>Días restantes</h6> 
+                      {{ gestion.diasRestantes }}
                     </span>
                     <span *ngIf="gestion.avance === 100">Finalizado</span>
                   </div>
-                  <div class="col-md-2" [ngClass]="colorPorcentaje(gestion.avance)">
-                    Avance: {{ gestion.avance }} %
+                  <div class="col-md-1" [ngClass]="colorPorcentaje(gestion.avance)">
+                    <h6>Avance</h6>
+                    {{ gestion.avance }} %
                   </div>
-                  <div class="col-md-2">
-                    Usuario: {{ obtenerNombreUsuario(gestion.idUsuario).toLocaleUpperCase() }}
+                  <div class="col-md-3">
+                    <h6>Usuario</h6>
+                    {{ obtenerNombreUsuario(gestion.idUsuario).toLocaleUpperCase() }}
                   </div>
                   <div class="col-md-1">
                     <button title="Modificar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarGestion" (click)="obtenerActividadGestionActividadEstrategica(gestion.idActividadGestionActividadEstrategica,gestion)">
                       <i class="bi bi-pen-fill"></i>
                     </button>
-                  <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarGestion(gestion.idActividadGestionActividadEstrategica)"><i class="bi bi-trash3-fill"></i></button>
+                  <button title="Eliminar" class="btn btn-outline-danger" (click)="eliminarGestion(gestion.idActividadGestionActividadEstrategica)"><i class="bi bi-trash3-fill"></i></button>
                   </div>
               </div>
             </div>
@@ -139,7 +151,7 @@
                 <!-- Detalles de la gestión... -->
       
                 <!-- Iterar sobre las tareas relacionadas con la gestión actual -->
-                <table class="table table-hover">
+                <table class="table table-sm">
                   <thead class="table-active">
                     <tr>
                       <th class="column-nombre">Nombre</th>
@@ -165,7 +177,7 @@
                       <th>Observacion</th>
                       <th>Responsable</th>
                       <th class="mb-3">Acciones </th>
-                      <th class="column-crear"><button title="Crear" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalCreartarea" (click)="obtenerActividadGestionActividadEstrategica(gestion.idActividadGestionActividadEstrategica,gestion)"
+                      <th class="column-crear"><button title="Crear" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalCreartarea" (click)="obtenerActividadGestionActividadEstrategica(gestion.idActividadGestionActividadEstrategica,gestion)"
                         ><i class="bi bi-plus-lg"></i></button></th>
                     </tr>
                   </thead>
@@ -175,17 +187,17 @@
                         <td>{{ tarea.nombre }}</td>
                         <td>
                           <div class="d-flex">
-                            <div class="col">
-                              <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'EN_BACKLOG')" class="estado-checkbox" [disabled]="!isEstado(tarea.estado, 'EN_BACKLOG')">
+                            <div class="col ">
+                              <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'EN_BACKLOG')" class="estado-checkbox form-check-input en-backlog" [disabled]="!isEstado(tarea.estado, 'EN_BACKLOG')">
                             </div>
                             <div class="col">
-                              <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'EN_PROCESO')" class="estado-checkbox" [disabled]="!isEstado(tarea.estado, 'EN_PROCESO')">
+                              <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'EN_PROCESO')" class="estado-checkbox form-check-input en-proceso" [disabled]="!isEstado(tarea.estado, 'EN_PROCESO')">
                             </div>
                             <div class="col">
-                              <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'TERMINADO')" class="estado-checkbox terminado" [disabled]="!isEstado(tarea.estado, 'TERMINADO')">
+                              <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'TERMINADO')" class="estado-checkbox form-check-input terminado" [disabled]="!isEstado(tarea.estado, 'TERMINADO')">
                             </div>
                             <div class="col">
-                              <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'IMPEDIMENTO')" class="estado-checkbox" [disabled]="!isEstado(tarea.estado, 'IMPEDIMENTO')">
+                              <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'IMPEDIMENTO')" class="estado-checkbox form-check-input impedimento" [disabled]="!isEstado(tarea.estado, 'IMPEDIMENTO')">
                             </div>
                           </div>
                         </td>
@@ -196,7 +208,7 @@
                         <td>
                           <button title="Modificar" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarTarea" (click)="obtenerTarea(tarea.idTarea,tarea)"
                           ><i class="bi bi-pen-fill"></i></button>
-                          <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarTarea(tarea.idTarea)"><i class="bi bi-trash3-fill"></i></button>
+                          <button title="Eliminar" class="btn btn-outline-danger" (click)="eliminarTarea(tarea.idTarea)"><i class="bi bi-trash3-fill"></i></button>
                         </td>
                       </tr>
                     </ng-container>
@@ -211,7 +223,7 @@
   </div>  
   
   <div class="modal fade" id="modalModificarProyecto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Modificar Proyecto</h5>
@@ -221,23 +233,36 @@
           <form [formGroup]="formProyecto" (ngSubmit)="modificarProyecto()">
             <div class="mb-3">
               <label class="form-label" for="nombre">Nombre</label>
-              <textarea type="text" id="nombre" class="form-control form-control-lg" [value]="nombreProyecto" formControlName="nombre" style="min-width: 100%;"></textarea>
+              <textarea type="text" id="nombre" class="form-control form-control-lg" [value]="nombreProyecto" formControlName="nombre"></textarea>
           </div>
             <div class="mb-3">
               <label for="presupuesto" class="form-label">Presupuesto</label>
-              <input type="text" class="form-control" id="presupuesto" formControlName="presupuesto">
+              <input type="number" class="form-control" id="presupuesto" formControlName="presupuesto" [ngModel]="presupuestoProyecto">
             </div>
             <div class="mb-3">
               <label for="fechaInicial" class="form-label">Fecha Inicial</label>
-              <input type="date" class="form-control" id="fechaInicial" formControlName="fechaInicial">
+              <input type="date" class="form-control" id="fechaInicial" formControlName="fechaInicial" [ngModel]="fechaInicialProyecto">
             </div>
             <div class="mb-3">
               <label for="fechaFinal" class="form-label">Fecha Final</label>
-              <input type="date" class="form-control" id="fechaFinal" formControlName="fechaFinal" >
+              <input type="date" class="form-control" id="fechaFinal" formControlName="fechaFinal" [ngModel]="fechaFinalProyecto">
+            </div>
+            <div class="mb-3">
+              <label for="modalidad" class="form-label">Modalidad</label>
+              <select class="form-select" id="modalidad" formControlName="modalidad" [ngModel]="modalidadProyecto">
+                <option *ngFor="let modalidad of modalidadEnumList" [value]="convertirModalidad(modalidad)">
+                  {{ modalidad }}</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="planeacionSprint" class="form-label">Planeación</label>
+              <select class="form-select" id="planeacionSprint" formControlName="planeacionSprint" [value]="planeacionProyecto">
+                <option *ngFor="let planeacion of planeacionEnumList" [value]="planeacion" >{{ planeacion }}</option>
+              </select>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-              <button type="submit" class="btn btn-primary">Guardar</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-success">Guardar</button>
             </div>
           </form>
         </div>
@@ -259,15 +284,15 @@
             </div>
               <div class="mb-3">
                 <label for="fechaInicial" class="form-label">Fecha Inicial</label>
-                <input type="date" class="form-control" id="fechaInicial" formControlName="fechaInicial">
+                <input type="date" class="form-control" id="fechaInicial" formControlName="fechaInicial" [ngModel]="fechaInicialGestion">
               </div>
               <div class="mb-3">
                 <label for="fechaFinal" class="form-label">Fecha Final</label>
-                <input type="date" class="form-control" id="fechaFinal" formControlName="fechaFinal">
+                <input type="date" class="form-control" id="fechaFinal" formControlName="fechaFinal" [ngModel]="fechaFinalGestion">
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-success">Guardar</button>
               </div>
             </form>
           </div>
@@ -287,7 +312,7 @@
               <div class="mb-3 custom-input">
                 <label for="nombre" class="form-label">{{ nombreTarea }}</label>
               </div>
-              <div class="mb-3">
+              <div class="mb-3" [ngModel]="estadoTarea">
                 <h6><i class="bi bi-info" data-toggle="popover" data-placement="top" data-content="Texto con información"></i> Estado: </h6>
                 <div class="form-check form-check-inline">
                   <input class="form-check-input" type="radio" name="estado" id="en-backlog" value="EN_BACKLOG" formControlName="estado" />
@@ -307,8 +332,8 @@
                 </div>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-success">Guardar</button>
               </div>
             </form>
           </div>
@@ -339,8 +364,8 @@
                 </select>
             </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-success">Guardar</button>
               </div>
             </form>
           </div>

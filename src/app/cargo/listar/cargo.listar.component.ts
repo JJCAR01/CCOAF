@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { CargoService } from '../services/cargo.service';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import Swal from 'sweetalert2';
+import { AreaListarComponent } from 'src/app/area/listar/area.listar.component';
+import { AreaService } from 'src/app/area/services/area.service';
 
 @Component({
   selector: 'app-root:not(c)',
@@ -11,12 +13,25 @@ import Swal from 'sweetalert2';
 export class CargoListarComponent {
   title = 'listarCargo';
     cargos: any[] = [];
+    areas: any[] = [];
     busqueda: any;
   
-    constructor(private cargoService: CargoService, private auth:AuthService) { }  
+    constructor(private cargoService: CargoService, private auth:AuthService,
+      private areaService:AreaService) { }  
 
     ngOnInit() {
       this.cargarCargos();
+      this.cargarAreas()
+    }
+    cargarAreas() {
+      this.areaService.listar(this.auth.obtenerHeader()).subscribe(
+        (data: any) => {
+          this.areas = data;
+      },
+        (error) => {
+          console.log(error);
+        }
+      );
     }
 
     cargarCargos() {
@@ -54,5 +69,10 @@ export class CargoListarComponent {
         );
       }
     });
+  }
+
+  obtenerNombreArea(idArea: number) {
+    const area = this.areas.find((u) => u.idArea === idArea);
+    return area ? area.nombre : '';
   }
 }

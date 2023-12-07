@@ -3,6 +3,7 @@ import { AreaService } from '../services/area.service';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import { HttpHeaders } from '@angular/common/http';
 import Swal from 'sweetalert2';
+import { EDireccion } from '../edireccion';
 
 @Component({
   selector: 'app-root:not(p)',
@@ -11,6 +12,7 @@ import Swal from 'sweetalert2';
 })
 export class AreaListarComponent implements OnInit {
   title = 'listarArea';
+  direccionEnumList: string[] = Object.values(EDireccion);
   areas: any[] = [];
   busqueda: any;
 
@@ -49,6 +51,7 @@ export class AreaListarComponent implements OnInit {
       confirmButtonColor: "#3085d6",
       showCancelButton: true,
       cancelButtonText: "Cancelar",
+      reverseButtons:true
     })
     .then((confirmacion) => {
       if (confirmacion.isConfirmed) {
@@ -65,5 +68,14 @@ export class AreaListarComponent implements OnInit {
       );
     }
   });
+  }
+
+  // Función para convertir entre valores mostrados y valores reales 
+  convertirDireccion(valor: string): string {
+    const valorMinuscSinTildes = valor.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    return valorMinuscSinTildes;
+  }
+  obtenerProcesoMinuscula(valor: EDireccion): string {
+    return valor.replace(/_/g, ' ');
   }
 }

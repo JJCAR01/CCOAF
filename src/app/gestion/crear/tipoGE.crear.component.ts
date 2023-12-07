@@ -71,7 +71,7 @@ export class TipoGECrearComponent implements OnInit {
         if (this.tipoActividad === 'estrategica') {
           this.tipoService.crearActividadEstrategica(actividad,this.auth.obtenerHeader()).subscribe(
             (response) => {
-              Swal.fire("Creado!!!", 'El actividad estratégica con el nombre ' + actividad.nombre + ', se ha creado!!', "success");
+              Swal.fire("Creado!!!", 'La actividad estratégica se ha creado!!', "success");
               this.form.reset();
             },
             (error) => {
@@ -81,7 +81,7 @@ export class TipoGECrearComponent implements OnInit {
         } else if (this.tipoActividad === 'gestion') {
           this.tipoService.crearGestion(actividad,this.auth.obtenerHeader()).subscribe(
             (response) => {
-              Swal.fire("Creado!!!", 'La gestión del área con el nombre ' + this.form.value.nombre + ', se ha creado!!', "success");
+              Swal.fire("Creado!!!", 'La gestión del área se ha creado!!', "success");
               this.form.reset();
             },
             (error) => {

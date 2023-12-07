@@ -7,11 +7,6 @@
     <link rel="stylesheet" href="pat.listar.component.scss">
 </head>
 <body>
-  <div class="row-with-button">
-    <div>
-      <h1 class="mb-2">Plan Anual de trabajo</h1>
-    </div>
-  </div>
   <div class="ng-container">
     <div class="plan-cuadro">
       <p>{{ cantidadPats}}</p>
@@ -71,12 +66,12 @@
     <table class="table table-hover">
       <thead class="table-dark">
         <tr>
-          <th>Programa</th> 
-          <th>Año</th>
-          <th>Proceso</th>
+          <th class="column-programa">Programa</th> 
+          <th class="column-fecha">Año</th>
+          <th class="column-proceso">Proceso</th>
           <th>Porcentaje avance</th>
-          <th>Responsable</th>
-          <th>Acciones</th> 
+          <th class="column-usuario">Responsable</th>
+          <th class="column-acciones">Acciones</th> 
         </tr>
       </thead>
       <tbody>
@@ -84,7 +79,7 @@
           <tr>
             <td>{{ pat.nombre }}</td>
             <td>{{ pat.fechaAnual }}</td>
-            <td>{{ pat.proceso | formatEnum }}</td>
+            <td>{{ obtenerProcesoMinuscula(pat.proceso) }}</td>
             <td [ngClass]="colorPorcentaje(pat.porcentaje)">{{ pat.porcentaje | number : '1.2-2' }} %</td>
             <td >{{ obtenerNombreUsuario(pat.idUsuario).toUpperCase() }} </td>
             
@@ -92,7 +87,7 @@
               <button title="Ver" class="btn btn-outline-primary me-1" 
               [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarTipoGE', pat.idPat] } }]"
                 ><i class="bi bi-eye-fill"></i></button>
-                <button title="Editar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalAdicionarActividad" (click)="setSelectedPat(pat.idPat,pat)">
+                <button title="Editar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarPat" (click)="setSelectedPat(pat.idPat,pat)">
                   <i class="bi bi-pen-fill"></i>
                 </button>
                   
@@ -104,7 +99,7 @@
     </table>
   </main>
   
-  <div class="modal fade" id="modalAdicionarActividad" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="modalModificarPat" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -119,17 +114,19 @@
             </div>
             <div class="mb-3">
               <label for="fechaAnual" class="form-label">Año</label>
-              <input type="text" class="form-control" id="fechaAnual" formControlName="fechaAnual">
+              <input type="text" class="form-control" id="fechaAnual" formControlName="fechaAnual" [value]="fechaAnualSeleccionada">
             </div>
             <div class="mb-3">
               <label for="proceso" class="form-label">Proceso</label>
-              <select class="form-select" id="proceso" formControlName="proceso">
-                <option *ngFor="let proceso of procesosEnumList" [value]="proceso">{{ proceso }}</option>
+              <select class="form-select" id="proceso" formControlName="proceso" [(value)]="procesoSeleccionado">
+                <option *ngFor="let proceso of procesosEnumList" [value]="convertirProceso(proceso)">
+                  {{ proceso }}
+                </option>
               </select>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-              <button type="submit" class="btn btn-primary">Guardar</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-success">Guardar</button>
             </div>
           </form>
         </div>

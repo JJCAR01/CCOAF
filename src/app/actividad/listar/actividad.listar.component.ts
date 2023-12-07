@@ -9,6 +9,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Proyecto } from '../crear/proyecto';
 import { EEstado } from 'src/app/gestion/listar/EEstado';
 import { TareaService } from 'src/app/tarea/services/tarea.service';
+import { EModalidad } from './emodalidad';
+import { EPlaneacion } from './eplaneacion';
 
 @Component({
   selector: 'app-listar',
@@ -17,12 +19,15 @@ import { TareaService } from 'src/app/tarea/services/tarea.service';
 })
 export class ActividadListarComponent implements OnInit{
   title = 'listarActividad';
+  modalidadEnumList: string[] = [];
+  planeacionEnumList = Object.values(EPlaneacion);
   estadoEnumList: string[] = [];
   gestiones: any[] = [];
   proyectos: any[] = [];
   actividades: any[] = [];
   usuarios:any[] =[];
   tareas:any[] =[];
+  patNombre:any;
   actividadNombre:any;
   usuarioProyecto:any;
   usuarioGestion:any;
@@ -32,10 +37,19 @@ export class ActividadListarComponent implements OnInit{
   patEstrategica:any;
   idActividadGestionSeleccionado:any;
   nombreActividadGestion:any;
+  fechaInicialGestion:any;
+  fechaFinalGestion:any;
   idProyectoSeleccionado:any;
   nombreProyecto:any;
+  presupuestoProyecto:any;
+  fechaInicialProyecto:any;
+  fechaFinalProyecto:any;
+  modalidadProyecto:any;
+  planeacionProyecto:any;
   idTareaSeleccionado:any;
   nombreTarea:any;
+  estadoTarea:any;
+  idTareaTipo:any;
   form:FormGroup;
   formProyecto:FormGroup;
   formTarea:FormGroup;
@@ -61,6 +75,8 @@ export class ActividadListarComponent implements OnInit{
       presupuesto: ['', Validators.required],
       fechaInicial: ['', Validators.required],
       fechaFinal: ['', Validators.required],
+      modalidad: ['', Validators.required],
+      planeacionSprint:['', Validators.required],
     });
     this.formTarea = this.formBuilder.group({
       estado: ['', Validators.required],
@@ -72,50 +88,51 @@ export class ActividadListarComponent implements OnInit{
     });
 }
 
-  ngOnInit() {
-    // Obtén el valor de idPat de la URL
-    this.route.params.subscribe(params => {
-      const idActividadEstrategica = params['idActividadEstrategica'];
-      this.tipoService.listarActividadEstrategicaPorId(idActividadEstrategica,this.auth.obtenerHeader()).subscribe(
-        (data: any) => {
-          this.actividadNombre = data.nombre;
-          this.idActividadEstrategica = data.idActividadEstrategica
-          this.porcentajeEstrategica = data.avance
-          this.usuarioEstrategica = data.idUsuario
-          this.patEstrategica = data.idPat
-        },
-      );
+ngOnInit() {
+  this.modalidadEnumList= Object.values(EModalidad);
+  this.route.params.subscribe(params => {
+    this.patNombre = params['patNombre'];
+    const idActividadEstrategica = params['idActividadEstrategica'];
 
-      this.cargarGestiones(idActividadEstrategica);
-      this.cargarProyectos(idActividadEstrategica);
-    });
-    this.cargarUsuario();
-    this.crearTarea();
-    this.estadoEnumList = Object.values(EEstado);
-  }
+    this.tipoService.listarActividadEstrategicaPorId(idActividadEstrategica, this.auth.obtenerHeader()).subscribe(
+      (data: any) => {
+        this.actividadNombre = data.nombre;
+        this.idActividadEstrategica = data.idActividadEstrategica;
+        this.porcentajeEstrategica = data.avance;
+        this.usuarioEstrategica = data.idUsuario;
+        this.patEstrategica = data.idPat;
+
+        this.cargarGestiones(idActividadEstrategica);
+        this.cargarProyectos(idActividadEstrategica);
+      },
+    );
+  });
+
+  this.cargarUsuario();
+  this.crearTarea();
+  this.estadoEnumList = Object.values(EEstado);
+}
   cargarUsuario() {
     this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
         this.usuarios = data;
     },
       (error) => {
-        console.log(error);
+        Swal.fire('Error', error.error.mensajeTecnico,'error');
       }
     );
   }
 
   cargarGestiones(idActividadEstrategica: number) {
-    // Utiliza idPat en tu solicitud para cargar las gestiones relacionadas
     this.actividadService
       .listarActividadGestionActividadEstrategicaPorIdActividadEstrategica(idActividadEstrategica, this.auth.obtenerHeader()) // Debes tener un método en tu servicio para listar gestiones por idPat
       .toPromise()
       .then(
         (data: any) => {
           this.gestiones = data;
-          console.log(data)
         },
         (error) => {
-          Swal.fire(error.error.mensajeTecnico,'', 'error');
+          Swal.fire('Error', error.error.mensajeTecnico,'error');
         }
       );
   }
@@ -130,7 +147,7 @@ export class ActividadListarComponent implements OnInit{
           this.proyectos = data;
         },
         (error) => {
-          Swal.fire(error.error.mensajeTecnico,'', 'error');
+          Swal.fire('Error',error.error.mensajeTecnico,'error');
         }
       );
   }
@@ -142,18 +159,23 @@ export class ActividadListarComponent implements OnInit{
         title: "¿Estás seguro?",
         text: "Una vez eliminado, no podrás recuperar este elemento.",
         icon: "question",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: "#3085d6",
         showCancelButton: true,
         cancelButtonText: "Cancelar",
-        
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: '#0E823F',
+        reverseButtons: true,     
       })
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
         this.actividadService.eliminarActividadGestionActividadEstrategica(idActividadGestionActividadEstrategica, this.auth.obtenerHeader()).subscribe(
           (response) => {
-            Swal.fire("Eliminado Satisfactoriamente", "La gestión del área " + gestionAEliminar.nombre + " se ha eliminado.", "success").then(() => {
-              window.location.reload();
+            Swal.fire({
+              title:"Eliminado!!!", 
+              text:"La gestión del área se ha eliminado.",
+              icon: "success",
+              confirmButtonColor: '#0E823F',
+            }).then(() => {
+              this.cargarGestiones(this.idActividadEstrategica)
             });
           },
           (error) => {
@@ -170,19 +192,24 @@ export class ActividadListarComponent implements OnInit{
         title: "¿Estás seguro?",
         text: "Una vez eliminado, no podrás recuperar este elemento.",
         icon: "question",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: "#3085d6",
         showCancelButton: true,
         cancelButtonText: "Cancelar",
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: '#0E823F',
+        reverseButtons: true,  
       })
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
         this.actividadService.eliminarProyecto(idProyecto, this.auth.obtenerHeader()).subscribe(
           (response) => {
-            Swal.fire("Eliminado Satisfactoriamente", "El proyecto con el nombre " + proyectoAEliminar.nombre + " se ha eliminado.", "success").then(() => {
-              window.location.reload();
+            Swal.fire({
+              title:"Eliminado!!!",
+              text:"El proyecto se ha eliminado.",
+              icon:"success",
+              reverseButtons: true,  
+            }).then(() => {
+              this.cargarProyectos(this.idActividadEstrategica)
             });
-            console.log(response);
           },
           (error) => {
             Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
@@ -207,31 +234,46 @@ export class ActividadListarComponent implements OnInit{
         idUsuario:idUsuario,
         idActividadEstrategica:idActividadEstrategica
       };
-      
-      this.actividadService
-        .modificarActividadGestionActividadEstrategica(actividadGestion, this.idActividadGestionSeleccionado, this.auth.obtenerHeader())
-        .subscribe(
-          (response) => {
-            Swal.fire({
-              title: "Modificado Satisfactoriamente",
-              text: "La gestión del área se ha modificado",
-              icon: "success",
-            }).then((value) => {
-              location.reload();
-            });
-          },
+
+      Swal.fire({
+        title: "¿Estás seguro de modificar?",
+        icon:"question",
+        text: "Una vez modificado no podrás revertir los cambios",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: '#0E823F',
+        reverseButtons: true, 
+      }).then((confirmacion) => {
+        if (confirmacion.isConfirmed) {
+          this.actividadService.modificarActividadGestionActividadEstrategica(actividadGestion, this.idActividadGestionSeleccionado, this.auth.obtenerHeader())
+            .subscribe(
+              (response) => {
+              Swal.fire({
+                title: "Modificado!!!",
+                text: "La gestión del área se ha modificado",
+                icon: "success",
+                confirmButtonColor: '#0E823F',
+              }).then((value) => {
+                this.cargarGestiones(this.idActividadEstrategica)
+              });
+              },
           (error) => {
-            Swal.fire(error.error.mensajeTecnico, '',"warning");
+            Swal.fire('Error!!!',error.error.mensajeTecnico, 'error');
           }
         );
+        }
+      })
     }
   }
   modificarProyecto() {
-    if (this.formProyecto.valid && this.idProyectoSeleccionado) {
+    if (this.formProyecto.valid) {
       const nombre = this.formProyecto.get('nombre')?.value;
       const presupuesto = this.formProyecto.get('presupuesto')?.value;
       const fechaInicial = this.formProyecto.get('fechaInicial')?.value;
       const fechaFinal = this.formProyecto.get('fechaFinal')?.value;
+      const modalidad = this.formProyecto.get('modalidad')?.value;
+      const planeacionSprint = this.formProyecto.get('planeacionSprint')?.value;
       const idActividadEstrategica = this.idActividadEstrategica;
       const idUsuario = this.usuarioProyecto
 
@@ -240,26 +282,42 @@ export class ActividadListarComponent implements OnInit{
         presupuesto:presupuesto,
         fechaInicial: fechaInicial,
         fechaFinal: fechaFinal,
+        modalidad:modalidad,
+        planeacionSprint: planeacionSprint,
         idUsuario : idUsuario,
         idActividadEstrategica : idActividadEstrategica
       };
 
-      this.actividadService
-        .modificarProyecto(proyecto, this.idProyectoSeleccionado, this.auth.obtenerHeader())
-        .subscribe(
-          (response) => {
-            Swal.fire({
-              title: "Modificado Satisfactoriamente",
-              text: "La actividad estrategica se ha modificado",
-              icon: "success",
-            }).then((value) => {
-              location.reload();
-            });
-          },
-          (error) => {
-            Swal.fire(error.error.mensajeTecnico, "warning");
-          }
-        );
+      Swal.fire({
+        title: "¿Estás seguro de modificar?",
+        icon:"question",
+        text: "Una vez modificado no podrás revertir los cambios",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: '#0E823F',
+        reverseButtons: true, 
+      }).then((confirmacion) => {
+        if (confirmacion.isConfirmed) {
+        this.actividadService
+          .modificarProyecto(proyecto, this.idProyectoSeleccionado, this.auth.obtenerHeader())
+          .subscribe(
+            (response) => {
+              Swal.fire({
+                title: "Modificado!!!",
+                text: "El proyecto se ha modificado",
+                icon: "success",
+                confirmButtonColor: '#0E823F',
+              }).then((value) => {
+                this.cargarProyectos(this.idActividadEstrategica)
+              });
+            },
+            (error) => {
+              Swal.fire('Error', error.error.mensajeHumano, 'error');
+            }
+          );
+        }
+      })
     }
   }
   cargarTareas(idASE:any, tipoASE:any) {
@@ -279,8 +337,7 @@ export class ActividadListarComponent implements OnInit{
   } 
   crearTarea() {
 
-    if (this.formCrearTarea.valid) {
-      
+    if (this.formCrearTarea.valid) { 
       const nombre = this.formCrearTarea.get('nombre')?.value;
       const descripcion = this.formCrearTarea.get('descripcion')?.value;
       const idUsuario = this.formCrearTarea.get('idUsuario')?.value;
@@ -293,15 +350,18 @@ export class ActividadListarComponent implements OnInit{
         idASE: this.idActividadGestionSeleccionado,
         idUsuario: idUsuario,
       };
-      
       this.tareaService
         .crearTarea(tarea,this.auth.obtenerHeader())
         .subscribe(
           (response) => {
             Swal.fire({
-              title: "Modificado Satisfactoriamente",
-              text: "La gestión del área se ha modificado",
+              title: "Creado!!!",
+              text: "Se ha creado la tarea.",
               icon: "success",
+              confirmButtonColor: '#0E823F',
+            }).then(()=>{
+              this.cargarTareas(this.idActividadGestionSeleccionado,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')
+              this.formCrearTarea.reset()
             });
           },
           (error) => {
@@ -316,42 +376,61 @@ export class ActividadListarComponent implements OnInit{
       const tareaModificar = {
         estado: estado,
       };
-      this.tareaService
-        .modificarTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader())
-        .subscribe(
-          (response) => {
-            Swal.fire({
-              title: "Modificado!!!",
-              text: "La gestión del área se ha modificado",
-              icon: "success",
-            });
-          },
-          (error) => {
-            Swal.fire('Error',error.error.mensajeHumano, "error");
-          }
-        );
+      Swal.fire({
+        title: "Modificado!!!",
+        text: "La gestión del área se ha modificado",
+        icon: "question",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: '#0E823F',
+        reverseButtons: true, 
+      })
+      .then((confirmacion) => {
+        if (confirmacion.isConfirmed) {
+          this.tareaService.modificarTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
+              (response) => {
+                Swal.fire({
+                  icon : 'success',
+                  title : 'Modificado!!!',
+                  text : 'El ha modificado la tarea.',
+                  confirmButtonColor: '#0E823F',
+                  }).then(() => {
+                    this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')
+                    this.formTarea.reset()
+                });
+              },
+              (error) => {
+                Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
+              }
+            );
+        }
+      });
     }
   }
   eliminarTarea(idTarea: number) {
-    const tareaAEliminar = this.tareas.find(t => t.idTarea === idTarea);
-
     Swal.fire({
         title: "¿Estás seguro?",
         text: "Una vez eliminado, no podrás recuperar este elemento.",
-        icon: "warning",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: "#3085d6",
+        icon: "question",
         showCancelButton: true,
         cancelButtonText: "Cancelar",
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: '#0E823F',
+        reverseButtons: true, 
       })
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
         this.tareaService.eliminarTarea(idTarea, this.auth.obtenerHeader()).subscribe(
           (response) => {
-            Swal.fire("Eliminado Satisfactoriamente", "La actividad de gestión " + tareaAEliminar.nombre + " se ha eliminado.", "success").then(() => {
-              window.location.reload();
+            Swal.fire({
+              title:"Eliminado!!!", 
+              text:"La tarea se ha eliminado.", 
+              icon:"success",
+              confirmButtonColor: '#0E823F', 
+            }).then(() => {
+              this.cargarTareas(this.idActividadGestionSeleccionado,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')
             });
-            console.log(response);
           },
           (error) => {
             Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
@@ -364,16 +443,44 @@ export class ActividadListarComponent implements OnInit{
   obtenerActividadGestionActividadEstrategica(idActividadGestionActividadEstrategica: number,gestion:any) {
     this.idActividadGestionSeleccionado = idActividadGestionActividadEstrategica;
     this.nombreActividadGestion = gestion.nombre;
-    this.usuarioGestion = gestion.idUsuario
+    this.usuarioGestion = gestion.idUsuario,
+    this.fechaInicialGestion = gestion.fechaInicial,
+    this.fechaFinalGestion = gestion.fechaFinal,
+
+    this.form.patchValue({
+      nombre: this.nombreActividadGestion,
+      fechaIncial: this.fechaInicialGestion,
+      fechaFinal: this.fechaFinalGestion,
+    });
   }
   obtenerTarea(idTarea: number,tarea:any) {
     this.idTareaSeleccionado = idTarea;
     this.nombreTarea = tarea.nombre;
+    this.idTareaTipo = tarea.idASE;
+    this.estadoTarea = tarea.estado
+
+    this.formTarea.patchValue({
+      estado : this.estadoTarea,
+    });
   }
   obtenerProyecto(idProyecto: number,proyecto:any) {
     this.idProyectoSeleccionado = idProyecto;
     this.nombreProyecto = proyecto.nombre;
     this.usuarioProyecto = proyecto.idUsuario;
+    this.presupuestoProyecto = proyecto.presupuesto
+    this.fechaInicialProyecto = proyecto.fechaInicial
+    this.fechaFinalProyecto = proyecto.fechaFinal
+    this.modalidadProyecto = proyecto.modalidad
+    this.planeacionProyecto = proyecto.planeacionSprint
+
+    this.formProyecto.patchValue({
+      nombre: this.nombreProyecto,
+      presupuesto: this.presupuestoProyecto,
+      fechaInicial: this.fechaInicialProyecto,
+      fechaFinal: this.fechaFinalProyecto,
+      modalidad: this.modalidadProyecto,
+      planeacionSprint:this.planeacionProyecto
+    });
   }
 
   obtenerNombreUsuario(idUsuario: number) {
@@ -398,6 +505,13 @@ export class ActividadListarComponent implements OnInit{
   }
   isEstado(tareaEstado:any, estado:any) {
     return tareaEstado === estado;
+  }
+  convertirModalidad(valor: string): string {
+    return valor.toUpperCase().replace(/ /g, '_');;
+  }
+
+  verModalidad(valor: string): string {
+    return valor.toUpperCase().replace(/_/g, ' ');;
   }
   
 }

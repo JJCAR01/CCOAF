@@ -106,6 +106,11 @@ export class LoginComponent implements OnInit{
   }
 
   solicitar(){
-    Swal.fire('Solicitar acceso', "Por favor contactese con el administrador, dirigiendose a la mesa de ayuda para generar el Ticket",'warning')
-  }
+    Swal.fire(
+        'Solicitar acceso',
+        "Por favor contactese con el administrador, dirigiendose a la mesa de ayuda para generar el Ticket " +
+        "<a href='https://mesadeayuda.ccoa.org.co:446/' target='_blank'>https://mesadeayuda.ccoa.org.co:446/</a>",
+        'warning'
+    );
+}
 }

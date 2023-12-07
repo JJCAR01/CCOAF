@@ -72,11 +72,11 @@ h3 {
 .nav-item {
   margin-top: 10px;
   text-align: center;
-  width: 780px;
+  width: 47%;
+  background: rgba(170, 170, 170, 0.315);
   
   a:active, // Aplica el estilo cuando el enlace está activo
   a:focus {  // Aplica el estilo cuando el enlace está enfocado
-    background-color: #ece8e8;
     color: #000000;
   }
 }
@@ -84,6 +84,13 @@ h3 {
   font-family: 'Roboto', initial;
   font-size: 20px;
   color: rgb(0, 0, 0);
+}
+.nav-tabs .nav-item:hover {
+  background: rgba(156, 155, 155, 0.438);
+}
+
+.nav-tabs .nav-link:hover {
+  color:rgb(0, 0, 0);
 }
 
 button {
@@ -103,13 +110,32 @@ button {
   color: green; // Define el color verde (u otro color de tu elección) para porcentajes normales.
 }
 .porcentaje-normal {
-  color: #504f4f;
+  color: rgb(172, 168, 168)
 }
 .column-nombre {
+  width: 650px; /* Ajusta el ancho a tu preferencia */
+}
+.column-nombreTarea {
   width: 400px; /* Ajusta el ancho a tu preferencia */
 }
+.fila-nombre {
+  text-align: left;
+}
+.column-fecha {
+  width: 110px; /* Ajusta el ancho a tu preferencia */
+}
+.column-duracion {
+  width: 100px; /* Ajusta el ancho a tu preferencia */
+}
+.column-dias {
+  width: 100px; /* Ajusta el ancho a tu preferencia */
+}
+.column-responsable {
+  width: 300px; /* Ajusta el ancho a tu preferencia */
+}
+
 .column-observacion {
-  width: 200px; /* Ajusta el ancho a tu preferencia */
+  width: 300px; /* Ajusta el ancho a tu preferencia */
 }
 .column-crear {
   width: 50px; /* Ajusta el ancho a tu preferencia */
@@ -137,26 +163,35 @@ th,td {
 .impedimento {
   color: rgb(206, 49, 49); /* Color para "IMPEDIMENTO" */
 }
-
 .form-check-input {
-  width: 20px; /* Ancho deseado */
-  height: 20px; /* Altura deseada */
-  margin-right: 10px; /* Espacio entre el input y la etiqueta de texto */
-  border: 1px solid #000000; /* Borde con color gris claro */
-  border-radius: 4px;  /* Espacio entre el input y la etiqueta de texto */
+  border: 1px solid #525050;  // Establecer un borde por defecto para todos los checkboxes
+}
+.form-check-input.en-backlog:checked {
+  background-color: rgb(87, 97, 89);
+  border-color: rgb(87, 97, 89);
+  color: #552a2a;
 }
 
-/* Estilo para el color del texto de las etiquetas de los inputs */
-.form-check-label {
-  color: #333; /* Cambiar el color de texto según tus preferencias */
+.form-check-input.en-proceso:checked {
+  background-color: rgba(202, 139, 22, 0.925);
+  border-color: rgba(202, 139, 22, 0.925);
+  color: #552a2a;
 }
 
-/* Estilo para cambiar el color de fondo de los inputs seleccionados */
-.form-check-input:checked {
-  background-color: #007bff; /* Cambiar el color de fondo cuando el input está seleccionado */
-  border-color: #007bff; /* Cambiar el color del borde cuando el input está seleccionado */
-  color: #552a2a; /* Cambiar el color del texto cuando el input está seleccionado */
+.form-check-input.terminado:checked {
+  background-color: green;
+  border-color: green;
+  color: #552a2a;
 }
+
+.form-check-input.impedimento:checked {
+  background-color: rgb(206, 49, 49);
+  border-color:rgb(206, 49, 49);
+  color: #552a2a;
+}
+
+
+
 
 .bi-info {
   color: #007bff;
@@ -165,6 +200,19 @@ th,td {
 .bi-info:hover {
   color: #ff8c00;
 }
+.tamaño-iconos{
+  font-size: large;
+}
+.color-iconoPorcentaje {
+  color: rgba(114, 114, 109, 0.699)
+} 
+.color-iconoFechaAnual {
+  color: rgb(101, 221, 171);
+} 
+.color-iconoResponsable {
+  color: rgb(29, 75, 75)
+} 
+
 
 
 

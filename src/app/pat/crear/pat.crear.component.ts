@@ -57,7 +57,7 @@ export class PatCrearComponent implements OnInit{
             console.log(response);
           },
           (error) => {
-            Swal.fire("Error",error.error.mensajeTecnico,"error");
+            Swal.fire("Error",error.error.mensajeHumano,"error");
           }
         );
   }

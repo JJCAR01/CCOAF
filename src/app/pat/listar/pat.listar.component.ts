@@ -21,6 +21,8 @@ export class PatListarComponent implements OnInit{
   busqueda: any;
   selectedPatId: number | null = null;
   nombrePatSeleccionado:any;
+  fechaAnualSeleccionada:any;
+  procesoSeleccionado:any;
   usuario:any;
   cantidadPats:any;
   cantidadProyectos:any;
@@ -48,12 +50,12 @@ export class PatListarComponent implements OnInit{
        }  
 
     ngOnInit() {
-          this.cargarPats();
-          this.cargarUsuario();
-          this.cargarActividadGestionActividadesEstrategica()
-          this.cargarActividadesEstrategica();
-          this.cargarPatsActividadGestion();
-          this.cargarPatsProyectos();
+      this.cargarPats();
+      this.cargarUsuario();
+      this.cargarActividadGestionActividadesEstrategica()
+      this.cargarActividadesEstrategica();
+      this.cargarPatsActividadGestion();
+      this.cargarPatsProyectos();
     }
     cargarUsuario() {
       this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
@@ -172,23 +174,39 @@ export class PatListarComponent implements OnInit{
           idUsuario: idUsuario
           
         };
-        this.patService
-          .modificarPat(pat, this.selectedPatId, this.auth.obtenerHeader())
-          .subscribe(
-            (response) => {
-              Swal.fire({
-                icon:'success',
-                title:'Modificado Satisfactoriamente',
-                text: pat.nombre +' se ha modificado'
-              }).then((value) => {
-                location.reload();
-              });
-            },
-            (error) => {
-              Swal.fire(error.error.mensajeHumano,'' ,"warning");
+
+        Swal.fire({
+          icon:"question",
+          title: "¿Estás seguro de modificar?",
+          text: "Una vez modificado no podrás revertir los cambios",
+          showCancelButton: true,
+          cancelButtonText: "Cancelar",
+          confirmButtonText: "Confirmar",
+          confirmButtonColor: '#0E823F',
+          reverseButtons: true, 
+        })
+        .then((confirmacion) => {
+          if (confirmacion.isConfirmed) {
+            if (this.selectedPatId != null) {
+                this.patService.modificarPat(pat, this.selectedPatId, this.auth.obtenerHeader()).subscribe(
+                (response) => {
+                  Swal.fire({
+                    icon : 'success',
+                    title : 'Modificado!!!',
+                    text : 'El plan anual se ha modificado.',
+                    confirmButtonColor: '#0E823F',
+                    }).then(() => {
+                      this.cargarPats()
+                  });
+                },
+                (error) => {
+                  Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
+                }
+              );
             }
-          );
-      }
+          }
+        });
+      } 
     }
     
     eliminarPat(idPat: number) {
@@ -198,17 +216,22 @@ export class PatListarComponent implements OnInit{
         icon:"question",
         title: "¿Estás seguro?",
         text: "Una vez eliminado  el pat "  + patAEliminar.nombre + ", no podrás recuperar este elemento.",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: "#3085d6",
         showCancelButton: true,
         cancelButtonText: "Cancelar",
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: '#0E823F',
+        reverseButtons: true, 
       })
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
           this.patService.eliminarPat(idPat, this.auth.obtenerHeader()).subscribe(
             (response) => {
-              Swal.fire("Se ha eliminado satisfactoriamente", "El pat con el nombre " + patAEliminar.nombre + " se ha eliminado.", "success").then(() => {
-                window.location.reload();
+              Swal.fire({
+                title:'Eliminado!',
+                text: "El pat con el nombre " + patAEliminar.nombre + " se ha eliminado.",
+                icon: "success",
+                confirmButtonColor: '#0E823F'}).then(() => {
+                  this.cargarPats()
               });
             },
             (error) => {
@@ -242,7 +265,15 @@ export class PatListarComponent implements OnInit{
     setSelectedPat(idPat: number,pat:any) {
       this.selectedPatId = idPat;
       this.nombrePatSeleccionado = pat.nombre;
+      this.fechaAnualSeleccionada = pat.fechaAnual;
+      this.procesoSeleccionado = pat.proceso;
       this.usuario = pat.idUsuario
+
+      this.form.patchValue({
+        nombre: this.nombrePatSeleccionado,
+        fechaAnual: this.fechaAnualSeleccionada,
+        proceso: this.procesoSeleccionado,
+      });
     }
 
     colorPorcentaje(porcentaje: number): string {
@@ -262,5 +293,13 @@ export class PatListarComponent implements OnInit{
       } else {
         return 'porcentaje-cien';
       }
-    } 
+    }
+    // Función para convertir entre valores mostrados y valores reales 
+    convertirProceso(valor: string): string {
+      const valorMinuscSinTildes = valor.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      return valorMinuscSinTildes;
+    }
+    obtenerProcesoMinuscula(valor: EProceso): string {
+      return valor.replace(/_/g, ' ');
+    }
 }

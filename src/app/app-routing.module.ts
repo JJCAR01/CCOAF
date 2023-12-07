@@ -50,8 +50,8 @@ const routes: Routes = [
     { path: "listarTipoGE/:idPat", component: TipogeListarComponent, outlet:"OutletUsuario" },
     { path: "crearTipoGE", component: TipoGECrearComponent, outlet:"OutletUsuario"}, 
     { path: "crearActividad", component: ActividadCrearComponent, outlet:"OutletUsuario"}, 
-    { path: 'listarActividad/:idActividadEstrategica', component: ActividadListarComponent, outlet: 'OutletUsuario' },
-    { path: 'listarSprint/:idProyecto', component: SprintListarComponent, outlet: 'OutletUsuario' },
+    { path: 'listarActividad/:idActividadEstrategica/pat/:patNombre', component: ActividadListarComponent, outlet: 'OutletUsuario' },
+    { path: 'listarSprint/:idProyecto/pat/:patNombre', component: SprintListarComponent, outlet: 'OutletUsuario' },
     { path: "crearSprint", component: SprintCrearComponent, outlet:"OutletUsuario"},
     { path: 'listarTarea/:idASE', component: TareaListarComponent, outlet: 'OutletUsuario' }
 

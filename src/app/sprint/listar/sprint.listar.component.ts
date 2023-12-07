@@ -26,8 +26,10 @@ export class SprintListarComponent implements OnInit {
   proyectos: any[] = [];
   tareas:any[] =[];
   usuarios:any[] =[];
+  patNombre:any;
   nombreSprint:any;
   totalSprint:any;
+  contadorSprint:any;
   planeacionSprint:any;
   proyectoNombre:any;
   proyectoPorcentaje:any;
@@ -37,6 +39,8 @@ export class SprintListarComponent implements OnInit {
   idSprintSeleccionado:any;
   idTareaSeleccionado:any;
   nombreTarea:any;
+  idTareaTipo:any;
+  estadoTarea:any;
   formTarea:FormGroup;
   formSprint:FormGroup;
   formCrearTarea:FormGroup
@@ -69,6 +73,7 @@ export class SprintListarComponent implements OnInit {
   ngOnInit() {
     // Obtén el valor de idPat de la URL
     this.route.params.subscribe(params => {
+      this.patNombre = params['patNombre'];
       const idProyecto = params['idProyecto'];
       this.actividadService.listarProyectoPorId(idProyecto,this.auth.obtenerHeader()).subscribe(
         (data: any) => {
@@ -124,6 +129,7 @@ export class SprintListarComponent implements OnInit {
       .then(
         (data: any) => {
           this.sprints = data;
+          
         },
         (error) => {
           Swal.fire(error.error.mensajeTecnico);
@@ -139,25 +145,39 @@ export class SprintListarComponent implements OnInit {
       const sprint = {
         descripcion: descripcion,
         fechaInicial: fechaInicial,
-        fechaFinal: fechaFinal,
-        
+        fechaFinal: fechaFinal, 
       };
-      this.sprintService
-        .modificarSprint(sprint, this.idSprintSeleccionado, this.auth.obtenerHeader())
-        .subscribe(
-          (response) => {
-            Swal.fire({
-              icon:'success',
-              title:'Modificado Satisfactoriamente',
-              text: 'Se ha modificado'
-            }).then((value) => {
-              location.reload();
+      Swal.fire({
+        title: "¿Estás seguro de modificar?",
+        icon:"question",
+        text: "Una vez modificado no podrás revertir los cambios",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: '#0E823F',
+        reverseButtons: true, 
+      }).then((confirmacion) => {
+        if (confirmacion.isConfirmed) {
+          this.sprintService.modificarSprint(sprint, this.idSprintSeleccionado, this.auth.obtenerHeader())
+          .subscribe(
+            (response) => {
+              Swal.fire({
+                title: "Modificado!!!",
+                text: "El proyecto se ha modificado",
+                icon: "success",
+                confirmButtonColor: '#0E823F',
+              }).then((value) => {
+                this.cargarSprints(this.idProyecto)
             });
-          },
-          (error) => {
-            Swal.fire(error.error.mensajeHumano,'' ,"warning");
-          }
+            },
+            (error) => {
+              Swal.fire(error.error.mensajeHumano,'' ,"warning");
+            }
         );
+        }
+      })
+
+      
     }
   }
 
@@ -168,19 +188,24 @@ export class SprintListarComponent implements OnInit {
         title: "¿Estás seguro?",
         text: "Una vez eliminado, no podrás recuperar este elemento.",
         icon: "question",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: "#3085d6",
         showCancelButton: true,
         cancelButtonText: "Cancelar",
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: '#0E823F',
+        reverseButtons: true,  
       })
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
         this.sprintService.eliminarSprint(idSprint, this.auth.obtenerHeader()).subscribe(
           (response) => {
-            Swal.fire("Eliminado!!!", "El sprint se ha eliminado.", "success").then(() => {
-              window.location.reload();
+            Swal.fire({
+              title:"Eliminado!!!",
+              text:"El proyecto se ha eliminado.",
+              icon:"success",
+              reverseButtons: true, 
+            }).then(() => {
+              this.cargarSprints(this.idProyecto)
             });
-            console.log(response);
           },
           (error) => {
             Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
@@ -219,15 +244,18 @@ export class SprintListarComponent implements OnInit {
         idASE: this.idSprintSeleccionado,
         idUsuario: idUsuario,
       };
-      
       this.tareaService
         .crearTarea(tarea,this.auth.obtenerHeader())
         .subscribe(
           (response) => {
             Swal.fire({
-              title: "Modificado Satisfactoriamente",
-              text: "La gestión del área se ha modificado",
+              title: "Creado!!!",
+              text: "Se ha creado la tarea.",
               icon: "success",
+              confirmButtonColor: '#0E823F',
+            }).then(()=>{
+              this.cargarTareas(this.idSprintSeleccionado,'SPRINT')
+              this.formCrearTarea.reset()
             });
           },
           (error) => {
@@ -242,40 +270,63 @@ export class SprintListarComponent implements OnInit {
       const tareaModificar = {
         estado: estado,
       };
-      this.tareaService
-        .modificarTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader())
-        .subscribe(
-          (response) => {
-            Swal.fire({
-              title: "Modificado!!!",
-              text: "La gestión del área se ha modificado",
-              icon: "success",
-            });
+
+      Swal.fire({
+        title: "Modificado!!!",
+        text: "La gestión del área se ha modificado",
+        icon: "question",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: '#0E823F',
+        reverseButtons: true, 
+      })
+      .then((confirmacion) => {
+        if (confirmacion.isConfirmed) {
+          this.tareaService.modificarTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader())
+            .subscribe(
+              (response) => {
+                this.cargarTareas(this.idTareaTipo,'SPRINT')
+                Swal.fire({
+                  title: "Modificado!!!",
+                  text: "La gestión del área se ha modificado",
+                  icon: "success",
+                  confirmButtonColor: '#0E823F',
+                }).then(() => {
+                  this.formTarea.reset()
+              });
           },
           (error) => {
             Swal.fire('Error',error.error.mensajeHumano, "error");
           }
         );
+        }
+    })
+      
     }
   }
   eliminarTarea(idTarea: number) {
-    const tareaAEliminar = this.tareas.find(t => t.idTarea === idTarea);
-
     Swal.fire({
         title: "¿Estás seguro?",
         text: "Una vez eliminado, no podrás recuperar este elemento.",
         icon: "warning",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: "#3085d6",
         showCancelButton: true,
         cancelButtonText: "Cancelar",
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: '#0E823F',
+        reverseButtons: true, 
       })
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
         this.tareaService.eliminarTarea(idTarea, this.auth.obtenerHeader()).subscribe(
           (response) => {
-            Swal.fire("Eliminado Satisfactoriamente", "La actividad de gestión " + tareaAEliminar.nombre + " se ha eliminado.", "success").then(() => {
-              window.location.reload();
+            Swal.fire({
+              title:"Eliminado!!!", 
+              text:"La tarea se ha eliminado.", 
+              icon:"success",
+              confirmButtonColor: '#0E823F', 
+            }).then(() => {
+              this.cargarTareas(this.idSprintSeleccionado,'SPRINT')
             });
           },
           (error) => {
@@ -295,6 +346,12 @@ export class SprintListarComponent implements OnInit {
   obtenerTarea(idTarea: number,tarea:any) {
     this.idTareaSeleccionado = idTarea;
     this.nombreTarea = tarea.nombre;
+    this.idTareaTipo = tarea.idASE;
+    this.estadoTarea = tarea.estado
+
+    this.formTarea.patchValue({
+      estado : this.estadoTarea,
+    });
   }
   
   obtenerNombreUsuario(idUsuario: number) {

@@ -29,15 +29,16 @@ export class PanelUsuarioComponent implements OnInit {
       icon:"question",
       title: "¿Estás seguro?",
       text: "Deseas salir de la sesión",
-      confirmButtonText: "Confirmar",
-      confirmButtonColor: "#3085d6",
       showCancelButton: true,
       cancelButtonText: "Cancelar",
+      confirmButtonText: "Confirmar",
+      confirmButtonColor: '#0E823F',
+      reverseButtons: true, 
     })
     .then((confirmacion) => {
       if (confirmacion.isConfirmed) {
         this.router.navigate(["/login"]);
-            Swal.fire("Sesión cerrada", "", "success").then(() => {
+            Swal.fire({title:"Exitoso!!!", icon: "success",confirmButtonColor: '#0E823F',}).then(() => {
               this.authService.signOut();
               this.cookie.deleteAll();
               this.loggedIn = false;
