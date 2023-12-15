@@ -55,12 +55,29 @@ export class CargoCrearComponent {
         // Luego, envía 'cargo' al backend usando tu servicio.
         this.cargoService.crear(cargo,this.auth.obtenerHeader()).subscribe(
           (response) => {
-            Swal.fire("Creado Satisfactoriamente", 'El area con el nombre ' + this.form.value.nombre + ', se ha creado!!', "success");
+            Swal.fire(
+              {
+                title:"Creado!!!",
+                text:'El área se ha creado.', 
+                icon:"success",
+                showCancelButton: true,
+                cancelButtonText: "Cancelar",
+                confirmButtonText: "Confirmar",
+                confirmButtonColor: '#0E823F',
+                reverseButtons: true, 
+              }
+            );
             this.form.reset();
             console.log(response);
           },
           (error) => {
-            Swal.fire("Error en la solicitud al backend:", error.error.mensajeTecnico,'error');
+            Swal.fire(
+              {
+                title:"Error!!!",
+                text:error.error.mensajeHumano, 
+                icon:"error",
+              }
+            );
           }
         );
       }

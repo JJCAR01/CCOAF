@@ -1,29 +1,82 @@
-import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
-import { Component, OnInit } from '@angular/core';
+import { animate, keyframes, style, transition, trigger } from '@angular/animations';
+import { Component, Output, EventEmitter, OnInit, HostListener } from '@angular/core';
+import { navbarData } from './nav-bar';
+import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
-import Swal from 'sweetalert2';
+import { getAuth,signOut } from 'firebase/auth';
+
+interface SideNavToggle {
+  screenWidth: number;
+  collapsed: boolean;
+}
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-sidenav',
   templateUrl: './panel.usuario.component.html',
-  styleUrls: ['./panel.usuario.component.scss']
+  styleUrls: ['./panel.usuario.component.scss'],
+  animations: [
+    trigger('fadeInOut', [
+      transition(':enter', [
+        style({opacity: 0}),
+        animate('350ms',
+          style({opacity: 1})
+        )
+      ]),
+      transition(':leave', [
+        style({opacity: 1}),
+        animate('350ms',
+          style({opacity: 0})
+        )
+      ])
+    ]),
+    trigger('rotate', [
+      transition(':enter', [
+        animate('1000ms', 
+          keyframes([
+            style({transform: 'rotate(0deg)', offset: '0'}),
+            style({transform: 'rotate(2turn)', offset: '1'})
+          ])
+        )
+      ])
+    ])
+  ]
 })
 export class PanelUsuarioComponent implements OnInit {
   title = 'panelUsuario';
-
-  user: SocialUser | null = null;
   loggedIn: boolean = true;
 
-  constructor(private authService:SocialAuthService,
-    private router: Router,private cookie: CookieService){}
+  constructor(private router: Router,private cookie: CookieService){}
+
+  @Output() onToggleSideNav: EventEmitter<SideNavToggle> = new EventEmitter();
+  collapsed = false;
+  screenWidth = 0;
+  navData = navbarData;
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.screenWidth = window.innerWidth;   
+    if(this.screenWidth <= 768 ) {
+      this.collapsed = false;
+      this.onToggleSideNav.emit({collapsed: this.collapsed, screenWidth: this.screenWidth});
+    }
+  }
 
   ngOnInit(): void {
-    this.authService.authState.subscribe((user) => {
-      this.user = user;
-      this.loggedIn = (user != null);
-    });
+      this.screenWidth = window.innerWidth;
+      this.loggedIn != null;
   }
+
+  toggleCollapse(): void {
+    this.collapsed = !this.collapsed;
+    this.onToggleSideNav.emit({collapsed: this.collapsed, screenWidth: this.screenWidth});
+  }
+
+  closeSidenav(): void {
+    this.collapsed = false;
+    this.onToggleSideNav.emit({collapsed: this.collapsed, screenWidth: this.screenWidth});
+  }
+
   logOut():void{
     Swal.fire({
       icon:"question",
@@ -39,7 +92,8 @@ export class PanelUsuarioComponent implements OnInit {
       if (confirmacion.isConfirmed) {
         this.router.navigate(["/login"]);
             Swal.fire({title:"Exitoso!!!", icon: "success",confirmButtonColor: '#0E823F',}).then(() => {
-              this.authService.signOut();
+              const auth = getAuth();
+              signOut(auth);
               this.cookie.deleteAll();
               this.loggedIn = false;
           },

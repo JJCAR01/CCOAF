@@ -224,7 +224,6 @@ export class TipogeListarComponent implements OnInit {
         idUsuario :idUsuario,
         idPat : idPat
       };
-      console.log(actividadGestion)
       Swal.fire({
         title: "¿Estás seguro de modificar?",
         icon: "question",
@@ -394,6 +393,7 @@ export class TipogeListarComponent implements OnInit {
     }
   }
   eliminarTarea(idTarea: number) {
+    
     Swal.fire({
         title: "¿Estás seguro?",
         text: "Una vez eliminado, no podrás recuperar este elemento.",

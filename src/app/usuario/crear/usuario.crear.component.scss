@@ -1,23 +1,19 @@
-.gradient-custom-3 {
-    /* fallback for old browsers */
-    background: #84fab0;
-    
-    /* Chrome 10-25, Safari 5.1-6 */
-    background: -webkit-linear-gradient(to right, rgba(132, 250, 176, 0.5), rgba(143, 211, 244, 0.5));
-    
-    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    background: linear-gradient(to right, rgba(132, 250, 176, 0.5), rgba(143, 211, 244, 0.5))
-    }
-    .gradient-custom-4 {
-    /* fallback for old browsers */
-    background: #84fab0;
-    
-    /* Chrome 10-25, Safari 5.1-6 */
-    background: -webkit-linear-gradient(to right, rgba(132, 250, 176, 1), rgba(143, 211, 244, 1));
-    
-    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    background: linear-gradient(to right, rgba(132, 250, 176, 1), rgba(143, 211, 244, 1))
-    }
+.row {
+  justify-content: center;
+}
+.card {
+  border: 1px solid #838282; /* Establece un borde sólido */
+  border-radius: 30px; /* Agrega esquinas redondeadas */
+  padding: 30px; /* Agrega espacio interior para el contenido */
+  box-shadow: 0 4px 8px rgba(192, 181, 181, 0.2); /* Agrega una sombra */
+  background-color: #fff; /* Establece un fondo blanco */
+}
+
+.card h2 {
+  margin-top: 0; /* Elimina el margen superior del título */
+  text-align: center; /* Centra el título */
+}
+
 
     .form-check-input {
         width: 20px; /* Ancho deseado */
@@ -39,35 +35,37 @@
         color: #552a2a; /* Cambiar el color del texto cuando el input está seleccionado */
     }
 
-    .abs-center {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 10vh;
-      }
-    
-      .abs-abajo {
-        min-height: 15vh;
-      }
-    
-      body {
-        font-family: 'Roboto',serif;
-        margin: 0;
-        padding: 0;
-    }
-    h2 {
-      border-radius: 50px;
-      text-align: center;
-      background-color: #504f4f;
-      color: #e7e5e5;
-      padding: 10px;
-      margin: 0;
-    }
-    .form-label {
-      text-align: left;
-      font-family: 'Roboto',monospace;
-    }
 
     .error-message {
       color: red;
     }
+    
+.required-field {
+    color: red
+}
+
+
+.form-floating select {
+  padding: 10px;
+}
+
+
+.required-field {
+  color: red;
+}
+
+.remove-icon {
+  color: red;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.direcciones-lista {
+  white-space: nowrap;  /* Evita el salto de línea automático */
+  overflow-x: auto;     /* Agrega una barra de desplazamiento horizontal si es necesario */
+}
+
+.direcciones-lista span {
+  display: inline-block; /* Muestra cada dirección en línea */
+  margin-right: 10px;    /* Espacio entre cada dirección */
+}

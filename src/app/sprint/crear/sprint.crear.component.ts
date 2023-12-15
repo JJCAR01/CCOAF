@@ -15,6 +15,7 @@ export class SprintCrearComponent implements OnInit{
   title = 'crearSprint';
   usuarios: any[] = [];
   form: FormGroup;
+  patNombre:any;
   proyectoNombre:any;
   idProyecto:any;
   tipoActividadGestionActividadEstrategica: boolean = false;
@@ -35,6 +36,7 @@ export class SprintCrearComponent implements OnInit{
     this.route.queryParams.subscribe(params => {
       this.idProyecto = params['idProyecto'];
       this.proyectoNombre = params['proyectoNombre'];
+      this.patNombre = params['patNombre']
     })
     this.cargarUsuarios();
   }

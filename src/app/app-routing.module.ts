@@ -22,7 +22,9 @@ import { SprintCrearComponent } from './sprint/crear/sprint.crear.component';
 import { HttpClientModule } from '@angular/common/http';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProyectoListarComponent } from './proyecto/listar/proyecto.listar.component';
+import { ProyectoPendienteListarComponent } from './proyecto/pendientes/proyecto.pendiente.component';
 import { ActividadestrategicaListarComponent } from './actividadestrategica/listar/actividadestrategica.listar.component';
+import { ActividadEstrategicaPendienteListarComponent } from './actividadestrategica/pendiente/actividadestrategica.pendiente.component';
 
 
 
@@ -38,13 +40,20 @@ const routes: Routes = [
     { path: "listarCargo", component: CargoListarComponent, outlet:"OutletAdmin"},
     { path: "crearArea", component: AreaCrearComponent, outlet:"OutletAdmin"},
     { path: "listarArea", component: AreaListarComponent, outlet:"OutletAdmin"},
+    { path: "dashboard", component: DashboardComponent, outlet:"OutletAdmin"},
+    { path: "listarProyecto", component: ProyectoListarComponent, outlet:"OutletAdmin"},
+    { path: "listarPat", component: PatListarComponent, outlet:"OutletAdmin"},
+    { path: "listarActividadesEstrategicas", component: ActividadestrategicaListarComponent, outlet:"OutletAdmin"},
+    { path: "listarActividadesEstrategicasPendiente", component: ActividadEstrategicaPendienteListarComponent, outlet:"OutletAdmin"},
   ]},
 
   { path: "panelUsuario", component: PanelUsuarioComponent, 
   children:[
     { path: "dashboard", component: DashboardComponent, outlet:"OutletUsuario"},
     { path: "listarProyecto", component: ProyectoListarComponent, outlet:"OutletUsuario"},
+    { path: "listarProyectosPendiente", component: ProyectoPendienteListarComponent, outlet:"OutletUsuario"},
     { path: "listarActividadesEstrategicas", component: ActividadestrategicaListarComponent, outlet:"OutletUsuario"},
+    { path: "listarActividadesEstrategicasPendiente", component: ActividadEstrategicaPendienteListarComponent, outlet:"OutletUsuario"},
     { path: "crearPat", component: PatCrearComponent, outlet:"OutletUsuario"},
     { path: "listarPat", component: PatListarComponent, outlet:"OutletUsuario"},   
     { path: "listarTipoGE/:idPat", component: TipogeListarComponent, outlet:"OutletUsuario" },

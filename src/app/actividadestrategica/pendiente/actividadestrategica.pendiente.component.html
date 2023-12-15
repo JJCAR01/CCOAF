@@ -4,17 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="actividadestrategica.listar.component.scss">
+    <link rel="stylesheet" href="actividadestrategica.pendiente.component.scss">
 </head>
 <body>
   <div class="row-with-button">
     <div>
-      <h1 class="mb-2">Actividades Estratégicas</h1>
+      <h1 class="mb-2">Actividades estratégicas pendientes</h1>
     </div>
   </div>  
   <main class="main text-center smaller-main">
     <table class="table table-hover">
-      <thead class="table-dark">
+      <thead class="table-danger">
         <tr>
           <th class="column-nombre">Nombre</th>
           <th>Fecha Inicial</th>
@@ -26,7 +26,7 @@
         </tr>
       </thead>
       <tbody>
-        <ng-container *ngFor="let actividad of actividadesEstrategicas">
+        <ng-container *ngFor="let actividad of actividadesEstrategicasPendientes">
           <tr title="{{actividad.nombre}}">
             <td>{{ actividad.nombre }}</td>
             <td>{{ actividad.fechaInicial }}</td>

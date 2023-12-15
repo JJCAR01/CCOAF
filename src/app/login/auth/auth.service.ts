@@ -16,11 +16,10 @@ export class AuthService {
 
     if (jwt) {
       try {
-        const decode = jwtDecode(jwt);
+        jwtDecode(jwt);
         return true;
-      } catch (error) {
-
-        console.error('Error al decodificar el JWT:', error);
+      } 
+      catch (error) {
         return false;
       }
     } else {

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="proyecto.listar.component.scss">
+    <link rel="stylesheet" href="proyecto.pendiente.component.scss">
 </head>
 <body>
   <div class="row-with-button">
@@ -29,7 +29,7 @@
         </tr>
       </thead>
       <tbody>
-        <ng-container *ngFor="let proyecto of proyectos">
+        <ng-container *ngFor="let proyecto of proyectosPendientes">
           <tr title="{{proyecto.nombre}}">
             <td>{{ proyecto.nombre }}</td>
             <td>{{ proyecto.presupuesto | currency : '$ ' : 'symbol' : '1.0-0' }}</td>

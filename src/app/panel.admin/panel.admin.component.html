@@ -1,68 +1,48 @@
-<html lang="en">
+<div class="sidenav" [ngClass]="collapsed ? 'sidenav-collapsed' : ''">
+    <div class="logo-container">
+      <button class="logo" (mouseenter)="toggleCollapse()" title="Cámara de comercio del Oriente antioqueño">PAT</button>
+      <div class="logo-text" *ngIf="collapsed">
+        <img src="./assets/logo_ccoa_blanco.png" width="120px" alt="logo" id="logo">
+      </div>
+    </div>
+    <ul class="sidenav-nav">
+        <li class="sidenav-nav-item" *ngFor="let data of navDataUser">
+          <a class="sidenav-nav-link" title="{{data.label}}"
+          [routerLink]="['/panelAdmin', { outlets: { 'OutletAdmin': [data.routeLink] } }]" routerLinkActive="router-link-active">
+            <i class="sidenav-link-icon" [class]="data.icon"></i>
+            <span class="sidenav-link-text" *ngIf="collapsed">
+              {{ data.label }}
+            </span>
+          </a>
+        </li>
+    </ul>
+    <hr>
+    <ul class="sidenav-nav">
+      <li class="sidenav-nav-item" *ngFor="let data of navData">
+        <a class="sidenav-nav-link" title="{{data.label}}"
+        [routerLink]="['/panelAdmin', { outlets: { 'OutletAdmin': [data.routeLink] } }]" routerLinkActive="router-link-active">
+          <i class="sidenav-link-icon" [class]="data.icon"></i>
+          <span class="sidenav-link-text" *ngIf="collapsed">
+            {{ data.label }}
+          </span>
+        </a>
+      </li>
+    </ul>
+    <div class="logout-container bottom">
+      <button (click)="logOut()" title="Cerrar sesión"><i class="bi bi-box-arrow-right"></i></button> 
+    </div>
+</div>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <title>Sidebar With Bootstrap</title>
-    <link rel="stylesheet" href="panel.admin.component.scss">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@1&family=Roboto+Slab&display=swap" rel="stylesheet">
-    
-</head>
 
-<body>
-    
-    <div class="container-fluid" *ngIf="loggedIn" >
-        <div class="row">
-            <div class="barra-lateral col-12 col-sm-auto">
-                <div class="logo">
-                    <img src="/assets/logoactualizado.png" width="200mp" alt="logo" id="logo">
-                </div>
-                <nav class="menu d-flex d-sm-block justify-content-center flex-wrap">
-                    <h2>Perfil administrador</h2>
-                    <a [routerLink]="['/panelAdmin', { outlets: { 'OutletAdmin': ['listarArea'] } }]">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-building-fill" viewBox="0 0 16 16">
-                            <path d="M3 0a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h3v-3.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V16h3a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1H3Zm1 2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3.5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5ZM4 5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM7.5 5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5Zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM4.5 8h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5Zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3.5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5Z"/>
-                          </svg>                          
-                        <span>Areas</span>
-                    </a>
-                    <a [routerLink]="['/panelAdmin', { outlets: { 'OutletAdmin': ['listarCargo'] } }]">
-                        <svg xmlns="http://www.w3.org/2000/svg"  fill="currentColor" class="bi bi-buildings-fill" viewBox="0 0 16 16">
-                            <path d="M15 .5a.5.5 0 0 0-.724-.447l-8 4A.5.5 0 0 0 6 4.5v3.14L.342 9.526A.5.5 0 0 0 0 10v5.5a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V14h1v1.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5V.5ZM2 11h1v1H2v-1Zm2 0h1v1H4v-1Zm-1 2v1H2v-1h1Zm1 0h1v1H4v-1Zm9-10v1h-1V3h1ZM8 5h1v1H8V5Zm1 2v1H8V7h1ZM8 9h1v1H8V9Zm2 0h1v1h-1V9Zm-1 2v1H8v-1h1Zm1 0h1v1h-1v-1Zm3-2v1h-1V9h1Zm-1 2h1v1h-1v-1Zm-2-4h1v1h-1V7Zm3 0v1h-1V7h1Zm-2-2v1h-1V5h1Zm1 0h1v1h-1V5Z"/>
-                          </svg>
-                        <span>Cargos</span>
-                    </a>                   
-                    <a [routerLink]="['/panelAdmin', { outlets: { 'OutletAdmin': ['listarUsuario'] } }]">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
-                            <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7Zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216ZM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/>
-                        </svg>
-                        <span>Usuarios</span>
-                    </a>
-                </nav>
-            </div> 
-            
-            <main class="main col" id="main-content">
-                <div class="main">
-                    <div class="header">
-                        <h3>Planeación estratégica</h3>
-                        <button *ngIf="loggedIn" class="btn btn-outline-danger" (click)="logOut()">
-                            <svg xmlns="http://www.w3.org/2000/svg"  width="20" height="20" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
-                                <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-                <router-outlet name="OutletAdmin"></router-outlet>
-            </main>
-            
+<main class="main col" id="main-content" (mouseenter)="closeSidenav()">
+                
+    <div class="main">
+        <div class="header">
+            <h3>Plan anual de trabajo</h3>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.4/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-</body>
 
-</html>
+    <router-outlet name="OutletAdmin"></router-outlet>
+</main> 
+
+  

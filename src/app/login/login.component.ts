@@ -3,7 +3,7 @@ import { LoginService } from './services/login.service';
 import jwt_decode from "jwt-decode";
 import Swal from 'sweetalert2';
 
-import {  Validators,FormGroup,FormControl, ValidatorFn, AbstractControl} from '@angular/forms';
+import { Validators,FormGroup,FormControl,AbstractControl} from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router'; 
 import { GoogleService } from './google/auth.google.service';
@@ -27,7 +27,6 @@ export class LoginComponent implements OnInit{
   constructor(
   private loginService: LoginService, 
     private cookieService:CookieService,
-    private auth:AuthService,
     private router: Router,
     private authGoogleService:GoogleService,
 
@@ -50,27 +49,41 @@ export class LoginComponent implements OnInit{
         const body = {
           googleToken: tokenResult  
         };  
-        this.loginService.loginGoogle(body).toPromise().then((resp ) => {
-          this.router.navigate(["/panelUsuario"]);
+          this.loginService.loginGoogle(body).toPromise()
+          .then((resp ) => {
+            if (resp) {    
+              const jwt = resp.jwt;
+              this.cookieService.set('jwt', jwt);
+              const decode:any = jwt_decode(jwt);
+              if (decode.type === 'OPERADOR')
+              {
+                this.loggedIn = response!=null;
+                this.router.navigate(['/panelUsuario', { outlets: { 'OutletUsuario': ['listarPat'] } }]);
+              }
+              else if(decode.type === 'ADMIN'){
+                this.loggedIn = response!=null;
+                this.router.navigate(['/panelAdmin', { outlets: { 'OutletAdmin': ['listarArea'] } }]);
+              }
+
+            }
+          }).catch((error) => {
+            Swal.fire({
+              title:'Error',
+              text: error.error.mensajeHumano,
+              icon:'error',
+              confirmButtonColor: '#0E823F'
+            })
+          });
         })
-        // Enviar el token al backend
-        //this.sendTokenToBackend(accessToken);
-        })
-        .catch((error) => {
-          console.error('Error al obtener el token:', error);
-        });
     })
     .catch(error => {
-      console.log(error)
+      Swal.fire({
+        title:'Error',
+        text: error.error.mensajeHumano,
+        icon:'error'
+      })
     })
     
-  }
-
-  sendTokenToBackend(token: string) {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
-    });
   }
 
   login() {
@@ -89,28 +102,32 @@ export class LoginComponent implements OnInit{
         if(decode.type === 'ADMIN')
         { 
           this.loggedIn = response!=null;
-          this.router.navigate(["/panelAdmin"]);
+          this.router.navigate(['/panelAdmin', { outlets: { 'OutletAdmin': ['listarArea'] } }]);
         }
         else if (decode.type === 'OPERADOR')
         {
-          this.router.navigate(["/panelUsuario"]);
+          this.loggedIn = response!=null;
+          this.router.navigate(['/panelUsuario', { outlets: { 'OutletUsuario': ['listarPat'] } }]);
         }
       } 
-    },error =>{
-      Swal.fire('Por favor intente de nuevo',error.error.mensajeTecnico,'warning')
-    } )
-  }
-
-  getControl(nombre:any):AbstractControl | null {
-    return this.form.get(nombre)
+      },error =>{
+        Swal.fire({
+          title:'Por favor intente de nuevo',
+          text:error.error.mensajeTecnico,
+          icon:'warning',
+          confirmButtonColor: '#0E823F'
+        })
+      } 
+    )
   }
 
   solicitar(){
-    Swal.fire(
-        'Solicitar acceso',
-        "Por favor contactese con el administrador, dirigiendose a la mesa de ayuda para generar el Ticket " +
-        "<a href='https://mesadeayuda.ccoa.org.co:446/' target='_blank'>https://mesadeayuda.ccoa.org.co:446/</a>",
-        'warning'
-    );
-}
+    Swal.fire({
+        title:'Solicitar acceso',
+        html: "Por favor contáctese con el administrador, dirigiéndose a la mesa de ayuda para generar el Ticket " +
+            "<a href='https://mesadeayuda.ccoa.org.co:446/' target='_blank'>https://mesadeayuda.ccoa.org.co:446/</a>",
+        icon:'warning',
+        confirmButtonColor: '#0E823F'
+    });
+  }
 }

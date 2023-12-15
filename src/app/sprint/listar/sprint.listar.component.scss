@@ -3,12 +3,11 @@
 }
 
 h1 {
-    font-family: "Roboto", unset;
-    color: #000000;
-    font-size: xx-large;
-    padding: 5px;
-    margin: 0;
-    text-align: left;
+  font-family: "Roboto", unset;
+  color: #000000;
+  font-size: xx-large;
+  margin: 0;
+  text-align: left;
 }
 
 
@@ -36,6 +35,11 @@ h4{
 }
 
 .responsable-info {
+  display: flex; /* Hacer que los elementos dentro de .responsable-info se muestren en línea */
+  align-items: center; /* Alinear verticalmente los elementos dentro de .responsable-info */
+}
+
+.responsable-info h1 {
   display: flex; /* Hacer que los elementos dentro de .responsable-info se muestren en línea */
   align-items: center; /* Alinear verticalmente los elementos dentro de .responsable-info */
 }
@@ -130,21 +134,37 @@ th,td {
   text-align: center; /* Centra el texto horizontalmente en las celdas del encabezado */
 }
 
-.en-backlog {
+.en-backlog .form-check-input {
+  color: rgb(87, 97, 89); /* Color para "EN BACKLOG" */
+  border-color: rgb(87, 97, 89);
+}
+.en-backlog .form-check-label {
   color: rgb(87, 97, 89); /* Color para "EN BACKLOG" */
 }
-
-.en-proceso {
+.en-proceso .form-check-input {
+  color: rgba(202, 139, 22, 0.925); /* Color para "EN PROCESO" */
+  border-color:  rgba(202, 139, 22, 0.925); ;
+}
+.en-proceso .form-check-label {
   color: rgba(202, 139, 22, 0.925); /* Color para "EN PROCESO" */
 }
 
-.terminado {
+.terminado .form-check-input {
   color: green; /* Color para "TERMINADO" */
+  border-color: green; /* Color del borde del checkbox */
+}
+.terminado .form-check-label {
+  color: green; /* Color para el texto "TERMINADO" si es necesario */
 }
 
-.impedimento {
+.impedimento .form-check-input  {
+  color: rgb(206, 49, 49); /* Color para "IMPEDIMENTO" */
+  border-color: rgb(206, 49, 49);
+}
+.impedimento .form-check-label  {
   color: rgb(206, 49, 49); /* Color para "IMPEDIMENTO" */
 }
+
 
 .form-check-input {
   border: 1px solid #525050;  // Establecer un borde por defecto para todos los checkboxes

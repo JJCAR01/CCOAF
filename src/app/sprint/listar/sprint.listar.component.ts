@@ -28,6 +28,8 @@ export class SprintListarComponent implements OnInit {
   usuarios:any[] =[];
   patNombre:any;
   nombreSprint:any;
+  fechaInicialSprint:any;
+  fechaFinalSprint:any;
   totalSprint:any;
   contadorSprint:any;
   planeacionSprint:any;
@@ -138,7 +140,7 @@ export class SprintListarComponent implements OnInit {
   }
   modificarSprint(){
     if (this.formSprint.valid) {
-      const descripcion = this.formSprint.get('nombre')?.value;
+      const descripcion = this.formSprint.get('descripcion')?.value;
       const fechaInicial = this.formSprint.get('fechaInicial')?.value;
       const fechaFinal = this.formSprint.get('fechaFinal')?.value;
 
@@ -182,8 +184,6 @@ export class SprintListarComponent implements OnInit {
   }
 
   eliminarSprint(idSprint: number) {
-    const sprintAEliminar = this.sprints.find(s => s.idSprint === idSprint);
-
     Swal.fire({
         title: "¿Estás seguro?",
         text: "Una vez eliminado, no podrás recuperar este elemento.",
@@ -230,7 +230,6 @@ export class SprintListarComponent implements OnInit {
     )};
   } 
   crearTarea() {
-    console.log(this.tareas)
     if (this.formCrearTarea.valid) {
       const nombre = this.formCrearTarea.get('nombre')?.value;
       const descripcion = this.formCrearTarea.get('descripcion')?.value;
@@ -336,12 +335,18 @@ export class SprintListarComponent implements OnInit {
       }
       });
   }
-
-
-
   obtenerSprint(idSprint: number,sprint:any) {
     this.idSprintSeleccionado = idSprint;
     this.nombreSprint = sprint.descripcion;
+    this.fechaInicialSprint = sprint.fechaInicial
+    this.fechaFinalSprint = sprint.fechaFinal
+    
+    this.formSprint.patchValue({
+      descripcion : this.nombreSprint,
+      fechaInicial : this.fechaInicialSprint,
+      fechaFinal : this.fechaFinalSprint
+    });
+
   }
   obtenerTarea(idTarea: number,tarea:any) {
     this.idTareaSeleccionado = idTarea;

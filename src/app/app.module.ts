@@ -30,6 +30,8 @@ import { SprintCrearComponent } from './sprint/crear/sprint.crear.component';
 import { TareaListarComponent } from './tarea/listar/tarea.listar.component';
 import { TareaCrearComponent } from './tarea/crear/tarea.crear.component';
 import { ProyectoListarComponent } from './proyecto/listar/proyecto.listar.component';
+import { ProyectoPendienteListarComponent } from './proyecto/pendientes/proyecto.pendiente.component';
+import { ActividadEstrategicaPendienteListarComponent } from './actividadestrategica/pendiente/actividadestrategica.pendiente.component';
 
 import { EnumPipe } from 'src/pipes/enum.pipes';
 import { TipoGECrearComponent } from './gestion/crear/tipoGE.crear.component';
@@ -51,7 +53,8 @@ import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
     AppComponent,LoginComponent,PanelAdminComponent,AreaCrearComponent,AreaListarComponent,PanelUsuarioComponent,
     CargoCrearComponent,CargoListarComponent,UsuarioCrearComponent,UsuarioListarComponent, BuscarPipe,EnumPipe,PatListarComponent,
     PatCrearComponent,TipogeListarComponent,ActividadCrearComponent, ActividadListarComponent,TipoGECrearComponent,
-    SprintListarComponent,SprintCrearComponent, TareaListarComponent, ProyectoListarComponent
+    SprintListarComponent,SprintCrearComponent, TareaListarComponent, ProyectoListarComponent, ProyectoPendienteListarComponent,
+    ActividadEstrategicaPendienteListarComponent
   ],
   imports: [
     

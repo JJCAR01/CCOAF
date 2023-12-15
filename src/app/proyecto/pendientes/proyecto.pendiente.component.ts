@@ -6,11 +6,11 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-proyecto.listar',
-  templateUrl: './proyecto.listar.component.html',
-  styleUrls: ['./proyecto.listar.component.scss']
+  templateUrl: './proyecto.pendiente.component.html',
+  styleUrls: ['./proyecto.pendiente.component.scss']
 })
-export class ProyectoListarComponent implements OnInit {
-  title = 'listarProyecto';
+export class ProyectoPendienteListarComponent implements OnInit {
+  title = 'listarProyectosPendiente';
   proyectos: any[] = [];
   proyectosPendientes: any[] = [];
 
@@ -19,21 +19,16 @@ export class ProyectoListarComponent implements OnInit {
     ){ }
 
   ngOnInit(): void {
-    this.cargarProyectos();
+    this.cargarProyectosPendientes();
   }
 
-  cargarProyectos() {
-    this.actividadService
-      .listarProyecto(this.auth.obtenerHeader()) 
-      .toPromise()
-      .then(
-        (data: any) => {
-          this.proyectos = data;
-        },
-        (error) => {
-          Swal.fire(error.error.mensajeTecnico,'', 'error');
-        }
-      );
+
+  cargarProyectosPendientes(){
+    this.actividadService.listarProyecto(this.auth.obtenerHeader()).toPromise().then((data:any)=>{
+      if(data.avance < 100){
+        this.proyectosPendientes = data;
+      }
+    })
   }
 
   colorPorcentaje(porcentaje: number): string {

@@ -15,7 +15,7 @@
     <div> 
       <div class="row">
         <div class="responsable-info">
-          <h1 ><img src="/assets/Programas.png" width="40mp" alt="logo" id="logo" title="{{ patNombre }}"> {{ patNombre }} </h1>
+          <h1 ><img src="/assets/Programas.png" width="30mp" alt="logo" id="logo" title="{{ patNombre }}"> {{ patNombre }} </h1>
         </div>
         <div class="responsable-info">
           <img src="/assets/tareas de proceso.png" width="20mp" alt="logo" id="logo" title="{{ actividadNombre }}"><h3>Actividad estratégica:</h3>
@@ -34,8 +34,8 @@
   </div>
   <ul class="nav nav-tabs header" id="myTab" role="tablist">
     <li class="header ">
-      <button title="Atrás"
-        type="button" class="btn btn-outline-dark" 
+      <button title="Volver"
+        type="button" class="btn btn-success" 
         [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarTipoGE', patEstrategica] } }]">
         <i class="bi bi-arrow-return-left"></i>
       </button>
@@ -58,7 +58,7 @@
     <div class="tab-pane fade show active" id="proyectos" role="tabpanel" aria-labelledby="proyectos-tab">
       <main class="main text-center smaller-main">
         <table class="table table-bordered table-hover">
-          <thead class="table-dark">
+          <thead class="table table-color">
             <tr>
               <th class="column-nombre">Nombre</th>
               <th class="column-presupuesto">Presupuesto</th>
@@ -75,17 +75,27 @@
           </thead>
           <tbody>
             <ng-container *ngFor="let proyecto of proyectos">
-              <tr>
-                <td class="fila-nombre">{{ proyecto.nombre }}</td>
-                <td>{{ proyecto.presupuesto | currency : '$ ' : 'symbol' : '1.0-0' }}</td>
-                <td>{{ verModalidad(proyecto.modalidad) }}</td>
-                <td>{{ proyecto.valorEjecutado | currency : '$ ' : 'symbol' : '1.0-0' }}</td>
-                <td>{{ proyecto.fechaInicial }}</td>
-                <td>{{ proyecto.fechaFinal }}</td>
-                <td>{{ proyecto.duracion }}</td>
-                <td [ngClass]="colorPorcentaje(proyecto.avance)">{{ proyecto.avance }} %</td>
-                <td>{{ proyecto.planeacionSprint }}</td>
-                <td>{{ proyecto.totalSprint }}</td>
+              <tr title="{{proyecto.nombre}}">
+                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]" class="fila-nombre">
+                      {{ proyecto.nombre }}</td>
+                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]">
+                      {{ proyecto.presupuesto | currency : '$ ' : 'symbol' : '1.0-0' }}</td>
+                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]">
+                      {{ verModalidad(proyecto.modalidad) }}</td>
+                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]">
+                      {{ proyecto.valorEjecutado | currency : '$ ' : 'symbol' : '1.0-0' }}</td>
+                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]">
+                      {{ proyecto.fechaInicial }}</td>
+                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]"> 
+                      {{ proyecto.fechaFinal }}</td>
+                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]">
+                      {{ proyecto.duracion }}</td>
+                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]" 
+                      [ngClass]="colorPorcentaje(proyecto.avance)">{{ proyecto.avance }} %</td>
+                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]">
+                      {{ proyecto.planeacionSprint }}</td>
+                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]">
+                      {{ proyecto.totalSprint }}</td>
                 <td>
                   <button title="Ver" class="btn btn-outline-primary me-1" 
                   [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]"
@@ -109,7 +119,7 @@
             <div class="card-header" role="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapse-' + gestion.idActividadGestionActividadEstrategica" (click)="cargarTareas(gestion.idActividadGestionActividadEstrategica,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')">
               <h5 class="mb-0" >{{ gestion.nombre }}</h5>
               <div class="card-body">
-                <div class="row justify-content-center">
+                <div class="row justify-content-center" title="{{gestion.nombre}}">
                   <div class="col-md-2">
                     <h6>Fecha Inicial</h6>
                     {{ gestion.fechaInicial }}
@@ -183,20 +193,20 @@
                   </thead>
                   <tbody>
                     <ng-container *ngFor="let tarea of tareas" >
-                      <tr>
+                      <tr title="{{ tarea.nombre }}">
                         <td>{{ tarea.nombre }}</td>
                         <td>
                           <div class="d-flex">
-                            <div class="col ">
+                            <div class="col en-backlog">
                               <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'EN_BACKLOG')" class="estado-checkbox form-check-input en-backlog" [disabled]="!isEstado(tarea.estado, 'EN_BACKLOG')">
                             </div>
-                            <div class="col">
+                            <div class="col en-proceso">
                               <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'EN_PROCESO')" class="estado-checkbox form-check-input en-proceso" [disabled]="!isEstado(tarea.estado, 'EN_PROCESO')">
                             </div>
-                            <div class="col">
+                            <div class="col terminado">
                               <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'TERMINADO')" class="estado-checkbox form-check-input terminado" [disabled]="!isEstado(tarea.estado, 'TERMINADO')">
                             </div>
-                            <div class="col">
+                            <div class="col impedimento">
                               <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'IMPEDIMENTO')" class="estado-checkbox form-check-input impedimento" [disabled]="!isEstado(tarea.estado, 'IMPEDIMENTO')">
                             </div>
                           </div>
@@ -208,7 +218,7 @@
                         <td>
                           <button title="Modificar" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarTarea" (click)="obtenerTarea(tarea.idTarea,tarea)"
                           ><i class="bi bi-pen-fill"></i></button>
-                          <button title="Eliminar" class="btn btn-outline-danger" (click)="eliminarTarea(tarea.idTarea)"><i class="bi bi-trash3-fill"></i></button>
+                          <button title="Eliminar" class="btn btn-outline-danger" (click)="eliminarTarea(tarea.idTarea)" (click)="obtenerActividadGestionActividadEstrategica(gestion.idActividadGestionActividadEstrategica,gestion)"><i class="bi bi-trash3-fill"></i></button>
                         </td>
                       </tr>
                     </ng-container>
@@ -262,7 +272,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <button type="submit" class="btn btn-success">Guardar</button>
+              <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Guardar</button>
             </div>
           </form>
         </div>
@@ -270,7 +280,7 @@
     </div>
   </div>
     <div class="modal fade" id="modalModificarGestion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Modificar Gestion del Area</h5>
@@ -280,7 +290,7 @@
             <form [formGroup]="form" (ngSubmit)="modificarActividadGestion()">
               <div class="mb-3">
                 <label class="form-label" for="nombre">Nombre</label>
-                <textarea type="text" id="nombre" class="form-control form-control-lg" [value]="nombreActividadGestion"  style="min-width: 100%;"></textarea>
+                <textarea type="text" id="nombre" class="form-control form-control-lg" [ngModel]="nombreActividadGestion" formControlName="nombre"></textarea>
             </div>
               <div class="mb-3">
                 <label for="fechaInicial" class="form-label">Fecha Inicial</label>
@@ -292,7 +302,7 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-success">Guardar</button>
+                <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Guardar</button>
               </div>
             </form>
           </div>
@@ -314,26 +324,26 @@
               </div>
               <div class="mb-3" [ngModel]="estadoTarea">
                 <h6><i class="bi bi-info" data-toggle="popover" data-placement="top" data-content="Texto con información"></i> Estado: </h6>
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="estado" id="en-backlog" value="EN_BACKLOG" formControlName="estado" />
-                  <label class="form-check-label" for="en-backlog">EN BACKLOG</label>
+                <div class="form-check form-check-inline en-backlog">
+                  <input class="form-check-input en-backlog " type="radio" name="estado" id="en-backlog" value="EN_BACKLOG" formControlName="estado" />
+                  <label class="form-check-label " for="en-backlog">EN BACKLOG</label>
                 </div>
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="estado" id="en-proceso" value="EN_PROCESO" formControlName="estado" />
+                <div class="form-check form-check-inline en-proceso">
+                  <input class="form-check-input en-proceso" type="radio" name="estado" id="en-proceso" value="EN_PROCESO" formControlName="estado" />
                   <label class="form-check-label" for="en-proceso ">EN PROCESO</label>
                 </div>
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="estado" id="terminado" value="TERMINADO" formControlName="estado" />
+                <div class="form-check form-check-inline terminado">
+                  <input class="form-check-input terminado" type="radio" name="estado" id="terminado" value="TERMINADO" formControlName="estado" />
                   <label class="form-check-label" for="terminado">TERMINADO</label>
                 </div>
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="estado" id="impedimento" value="IMPEDIMENTO" formControlName="estado" />
+                <div class="form-check form-check-inline impedimento">
+                  <input class="form-check-input impedimento" type="radio" name="estado" id="impedimento" value="IMPEDIMENTO" formControlName="estado" />
                   <label class="form-check-label" for="impedimento">IMPEDIMENTO</label>
                 </div>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-success">Guardar</button>
+                <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Guardar</button>
               </div>
             </form>
           </div>
@@ -365,7 +375,7 @@
             </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-success">Guardar</button>
+                <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Guardar</button>
               </div>
             </form>
           </div>

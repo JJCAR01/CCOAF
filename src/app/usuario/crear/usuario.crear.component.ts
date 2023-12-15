@@ -1,17 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UsuarioService } from '../services/usuario.service';
 import { CargoService } from 'src/app/cargo/services/cargo.service';
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import Swal from 'sweetalert2';
+import { EDireccion } from 'src/app/area/edireccion';
+import { EProceso } from 'src/app/pat/listar/eproceso';
 
 @Component({
   selector: 'app-root',
   templateUrl: './usuario.crear.component.html',
   styleUrls: ['./usuario.crear.component.scss']
 })
-export class UsuarioCrearComponent {
+export class UsuarioCrearComponent implements OnInit {
   title = 'crearUsuario';
+  procesosLista: string[] = [];
+  direccionesLista: any;
+  listaDeDireccionesSeleccionadas: string[] = [];
   cargos: any[] = [];
   roles: any[] =[];
   form:FormGroup;
@@ -25,16 +30,31 @@ export class UsuarioCrearComponent {
       correo: ['', Validators.required],
       password: ['', Validators.required],
       idCargo: ['', Validators.required],
-      rol: ['', Validators.required],
+      nombreRol: ['', Validators.required],
       cpassword: ['', Validators.required],  // Agrega el control para confirmar la contraseña
+      direcciones: ['', Validators.required],
+      procesos:['',Validators.required]
     }, {
       validators : matchpassword
     });
   }
   ngOnInit(): void {
+    this.procesosLista = Object.values(EProceso);
+    this.direccionesLista = Object.values(EDireccion);
     this.cargarCargos();
   }
 
+  guardarDireccion() {
+    const direccionSeleccionada = this.form.get('direcciones')?.value;
+    const direccionMayusculas = direccionSeleccionada.replace(/\s+/g, '_').toUpperCase();
+  
+    // Verificar si la dirección ya existe en la lista antes de agregarla
+    if (!this.listaDeDireccionesSeleccionadas.includes(direccionMayusculas)) {
+      this.listaDeDireccionesSeleccionadas.push(direccionMayusculas);
+    }
+  }
+  
+  
   cargarCargos() {
     this.cargoService.listar(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
@@ -47,6 +67,7 @@ export class UsuarioCrearComponent {
   }
 
   crearUsuario() {
+    this.listaDeDireccionesSeleccionadas
     if (this.form.valid) {
       const usuarioData = {
         nombre: this.form.get('nombre')?.value,
@@ -54,25 +75,43 @@ export class UsuarioCrearComponent {
         correo: this.form.get('correo')?.value,
         password: this.form.get('password')?.value,
         idCargo: this.form.get('idCargo')?.value,
+        direcciones: this.listaDeDireccionesSeleccionadas,
+        procesos: this.form.get('procesos')?.value,
         roles: [
           {
-            rol: this.form.get('rol')?.value
+            nombreRol: this.form.get('nombreRol')?.value
           }
         ]
       };
-
+      
       this.usuarioService.crearUsuario(usuarioData,this.auth.obtenerHeader()).subscribe(
         (response) => {
-          Swal.fire("Creado Satisfactoriamente", 'El area con el nombre ' + usuarioData.nombre + ', se ha creado!!', "success");
+          Swal.fire(
+            {
+              title:"Creado!!!",
+              text:'El usuario se ha creado.', 
+              icon:"success",
+              showCancelButton: true,
+              cancelButtonText: "Cancelar",
+              confirmButtonText: "Confirmar",
+              confirmButtonColor: '#0E823F',
+              reverseButtons: true, 
+            }
+          );
             this.form.reset();
-          console.log(response);
         },
         (error) => {
-          Swal.fire('Error!!!',error.error.mensajeHumano,"warning");
+          Swal.fire(
+            {
+              title:"Error!!!",
+              text:error.error.mensajeHumano, 
+              icon:"error",
+            }
+          );
         }
       );
     }
-    this.form.reset();
+    
   }
 
 }

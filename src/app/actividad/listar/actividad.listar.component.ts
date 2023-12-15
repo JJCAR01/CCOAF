@@ -235,6 +235,8 @@ ngOnInit() {
         idActividadEstrategica:idActividadEstrategica
       };
 
+      console.log(actividadGestion)
+
       Swal.fire({
         title: "¿Estás seguro de modificar?",
         icon:"question",
@@ -336,7 +338,6 @@ ngOnInit() {
     )};
   } 
   crearTarea() {
-
     if (this.formCrearTarea.valid) { 
       const nombre = this.formCrearTarea.get('nombre')?.value;
       const descripcion = this.formCrearTarea.get('descripcion')?.value;

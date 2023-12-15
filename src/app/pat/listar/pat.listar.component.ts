@@ -7,6 +7,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TipoGEService } from 'src/app/gestion/services/tipoGE.service';
 import { ActividadService } from 'src/app/actividad/services/actividad.service';
 import { EProceso } from './eproceso';
+import { NgbModal, NgbModalRef  } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-root',
@@ -14,10 +15,13 @@ import { EProceso } from './eproceso';
   styleUrls: ['./pat.listar.component.scss']
 })
 export class PatListarComponent implements OnInit{
+  private modalRef: NgbModalRef | undefined;
   title = 'listarPat';
+
   procesosEnumList: string[] = Object.values(EProceso);
   pats: any[] = [];
   usuarios:any[] =[];
+  direccion:any;
   busqueda: any;
   selectedPatId: number | null = null;
   nombrePatSeleccionado:any;
@@ -71,9 +75,30 @@ export class PatListarComponent implements OnInit{
     cargarPats() {
       this.patService.listarPat(this.auth.obtenerHeader()).toPromise().then(
         (data: any) => {
-          this.pats = data;
-          const numeroDeListas = Object.keys(data).length;
-          this.cantidadPats = numeroDeListas;
+          // Obtener el token
+          const token:any = this.auth.getToken();
+
+          // Decodificar el payload del token
+          const payloadBase64 = token.split('.')[1];
+          const decodedPayload = JSON.parse(atob(payloadBase64));
+
+          // Remover corchetes alrededor de la cadena de direcciones y procesos
+          const direccionesString = decodedPayload.direccion.replace(/^\[|\]$/g, '');
+          const procesosString = decodedPayload.proceso.replace(/^\[|\]$/g, '');
+
+          // Convertir las cadenas de direcciones y procesos a arrays
+          const direccionesArray = direccionesString.split(',').map((direccion: string) => direccion.trim());
+          const procesosArray = procesosString.split(',').map((proceso: string) => proceso.trim());
+
+          // Filtrar los datos según las direcciones y procesos del payload
+          this.pats = data.filter((d: any) => {
+            return direccionesArray.some((direccion: string) =>
+              d.direccion.toLowerCase() === direccion.toLowerCase()
+            ) && procesosArray.includes(d.proceso);
+          });
+          
+          // Actualizar la cantidad de pats
+          this.cantidadPats = this.pats.length;
         },
         (error) => {
           Swal.fire(error.error.mensajeTecnico);
@@ -172,9 +197,7 @@ export class PatListarComponent implements OnInit{
           fechaAnual: fechaAnual,
           proceso: proceso,
           idUsuario: idUsuario
-          
-        };
-
+        }
         Swal.fire({
           icon:"question",
           title: "¿Estás seguro de modificar?",
@@ -215,7 +238,7 @@ export class PatListarComponent implements OnInit{
       Swal.fire({
         icon:"question",
         title: "¿Estás seguro?",
-        text: "Una vez eliminado  el pat "  + patAEliminar.nombre + ", no podrás recuperar este elemento.",
+        text: "Una vez eliminado  el pat, no podrás recuperar este elemento.",
         showCancelButton: true,
         cancelButtonText: "Cancelar",
         confirmButtonText: "Confirmar",
@@ -228,14 +251,19 @@ export class PatListarComponent implements OnInit{
             (response) => {
               Swal.fire({
                 title:'Eliminado!',
-                text: "El pat con el nombre " + patAEliminar.nombre + " se ha eliminado.",
+                text: "El pat se ha eliminado.",
                 icon: "success",
-                confirmButtonColor: '#0E823F'}).then(() => {
+                confirmButtonColor: '#0E823F'
+              }).then(() => {
                   this.cargarPats()
               });
             },
             (error) => {
-              Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
+              Swal.fire({
+                title:'Solicitud no válida!',
+                text: error.error.mensajeHumano,
+                icon: "error",
+              });
             }
           );
         }

@@ -16,10 +16,10 @@
     <div>
       <div class="row">
         <div class="responsable-info">
-          <h1 ><img src="/assets/Programas.png" width="40mp" alt="logo" id="logo" title="{{ patNombre }}"> {{ patNombre }} </h1>
+          <h1><img src="/assets/Programas.png" width="30mp" alt="logo" id="logo" title="{{ patNombre }}"> {{ patNombre }} </h1>
         </div>
         <div class="responsable-info">
-          <h2 title="Porcentaje Actual" ><i class="bi bi-percent tamaño-iconos color-iconoPorcentaje"></i> Porcentaje actual:</h2>
+          <h2 title="Porcentaje Actual" ><i class="bi bi-percent tamaño-iconos color-iconoPorcentaje"></i> Porcentaje de avance:</h2>
           <p [ngClass]="colorPorcentaje(porcentajePat)">{{ porcentajePat | number : '1.2-2' }} %</p>
         </div>
         <div class="responsable-info">
@@ -36,7 +36,7 @@
   <ul class="nav nav-tabs header" id="myTab" role="tablist">
     <li class="header">
       <button title="Volver"
-        type="button" class="btn btn-outline-dark" 
+        type="button" class="btn btn-success" 
         [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarPat'] } }]">
         <i class="bi bi-arrow-return-left"></i>
       </button>
@@ -59,7 +59,7 @@
     <div class="tab-pane fade show active" id="actividadese" role="tabpanel" aria-labelledby="actividadese-tab">
       <main class="main text-center smaller-main">
         <table class="table table-bordered table-hover">
-          <thead class="table-dark">
+          <thead class="table table-color">
             <tr>
               <th class="column-nombre">Nombre</th>
               <th class="column-fecha">Fecha Inicial</th>
@@ -73,17 +73,24 @@
           </thead>
           <tbody>
             <ng-container *ngFor="let actividad of actividades">
-              <tr>
-                <td class="fila-nombre">{{ actividad.nombre }}</td>
-                <td>{{ actividad.fechaInicial }}</td>
-                <td>{{ actividad.fechaFinal }}</td>
-                <td>{{ actividad.duracion }}</td>
-                <td [ngClass]="colorPorcentaje(actividad.avance)">
-                  <span *ngIf="actividad.avance !== 100"[ngClass]="colorDias(actividad.diasRestantes)">{{ actividad.diasRestantes }}</span>
-                  <span *ngIf="actividad.avance === 100">Finalizado</span>
+              <tr title="{{actividad.nombre}}">
+                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]" class="fila-nombre">
+                      {{ actividad.nombre }}</td>
+                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]">
+                      {{ actividad.fechaInicial }}</td>
+                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]">
+                      {{ actividad.fechaFinal }}</td>
+                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]">
+                      {{ actividad.duracion }}</td>
+                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]" 
+                      [ngClass]="colorPorcentaje(actividad.avance)">
+                      <span *ngIf="actividad.avance !== 100"[ngClass]="colorDias(actividad.diasRestantes)">{{ actividad.diasRestantes }}</span>
+                      <span *ngIf="actividad.avance === 100">Finalizado</span>
                 </td>
-                <td [ngClass]="colorPorcentaje(actividad.avance)">{{ actividad.avance }} %</td>
-                <td>{{ obtenerNombreUsuario(actividad.idUsuario).toLocaleUpperCase() }}</td>
+                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]" 
+                      [ngClass]="colorPorcentaje(actividad.avance)">{{ actividad.avance }} %</td>
+                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]">
+                      {{ obtenerNombreUsuario(actividad.idUsuario).toLocaleUpperCase() }}</td>
                 <td >
                   <button title="Ver" class="btn btn-outline-primary me-1" 
                   [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]"
@@ -107,7 +114,7 @@
             <div class="card-header" role="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapse-' + gestion.idActividadGestion" (click)="cargarTareas(gestion.idActividadGestion,'ACTIVIDAD_GESTION')">
               <h5 class="mb-0" >{{ gestion.nombre }}</h5>
               <div class="card-body">
-                <div class="row justify-content-center">
+                <div class="row justify-content-center" title="{{gestion.nombre}}">
                   <div class="col-md-2">
                     <h6>Fecha Inicial</h6>
                     {{ gestion.fechaInicial }}
@@ -148,9 +155,6 @@
           </div>
             <div [id]="'collapse-' + gestion.idActividadGestion" class="collapse">
               <div class="card-body" >
-                <!-- Detalles de la gestión... -->
-      
-                <!-- Iterar sobre las tareas relacionadas con la gestión actual -->
                 <table class="table table-sm">
                   <thead class="table-active">
                     <tr>
@@ -166,7 +170,7 @@
                               <span class="estado-text en-proceso">EN PROCESO</span>
                             </div>
                             <div class="col">
-                              <span class="estado-text terminado">TERMINADO</span>
+                              <span class="form-check-label  terminado">TERMINADO</span>
                             </div>
                             <div class="col">
                               <span class="estado-text impedimento">IMPEDIMENTO</span>
@@ -183,20 +187,20 @@
                   </thead>
                   <tbody>
                     <ng-container *ngFor="let tarea of tareas" >
-                      <tr>
+                      <tr title="{{ tarea.nombre }}">
                         <td >{{ tarea.nombre }}</td>
                         <td>
                           <div class="d-flex">
-                            <div class="col ">
+                            <div class="col en-backlog">
                               <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'EN_BACKLOG')" class="estado-checkbox form-check-input en-backlog" [disabled]="!isEstado(tarea.estado, 'EN_BACKLOG')">
                             </div>
-                            <div class="col">
+                            <div class="col en-proceso">
                               <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'EN_PROCESO')" class="estado-checkbox form-check-input en-proceso" [disabled]="!isEstado(tarea.estado, 'EN_PROCESO')">
                             </div>
-                            <div class="col">
+                            <div class="col terminado">
                               <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'TERMINADO')" class="estado-checkbox form-check-input terminado" [disabled]="!isEstado(tarea.estado, 'TERMINADO')">
                             </div>
-                            <div class="col">
+                            <div class="col impedimento">
                               <input type="checkbox" name="estado" [ngModel]="isEstado(tarea.estado, 'IMPEDIMENTO')" class="estado-checkbox form-check-input impedimento" [disabled]="!isEstado(tarea.estado, 'IMPEDIMENTO')">
                             </div>
                           </div>
@@ -207,7 +211,7 @@
                         <td>
                           <button title="Modificar" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarTarea" (click)="obtenerTarea(tarea.idTarea,tarea)"
                           ><i class="bi bi-pen-fill"></i></button>
-                          <button title="Eliminar" class="btn btn-outline-danger" (click)="eliminarTarea(tarea.idTarea)"><i class="bi bi-trash3-fill"></i></button>
+                          <button title="Eliminar" class="btn btn-outline-danger" (click)="eliminarTarea(tarea.idTarea)" (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)"><i class="bi bi-trash3-fill"></i></button>
                         </td>
                       </tr>
                     </ng-container>
@@ -244,7 +248,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <button type="submit" class="btn btn-success">Guardar</button>
+              <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Guardar</button>
             </div>
           </form>
         </div>
@@ -254,7 +258,7 @@
 
   
   <div class="modal fade" id="modalModificarGestion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Modificar Gestion del Area</h5>
@@ -276,7 +280,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <button type="submit" class="btn btn-success">Guardar</button>
+              <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Guardar</button>
             </div>
           </form>
         </div>
@@ -297,26 +301,26 @@
             </div>
             <div class="mb-3" [ngModel]="estadoTarea">
               <h6><i class="bi bi-info" data-toggle="popover" data-placement="top" data-content="Texto con información"></i> Estado: </h6>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="estado" id="en-backlog" value="EN_BACKLOG" formControlName="estado" />
+              <div class="form-check form-check-inline en-backlog">
+                <input class="form-check-input en-backlog" type="radio" name="estado" id="en-backlog" value="EN_BACKLOG" formControlName="estado" />
                 <label class="form-check-label" for="en-backlog">EN BACKLOG</label>
               </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="estado" id="en-proceso" value="EN_PROCESO" formControlName="estado" />
-                <label class="form-check-label" for="en-proceso ">EN PROCESO</label>
+              <div class="form-check form-check-inline en-proceso">
+                <input class="form-check-input en-proceso" type="radio" name="estado" id="en-proceso" value="EN_PROCESO" formControlName="estado" />
+                <label class="form-check-label en-proceso" for="en-proceso ">EN PROCESO</label>
               </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="estado" id="terminado" value="TERMINADO" formControlName="estado" />
+              <div class="form-check form-check-inline terminado">
+                <input class="form-check-input terminado" type="radio" name="estado" id="terminado" value="TERMINADO" formControlName="estado" />
                 <label class="form-check-label" for="terminado">TERMINADO</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="estado" id="impedimento" value="IMPEDIMENTO" formControlName="estado" />
+             </div>
+              <div class="form-check form-check-inline impedimento">
+                <input class="form-check-input impedimento" type="radio" name="estado" id="impedimento" value="IMPEDIMENTO" formControlName="estado" />
                 <label class="form-check-label" for="impedimento">IMPEDIMENTO</label>
               </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <button type="submit" class="btn btn-success">Guardar</button>
+              <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Guardar</button>
             </div>
           </form>
         </div>
@@ -348,7 +352,7 @@
           </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <button type="submit" class="btn btn-success">Guardar</button>
+              <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Guardar</button>
             </div>
           </form>
         </div>

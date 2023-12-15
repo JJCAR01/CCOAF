@@ -52,12 +52,26 @@ export class PatCrearComponent implements OnInit{
         // Luego, envía 'cargo' al backend usando tu servicio.
         this.patService.crearPat(this.pat,this.auth.obtenerHeader()).subscribe(
           (response) => {
-            Swal.fire("Creado Satisfactoriamente", 'El pat con el nombre ' + this.form.value.nombre + ', se ha creado!!', "success");
+            Swal.fire({
+              title:"Creado!!!",
+              text:'El pat se ha creado!!', 
+              icon:"success",
+              showCancelButton: true,
+              cancelButtonText: "Cancelar",
+              confirmButtonText: "Confirmar",
+              confirmButtonColor: '#0E823F',
+              reverseButtons: true, 
+            });
             this.form.reset();
-            console.log(response);
           },
           (error) => {
-            Swal.fire("Error",error.error.mensajeHumano,"error");
+            Swal.fire(
+              {
+                title:"Error!!!",
+                text:error.error.mensajeHumano, 
+                icon:"error",
+              }
+            );
           }
         );
   }

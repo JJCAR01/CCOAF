@@ -46,25 +46,38 @@ export class CargoListarComponent {
     }
     eliminarCargo(idCargo: number) {
       const cargoAEliminar = this.cargos.find(cargo => cargo.idCargo === idCargo);
-      Swal.fire({
-        title: "¿Estás seguro?",
-        text: "Una vez eliminado, no podrás recuperar este elemento.",
-        icon: "question",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: "#3085d6",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-      })
+      Swal.fire(
+        {
+          icon:"question",
+          title: "¿Estás seguro?",
+          text: "Una vez eliminado  el cargo, no podrás recuperar este elemento.",
+          showCancelButton: true,
+          cancelButtonText: "Cancelar",
+          confirmButtonText: "Confirmar",
+          confirmButtonColor: '#0E823F',
+          reverseButtons: true, 
+        }
+      )
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
         this.cargoService.eliminar(idCargo, this.auth.obtenerHeader()).subscribe(
           (response) => {
-            Swal.fire("Eliminado!!!", "El cargo se ha eliminado." , "success").then(() => {
-              window.location.reload();
+            Swal.fire({
+              title:'Eliminado!',
+              text: "El cargo se ha eliminado.",
+              icon: "success",
+              confirmButtonColor: '#0E823F'
+            }).then(() => {
+              this.cargarCargos()
             });
           },
           (error) => {
-            Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
+            Swal.fire(
+              {
+                title:'Solicitud no válida!',
+                text: error.error.mensajeHumano,
+                icon: "error",
+              })
           }
         );
       }

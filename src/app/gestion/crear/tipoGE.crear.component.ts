@@ -71,7 +71,12 @@ export class TipoGECrearComponent implements OnInit {
         if (this.tipoActividad === 'estrategica') {
           this.tipoService.crearActividadEstrategica(actividad,this.auth.obtenerHeader()).subscribe(
             (response) => {
-              Swal.fire("Creado!!!", 'La actividad estratégica se ha creado!!', "success");
+              Swal.fire({
+                title:"Creado!!!",
+                text: 'La actividad estratégica se ha creada!!',
+                icon: "success",
+                confirmButtonColor: '#0E823F',
+              });
               this.form.reset();
             },
             (error) => {
@@ -81,7 +86,11 @@ export class TipoGECrearComponent implements OnInit {
         } else if (this.tipoActividad === 'gestion') {
           this.tipoService.crearGestion(actividad,this.auth.obtenerHeader()).subscribe(
             (response) => {
-              Swal.fire("Creado!!!", 'La gestión del área se ha creado!!', "success");
+              Swal.fire({
+                title:"Creado!!!", 
+                text:'La gestión del área se ha creado!!',
+                icon: "success",
+                confirmButtonColor: '#0E823F',});
               this.form.reset();
             },
             (error) => {

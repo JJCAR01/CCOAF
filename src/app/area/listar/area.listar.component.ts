@@ -44,26 +44,34 @@ export class AreaListarComponent implements OnInit {
     const areaAEliminar = this.areas.find(area => area.idArea === idArea);
 
     Swal.fire({
+      icon:"question",
       title: "¿Estás seguro?",
-      text: "Una vez eliminado, no podrás recuperar este elemento.",
-      icon: "question",
-      confirmButtonText: "Confirmar",
-      confirmButtonColor: "#3085d6",
+      text: "Una vez eliminado  el área, no podrás recuperar este elemento.",
       showCancelButton: true,
       cancelButtonText: "Cancelar",
-      reverseButtons:true
+      confirmButtonText: "Confirmar",
+      confirmButtonColor: '#0E823F',
+      reverseButtons: true, 
     })
     .then((confirmacion) => {
       if (confirmacion.isConfirmed) {
       this.areaService.eliminar(idArea, this.auth.obtenerHeader()).subscribe(
         (response) => {
-          Swal.fire("Eliminado!!!", "El area se ha eliminado." , "success").then(() => {
-            window.location.reload();
+          Swal.fire({
+            title:'Eliminado!',
+            text: "El área se ha eliminado.",
+            icon: "success",
+            confirmButtonColor: '#0E823F'
+          }).then(() => {
           });
-          console.log(response);
+          this.cargarAreas()
         },
         (error) => {
-          Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
+          Swal.fire({
+            title:'Solicitud no válida!',
+            text: error.error.mensajeHumano,
+            icon: "error",
+          });
         }
       );
     }

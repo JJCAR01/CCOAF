@@ -36,10 +36,25 @@ export class AreaCrearComponent implements OnInit {
       direccion:direccion
     };
     this.areaService.crear(body,this.auth.obtenerHeader()).toPromise().then(response =>{
-      Swal.fire("Creado!!!", 'El area con el nombre ' +this.form.value.nombre + ',  se ha creado!!', "success");
+      Swal.fire({
+        title:"Creado!!!",
+        text:'El área se ha creado.', 
+        icon:"success",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: '#0E823F',
+        reverseButtons: true, 
+      });
       this.form.reset();
     },error =>{
-      Swal.fire("Error al Crear " + this.form.value.nombre , error.error.mensajeTecnico , "error");
+      Swal.fire(
+        {
+          title:"Error!!!",
+          text:error.error.mensajeHumano, 
+          icon:"error",
+        }
+      );
     } )
   }
 }

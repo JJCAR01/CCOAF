@@ -24,12 +24,15 @@
         </div>
     </div>
 
-    <div class="container-sm">
-        <table class="table">
+    <div class="table-responsive">
+        <table class="table table-bordered">
             <thead class="thead-dark">
             <tr>
-              <th scope="col">Nombre y Apellidos</th>
+              <th scope="col">Nombre </th>
               <th scope="col">Correo</th>
+              <th scope="col">Cargo</th>
+              <th scope="col">Direcciones</th>
+              <th scope="col">Procesos</th>
               <th scope="col">Acciones</th>
             </tr>
           </thead>
@@ -37,6 +40,9 @@
             <tr *ngFor="let usuario of usuarios | buscar: busqueda">
                 <td>{{ usuario.nombre | formatEnum }} {{ usuario.apellidos | formatEnum }}</td>
                 <td>{{ usuario.correo }}</td>
+                <td>{{ obtenerNombreCargo(usuario.idCargo) }}</td>
+                <td>{{ usuario.direcciones}}</td>
+                <td>{{ usuario.procesos}}</td>            
                 <td>
                     <button class="btn btn-primary me-1"><i class="bi bi-pen-fill"></i></button>
                     <button class="btn btn-danger" (click)="eliminarUsuario(usuario.idUsuario)">

@@ -71,11 +71,12 @@ th,td {
 }
 
 .plan-cuadro {
-    background-color: #dbdbdb80;
-    padding: 1px; // Reduce el espacio interno
-    flex: 1;
+    background-color: #81eba428;
     height: 80px; // Ajusta la altura
+    width: 400px;
     text-align: center; 
+    border-radius: 15px; 
+    margin: auto;
 }
 .plan-cuadro p {
     margin-bottom: 0px; //Espacio entre p y h1
@@ -88,13 +89,14 @@ th,td {
     margin-top: 5px; // Espacio entre la sección anterior y los cuadros
 }
 .cuadro {
-    background-color: rgba(199, 199, 199, 0.514);
+    background-color: rgba(224, 224, 224, 0.479);
     padding: 2px; // Reduce el espacio interno
     flex: 1;
     width: auto; // Ajusta el ancho
     height: 75px; // Ajusta la altura
     margin-top: 1px;
     text-align: center; 
+    border-radius: 20px;
 }
 .cuadro h2 {
     margin-bottom: 1px; //Espacio entre p y h1
@@ -107,12 +109,14 @@ th,td {
     justify-content: center;
     gap: 5px; // Espacio entre los cuadros
     margin-top: 2px; // Espacio entre la sección anterior y los cuadros
+    
  }
 .subcuadro {
     padding: 1px; // Reduce el espacio interno
     flex: 1;
     width: 10px; // Ajusta el ancho
     height: 60px; // Ajusta la altura
+    border-radius: 20px;
 }
 
 .subcuadro p {
@@ -121,10 +125,10 @@ th,td {
     font-size: 20px;
 }
 .finalizado {
-    background-color: #0aec7083;
+    background-color: #b6f3d183;
 }
 .abierto{
-    background-color: #ffb411ab;
+    background-color: #fada81ab;
 }
   
 p {
@@ -151,5 +155,15 @@ p {
 }
 .column-acciones{
     width: 15%;
+}
+
+.table-color th{
+    background-color: #bbbbbb;
+}
+td {
+    cursor: pointer;
+}
+th{
+    color: #161515c0;
 }
   

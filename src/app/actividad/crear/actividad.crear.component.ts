@@ -108,10 +108,12 @@ export class ActividadCrearComponent implements OnInit{
   }
 
   handleSuccessResponse(type: string) {
-    Swal.fire(
-      'Creado Satisfactoriamente',
-      `El ${type} se ha creado!!`,
-      'success'
+    Swal.fire({
+      title:'Creado',
+      text: `El ${type} se ha creado!!`,
+      icon:'success',
+      confirmButtonColor: '#0E823F',
+    }
     );
     this.form.reset();
     this.tipo = ''; // Reset the type of activity

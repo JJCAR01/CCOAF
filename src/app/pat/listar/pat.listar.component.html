@@ -64,7 +64,7 @@
         </button>
     </div>
     <table class="table table-hover">
-      <thead class="table-dark">
+      <thead class="table table-color">
         <tr>
           <th class="column-programa">Programa</th> 
           <th class="column-fecha">Año</th>
@@ -76,13 +76,13 @@
       </thead>
       <tbody>
         <ng-container *ngFor="let pat of pats | buscar: busqueda">
-          <tr>
-            <td>{{ pat.nombre }}</td>
-            <td>{{ pat.fechaAnual }}</td>
-            <td>{{ obtenerProcesoMinuscula(pat.proceso) }}</td>
-            <td [ngClass]="colorPorcentaje(pat.porcentaje)">{{ pat.porcentaje | number : '1.2-2' }} %</td>
-            <td >{{ obtenerNombreUsuario(pat.idUsuario).toUpperCase() }} </td>
-            
+          <tr title="{{pat.nombre}}" >
+            <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarTipoGE', pat.idPat] } }]" >{{ pat.nombre }}</td>
+            <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarTipoGE', pat.idPat] } }]">{{ pat.fechaAnual }}</td>
+            <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarTipoGE', pat.idPat] } }]">{{ obtenerProcesoMinuscula(pat.proceso) }}</td>
+            <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarTipoGE', pat.idPat] } }]"
+                [ngClass]="colorPorcentaje(pat.porcentaje)">{{ pat.porcentaje | number : '1.2-2' }} %</td>
+            <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarTipoGE', pat.idPat] } }]">{{ obtenerNombreUsuario(pat.idUsuario).toUpperCase() }} </td>
             <td>
               <button title="Ver" class="btn btn-outline-primary me-1" 
               [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarTipoGE', pat.idPat] } }]"
@@ -126,7 +126,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <button type="submit" class="btn btn-success">Guardar</button>
+              <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Guardar</button>
             </div>
           </form>
         </div>
