@@ -1,3 +1,23 @@
 .chart-container {
-    height: 100px; /* Adjust the height as needed */
+  position: relative;
+    height: 40vh;
   }
+
+  
+h1 {
+  font-family: "Roboto", unset;
+  color: #000000;
+  font-size: xx-large;
+  margin: 0;
+  text-align: left;
+}
+
+
+h2 {
+  font-family: "Roboto", unset;
+  color: #000000;
+  font-size: x-large;
+  padding: 5px;
+  margin: 0;
+  text-align: left;
+}

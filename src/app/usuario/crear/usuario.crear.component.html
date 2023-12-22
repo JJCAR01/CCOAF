@@ -42,25 +42,34 @@
                     </div>
                   </div>
                   <div class="form-floating mb-2">
-                    <select class="form-select" id="direcciones" formControlName="direcciones">
-                      <option value="" disabled selected>Seleccione las direcciones<span class="required-field">*</span></option>
-                      <option *ngFor="let direccion of direccionesLista" [value]="direccion">{{ direccion }}</option>
-                    </select>
+                    <div class="input">
+                      <select class="form-select" id="direcciones" formControlName="direcciones">
+                        <option value="" disabled selected>Seleccione las direcciones<span class="required-field">*</span></option>
+                        <option *ngFor="let direccion of direccionesLista" [value]="direccion">{{ direccion }}</option>
+                      </select>
+                      <button (click)="agregarDirecciones()" class="btn btn-outline-success btn-input">Agregar dirección</button>
+                    </div>
                   </div>
                   <div class="direcciones-lista">
                     <span *ngFor="let direccionSeleccionada of listaDeDireccionesSeleccionadas">
-                      {{ direccionSeleccionada }}
+                      <h6>{{ direccionSeleccionada | formatEnum }},</h6>
                     </span>
                   </div>
-                  <button (click)="guardarDireccion()" class="btn btn-secondary lg">Imprimir Dirección</button>
                   
-
                   <div class="form-floating mb-2">
-                    <select class="form-select" id="procesos" formControlName="procesos">
+                    <div class="input">
+                      <select class="form-select" id="procesos" formControlName="procesos">
                         <option value="" disabled selected>Seleccione el proceso<span class="required-field">*</span></option>
-                        <option *ngFor="let proceso of procesosLista" [value]="proceso">{{ proceso }}</option>
-                    </select>
-                </div>
+                        <option *ngFor="let proceso of procesosLista" [value]="proceso">{{ proceso }}</option>          
+                      </select>
+                      <button (click)="agregarProcesos()" class="btn btn-outline-success btn-input">Agregar proceso</button>
+                    </div> 
+                  </div>
+                  <div class="direcciones-lista">
+                    <span *ngFor="let lista of listaDeProcesosSeleccionadas">
+                      <h6>{{ lista | formatEnum }},</h6>
+                    </span>
+                  </div>
 
                   <div class="form-floating mb-2">
                     <select class="form-select" id="idCargo" formControlName="idCargo">

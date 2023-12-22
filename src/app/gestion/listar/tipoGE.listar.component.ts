@@ -87,9 +87,6 @@ export class TipogeListarComponent implements OnInit {
           this.porcentajePat = data.porcentaje
           this.anual = data.fechaAnual
           this.usuarioPat = data.idUsuario
-        },
-        (error) => {
-          // Manejo de errores
         }
       );
 
@@ -108,7 +105,12 @@ export class TipogeListarComponent implements OnInit {
         this.usuarios = data;
     },
       (error) => {
-        console.log(error);
+        Swal.fire({
+          title:'Error al cargar los usuarios',
+          text:error.error.mensajeHumano,
+          icon:'error',
+          confirmButtonColor: '#0E823F',
+        })
       }
     );
   }
@@ -140,7 +142,8 @@ export class TipogeListarComponent implements OnInit {
           Swal.fire({
             text :error.error.mensajeTecnico,
             title : 'Error!',
-            icon : 'error'});
+            icon : 'error'
+          });
         }
       );
   }

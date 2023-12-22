@@ -3,7 +3,7 @@ export enum EProceso {
     AUDITORIAS_DE_CONTROL_INTERNO = 'Auditorías de Control Interno',
     ESTRATEGIA_TECNOLOGICA_Y_TRANSFORMACION_DIGITAL = 'Estrategia Tecnológica y Transformación Digital',
     ESTUDIOS_E_INVESTIGACIONES = 'Estudios e Investigaciones',
-    FORMULACION_DESPLIEGUE_Y_SEGUIMIENTO_A_LA_ESTRATEGIA = 'Formulación, Despliegue y Seguimiento a la Estrategia',
+    FORMULACION_DESPLIEGUE_Y_SEGUIMIENTO_A_LA_ESTRATEGIA = 'Formulación Despliegue y Seguimiento a la Estrategia',
     GESTION_CONTRACTUAL = 'Gestión Contractual',
     GESTION_DE_DERECHOS_DE_PETICION = 'Gestión de Derechos de Petición',
     GESTION_DE_COMUNICACIONES = 'Gestión de Comunicaciones',
@@ -22,7 +22,7 @@ export enum EProceso {
     GESTION_LEGAL = 'Gestión Legal',
     INNOVACION_ORGANIZACIONAL = 'Innovación Organizacional',
     RELACIONAMIENTO_INSTITUCIONAL = 'Relacionamiento Institucional',
-    SERVICIO_DE_CONCILIACION_ARBITRAJE_Y_AMIGABLE_COMPOSICION = 'Servicio de Conciliación, Arbitraje y Amigable Composición',
+    SERVICIO_DE_CONCILIACION_ARBITRAJE_Y_AMIGABLE_COMPOSICION = 'Servicio de Conciliación Arbitraje y Amigable Composición',
     SERVICIOS_AFILIADOS = 'Servicios Afiliados',
     SERVICIOS_ESPECIALIZADOS = 'Servicios Especializados',
     SERVICIOS_PARA_EL_DESARROLLO_EMPRESARIAL = 'Servicios para el Desarrollo Empresarial',
@@ -31,4 +31,5 @@ export enum EProceso {
     SERVICIOS_PARA_LA_FORMALIZACION = 'Servicios para la Formalización',
     SERVICIOS_PARA_LA_INTERNACIONALIZACION_Y_ESCALAMIENTO_EMPRESARIAL = 'Servicios para la Internacionalización y Escalamiento Empresarial',
     SERVICIOS_TECNOLOGIA_DE_LA_INFORMACION = 'Servicios Tecnología de la Información',
+    TODO_LOS_PROCESOS = 'Todo los procesos'
 }

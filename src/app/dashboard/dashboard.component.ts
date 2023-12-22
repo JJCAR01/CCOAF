@@ -1,97 +1,199 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Chart,registerables} from 'node_modules/chart.js'
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PatService } from '../pat/services/pat.service';
 import { AuthService } from '../login/auth/auth.service';
 import { ActividadService } from '../actividad/services/actividad.service';
 import { TipoGEService } from '../gestion/services/tipoGE.service';
-Chart.register(...registerables)
+import { Chart, registerables } from 'chart.js/auto';
+
+Chart.register(...registerables);
 
 @Component({
-  selector: 'app-dashboard',
-  standalone: true,
-  imports: [CommonModule],
+  selector: 'app-root',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
   title = 'dashboard';
-  data : any;
-  nombrePats : any [] = [];
-  porcentajePats : any [] = [];
-  label : any [] = [];
-  avanceProyectos : any [] = [];
-  sumaTotal : any [] = [];
-  total : any [] = [];
+  datoPat: any;
+  dataActvidadesEstrategicas: any;
+  dataAct: any;
+  datoProyectos:any;
+  idPat:number | any;
+  idActividadEstrategica:[] = [];
+  nombrePats: any[] = [];
+  porcentajePats: any[] = [];
+  label: any[] = [];
+  avanceProyectos: any[] = [];
+  sumaTotalActividadesGestion: any[] = [];
+  sumaTotalActividadesEstrategicas: any[] = [];
+  sumaTotalProyectos: any;
+  total: any[] = [];
+  selectedPat: string = '';
+  nombreActividades: string[] = ['Actividades de Gestión', 'Actividades estratégicas','Proyectos'];
+  patSeleccionado :string = ''
+  form:FormGroup;
+  chartPrincipal:Chart | any;
+  chart1: Chart | any;
+  chart2: Chart | any;
 
   constructor(
-    private patService:PatService,
-    private auth:AuthService,
-    private actividadService:ActividadService,
-    private tipoService:TipoGEService){ }
-  
-  ngOnInit(): void {
-    this.patService.listarPat(this.auth.obtenerHeader()).subscribe(result => {
-      this.data = result;
-      if(this.data != null){
-        for (let i = 0; i < this.data.length; i++) {
-          this.nombrePats.push(this.data[i].nombre);
-          this.porcentajePats.push(this.data[i].porcentaje);
-        }
-        this.renderChart(this.nombrePats,this.porcentajePats,'bar','chart','Total');
-        this.renderChart(this.nombrePats,this.porcentajePats,'line','chart3','Total');
-      }
-    })
-    
-    this.actividadService.listarProyecto(this.auth.obtenerHeader()).subscribe(result => {
-      this.data = result;
-      if(this.data != null){
-        this.label.push('Proyectos');
-      }
-      this.sumaTotal.push(this.data.length);
-      
-    })
+    private patService: PatService,
+    private auth: AuthService,
+    private actividadService: ActividadService,
+    private tipoService: TipoGEService,
+    private formBuilder: FormBuilder
+  ) {
+    this.form = this.formBuilder.group({
+      pat: ['', Validators.required],
+    });
 
-    this.tipoService.listarGestion(this.auth.obtenerHeader()).subscribe(result => {
-      this.data = result;
-      if(this.data != null){
-        this.label.push('Actividades gestión');
-      }
-      this.sumaTotal.push(this.data.length);
-    })
-    this.actividadService.listarActividadGestionActividadEstrategica(this.auth.obtenerHeader()).subscribe(result => {
-      this.data = result;
-      if(this.data != null){
-        this.label.push('Actividades de gestion de Actividades estratégicas');
-      }
-      this.sumaTotal.push(this.data.length);
-      
-    })
-
-    this.tipoService.listarActividadEstrategica(this.auth.obtenerHeader()).subscribe(result => {
-      this.data = result;
-      if(this.data != null){
-        this.label.push("Actividades Estratégicas");        
-      }
-      this.sumaTotal.push(this.data.length);
-      this.renderChart(this.label,this.sumaTotal,'doughnut','chart2','Total');
-    }) 
   }
 
-  renderChart(data:any, mindata:any, type:any , id:any, label:any){
-    const dashboard = new Chart(id, {
-      type: type,
+  ngOnInit(): void {
+    this.obtenerDatos();
+    this.inicializarGraficoPrincipal();
+    this.inicializarGraficos();
+  }
+
+  obtenerDatos(): void {
+    this.patService.listarPat(this.auth.obtenerHeader()).subscribe(result => {
+      this.datoPat = result;
+      if (this.datoPat != null) {
+        this.nombrePats = [];
+        this.porcentajePats = [];
+        for (let i = 0; i < this.datoPat.length; i++) {
+          this.nombrePats.push(this.datoPat[i].nombre);
+          this.porcentajePats.push(this.datoPat[i].porcentaje);
+        }
+      }
+      // Actualizar chartPrincipal con los datos iniciales
+      this.chartPrincipal.data.labels = this.nombrePats;
+      this.chartPrincipal.data.datasets[0].data = this.porcentajePats;
+      this.chartPrincipal.update();
+    });
+  }
+
+  async obtenerDatosPorActividades(idPat: number) {
+    this.idActividadEstrategica = [];
+  
+    this.tipoService.listarGestionPorIdPat(idPat, this.auth.obtenerHeader()).subscribe(result => {
+      this.dataAct = result;
+      if (this.dataAct != null) {
+        this.sumaTotalActividadesGestion = [this.dataAct.length];
+      }
+    });
+  
+    this.sumaTotalProyectos = 0;  // Inicializar como un número
+  
+    this.tipoService.listarActividadEstrategicaPorIdPat(idPat, this.auth.obtenerHeader()).subscribe(async result => {
+      this.dataActvidadesEstrategicas = result;
+      if (this.dataActvidadesEstrategicas != null) {
+        this.idActividadEstrategica = this.dataActvidadesEstrategicas.map((act: any) => act.idActividadEstrategica);
+        this.sumaTotalActividadesEstrategicas = [this.dataActvidadesEstrategicas.length];
+  
+        // Inicializar sumaTotalProyectos como 0 antes de comenzar el bucle
+        this.sumaTotalProyectos = 0;
+  
+        // Crear un array de promesas
+        const promesasProyectos = this.idActividadEstrategica.map(async (id: any) => {
+          return new Promise<void>(async (resolve) => {
+            const proyectos = await this.actividadService.listarProyectoPorIdActividadEstrategica(id, this.auth.obtenerHeader()).toPromise();
+  
+            // Verificar si proyectos es undefined o null
+            const proyectosArray = (proyectos !== undefined) ? proyectos as any[] : [];
+  
+            // Sumar la longitud de cada conjunto de proyectos
+            this.sumaTotalProyectos += proyectosArray.length;
+  
+            // Si necesitas hacer algo con los proyectos individuales, puedes hacerlo aquí
+  
+            // Resolve la promesa después de completar las operaciones asincrónicas
+            resolve();
+          });
+        });
+  
+        // Utilizar Promise.all para esperar a que todas las promesas se resuelvan antes de continuar
+        await Promise.all(promesasProyectos);
+  
+        // Después de que todas las operaciones asincrónicas hayan concluido, actualiza el gráfico
+        this.actualizarGrafico2();
+      }
+    });
+  }
+  
+  async obtenerPat(pat: any): Promise<void> {
+    const idPatsFiltrados = pat.map((pat: any) => pat.idPat);
+    const primerIdPat = idPatsFiltrados[0];
+    this.idPat = primerIdPat;
+  
+    // Espera a que todas las operaciones asíncronas se completen antes de continuar
+    await this.tipoService.listarGestionPorIdPat(this.idPat, this.auth.obtenerHeader()).toPromise();
+    // ...
+    await this.tipoService.listarActividadEstrategicaPorIdPat(this.idPat, this.auth.obtenerHeader()).toPromise();
+    // ...
+    await this.obtenerDatosPorActividades(this.idPat);
+  }
+
+  async onPatSelect(): Promise<void> {
+    const patSeleccionado = this.form.get('pat')?.value;
+    this.patSeleccionado = patSeleccionado;
+  
+    // Lógica para filtrar datos según el 'pat' seleccionado
+    const filtrarPorNombrePat = this.datoPat.filter((item: any) => item.nombre === patSeleccionado);
+    
+    // Espera a que obtenerPat y todas las operaciones asíncronas se completen antes de continuar
+    await this.obtenerPat(filtrarPorNombrePat);
+  
+    // Actualizar gráficos después de completar todas las operaciones
+    await Promise.all([
+      this.actualizarGrafico2(),
+      this.actualizarGrafico1(filtrarPorNombrePat),
+      
+    ]);
+  }
+  async actualizarGrafico1(filtrarPorNombrePat: any[]): Promise<void> {
+    const labels = filtrarPorNombrePat.map((item: any) => item.nombre);
+    const porcentaje = filtrarPorNombrePat.map((item: any) => item.porcentaje);
+    const dataRestante = porcentaje.map((value: number) => 100 - value);
+  
+    labels.push('Restante');
+    porcentaje.push(dataRestante);
+  
+    // Actualizar gráfico 1
+    if (this.chart1) {
+      this.chart1.data.labels = labels;
+      this.chart1.data.datasets[0].data = porcentaje;
+      this.chart1.update();
+    }
+  }
+  
+  // ...
+  
+  async actualizarGrafico2(): Promise<void> {
+    const datosChart2 = [
+      this.sumaTotalActividadesGestion[0], // Datos para 'Actividades de Gestión'
+      this.sumaTotalActividadesEstrategicas[0], // Datos para 'Actividades estratégicas'
+      this.sumaTotalProyectos
+    ];
+  
+    // Actualizar gráfico 2
+    if (this.chart2) {
+      this.chart2.data.labels = this.nombreActividades;
+      this.chart2.data.datasets[0].data = datosChart2;
+      this.chart2.update();
+    }
+  }
+
+  inicializarGraficoPrincipal(): void {
+    this.chartPrincipal = new Chart('chartPrincipal', {
+      type: 'bar',
       data: {
-        labels: data,
+        labels: this.nombrePats,
         datasets: [{
-          label: label,
-          data: mindata,
-          backgroundColor: [
-            'rgb(255, 99, 132)',
-            'rgb(54, 162, 235)',
-            'rgb(255, 205, 86)',
-            'rgb(66, 205, 86)'
-          ],
+          label: 'Porcentaje anual',
+          data: this.porcentajePats ,
+          backgroundColor: ['rgb(78, 119, 228)', 'rgb(203, 159, 77)','rgb(181, 91, 205)','rgb(111, 210, 105)','rgb(205, 195, 91)'],
         }]
       },
       options: {
@@ -104,4 +206,45 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  inicializarGraficos(): void {
+    this.chart1 = new Chart('chart1', {
+      type: 'doughnut',
+      data: {
+        labels: this.nombrePats,
+        datasets: [{
+          label: 'Porcentaje actual',
+          data: this.porcentajePats + '%',
+          backgroundColor: ['rgb(111, 210, 105)', 'rgb(227, 227, 227)'],
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+    this.chart2 = new Chart('chart2', {
+      type: 'bar',
+      data: {
+        labels: this.nombreActividades,
+        datasets: [{
+          label: 'Cantidad',
+          data: this.sumaTotalActividadesGestion, // Actualizar para reflejar la estructura correcta
+          backgroundColor: ['rgb(111, 210, 105)', 'rgb(227, 227, 227)','rgb(203, 159, 77)'],
+        }] 
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+  }
+  
 }

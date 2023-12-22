@@ -26,6 +26,13 @@
                                 </div>
 
                                 <div class="form-floating mb-3">
+                                    <select class="form-select" id="direccion" formControlName="direccion">
+                                        <option *ngFor="let direccion of direccionesLista" [value]="direccion">{{ direccion }}</option>
+                                    </select>
+                                    <label for="proceso" class="form-label">Dirección</label>
+                                </div>
+
+                                <div class="form-floating mb-3">
                                     <select class="form-select" id="proceso" formControlName="proceso">
                                         <option *ngFor="let proceso of procesosEnumList" [value]="proceso">{{ proceso }}</option>
                                     </select>

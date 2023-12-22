@@ -76,12 +76,14 @@ export class PatListarComponent implements OnInit{
       this.patService.listarPat(this.auth.obtenerHeader()).toPromise().then(
         (data: any) => {
           // Obtener el token
-          const token:any = this.auth.getToken();
-
+          const token: any = this.auth.getToken();
+    
           // Decodificar el payload del token
           const payloadBase64 = token.split('.')[1];
           const decodedPayload = JSON.parse(atob(payloadBase64));
 
+          console.log(decodedPayload)
+    
           // Remover corchetes alrededor de la cadena de direcciones y procesos
           const direccionesString = decodedPayload.direccion.replace(/^\[|\]$/g, '');
           const procesosString = decodedPayload.proceso.replace(/^\[|\]$/g, '');
@@ -89,14 +91,25 @@ export class PatListarComponent implements OnInit{
           // Convertir las cadenas de direcciones y procesos a arrays
           const direccionesArray = direccionesString.split(',').map((direccion: string) => direccion.trim());
           const procesosArray = procesosString.split(',').map((proceso: string) => proceso.trim());
-
+    
+          // Verificar si son todas las direcciones y todos los procesos
+          const sonTodasLasDirecciones = direccionesArray.includes('TODAS_LAS_DIRECCIONES');
+          const sonTodosLosProcesos = procesosArray.includes('TODO_LOS_PROCESOS');
+    
           // Filtrar los datos según las direcciones y procesos del payload
           this.pats = data.filter((d: any) => {
-            return direccionesArray.some((direccion: string) =>
-              d.direccion.toLowerCase() === direccion.toLowerCase()
-            ) && procesosArray.includes(d.proceso);
+            if (sonTodasLasDirecciones && sonTodosLosProcesos) {
+              return true;
+            } else if (sonTodasLasDirecciones ){
+              procesosArray.includes(d.proceso);
+            } else {
+              // Aplicar los filtros si no son todas las direcciones y todos los procesos
+              return direccionesArray.some((direccion: string) =>
+                d.direccion.toLowerCase() === direccion.toLowerCase()
+              ) && procesosArray.includes(d.proceso);
+            }
           });
-          
+    
           // Actualizar la cantidad de pats
           this.cantidadPats = this.pats.length;
         },

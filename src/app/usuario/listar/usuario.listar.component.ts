@@ -30,6 +30,7 @@ export class UsuarioListarComponent implements OnInit{
       this.cargoService.listar(this.auth.obtenerHeader()).subscribe(
         (data: any) => {
           this.cargos = data;
+          console.log(this.usuarios)
       },
         (error) => {
           console.log(error);

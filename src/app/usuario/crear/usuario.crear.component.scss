@@ -1,6 +1,7 @@
-.row {
-  justify-content: center;
+.body{
+  font-family: "Roboto";
 }
+
 .card {
   border: 1px solid #838282; /* Establece un borde sólido */
   border-radius: 30px; /* Agrega esquinas redondeadas */
@@ -12,6 +13,10 @@
 .card h2 {
   margin-top: 0; /* Elimina el margen superior del título */
   text-align: center; /* Centra el título */
+}
+
+.row {
+  justify-content: center;
 }
 
 
@@ -68,4 +73,22 @@
 .direcciones-lista span {
   display: inline-block; /* Muestra cada dirección en línea */
   margin-right: 10px;    /* Espacio entre cada dirección */
+}
+
+.input{
+  display: flex; 
+  align-items: center;
+}
+.btn-input{
+  width: 20%;
+}
+
+.table-color th{
+  background-color: #bbbbbb;
+}
+td {
+  cursor: pointer;
+}
+th{
+  color: #161515c0;
 }

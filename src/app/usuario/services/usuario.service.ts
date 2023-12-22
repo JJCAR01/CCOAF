@@ -22,4 +22,23 @@ export class UsuarioService {
   eliminarUsuario(idUsuario:number,headers?: HttpHeaders){
     return this.http.delete(`${environment.apiUrl}/ccoa/usuarios/${idUsuario}`,{headers});
   }
+
+  modificar(usuario : any,idUsuario:number,headers?: HttpHeaders){
+    return this.http.put(`${environment.apiUrl}/ccoa/usuarios/${idUsuario}`,usuario,{headers});
+  }
+
+  modificarDireccion(usuario : any,idUsuario:number,headers?: HttpHeaders){
+    return this.http.put(`${environment.apiUrl}/ccoa/usuarios/direcciones/${idUsuario}`,usuario,{headers});
+  }
+  eliminarDireccion(usuario : any,idUsuario:number,headers?: HttpHeaders){
+    return this.http.put(`${environment.apiUrl}/ccoa/usuarios/direcciones/del/${idUsuario}`,usuario,{headers});
+  }
+  modificarProceso(usuario : any,idUsuario:number,headers?: HttpHeaders){
+    return this.http.put(`${environment.apiUrl}/ccoa/usuarios/procesos/${idUsuario}`,usuario,{headers});
+  }
+  eliminarProceso(usuario : any,idUsuario:number,headers?: HttpHeaders){
+    return this.http.put(`${environment.apiUrl}/ccoa/usuarios/procesos/del/${idUsuario}`,usuario,{headers});
+  }
+  
+ 
 }

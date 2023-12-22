@@ -1,0 +1,90 @@
+.body{
+  font-family: "Roboto";
+}
+
+.buscador input{
+  max-width: 100px;
+  align-items: center;
+}
+
+h1 {
+  font-family: "Roboto", unset;
+  color: #000000;
+  font-size: xx-large;
+  margin: 0;
+  text-align: left;
+}
+
+h2 {
+  font-family: "Roboto", unset;
+  color: #000000;
+  font-size: x-large;
+  padding: 5px;
+  margin: 0;
+  text-align: left;
+}
+h3 {
+  font-family: "Roboto", initial;
+  font-size: large;
+  margin-bottom: 10px;
+}
+h4{
+  flex-grow: 1; /* Permitir que el texto "Epicas" ocupe el espacio restante */
+  font-size: medium;
+
+}
+h5{
+  flex-grow: 1; /* Permitir que el texto "Epicas" ocupe el espacio restante */
+  font-size: small;
+
+}
+h6 {
+  font-size: smaller;
+}
+
+
+.smaller-main{
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  margin-top: 10px;
+
+  hr {
+    margin: 2px 0; // Ajusta según sea necesario para reducir el espacio superior e inferior del hr
+  }
+
+  th, td {
+    text-align: center; // Centra horizontalmente el texto
+    vertical-align: middle; // Centra verticalmente el texto
+  }
+
+}
+
+.column-proceso{
+  width: 45%;
+}
+.column-direccion{
+  width:  33%;
+}
+.column-acciones{
+  width:  7%;
+}
+
+
+.input{
+  display: flex; 
+  align-items: center;
+}
+.btn-input{
+  width: 40%;
+}
+
+.table-color th{
+  background-color: #bbbbbb;
+}
+td {
+  cursor: pointer;
+}
+th{
+  color: #161515c0;
+}

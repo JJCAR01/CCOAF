@@ -14,9 +14,10 @@ import { EProceso } from 'src/app/pat/listar/eproceso';
 })
 export class UsuarioCrearComponent implements OnInit {
   title = 'crearUsuario';
-  procesosLista: string[] = [];
+  procesosLista: any;
   direccionesLista: any;
   listaDeDireccionesSeleccionadas: string[] = [];
+  listaDeProcesosSeleccionadas: string[] = [];
   cargos: any[] = [];
   roles: any[] =[];
   form:FormGroup;
@@ -44,15 +45,34 @@ export class UsuarioCrearComponent implements OnInit {
     this.cargarCargos();
   }
 
-  guardarDireccion() {
+  agregarDirecciones() {
     const direccionSeleccionada = this.form.get('direcciones')?.value;
-    const direccionMayusculas = direccionSeleccionada.replace(/\s+/g, '_').toUpperCase();
-  
+    const direccionEnEnum = this.formatearProceso(direccionSeleccionada)
+
     // Verificar si la dirección ya existe en la lista antes de agregarla
-    if (!this.listaDeDireccionesSeleccionadas.includes(direccionMayusculas)) {
-      this.listaDeDireccionesSeleccionadas.push(direccionMayusculas);
+    if (!this.listaDeDireccionesSeleccionadas.includes(direccionEnEnum)) {
+      this.listaDeDireccionesSeleccionadas.push(direccionEnEnum);
     }
   }
+
+  agregarProcesos() {
+    const procesoSeleccionado = this.form.get('procesos')?.value;
+    const procesoEnEnum = this.formatearProceso(procesoSeleccionado);
+    
+    // Verificar si el proceso ya existe en la lista antes de agregarlo
+    if (!this.listaDeProcesosSeleccionadas.includes(procesoEnEnum)) {
+      this.listaDeProcesosSeleccionadas.push(procesoEnEnum);
+    }
+    
+  }
+  
+  formatearProceso(proceso: string): string {
+    return proceso.normalize('NFD')
+                   .replace(/[\u0300-\u036f]/g, '')
+                   .replace(/\s+/g, '_')
+                   .toUpperCase();
+  }
+  
   
   
   cargarCargos() {
@@ -76,7 +96,7 @@ export class UsuarioCrearComponent implements OnInit {
         password: this.form.get('password')?.value,
         idCargo: this.form.get('idCargo')?.value,
         direcciones: this.listaDeDireccionesSeleccionadas,
-        procesos: this.form.get('procesos')?.value,
+        procesos: this.listaDeProcesosSeleccionadas,
         roles: [
           {
             nombreRol: this.form.get('nombreRol')?.value
@@ -104,8 +124,9 @@ export class UsuarioCrearComponent implements OnInit {
           Swal.fire(
             {
               title:"Error!!!",
-              text:error.error.mensajeHumano, 
+              text:error.error.mensajeTecnico, 
               icon:"error",
+              confirmButtonColor: '#0E823F',
             }
           );
         }

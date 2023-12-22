@@ -55,7 +55,7 @@ export class SprintListarComponent implements OnInit {
     private usuarioService :UsuarioService,
     private formBuilder: FormBuilder,
     private tareaService: TareaService,
-    
+
   ) { 
     this.formSprint = this.formBuilder.group({
       descripcion: ['', Validators.required],

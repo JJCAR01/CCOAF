@@ -9,7 +9,7 @@
         <li class="sidenav-nav-item" *ngFor="let data of navDataUser">
           <a class="sidenav-nav-link" title="{{data.label}}"
           [routerLink]="['/panelAdmin', { outlets: { 'OutletAdmin': [data.routeLink] } }]" routerLinkActive="router-link-active">
-            <i class="sidenav-link-icon" [class]="data.icon"></i>
+          <img class="sidenav-link-image" [src]="data.imageSource" />
             <span class="sidenav-link-text" *ngIf="collapsed">
               {{ data.label }}
             </span>
@@ -21,7 +21,7 @@
       <li class="sidenav-nav-item" *ngFor="let data of navData">
         <a class="sidenav-nav-link" title="{{data.label}}"
         [routerLink]="['/panelAdmin', { outlets: { 'OutletAdmin': [data.routeLink] } }]" routerLinkActive="router-link-active">
-          <i class="sidenav-link-icon" [class]="data.icon"></i>
+          <img class="sidenav-link-image" [src]="data.imageSource" />
           <span class="sidenav-link-text" *ngIf="collapsed">
             {{ data.label }}
           </span>

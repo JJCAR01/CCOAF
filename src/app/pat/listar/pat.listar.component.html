@@ -57,7 +57,10 @@
   </div>
   
   <main class="main text-center smaller-main">
-    <div class="custom-button mb-1">
+    <div class="custom-button">
+        <span class="input-group-text buscador">Buscar:</span>
+        <input type="text" class="form-control me-1" [(ngModel)]="busqueda" />
+            
         <button title="Agregar"
           type="button" class="btn btn-success" [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['crearPat'] } }]">
           <i class="bi bi-plus-lg"></i>

@@ -1,32 +1,32 @@
 export const navbarData = [
     {
         routeLink: 'listarPat', // Ruta absoluta
-        icon: 'bi bi-graph-up',
+        imageSource: 'assets/plan.png',
         label: 'Plan Anual de trabajo'
     },
     {
         routeLink: 'dashboard',
-        icon: 'bi bi-speedometer2',
+        imageSource: 'assets/dashboard.png',
         label: 'Dashboard'
     },
     {
         routeLink: 'listarActividadesEstrategicas',
-        icon: "bi bi-building",
+        imageSource: "assets/estrategica.png",
         label: 'Actividades estratégicas'
     },
     {
         routeLink: 'listarProyecto',
-        icon: "bi bi-kanban",
+        imageSource: "assets/proyecto.png",
         label: 'Proyectos'
     },
     {
         routeLink: 'listarActividadesEstrategicasPendiente',
-        icon: "bi bi-building-exclamation",
+        imageSource: "assets/estrategicaadvertencia.png",
         label: 'Act estratégicas pendientes'
     },
     {
         routeLink: 'listarGestionesPendientes',
-        icon: 'bi bi-shield-exclamation',
+        imageSource: 'assets/proyectoadvertencia.png',
         label: 'Gestiones del área pendientes'
     },
 

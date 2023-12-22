@@ -28,6 +28,7 @@
     "bootstrap": "^5.3.1",
     "bootstrap-icons": "^1.11.1",
     "chart.js": "^4.4.0",
+    "diacritic": "^0.0.2",
     "firebase": "^10.6.0",
     "googleapis": "^126.0.1",
     "jquery": "^3.7.0",

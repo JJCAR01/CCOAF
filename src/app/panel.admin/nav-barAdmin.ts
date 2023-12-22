@@ -1,22 +1,22 @@
 export const navbarAdminData = [
     {
         routeLink: 'listarArea', // Ruta absoluta
-        icon: 'bi bi-building-fill',
+        imageSource: 'assets/area.png',
         label: 'Areas'
     },
     {
         routeLink: 'listarCargo',
-        icon: 'bi bi-buildings-fill',
+        imageSource: 'assets/cargo.png',
         label: 'Cargos'
     },
     {
         routeLink: 'listarUsuario',
-        icon: "bi bi-people-fill",
+        imageSource: "assets/usuarios.png",
         label: 'Usuarios'
     },
     {
-        routeLink: 'modificarDireciones',
-        icon: "bi bi-pencil-square",
+        routeLink: 'modificarDirecciones',
+        imageSource: "assets/direcciones.png",
         label: 'Modificar direcciones'
     },
 

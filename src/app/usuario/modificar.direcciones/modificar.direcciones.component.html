@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="modificar.direcciones.component.scss">
+    <title>Modificar direcciones y procesos</title>
+</head>
+<body>
+    <h1 class="mb-2">Modificar direcciones y procesos</h1>
+    <div>
+        <div class="col-lg-4 " >
+          <div class="input-group">
+            <span class="input-group-text buscador">Buscar:</span>
+            <input type="text" class="form-control" [(ngModel)]="busqueda" />
+          </div>
+        </div>
+    </div>
+    <main class="main smaller-main">
+            <table class="table table-bordered">
+              <thead class="table table-color">
+                <tr>
+                <th >Nombre </th>
+                <th class="column-direccion">Direcciones</th>
+                <th class="column-proceso">Procesos</th>
+                <th class="column-acciones">Modificar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let usuario of usuarios | buscar: busqueda">
+                    <td>{{ usuario.nombre }} {{usuario.apellidos }}</td>
+                    <td>
+                      <li *ngFor="let direccion of usuario.direcciones">{{ direccion | formatEnum }}</li>
+                    </td>                    
+                    <td>
+                        <li *ngFor="let proceso of usuario.procesos">{{ proceso | formatEnum }}</li>
+                    </td>    
+                    <td>
+                      <h6>Direcciones</h6>
+                      <div>
+                        <button title="Agregar dirección" type="button" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#ModalModificarDireccion" 
+                        (click)="obtengoUsuario(usuario.idUsuario,usuario)">
+                            <i class="bi bi-pen-fill"></i>
+                          </button>
+                        <button title="Eliminar dirección" type="button" class="btn btn-outline-danger me-1 mb-1" data-bs-toggle="modal" data-bs-target="#ModalEliminarDireccion" 
+                        (click)="obtengoUsuario(usuario.idUsuario,usuario)">
+                            <i class="bi bi-trash3-fill"></i>
+                          </button>
+                      </div>
+                      <hr>
+                      <h6>Procesos</h6>
+                      <div>
+                        <button title="Agregar proceso" type="button" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#ModalModificarProceso" 
+                        (click)="obtengoUsuario(usuario.idUsuario,usuario)">
+                            <i class="bi bi-pen-fill"></i>
+                          </button>
+                        <button title="Eliminar proceso" type="button" class="btn btn-outline-danger me-1" data-bs-toggle="modal" data-bs-target="#ModalEliminarProceso" 
+                        (click)="obtengoUsuario(usuario.idUsuario,usuario)">
+                            <i class="bi bi-trash3-fill"></i>
+                          </button>
+                      </div>
+
+                    </td>
+                </tr>
+            </tbody>
+            </table>
+    </main>
+
+    <div class="modal fade" id="ModalModificarDireccion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2 class="modal-title" id="exampleModalLabel">Agregar dirección</h2>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form [formGroup]="formDireccion">
+                <h3>Usuario:</h3>
+                <h6 class="mb-2">{{nombreUsuarioSeleccionado}}</h6>
+                <h3>Direcciones actuales:</h3>
+                <h6 *ngFor="let direcciones of direccionesUsuarioSeleccionado">{{ direcciones | formatEnum}} </h6>
+                <div class="form-floating mb-2">
+                  <div class="input">
+                    <select class="form-select" id="direcciones" formControlName="direcciones">
+                      <option value="" disabled selected>Seleccione las direcciones<span class="required-field">*</span></option>
+                      <option *ngFor="let direccion of direccionesLista" [value]="direccion">{{ direccion }}</option>
+                    </select>
+                    <button (click)="seleccionarDireccion()" class="btn btn-secondary btn-input">Agregar dirección</button>
+                  </div>
+                </div>
+                <div class="direcciones-lista">
+                  <h6 *ngFor="let direcciones of listaDeDireccionesSeleccionadas">{{ direcciones | formatEnum }}</h6>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                  <button type="submit" class="btn btn-success" data-bs-dismiss="modal" (click)="modificarDireccionDeUsuario()">Guardar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="modal fade" id="ModalEliminarDireccion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2 class="modal-title" id="exampleModalLabel">Eliminar dirección</h2>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form [formGroup]="formDireccion">
+                <h3>Usuario:</h3>
+                <h6 class="mb-2">{{nombreUsuarioSeleccionado}}</h6>
+                <h3>Direcciones actuales:</h3>
+                <h6 *ngFor="let direcciones of direccionesUsuarioSeleccionado">{{ direcciones | formatEnum}} </h6>
+                <div class="form-floating mb-2">
+                  <div class="input">
+                    <select class="form-select" id="direcciones" formControlName="direcciones">
+                      <option value="" disabled selected>Seleccione las direccion a eliminar<span class="required-field">*</span></option>
+                      <option *ngFor="let direccion of direccionesUsuarioSeleccionado" [value]="direccion">{{ direccion | formatEnum}}</option>
+                    </select>
+                    <button (click)="seleccionarDireccion()" class="btn btn-secondary btn-input">Dirección a eliminar</button>
+                  </div>
+                </div>
+                <div class="direcciones-lista">
+                  <h6 *ngFor="let direcciones of listaDeDireccionesSeleccionadas">{{ direcciones | formatEnum }}</h6>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                  <button type="submit" class="btn btn-success" data-bs-dismiss="modal" (click)="eliminarDireccionUsuario()">Guardar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="ModalModificarProceso" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2 class="modal-title" id="exampleModalLabel">Agregar proceso</h2>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form [formGroup]="formProceso">
+                <h3>Usuario:</h3>
+                <h6 class="mb-2">{{nombreUsuarioSeleccionado}}</h6>
+                <h3>Procesos actuales:</h3>
+                <h6 *ngFor="let procesos of procesosUsuarioSeleccionado">{{ procesos  | formatEnum}} </h6>
+                <div class="form-floating mb-2">
+                  <div class="input">
+                    <select class="form-select" id="procesos" formControlName="procesos">
+                      <option value="" disabled selected>Seleccione los procesos<span class="required-field">*</span></option>
+                      <option *ngFor="let proceso of procesosLista" [value]="proceso">{{ proceso }}</option>
+                    </select>
+                    <button (click)="seleccionarProceso()" class="btn btn-secondary btn-input">Agregar proceso</button>
+                  </div>
+                </div>
+                <div class="direcciones-lista">
+                  <h6 *ngFor="let procesos of listaDeProcesosSeleccionadas">{{ procesos | formatEnum }}</h6>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                  <button type="submit" class="btn btn-success" data-bs-dismiss="modal" (click)="modificarProcesoDeUsuario()">Guardar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="modal fade" id="ModalEliminarProceso" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2 class="modal-title" id="exampleModalLabel">Eliminar proceso</h2>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form [formGroup]="formProceso">
+                <h3>Usuario:</h3>
+                <h6 class="mb-2">{{nombreUsuarioSeleccionado}}</h6>
+                <h3>Procesos actuales:</h3>
+                <h6 *ngFor="let procesos of procesosUsuarioSeleccionado">{{ procesos  | formatEnum}} </h6>
+                <div class="form-floating mb-2">
+                  <div class="input">
+                    <select class="form-select" id="direcciones" formControlName="direcciones">
+                      <option value="" disabled selected>Seleccione las direccion a eliminar<span class="required-field">*</span></option>
+                      <option *ngFor="let proceso of procesosUsuarioSeleccionado" [value]="proceso">{{ proceso | formatEnum}}</option>
+                    </select>
+                    <button (click)="seleccionarProceso()" class="btn btn-secondary btn-input">Proceso a eliminar</button>
+                  </div>
+                </div>
+                <div class="direcciones-lista">
+                  <h6 *ngFor="let procesos of listaDeProcesosSeleccionadas">{{ procesos | formatEnum }}</h6>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                  <button type="submit" class="btn btn-success" data-bs-dismiss="modal" (click)="eliminarProcesoUsuario()">Guardar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.4/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+  
+    
+    
+</body>
+</html>

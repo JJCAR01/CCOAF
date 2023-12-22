@@ -1,26 +1,47 @@
-<div class="container">
-  <div class="row justify-content-center mt-2"> <!-- Añadí mt-5 para aumentar el espacio superior -->
-    <div class="col-lg-8"> <!-- Cambié a col-lg-8 para hacerlo un poco más grande -->
-      <h2 class="text-center mb-3">Gráfica de puntos de Programa</h2>
-      <div class="chart-container h-100">
-        <canvas id="chart3"></canvas>
+<html>
+<body>
+    <div class="row-with-button">
+      <div>
+        <h1 class="mb-2">Dashboard</h1>
       </div>
-    </div>
+    </div>  
+    <main class="main smaller-main">
+      <form [formGroup]="form">
+        <div class="form-floating mb-3">
+          <select class="form-select" id="pat" formControlName="pat" (change)="onPatSelect()">
+            <option value="" disabled selected>Seleccione el pat a filtrar*</option>
+            <option *ngFor="let pat of nombrePats" [value]="pat">{{ pat }}</option>
+          </select>
+          <label for="pat" class="form-label">Pat</label>
+        </div>
+      </form>
+      <div>
+        <div class="row">
+          <div class="col">
+            <h2 class="text-center mb-3">Planes anuales</h2>
+            <div class="chart-container">
+              <canvas id="chartPrincipal"></canvas>
+            </div>
+          </div>
+          <div class="col-lg-2">
+            <h2 class="text-center mb-3">Porcentaje avance de plan anual de {{ patSeleccionado }}</h2>
+            <div class="chart-container">
+              <canvas id="chart1"></canvas>
+            </div>
+          </div>
+          <div class="col">
+            <h2 class="text-center mb-3">Total de actividades de {{patSeleccionado}}</h2>
+            <div class="chart-container">
+              <canvas id="chart2"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
 
-    <div class="col-lg-4"> <!-- Mantuve col-lg-4 para la otra columna -->
-      <h2 class="text-center mb-3">Total</h2>
-      <div class="chart-container h-100">
-        <canvas id="chart2"></canvas>
-      </div>
-    </div>
-  </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.4/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 
-  <div class="row justify-content-center">
-    <div class="col-lg-6 mt-3">
-      <h2 class="text-center mb-3">Porcentaje Avance de planes anuales</h2>
-      <div class="chart-container h-100">
-        <canvas id="chart"></canvas>
-      </div>
-    </div>
-  </div>
-</div>
+</body>
+</html>

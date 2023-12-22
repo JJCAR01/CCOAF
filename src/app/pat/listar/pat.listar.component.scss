@@ -29,9 +29,10 @@ h2 {
 
 }
 .custom-button {
-    color: #fff; /* Cambia #your-desired-color por el color que desees */
-    margin-top: auto; /* Empuja el botón hacia la parte inferior del contenedor */
-    align-self: flex-end; /* Alinea el botón a la derecha */
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px; // Ajusta según sea necesario
+    margin-top: auto; /* Empuja el botón hacia la parte inferior del conteneddor */
 }
 
 .tabla-row {
