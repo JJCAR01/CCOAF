@@ -1,4 +1,4 @@
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 import { Component,Injectable,OnInit } from '@angular/core';
 import { SprintService } from '../services/sprint.service';
@@ -10,9 +10,8 @@ import Swal from 'sweetalert2';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { TareaService } from "src/app/tarea/services/tarea.service";
 import { EEstado } from "src/app/gestion/listar/EEstado";
-import { initializeApp } from "@angular/fire/app";
+import { initializeApp } from 'firebase/app';
 import { environment } from "src/environments/environment.development";
-
 
 @Component({
   selector: 'app-sprint',
@@ -46,6 +45,7 @@ export class SprintListarComponent implements OnInit {
   formTarea:FormGroup;
   formSprint:FormGroup;
   formCrearTarea:FormGroup
+  
 
   constructor(
     private sprintService: SprintService,
@@ -55,6 +55,7 @@ export class SprintListarComponent implements OnInit {
     private usuarioService :UsuarioService,
     private formBuilder: FormBuilder,
     private tareaService: TareaService,
+
 
   ) { 
     this.formSprint = this.formBuilder.group({
@@ -100,15 +101,40 @@ export class SprintListarComponent implements OnInit {
   }
 
 
-  documento($event: any) {
-    const app = initializeApp(environment.firebase);
-    const storage = getStorage(app);
-    const storageRef = ref(storage, 'some-child');
-    const file = $event.target.files[0];  
+  async documento($event: any, idSprintSeleccionado: number) {
+  const app = initializeApp(environment.firebase);
+  const storage = getStorage(app);
+  const storageRef = ref(storage, `sprint/${idSprintSeleccionado}/${$event.target.files[0].name}`);
+  const file = $event.target.files[0];
 
-    uploadBytes(storageRef, file).then((snapshot) => {
-      console.log('Uploaded a blob or file!');
-    });
+  try {
+    const snapshot = await uploadBytes(storageRef, file);
+    const downloadURL = await getDownloadURL(storageRef);
+
+    const headers = this.auth.obtenerHeader(); // Asegúrate de que esta línea sea correcta y devuelva los encabezados necesarios.
+
+    this.sprintService.guardarDocumentoSprint(downloadURL, idSprintSeleccionado, this.auth.obtenerHeader()).subscribe(
+      (data: any) => {
+        console.log('URL de descarga:', downloadURL);
+        console.log('Respuesta del servicio:', data);
+        // Puedes realizar acciones adicionales después de que el documento se ha guardado.
+      },
+      (error: any) => {
+        console.error('Error al guardar el documento:', error);
+        // Manejar el error según tus necesidades.
+        // Puedes mostrar un mensaje de error al usuario.
+      }
+    );
+
+  } catch (error) {
+    console.error('Error durante la subida del archivo:', error);
+    // Manejar el error según tus necesidades.
+    // Puedes mostrar un mensaje de error al usuario.
+  }
+}
+
+  abrirModalAgregarDocumento(idSprint: number): void {
+    this.idSprintSeleccionado = idSprint;
   }
 
   cargarUsuario() {

@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 
 @Injectable({
@@ -13,8 +14,8 @@ export class SprintService {
   crearSprint(sprint : any,headers?: HttpHeaders){
     return this.http.post(`${environment.apiUrl}/ccoa/sprints`,sprint,{headers});
   }
-  guardarDocumentoSprint(documento : any,headers?: HttpHeaders){
-    return this.http.post(`${environment.apiUrl}/ccoa/sprints/archivo`,documento,{headers});
+  guardarDocumentoSprint(sprint : any,idSprint:number,headers?: HttpHeaders){
+    return this.http.post(`${environment.apiUrl}/ccoa/sprints/archivo/${idSprint}`, sprint,{headers});
   }
   listarSprint(headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/sprints`,{headers});

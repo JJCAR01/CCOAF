@@ -8,7 +8,9 @@ export const environment = {
       projectId: "ccoa-52fa5",
       storageBucket: "ccoa-52fa5.appspot.com",
       messagingSenderId: "121626008191",
+      locationId: "europe-west",
       appId: "1:121626008191:web:7321e181f8413331e37d4a"
     }
  };
+
 
