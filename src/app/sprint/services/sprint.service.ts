@@ -15,7 +15,10 @@ export class SprintService {
     return this.http.post(`${environment.apiUrl}/ccoa/sprints`,sprint,{headers});
   }
   guardarDocumentoSprint(sprint : any,idSprint:number,headers?: HttpHeaders){
-    return this.http.post(`${environment.apiUrl}/ccoa/sprints/archivo/${idSprint}`, sprint,{headers});
+    return this.http.put(`${environment.apiUrl}/ccoa/sprints/archivo/${idSprint}`, sprint,{headers});
+  }
+  obtenerDocumento(idSprint:number,headers?: HttpHeaders){
+    return this.http.get(`${environment.apiUrl}/ccoa/sprints/archivo/${idSprint}`,{headers});
   }
   listarSprint(headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/sprints`,{headers});

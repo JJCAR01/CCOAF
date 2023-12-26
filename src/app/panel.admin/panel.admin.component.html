@@ -6,27 +6,22 @@
       </div>
     </div>
     <ul class="sidenav-nav">
-        <li class="sidenav-nav-item" *ngFor="let data of navDataUser">
-          <a class="sidenav-nav-link" title="{{data.label}}"
-          [routerLink]="['/panelAdmin', { outlets: { 'OutletAdmin': [data.routeLink] } }]" routerLinkActive="router-link-active">
-          <img class="sidenav-link-image" [src]="data.imageSource" />
-            <span class="sidenav-link-text" *ngIf="collapsed">
-              {{ data.label }}
-            </span>
-          </a>
-        </li>
-    </ul>
-    <hr>
-    <ul class="sidenav-nav">
-      <li class="sidenav-nav-item" *ngFor="let data of navData">
-        <a class="sidenav-nav-link" title="{{data.label}}"
-        [routerLink]="['/panelAdmin', { outlets: { 'OutletAdmin': [data.routeLink] } }]" routerLinkActive="router-link-active">
-          <img class="sidenav-link-image" [src]="data.imageSource" />
-          <span class="sidenav-link-text" *ngIf="collapsed">
-            {{ data.label }}
-          </span>
-        </a>
-      </li>
+      <ng-container *ngFor="let data of navData">
+        <ng-container *ngIf="!data.isSeparator">
+          <li class="sidenav-nav-item">
+            <a class="sidenav-nav-link" title="{{data.label}}"
+              [routerLink]="[{ outlets: { 'OutletAdmin': [data.routeLink] } }]" routerLinkActive="router-link-active">
+              <img class="sidenav-link-image" [src]="data.imageSource" />
+              <span class="sidenav-link-text" *ngIf="collapsed">
+                {{ data.label }}
+              </span>
+            </a>
+          </li>
+        </ng-container>
+        <ng-container *ngIf="data.isSeparator">
+          <hr class="separator-line" />
+        </ng-container>
+      </ng-container>
     </ul>
     <div class="logout-container bottom">
       <button (click)="logOut()" title="Cerrar sesión"><i class="bi bi-box-arrow-right"></i></button> 

@@ -20,11 +20,16 @@ import { environment } from "src/environments/environment.development";
 })
 export class SprintListarComponent implements OnInit {
   title = 'listarSprint';
+  pesoDeArchivo = 300 * 1024 * 1024; // 300 MB
+  extencionesPermitidas = /\.(doc|docx|xls|xlsx|ppt|pptx|zip|pdf)$/i;
+  nombreArchivoSeleccionado: string = '';
+  archivoSeleccionado: File | null = null;
   estadoEnumList: string[] = [];
   sprints: any[] = [];
   proyectos: any[] = [];
   tareas:any[] =[];
   usuarios:any[] =[];
+  documentoObtenido:any;
   patNombre:any;
   nombreSprint:any;
   fechaInicialSprint:any;
@@ -101,37 +106,147 @@ export class SprintListarComponent implements OnInit {
   }
 
 
-  async documento($event: any, idSprintSeleccionado: number) {
-  const app = initializeApp(environment.firebase);
-  const storage = getStorage(app);
-  const storageRef = ref(storage, `sprint/${idSprintSeleccionado}/${$event.target.files[0].name}`);
-  const file = $event.target.files[0];
+  async documento(event: any, idSprintSeleccionado: number): Promise<void> {
+    this.idSprintSeleccionado = idSprintSeleccionado;
+    this.archivoSeleccionado = event.target.files[0];
+  
+    try {
+      await this.validarArchivo();
+      // Actualizar el nombre del archivo seleccionado
+      this.nombreArchivoSeleccionado = this.archivoSeleccionado ? this.archivoSeleccionado.name : '';
+      // Resto del código si la validación es exitosa
+    } catch (error) {
+      // Mostrar un mensaje de error o tomar alguna acción si la validación falla
+      console.error(error);
+      this.archivoSeleccionado = null;
+      this.nombreArchivoSeleccionado = '';
+    }
+  }
 
-  try {
-    const snapshot = await uploadBytes(storageRef, file);
-    const downloadURL = await getDownloadURL(storageRef);
+  private validarArchivo(): boolean {
+    if (!this.archivoSeleccionado) {
+      // Puedes mostrar un mensaje de error o manejarlo de otra manera
+      return false;
+    }
 
-    const headers = this.auth.obtenerHeader(); // Asegúrate de que esta línea sea correcta y devuelva los encabezados necesarios.
 
-    this.sprintService.guardarDocumentoSprint(downloadURL, idSprintSeleccionado, this.auth.obtenerHeader()).subscribe(
+    const fileSize = this.archivoSeleccionado.size;
+    const fileName = this.archivoSeleccionado.name;
+
+    if (fileSize > this.pesoDeArchivo) {
+      alert('El archivo supera el límite de tamaño permitido (300MB).');
+      return false;
+    } else if (!this.extencionesPermitidas.test(fileName)) {
+      alert('Formato de archivo no permitido. Por favor, elija un archivo con una de las siguientes extensiones: .doc, .docx, .xls, .xlsx, .ppt, .pptx, .zip');
+      return false;
+    }
+
+    return true;
+  }
+  async subirDocumento(formulario: any) {
+    if (!this.archivoSeleccionado) {
+      // Puedes mostrar un mensaje de error o manejarlo de otra manera
+      return;
+    }
+
+    const app = initializeApp(environment.firebase);
+    const storage = getStorage(app);
+    const storageRef = ref(storage, `sprint/${this.idSprintSeleccionado}/${this.archivoSeleccionado.name}`);
+
+      try {
+        const snapshot = await uploadBytes(storageRef, this.archivoSeleccionado);
+        const downloadURL = await getDownloadURL(storageRef);
+
+        // Crear un objeto sprint que incluya la URL de descarga
+        const sprint = {
+          rutaArchivo: downloadURL, // Asegúrate de que el nombre de la propiedad coincida con lo que espera tu backend
+        };
+
+        this.sprintService.guardarDocumentoSprint(sprint, this.idSprintSeleccionado, this.auth.obtenerHeaderDocumento()).subscribe(
+            (data: any) => {
+              Swal.fire({
+                title:'Archivo subido!!!',
+                text:'El archivo se cargo correctamente',
+                icon:'success',
+                confirmButtonColor: '#0E823F',
+              })
+            },
+            (error) => {
+              Swal.fire({
+                title:'Hubo un error!!!',
+                text:error.error.mensajeTecnico,
+                icon:'error',
+                confirmButtonColor: '#0E823F',
+              })
+            }
+        );
+
+    } catch (error) {
+      Swal.fire({
+        title:'Hubo un error!!!',
+        text:'Error durante la subida del archivo',
+        icon:'error',
+        confirmButtonColor: '#0E823F',
+      })
+    }
+  }
+  obtenerDocumento(idSprint: number) {
+    this.sprintService.obtenerDocumento(idSprint, this.auth.obtenerHeaderDocumento()).subscribe(
       (data: any) => {
-        console.log('URL de descarga:', downloadURL);
-        console.log('Respuesta del servicio:', data);
-        // Puedes realizar acciones adicionales después de que el documento se ha guardado.
+        this.documentoObtenido = data;
+  
+        // Verificar si this.documentoObtenido.rutaArchivo existe
+        if (this.documentoObtenido.rutaArchivo) {
+          // Extraer el nombre del archivo de la URL
+          const nombreArchivo = this.extraerNombreArchivo(this.documentoObtenido.rutaArchivo);
+
+          // Crear un enlace HTML
+          const enlaceHTML = `<a href="${this.documentoObtenido.rutaArchivo}" target="_blank">${nombreArchivo}</a>`;
+
+          Swal.fire({
+            title: ' Documento cargado al sprint',
+            html: `Para previsualizar darle click al enlace: ${enlaceHTML}`,
+            confirmButtonColor: '#0E823F',
+            icon:'success'
+          });
+        } else {
+          // Manejar el caso en el que la propiedad rutaArchivo no existe
+          console.error('La respuesta del servidor no tiene la propiedad rutaArchivo.');
+        }
       },
       (error: any) => {
-        console.error('Error al guardar el documento:', error);
-        // Manejar el error según tus necesidades.
-        // Puedes mostrar un mensaje de error al usuario.
+        Swal.fire({
+          title: 'Este sprint no tiene documentos adjuntos',
+          text: 'Cargue un documento para visualizarlo',
+          icon: 'info',
+          confirmButtonColor: '#0E823F',
+        });
       }
     );
-
-  } catch (error) {
-    console.error('Error durante la subida del archivo:', error);
-    // Manejar el error según tus necesidades.
-    // Puedes mostrar un mensaje de error al usuario.
   }
-}
+  
+  extraerNombreArchivo(rutaArchivo: string): string {
+    // Decodificar la URL para manejar códigos de escape
+    const nombreArchivoDecodificado = decodeURIComponent(rutaArchivo);
+  
+    // Buscar la posición de la última '/'
+    const posicionUltimaBarra = nombreArchivoDecodificado.lastIndexOf('/');
+  
+    // Buscar la posición del primer '?' después de la extensión
+    const posicionInterrogante = nombreArchivoDecodificado.indexOf('?', posicionUltimaBarra);
+  
+    // Verificar si se encontró la posición adecuada
+    if (posicionUltimaBarra !== -1 && posicionInterrogante !== -1) {
+      // Extraer el nombre del archivo
+      const nombreArchivo = nombreArchivoDecodificado.substring(posicionUltimaBarra + 1, posicionInterrogante);
+      return nombreArchivo;
+    } else {
+      console.error('No se pudo determinar el nombre del archivo desde la URL:', rutaArchivo);
+      return '';
+    }
+  }
+  
+  
 
   abrirModalAgregarDocumento(idSprint: number): void {
     this.idSprintSeleccionado = idSprint;

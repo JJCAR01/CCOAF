@@ -241,3 +241,11 @@ th,td {
 .color-iconoTiempo {
   color: rgb(37, 70, 70)
 } 
+
+/* En tu archivo de estilo */
+.campo-carga {
+  border: 1px solid #0d0d0e; /* Color y estilo del borde */
+  border-radius: 5px; /* Radio de borde para esquinas redondeadas */
+  padding: 8px; /* Espaciado interno para mejorar la apariencia */
+  cursor: pointer;
+}

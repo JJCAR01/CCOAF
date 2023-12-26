@@ -33,4 +33,31 @@ export class AuthService {
     const token = this.getToken();
     return new HttpHeaders().set('Authorization', `Bearer ${token}`);
   }
+  obtenerHeaderDocumento(): HttpHeaders {
+    const token = this.getToken();
+    // Agregar el encabezado 'Content-Type: application/json'
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+  }
+
+  esAdmin(): boolean {
+    const token = this.getToken();
+
+    if (token) {
+      try {
+        const decodedToken: any = jwtDecode(token);
+
+        // Verificar si el token contiene información sobre el rol del usuario
+        // Puedes ajustar esto según la estructura específica de tus tokens
+        return decodedToken && decodedToken.type === 'ADMIN';
+
+      } catch (error) {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
 }

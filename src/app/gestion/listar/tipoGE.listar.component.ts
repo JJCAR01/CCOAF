@@ -347,6 +347,7 @@ export class TipogeListarComponent implements OnInit {
               icon: "success",
               confirmButtonColor: '#0E823F',
             }).then(()=>{
+              
               this.cargarTareas(this.idActividadGestionSeleccionado,'ACTIVIDAD_GESTION')
               this.formCrearTarea.reset()
             });
@@ -383,6 +384,7 @@ export class TipogeListarComponent implements OnInit {
                   text : 'Se ha modificado la tarea.',
                   confirmButtonColor: '#0E823F',
                 }).then(()=>{
+                  this.cargarGestiones(this.idPat)
                   this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION')
                   this.formTarea.reset()  
                 });               
