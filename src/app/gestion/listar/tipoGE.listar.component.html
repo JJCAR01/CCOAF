@@ -37,7 +37,7 @@
     <li class="header">
       <button title="Volver"
         type="button" class="btn btn-success" 
-        [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarPat'] } }]">
+        [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarPat'] } }]">
         <i class="bi bi-arrow-return-left"></i>
       </button>
     </li>
@@ -49,7 +49,7 @@
     </li>
     <li class="header">
       <button title="Agregar"
-          type="button" class="btn btn-success" [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['crearTipoGE'] } }]"
+          type="button" class="btn btn-success" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['crearTipoGE'] } }]"
           [queryParams]="{ idPat , patNombre }">
           <i class="bi bi-plus-lg"></i>
         </button>
@@ -74,26 +74,26 @@
           <tbody>
             <ng-container *ngFor="let actividad of actividades">
               <tr title="{{actividad.nombre}}">
-                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]" class="fila-nombre">
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]" class="fila-nombre">
                       {{ actividad.nombre }}</td>
-                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]">
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]">
                       {{ actividad.fechaInicial }}</td>
-                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]">
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]">
                       {{ actividad.fechaFinal }}</td>
-                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]">
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]">
                       {{ actividad.duracion }}</td>
-                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]" 
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]" 
                       [ngClass]="colorPorcentaje(actividad.avance)">
                       <span *ngIf="actividad.avance !== 100"[ngClass]="colorDias(actividad.diasRestantes)">{{ actividad.diasRestantes }}</span>
                       <span *ngIf="actividad.avance === 100">Finalizado</span>
                 </td>
-                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]" 
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]" 
                       [ngClass]="colorPorcentaje(actividad.avance)">{{ actividad.avance }} %</td>
-                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]">
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]">
                       {{ obtenerNombreUsuario(actividad.idUsuario).toLocaleUpperCase() }}</td>
                 <td >
                   <button title="Ver" class="btn btn-outline-primary me-1" 
-                  [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]"
+                  [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]"
                     ><i class="bi bi-eye-fill"></i></button>
                     <button title="Modificar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificar" (click)="obtenerActividadEstrategica(actividad.idActividadEstrategica,actividad)">
                       <i class="bi bi-pen-fill"></i>

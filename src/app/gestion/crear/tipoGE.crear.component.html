@@ -52,7 +52,7 @@
                         
                             <div class="d-flex justify-content-center">
                                 <button type="button" class="btn btn-secondary btn-block me-2"
-                                    [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarTipoGE',idPat] } }]"
+                                    [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE',idPat] } }]"
                                 > Atrás</button>
                                 <button type="submit" class="btn btn-success btn-block btn-lg " [disabled]="!form.valid || (!tipoActividadEstrategica && !tipoActividadGestion)">Registrar</button>
                             </div>

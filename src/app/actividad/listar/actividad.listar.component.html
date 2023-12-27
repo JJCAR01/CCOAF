@@ -36,7 +36,7 @@
     <li class="header ">
       <button title="Volver"
         type="button" class="btn btn-success" 
-        [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarTipoGE', patEstrategica] } }]">
+        [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', patEstrategica] } }]">
         <i class="bi bi-arrow-return-left"></i>
       </button>
     </li>
@@ -48,7 +48,7 @@
     </li>
     <li class="header">
       <button title="Agregar"
-        type="button" class="btn btn-success" [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['crearActividad'] } }]"
+        type="button" class="btn btn-success" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['crearActividad'] } }]"
         [queryParams]="{ idActividadEstrategica , actividadNombre }">
           <i class="bi bi-plus-lg"></i>
         </button>
@@ -76,29 +76,29 @@
           <tbody>
             <ng-container *ngFor="let proyecto of proyectos">
               <tr title="{{proyecto.nombre}}">
-                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]" class="fila-nombre">
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]" class="fila-nombre">
                       {{ proyecto.nombre }}</td>
-                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]">
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]">
                       {{ proyecto.presupuesto | currency : '$ ' : 'symbol' : '1.0-0' }}</td>
-                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]">
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]">
                       {{ verModalidad(proyecto.modalidad) }}</td>
-                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]">
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]">
                       {{ proyecto.valorEjecutado | currency : '$ ' : 'symbol' : '1.0-0' }}</td>
-                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]">
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]">
                       {{ proyecto.fechaInicial }}</td>
-                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]"> 
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]"> 
                       {{ proyecto.fechaFinal }}</td>
-                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]">
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]">
                       {{ proyecto.duracion }}</td>
-                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]" 
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]" 
                       [ngClass]="colorPorcentaje(proyecto.avance)">{{ proyecto.avance }} %</td>
-                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]">
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]">
                       {{ proyecto.planeacionSprint }}</td>
-                <td [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]">
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]">
                       {{ proyecto.totalSprint }}</td>
                 <td>
                   <button title="Ver" class="btn btn-outline-primary me-1" 
-                  [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]"
+                  [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]"
                     ><i class="bi bi-eye-fill"></i></button>
                     <button title="Modificar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarProyecto" (click)="obtenerProyecto(proyecto.idProyecto,proyecto)">
                       <i class="bi bi-pen-fill"></i>

@@ -32,7 +32,7 @@ const routes: Routes = [
   { path: '',redirectTo:'login',pathMatch:"full"},
   { path: "login", component: LoginComponent},
 
-  { path: "panelAdmin", component: PanelAdminComponent,canActivate:[LoginGuard],
+  { path: "panel", component: PanelAdminComponent,canActivate:[LoginGuard],
   children:[
     { path: "crearUsuario", component: UsuarioCrearComponent, outlet:"OutletAdmin" },
     { path: `listarUsuario`, component: UsuarioListarComponent, outlet:"OutletAdmin"},

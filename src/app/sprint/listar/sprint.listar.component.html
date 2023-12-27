@@ -40,11 +40,11 @@
         <li class="header">
           <button title="Volver"
             type="button" class="btn btn-success mb-1" 
-            [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['listarActividad', actividad, 'pat', patNombre] } }]">
+            [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarActividad', actividad, 'pat', patNombre] } }]">
             <i class="bi bi-arrow-return-left"></i>
           </button>
           <button title="Agregar"
-            type="button" class="btn btn-success" [routerLink]="['/panelUsuario', { outlets: { 'OutletUsuario': ['crearSprint'] } }]"
+            type="button" class="btn btn-success" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['crearSprint'] } }]"
             [queryParams]="{ idProyecto , proyectoNombre, patNombre }">Añadir Sprint
               <i class="bi bi-plus-lg"></i>
             </button>

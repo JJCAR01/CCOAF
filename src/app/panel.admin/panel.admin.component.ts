@@ -44,7 +44,7 @@ interface SideNavToggle {
   ]
 })
 export class PanelAdminComponent implements OnInit {
-  title = 'panelAdmin';
+  title = 'panel';
   loggedIn: boolean = true;
 
   constructor(private router: Router,private cookie: CookieService){}

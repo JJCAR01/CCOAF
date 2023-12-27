@@ -58,11 +58,11 @@ export class LoginComponent implements OnInit{
               if (decode.type === 'OPERADOR')
               {
                 this.loggedIn = response!=null;
-                this.router.navigate(['/panelUsuario', { outlets: { 'OutletUsuario': ['listarPat'] } }]);
+                this.router.navigate(['/panel', { outlets: { 'OutletAdmin': ['listarPat'] } }]);
               }
               else if(decode.type === 'ADMIN'){
                 this.loggedIn = response!=null;
-                this.router.navigate(['/panelAdmin', { outlets: { 'OutletAdmin': ['listarArea'] } }]);
+                this.router.navigate(['/panel', { outlets: { 'OutletAdmin': ['listarArea'] } }]);
               }
 
             }
@@ -102,12 +102,12 @@ export class LoginComponent implements OnInit{
         if(decode.type === 'ADMIN')
         { 
           this.loggedIn = response!=null;
-          this.router.navigate(['/panelAdmin', { outlets: { 'OutletAdmin': ['listarArea'] } }]);
+          this.router.navigate(['/panel', { outlets: { 'OutletAdmin': ['listarArea'] } }]);
         }
         else if (decode.type === 'OPERADOR')
         {
           this.loggedIn = response!=null;
-          this.router.navigate(['/panelUsuario', { outlets: { 'OutletUsuario': ['listarPat'] } }]);
+          this.router.navigate(['/panel', { outlets: { 'OutletAdmin': ['listarPat'] } }]);
         }
       } 
       },error =>{
