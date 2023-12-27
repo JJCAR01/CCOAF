@@ -25,9 +25,9 @@ export const navbarData = [
         label: 'Act estratégicas pendientes'
     },
     {
-        routeLink: 'listarGestionesPendientes',
+        routeLink: 'listarProyectosPendiente',
         imageSource: 'assets/proyectoadvertencia.png',
-        label: 'Gestiones del área pendientes'
+        label: 'Proyectos pendientes'
     },
 
 ]

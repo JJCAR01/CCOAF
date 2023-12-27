@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActividadService } from 'src/app/actividad/services/actividad.service';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import Swal from 'sweetalert2';
+import { UsuarioService } from 'src/app/usuario/services/usuario.service';
 
 @Component({
   selector: 'app-proyecto.listar',
@@ -12,23 +13,33 @@ import Swal from 'sweetalert2';
 export class ProyectoPendienteListarComponent implements OnInit {
   title = 'listarProyectosPendiente';
   proyectos: any[] = [];
+  usuarios: any[] = [];
   proyectosPendientes: any[] = [];
 
   constructor(private actividadService: ActividadService,
     private auth: AuthService,
+    private usuarioService :UsuarioService
     ){ }
 
   ngOnInit(): void {
     this.cargarProyectosPendientes();
   }
 
+  cargarProyectosPendientes() {
+    this.actividadService.listarProyecto(this.auth.obtenerHeader()).subscribe((data: any) => {
+      this.proyectosPendientes = data.filter((pendiente: any) => pendiente.avance < 100);
+    });
+  }
 
-  cargarProyectosPendientes(){
-    this.actividadService.listarProyecto(this.auth.obtenerHeader()).toPromise().then((data:any)=>{
-      if(data.avance < 100){
-        this.proyectosPendientes = data;
+  cargarUsuario() {
+    this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
+      (data: any) => {
+        this.usuarios = data;
+    },
+      (error) => {
+        console.log(error);
       }
-    })
+    );
   }
 
   colorPorcentaje(porcentaje: number): string {

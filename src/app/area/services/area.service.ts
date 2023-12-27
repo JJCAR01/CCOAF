@@ -25,8 +25,9 @@ export class AreaService {
   eliminar(idArea:number,headers?: HttpHeaders){
     return this.http.delete(`${environment.apiUrl}/ccoa/areas/${idArea}`,{headers});
   }
-  modificar(idArea:number,nuevoNombre:string,headers?: HttpHeaders){
-    return this.http.put(`${environment.apiUrl}/ccoa/areas/${idArea}`,{headers});
+
+  modificarArea<T>(area : any,idArea:number,headers?: HttpHeaders):Observable<T>{
+    return this.http.put<T>(`${environment.apiUrl}/ccoa/areas/${idArea}`,area,{headers});
   }
 }
 

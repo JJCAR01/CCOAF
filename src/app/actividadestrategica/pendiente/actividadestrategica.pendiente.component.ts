@@ -23,21 +23,17 @@ export class ActividadEstrategicaPendienteListarComponent implements OnInit {
     ){ }
 
   ngOnInit(): void {
-    this.cargarProyectosPendientes();
+    this.cargarActividadesEstrategicaPendientes();
     this.cargarUsuario()
   }
 
 
-  cargarProyectosPendientes(){
-    this.tipoService.listarActividadEstrategica(this.auth.obtenerHeader()).subscribe((data:any)=>{
-      data.forEach((e:any) => {
-        if(e.avance < 100){
-          this.actividadesEstrategicasPendientes = data
-        }
-        
-      });
-    })
+  cargarActividadesEstrategicaPendientes() {
+    this.tipoService.listarActividadEstrategica(this.auth.obtenerHeader()).subscribe((data: any) => {
+      this.actividadesEstrategicasPendientes = data.filter((pendiente: any) => pendiente.avance < 100);
+    });
   }
+  
   cargarUsuario() {
     this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
       (data: any) => {

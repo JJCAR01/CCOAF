@@ -394,6 +394,7 @@ export class SprintListarComponent implements OnInit {
               icon: "success",
               confirmButtonColor: '#0E823F',
             }).then(()=>{
+              this.cargarSprints(this.idProyecto)
               this.cargarTareas(this.idSprintSeleccionado,'SPRINT')
               this.formCrearTarea.reset()
             });

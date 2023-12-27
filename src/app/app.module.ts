@@ -25,7 +25,6 @@ import { ActividadCrearComponent } from './actividad/crear/actividad.crear.compo
 import { ActividadListarComponent } from './actividad/listar/actividad.listar.component';
 import { SprintListarComponent } from './sprint/listar/sprint.listar.component';
 import { SprintCrearComponent } from './sprint/crear/sprint.crear.component';
-import { TareaListarComponent } from './tarea/listar/tarea.listar.component';
 import { ProyectoListarComponent } from './proyecto/listar/proyecto.listar.component';
 import { ProyectoPendienteListarComponent } from './proyecto/pendientes/proyecto.pendiente.component';
 import { ActividadEstrategicaPendienteListarComponent } from './actividadestrategica/pendiente/actividadestrategica.pendiente.component';
@@ -55,7 +54,7 @@ import { CommonModule } from '@angular/common';
     AppComponent,LoginComponent,PanelAdminComponent,AreaCrearComponent,AreaListarComponent,PanelUsuarioComponent,
     CargoCrearComponent,CargoListarComponent,UsuarioCrearComponent,UsuarioListarComponent, BuscarPipe,EnumPipe,PatListarComponent,
     PatCrearComponent,TipogeListarComponent,ActividadCrearComponent, ActividadListarComponent,TipoGECrearComponent,
-    SprintListarComponent,SprintCrearComponent, TareaListarComponent, ProyectoListarComponent, ProyectoPendienteListarComponent,
+    SprintListarComponent,SprintCrearComponent, ProyectoListarComponent, ProyectoPendienteListarComponent,
     ActividadEstrategicaPendienteListarComponent, ComasPipe, ModificarDireccionesComponent,DashboardComponent
   ],
   imports: [

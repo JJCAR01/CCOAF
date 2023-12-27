@@ -16,7 +16,6 @@ import { TipogeListarComponent } from './gestion/listar/tipoGE.listar.component'
 import { ActividadCrearComponent } from './actividad/crear/actividad.crear.component';
 import { ActividadListarComponent } from './actividad/listar/actividad.listar.component';
 import { SprintListarComponent } from './sprint/listar/sprint.listar.component';
-import { TareaListarComponent } from './tarea/listar/tarea.listar.component';
 import { TipoGECrearComponent } from './gestion/crear/tipoGE.crear.component';
 import { SprintCrearComponent } from './sprint/crear/sprint.crear.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -43,6 +42,7 @@ const routes: Routes = [
     { path: "listarArea", component: AreaListarComponent, outlet:"OutletAdmin"},
     { path: "dashboard", component: DashboardComponent, outlet:"OutletAdmin"},
     { path: "listarProyecto", component: ProyectoListarComponent, outlet:"OutletAdmin"},
+    { path: 'listarProyectoPendiente', component: ProyectoPendienteListarComponent, outlet:'OutletAdmin'},
     { path: "listarPat", component: PatListarComponent,outlet:"OutletAdmin"},
     { path: "listarActividadesEstrategicas", component: ActividadestrategicaListarComponent, outlet:"OutletAdmin"},
     { path: "listarActividadesEstrategicasPendiente", component: ActividadEstrategicaPendienteListarComponent, outlet:"OutletAdmin"},
@@ -59,7 +59,6 @@ const routes: Routes = [
     { path: 'listarActividad/:idActividadEstrategica/pat/:patNombre', component: ActividadListarComponent, outlet: 'OutletAdmin' },
     { path: 'listarSprint/:idProyecto/pat/:patNombre', component: SprintListarComponent, outlet: 'OutletAdmin' },
     { path: "crearSprint", component: SprintCrearComponent, outlet:"OutletAdmin"},
-    { path: 'listarTarea/:idASE', component: TareaListarComponent, outlet: 'OutletAdmin' }
   ]},
 
   { path: "panelUsuario", component: PanelUsuarioComponent, canActivate:[LoginGuard],
@@ -77,7 +76,6 @@ const routes: Routes = [
     { path: 'listarActividad/:idActividadEstrategica/pat/:patNombre', component: ActividadListarComponent, outlet: 'OutletUsuario' },
     { path: 'listarSprint/:idProyecto/pat/:patNombre', component: SprintListarComponent, outlet: 'OutletUsuario' },
     { path: "crearSprint", component: SprintCrearComponent, outlet:"OutletUsuario"},
-    { path: 'listarTarea/:idASE', component: TareaListarComponent, outlet: 'OutletUsuario' }
 
   ] },
 

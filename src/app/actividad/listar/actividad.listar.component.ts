@@ -397,6 +397,7 @@ ngOnInit() {
                   text : 'El ha modificado la tarea.',
                   confirmButtonColor: '#0E823F',
                   }).then(() => {
+                    this.cargarGestiones(this.idActividadEstrategica)
                     this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')
                     this.formTarea.reset()
                 });

@@ -28,6 +28,9 @@ export class PatListarComponent implements OnInit{
   fechaAnualSeleccionada:any;
   procesoSeleccionado:any;
   usuario:any;
+  actividadesFiltradas:any;
+  proyectosFiltrados:any;
+  actividadesGestionFiltradas:any;
   cantidadPats:any;
   cantidadProyectos:any;
   cantidadGestiones:any;
@@ -56,10 +59,6 @@ export class PatListarComponent implements OnInit{
     ngOnInit() {
       this.cargarPats();
       this.cargarUsuario();
-      this.cargarActividadGestionActividadesEstrategica()
-      this.cargarActividadesEstrategica();
-      this.cargarPatsActividadGestion();
-      this.cargarPatsProyectos();
     }
     cargarUsuario() {
       this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
@@ -82,8 +81,6 @@ export class PatListarComponent implements OnInit{
           const payloadBase64 = token.split('.')[1];
           const decodedPayload = JSON.parse(atob(payloadBase64));
 
-          console.log(decodedPayload)
-    
           // Remover corchetes alrededor de la cadena de direcciones y procesos
           const direccionesString = decodedPayload.direccion.replace(/^\[|\]$/g, '');
           const procesosString = decodedPayload.proceso.replace(/^\[|\]$/g, '');
@@ -112,56 +109,28 @@ export class PatListarComponent implements OnInit{
     
           // Actualizar la cantidad de pats
           this.cantidadPats = this.pats.length;
+
+          // Cargar las actividades estratégicas relacionadas con los planes anuales
+          this.cargarActividadesEstrategica(this.pats);
+          this.cargarPatsActividadGestion(this.pats);
         },
         (error) => {
           Swal.fire(error.error.mensajeTecnico);
         }
       );
     }
-    cargarActividadesEstrategica() {
-      this.tipoService.listarActividadEstrategica(this.auth.obtenerHeader()).toPromise().then(
-        (data: any) => {
-          data.forEach((actividad:any) => {
-            const terminadas = actividad.avance;
+    cargarPatsActividadGestion(pats: any[]) {
+      // Obtener los IDs de los planes anuales
+      const idsPats = pats.map(pat => pat.idPat);
     
-            if (terminadas === 100) {
-              this.sumadorActividadEstrategicasTerminados += 1;
-            } else {
-              this.sumadorActividadEstrategicasAbiertos += 1;
-            }
-          });
-          const numeroDeListas = Object.keys(data).length;
-          this.cantidadEstrategicas = numeroDeListas;
-        },
-        (error) => {
-          Swal.fire(error.error.mensajeTecnico);
-        }
-      );
-    }
-    cargarActividadGestionActividadesEstrategica() {
-      this.actividadService.listarActividadGestionActividadEstrategica(this.auth.obtenerHeader()).toPromise().then(
-        (data: any) => {
-          data.forEach((actividad:any) => {
-            const terminadas = actividad.avance;
-    
-            if (terminadas === 100) {
-              this.sumadorActividadGestionTerminados += 1;
-            } else {
-              this.sumadorActividadGestionAbiertos += 1;
-            }
-          });
-          const numeroDeListas = Object.keys(data).length;
-          this.cantidadGestionesActividadEstrategica = numeroDeListas;
-        },
-        (error) => {
-          Swal.fire(error.error.mensajeTecnico);
-        }
-      );
-    }
-    cargarPatsActividadGestion() {
+      // Filtrar las actividades de gestión por los IDs de los planes anuales
       this.tipoService.listarGestion(this.auth.obtenerHeader()).toPromise().then(
         (data: any) => {
-          data.forEach((actividad:any) => {
+          const actividadesFiltradas = data.filter((actividad: any) =>
+            idsPats.includes(actividad.idPat)
+          );
+    
+          actividadesFiltradas.forEach((actividad: any) => {
             const terminadas = actividad.avance;
     
             if (terminadas === 100) {
@@ -170,7 +139,8 @@ export class PatListarComponent implements OnInit{
               this.sumadorActividadGestionAbiertos += 1;
             }
           });
-          const numeroDeListas = Object.keys(data).length;
+    
+          const numeroDeListas = actividadesFiltradas.length;
           this.cantidadGestiones = numeroDeListas;
         },
         (error) => {
@@ -178,12 +148,78 @@ export class PatListarComponent implements OnInit{
         }
       );
     }
-    cargarPatsProyectos() {
-      this.actividadService.listarProyecto(this.auth.obtenerHeader()).toPromise().then(
+    cargarActividadesEstrategica(pats: any[]) {
+      // Obtener los IDs de los planes anuales
+      const idsPats = pats.map(pat => pat.idPat);
+    
+      // Filtrar las actividades estratégicas por los IDs de los planes anuales
+      this.tipoService.listarActividadEstrategica(this.auth.obtenerHeader()).toPromise().then(
         (data: any) => {
-          data.forEach((actividad:any) => {
+          this.actividadesFiltradas = data.filter((actividad: any) =>
+            idsPats.includes(actividad.idPat)
+          );
+    
+          this.actividadesFiltradas.forEach((actividad: any) => {
+            const terminadas = actividad.avance;
+            
+            if (terminadas === 100) {
+              this.sumadorActividadEstrategicasTerminados += 1;
+            } else {
+              this.sumadorActividadEstrategicasAbiertos += 1;
+            }
+            
+          });
+          this.cargarActividadGestionActividadesEstrategica(this.actividadesFiltradas);
+          this.cargarPatsProyectos(this.actividadesFiltradas);
+          const numeroDeListas = this.actividadesFiltradas.length;
+          this.cantidadEstrategicas = numeroDeListas;
+          
+        },
+        (error) => {
+          Swal.fire(error.error.mensajeTecnico);
+        }
+      );
+    }
+    cargarActividadGestionActividadesEstrategica(actividadesEstrategicas: any[]) {
+      // Obtener los IDs de las actividades estratégicas
+      const idsActividadesEstrategicas = actividadesEstrategicas.map(actividad => actividad.idActividadEstrategica);
+      // Consultar las actividades de gestión relacionadas con las actividades estratégicas
+      this.actividadService.listarActividadGestionActividadEstrategica(this.auth.obtenerHeader()).toPromise().then(
+        (data: any) => {
+          this.actividadesGestionFiltradas = data.filter((actividad: any) =>
+            idsActividadesEstrategicas.includes(actividad.idActividadEstrategica)
+          );
+    
+          this.actividadesGestionFiltradas.forEach((actividad: any) => {
             const terminadas = actividad.avance;
     
+            if (terminadas === 100) {
+              this.sumadorActividadGestionTerminados += 1;
+            } else {
+              this.sumadorActividadGestionAbiertos += 1;
+            }
+          });
+    
+          const numeroDeListas = this.actividadesGestionFiltradas.length;
+          this.cantidadGestionesActividadEstrategica = numeroDeListas;
+        },
+        (error) => {
+          Swal.fire(error.error.mensajeTecnico);
+        }
+      );
+    }
+    
+    cargarPatsProyectos(proyectos: any[]) {
+      // Obtener los IDs de las actividades estratégicas
+      const idsProyectos = proyectos.map(proyecto => proyecto.idActividadEstrategica);
+      this.actividadService.listarProyecto(this.auth.obtenerHeader()).toPromise().then(
+        (data: any) => {
+          this.proyectosFiltrados = data.filter((proyecto: any) =>
+            idsProyectos.includes(proyecto.idActividadEstrategica)
+          );
+
+          this.proyectosFiltrados.forEach((proyecto:any) => {
+            const terminadas = proyecto.avance;
             if (terminadas === 100) {
               this.sumadorProyectosTerminados += 1;
             } else {

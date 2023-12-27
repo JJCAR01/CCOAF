@@ -51,8 +51,7 @@ export class UsuarioListarComponent implements OnInit{
     }
 
     eliminarUsuario(idUsuario: number) {
-      const usuarioAEliminar = this.usuarios.find(usuario => usuario.idUsuario === idUsuario);
-
+      
       Swal.fire(
         {
           icon:"question",
@@ -75,6 +74,7 @@ export class UsuarioListarComponent implements OnInit{
               icon: "success",
               confirmButtonColor: '#0E823F'
             }).then(() => {
+              this.cargarUsuarios()
             });
           },
           (error) => {
@@ -82,6 +82,8 @@ export class UsuarioListarComponent implements OnInit{
               title:'Solicitud no válida!',
               text: error.error.mensajeHumano,
               icon: "error",
+              confirmButtonText: "OK",
+              confirmButtonColor: '#0E823F'
             });
           }
         );

@@ -112,10 +112,8 @@ export class UsuarioCrearComponent implements OnInit {
               text:'El usuario se ha creado.', 
               icon:"success",
               showCancelButton: true,
-              cancelButtonText: "Cancelar",
               confirmButtonText: "Confirmar",
               confirmButtonColor: '#0E823F',
-              reverseButtons: true, 
             }
           );
             this.form.reset();

@@ -1,7 +1,6 @@
 .body{
     font-family: "Roboto";
   }
-  
 
 .buscador input{
     max-width: 100px;
@@ -9,13 +8,22 @@
 }
 
 h1 {
-    background-color: #504f4f;
+    font-family: "Roboto", unset;
+    background-color: #555555c0;
+    font-size: xx-large;
     color: #e7e5e5;
     padding: 10px;
     margin: 0;
     text-align: center;
+}  
+h2 {
+    font-family: "Roboto", unset;
+    color: #000000;
+    font-size: x-large;
+    padding: 5px;
+    margin: 0;
+    text-align: left;
 }
-
 /* Estilos de la lista y los elementos */
 .element-list {
     list-style-type: none;

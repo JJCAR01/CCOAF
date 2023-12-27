@@ -8,10 +8,10 @@
     <title>Cargos</title>
 </head>
 <body>
-    <h1 class="mb-2">Lista de Cargos</h1>
+    <h1 class="mb-2">Cargos</h1>
     <div class="row mt-2">
-        <div class="col-lg-4 ms-5" >
-            <div class="input-group ms-5">
+        <div class="col-lg-4" >
+            <div class="input-group">
                 <span class="input-group-text buscador ms-5">Buscar:</span>
                 <input type="text" class="form-control ms-2" [(ngModel)]="busqueda" />
             </div>
@@ -24,20 +24,45 @@
         </div>
     </div>
 
-    <div *ngFor="let cargo of cargos | buscar: busqueda" class="container-sm">
-        <ul class="list-group mt-2">
+    <div *ngFor="let cargo of cargos | buscar: busqueda" class="container">
+        <ul class="list-group mt-1">
             <li class="list-group-item">
                 <div class="d-flex justify-content-between align-items-center">
                 <span class="col-lg-4">{{ cargo.nombre }}</span>
-                <span class="col-lg-4">{{ obtenerNombreArea(cargo.idArea).toUpperCase() }}</span>
+                <span class="col-lg-4">{{ obtenerNombreArea(cargo.idArea) }}</span>
                     <span>
-                        <button class="btn btn-primary me-1"><i class="bi bi-pen-fill"></i></button>
-                        <button class="btn btn-danger" (click)="eliminarCargo(cargo.idCargo)" ><i class="bi bi-trash3-fill"></i></button>
+                        <button class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarCargo" (click)="cargoSeleccionado(cargo.idCargo,cargo)"
+                        ><i class="bi bi-pen-fill"></i></button>
+                        <button class="btn btn-outline-danger" (click)="eliminarCargo(cargo.idCargo)" ><i class="bi bi-trash3-fill"></i></button>
                     </span>
                 </div>
             </li>
         </ul>
     </div>
+
+    <div class="modal fade" id="modalModificarCargo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Modificar cargo</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form [formGroup]="form" (ngSubmit)="modificarCargo()">
+                <div class="mb-3">
+                  <label for="nombre" class="form-label">Nombre</label>
+                  <input type="text" class="form-control" id="nombre" formControlName="nombre" [value]="nombreCargoSeleccionado">
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                  <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Guardar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
     
 </body>
 </html>
