@@ -7,7 +7,7 @@
     </div>
     <ul class="sidenav-nav">
       <ng-container *ngFor="let data of navData">
-        <ng-container *ngIf="!data.isSeparator">
+        <ng-container *ngIf="!data.isSeparator && (isAdmin || !data.adminOnly)">
           <li class="sidenav-nav-item">
             <a class="sidenav-nav-link" title="{{data.label}}"
               [routerLink]="[{ outlets: { 'OutletAdmin': [data.routeLink] } }]" routerLinkActive="router-link-active">

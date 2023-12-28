@@ -4,6 +4,8 @@ import Swal from 'sweetalert2';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import { TipoGEService } from 'src/app/gestion/services/tipoGE.service';
 import { UsuarioService } from 'src/app/usuario/services/usuario.service';
+import { PatService } from 'src/app/pat/services/pat.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-actividadestrategica.listar',
@@ -19,7 +21,9 @@ export class ActividadestrategicaListarComponent implements OnInit{
 
   constructor(private tipoService: TipoGEService,
     private auth: AuthService,
-    private usuarioService :UsuarioService){}
+    private usuarioService :UsuarioService,
+    private patService:PatService,
+    private router:Router){}
 
   ngOnInit(): void {
     this.cargarActividadesEstrategicas();
@@ -47,6 +51,20 @@ export class ActividadestrategicaListarComponent implements OnInit{
     },
       (error) => {
         console.log(error);
+      }
+    );
+  }
+
+  irADetalles(actividad: any) {
+    // Obtén el nombre del PAT antes de navegar
+    this.patService.listarPatPorId(actividad.idPat, this.auth.obtenerHeader()).subscribe(
+      (data:any) => {
+        const patNombre = data.nombre;
+        // Navega a la página de detalles con el nombre asociado al idPat
+        this.router.navigate(['/panel', { outlets: { 'OutletAdmin': ['listarActividad', actividad.idActividadEstrategica, 'pat', patNombre] } }]);
+      },
+      (error) => {
+        console.error('Error al obtener el nombre del PAT:', error);
       }
     );
   }

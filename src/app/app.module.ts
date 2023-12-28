@@ -9,7 +9,6 @@ import { LoginComponent} from './login/login.component'
 import { UsuarioCrearComponent } from './usuario/crear/usuario.crear.component';
 import { UsuarioListarComponent } from './usuario/listar/usuario.listar.component';
 import { PanelAdminComponent } from './panel.admin/panel.admin.component';
-import { PanelUsuarioComponent } from './panel.usuario/panel.usuario.component';
 import { CargoCrearComponent } from './cargo/crear/cargo.crear.component';
 import { CargoListarComponent } from './cargo/listar/cargo.listar.component';
 import { AreaCrearComponent } from './area/crear/area.crear.component';
@@ -51,7 +50,7 @@ import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
-    AppComponent,LoginComponent,PanelAdminComponent,AreaCrearComponent,AreaListarComponent,PanelUsuarioComponent,
+    AppComponent,LoginComponent,PanelAdminComponent,AreaCrearComponent,AreaListarComponent,
     CargoCrearComponent,CargoListarComponent,UsuarioCrearComponent,UsuarioListarComponent, BuscarPipe,EnumPipe,PatListarComponent,
     PatCrearComponent,TipogeListarComponent,ActividadCrearComponent, ActividadListarComponent,TipoGECrearComponent,
     SprintListarComponent,SprintCrearComponent, ProyectoListarComponent, ProyectoPendienteListarComponent,

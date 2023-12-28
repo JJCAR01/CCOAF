@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { getAuth,signOut } from 'firebase/auth';
 import { navbarAdminData } from './nav-barAdmin';
-import { navbarData } from '../panel.usuario/nav-bar';
+import { AuthService } from '../login/auth/auth.service';
 
 interface SideNavToggle {
   screenWidth: number;
@@ -46,14 +46,16 @@ interface SideNavToggle {
 export class PanelAdminComponent implements OnInit {
   title = 'panel';
   loggedIn: boolean = true;
+  isAdmin: boolean = false; // Agrega esta línea
 
-  constructor(private router: Router,private cookie: CookieService){}
+  constructor(private router: Router,
+    private cookie: CookieService,
+    private authService :AuthService){}
 
   @Output() onToggleSideNav: EventEmitter<SideNavToggle> = new EventEmitter();
   collapsed = false;
   screenWidth = 0;
   navData = navbarAdminData;
-  navDataUser = navbarData;
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -67,6 +69,13 @@ export class PanelAdminComponent implements OnInit {
   ngOnInit(): void {
       this.screenWidth = window.innerWidth;
       this.loggedIn != null;
+
+      // Llamar al servicio para obtener el estado de isAdmin de manera asíncrona
+      this.authService.esAdmin().then((isAdmin) => {
+        
+        this.isAdmin = isAdmin;
+        
+      });
   }
 
   toggleCollapse(): void {

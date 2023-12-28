@@ -23,6 +23,7 @@ import { HttpHeaders } from '@angular/common/http';
 export class LoginComponent implements OnInit{
 
   loggedIn: boolean = false;
+  isAdmin: boolean = false; // Agrega esta línea
 
   constructor(
   private loginService: LoginService, 
@@ -61,6 +62,7 @@ export class LoginComponent implements OnInit{
                 this.router.navigate(['/panel', { outlets: { 'OutletAdmin': ['listarPat'] } }]);
               }
               else if(decode.type === 'ADMIN'){
+                this.isAdmin = true;
                 this.loggedIn = response!=null;
                 this.router.navigate(['/panel', { outlets: { 'OutletAdmin': ['listarArea'] } }]);
               }
@@ -101,6 +103,7 @@ export class LoginComponent implements OnInit{
         const decode:any = jwt_decode(jwt);
         if(decode.type === 'ADMIN')
         { 
+          this.isAdmin = true;
           this.loggedIn = response!=null;
           this.router.navigate(['/panel', { outlets: { 'OutletAdmin': ['listarArea'] } }]);
         }

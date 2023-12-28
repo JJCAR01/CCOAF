@@ -18,7 +18,7 @@ export class ProyectoPendienteListarComponent implements OnInit {
 
   constructor(private actividadService: ActividadService,
     private auth: AuthService,
-    private usuarioService :UsuarioService
+    private usuarioService :UsuarioService,
     ){ }
 
   ngOnInit(): void {
@@ -41,6 +41,7 @@ export class ProyectoPendienteListarComponent implements OnInit {
       }
     );
   }
+
 
   colorPorcentaje(porcentaje: number): string {
     if (porcentaje < 30) {

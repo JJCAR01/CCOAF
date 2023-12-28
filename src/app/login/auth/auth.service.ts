@@ -42,22 +42,25 @@ export class AuthService {
     });
   }
 
-  esAdmin(): boolean {
-    const token = this.getToken();
+    // En AuthService
+  esAdmin(): Promise<boolean> {
+    return new Promise((resolve) => {
+      const token = this.getToken();
 
-    if (token) {
-      try {
-        const decodedToken: any = jwtDecode(token);
+      if (token) {
+        try {
+          const decodedToken: any = jwtDecode(token);
 
-        // Verificar si el token contiene información sobre el rol del usuario
-        // Puedes ajustar esto según la estructura específica de tus tokens
-        return decodedToken && decodedToken.type === 'ADMIN';
+          // Verificar si el token contiene información sobre el rol del usuario
+          // Puedes ajustar esto según la estructura específica de tus tokens
+          resolve(decodedToken && decodedToken.type === 'ADMIN');
 
-      } catch (error) {
-        return false;
+        } catch (error) {
+          resolve(false);
+        }
+      } else {
+        resolve(false);
       }
-    } else {
-      return false;
-    }
+    });
   }
 }

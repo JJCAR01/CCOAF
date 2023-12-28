@@ -22,19 +22,19 @@
         <p> {{ proyectoNombre }} </p> 
       </div> 
         <div class="responsable-info">
-          <h3 title="Porcentaje Actual" ><i class="bi bi-percent me-1 tamaño-iconos color-iconoPorcentaje"></i>Porcentaje actual:</h3>
+          <h3 title="Porcentaje Actual" ><i class="bi bi-percent me-1 color-iconoPorcentaje"></i>Porcentaje actual:</h3>
           <p [ngClass]="colorPorcentaje(proyectoPorcentaje)">{{ proyectoPorcentaje | number : '1.2-2' }} %</p>                                                               
         </div>
         <div class="responsable-info">
-          <h3 title="Responsble"><i class="bi bi-person-circle me-1 tamaño-iconos color-iconoResponsable"></i>Responsable:</h3>
+          <h3 title="Responsble"><i class="bi bi-person-circle me-1 color-iconoResponsable"></i>Responsable:</h3>
           <p> {{ obtenerNombreUsuario(proyectoUsuario).toLocaleUpperCase() }}</p>
         </div>
         <div class="responsable-info ">
-          <h3 title="Total sprint"><i class="bi bi-skip-end-circle me-1 tamaño-iconos color-iconoTotal"></i>Total Sprint:</h3>
+          <h3 title="Total sprint"><i class="bi bi-skip-end-circle me-1 color-iconoTotal"></i>Total Sprint:</h3>
           <p> {{ totalSprint }}</p>
         </div>
         <div class="responsable-info">
-          <h3 title="Tiempo de planeación"> <i class="bi bi-stopwatch me-1 tamaño-iconos color-iconoTiempo"></i>Tiempo Sprint:</h3>
+          <h3 title="Tiempo de planeación"> <i class="bi bi-stopwatch me-1 color-iconoTiempo"></i>Tiempo Sprint:</h3>
           <p> {{ planeacionSprint }}</p>
         </div>
         <li class="header">

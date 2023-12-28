@@ -1,6 +1,8 @@
+
+
 export const navbarAdminData = [
     {
-        routeLink: 'listarPat', // Ruta absoluta
+        routeLink: 'listarPat',
         imageSource: 'assets/plan.png',
         label: 'Plan Anual de trabajo'
     },
@@ -11,17 +13,17 @@ export const navbarAdminData = [
     },
     {
         routeLink: 'listarActividadesEstrategicas',
-        imageSource: "assets/estrategica.png",
+        imageSource: 'assets/estrategica.png',
         label: 'Actividades estratégicas'
     },
     {
         routeLink: 'listarProyecto',
-        imageSource: "assets/proyecto.png",
+        imageSource: 'assets/proyecto.png',
         label: 'Proyectos'
     },
     {
         routeLink: 'listarActividadesEstrategicasPendiente',
-        imageSource: "assets/estrategicaadvertencia.png",
+        imageSource: 'assets/estrategicaadvertencia.png',
         label: 'Act estratégicas pendientes'
     },
     {
@@ -30,27 +32,30 @@ export const navbarAdminData = [
         label: 'Proyectos pendientes'
     },
     {
-        isSeparator: true  // Esta propiedad indica que es un separador
+            isSeparator: true
     },
     {
-        routeLink: 'listarArea', // Ruta absoluta
+        routeLink: 'listarArea',
         imageSource: 'assets/area.png',
-        label: 'Areas'
+        label: 'Areas',
+        adminOnly: true
     },
     {
         routeLink: 'listarCargo',
         imageSource: 'assets/cargo.png',
-        label: 'Cargos'
+        label: 'Cargos',
+        adminOnly: true
     },
     {
         routeLink: 'listarUsuario',
-        imageSource: "assets/usuarios.png",
-        label: 'Usuarios'
+        imageSource: 'assets/usuarios.png',
+        label: 'Usuarios',
+        adminOnly: true
     },
     {
         routeLink: 'modificarDirecciones',
-        imageSource: "assets/direcciones.png",
-        label: 'Modificar direcciones'
+        imageSource: 'assets/direcciones.png',
+        label: 'Modificar direcciones',
+        adminOnly: true
     },
-
-]
+];

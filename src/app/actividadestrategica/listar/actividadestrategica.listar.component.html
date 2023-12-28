@@ -27,7 +27,7 @@
       </thead>
       <tbody>
         <ng-container *ngFor="let actividad of actividadesEstrategicas">
-          <tr title="{{actividad.nombre}}">
+          <tr (click)="irADetalles(actividad)" title="{{actividad.nombre}}">
             <td>{{ actividad.nombre }}</td>
             <td>{{ actividad.fechaInicial }}</td>
             <td>{{ actividad.fechaFinal }}</td>

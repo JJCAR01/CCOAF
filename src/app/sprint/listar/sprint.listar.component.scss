@@ -1,56 +1,40 @@
 .body{
-  font-family: "Roboto";
+  font-family: "Roboto",unset;
+  color: #000000;
 }
 
 h1 {
-  font-family: "Roboto", unset;
-  color: #000000;
   font-size: xx-large;
   margin: 0;
   text-align: left;
 }
 
-
-h2 {
-  font-family: "Roboto", unset;
-  color: #000000;
-  font-size: x-large;
-  padding: 5px;
-  margin: 0;
-  text-align: left;
-}
 h3 {
-  font-family: "Roboto", initial;
   font-size: 15px;
   margin-bottom: 10px;
 }
-h4{
-  flex-grow: 1; /* Permitir que el texto "Epicas" ocupe el espacio restante */
-  text-align: center; /* Alinea el texto al centro */
-}
+.responsable-info {
+  display: flex;
+  align-items: center;
 
+  h1, h3, p {
+    margin: 2px; // O ajusta según tus necesidades específicas
+  }
+
+  h3, p {
+    margin: 3px; // O ajusta según tus necesidades específicas
+  }
+}
 .row {
   display: flex; /* Hacer que los elementos dentro de .row se muestren en línea */
   align-items: center; /* Alinear verticalmente los elementos dentro de .row */
 }
 
-.responsable-info {
-  display: flex; /* Hacer que los elementos dentro de .responsable-info se muestren en línea */
-  align-items: center; /* Alinear verticalmente los elementos dentro de .responsable-info */
-}
-
-.responsable-info h1 {
-  display: flex; /* Hacer que los elementos dentro de .responsable-info se muestren en línea */
-  align-items: center; /* Alinear verticalmente los elementos dentro de .responsable-info */
-}
-
-.responsable-info h3 {
-  margin-top: 5px;
-  margin: 2px;
-}
-.responsable-info p {
-  margin-top: 5px;
-  margin: 5px;
+.header {
+  justify-content: center;
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
 }
 
 
@@ -62,36 +46,28 @@ h4{
   margin-top: 10px;
 }
 
-/* Estilos para los botones */
-.custom-button {
-  width: 100px; /* Ancho en píxeles */
-  height: 35px; /* Altura en píxeles */
-  text-align: center;
-}
-
-/* Estilos para alinear los botones a la derecha en la tabla */
 .button-container {
   text-align: right;
 }
 
-.header {
-  justify-content: center;
-  margin-top: 10px;
-  display: flex;
-  justify-content: space-between;
+.custom-button {
+  width: 100px;
+  height: 35px;
+  text-align: center;
 }
+
+.custom-eye {
+  width: auto;
+}
+
+
 
 .nav-item {
   margin-top: 10px;
   text-align: center;
   width: 780px;
-  
-  a:active, // Aplica el estilo cuando el enlace está activo
-  a:focus {  // Aplica el estilo cuando el enlace está enfocado
-    background-color: #ece8e8;
-    color: #000000;
-  }
 }
+
 .nav-link {
   font-family: 'Roboto', initial;
   font-size: 20px;
@@ -100,10 +76,6 @@ h4{
 
 button {
   width: auto; /* Ancho automático, ajustado al contenido */
-}
-
-.custom-eye {
-  width: auto;
 }
 .porcentaje-bajo {
   color: red; // Define el color rojo para porcentajes bajos.
@@ -169,31 +141,32 @@ th,td {
 .form-check-input {
   border: 1px solid #525050;  // Establecer un borde por defecto para todos los checkboxes
 }
+
+.form-check-input.en-backlog:checked,
+.form-check-input.en-proceso:checked,
+.form-check-input.terminado:checked,
+.form-check-input.impedimento:checked {
+  color: #552a2a;
+}
 .form-check-input.en-backlog:checked {
   background-color: rgb(87, 97, 89);
   border-color: rgb(87, 97, 89);
-  color: #552a2a;
 }
 
 .form-check-input.en-proceso:checked {
   background-color: rgba(202, 139, 22, 0.925);
   border-color: rgba(202, 139, 22, 0.925);
-  color: #552a2a;
 }
 
 .form-check-input.terminado:checked {
   background-color: green;
   border-color: green;
-  color: #552a2a;
 }
 
 .form-check-input.impedimento:checked {
   background-color: rgb(206, 49, 49);
   border-color:rgb(206, 49, 49);
-  color: #552a2a;
 }
- 
-
 
 
 .custom-file-button input[type=file] {
@@ -213,8 +186,6 @@ th,td {
   cursor: pointer;
 }
 
-
-
 .bi-info {
   color: #007bff;
 }
@@ -223,7 +194,11 @@ th,td {
   color: #ff8c00;
 }
 
-.tamaño-iconos{
+.color-iconoPorcentaje,
+.color-iconoFechaAnual,
+.color-iconoResponsable,
+.color-iconoTotal,
+.color-iconoTiempo {
   font-size: large;
 }
 .color-iconoPorcentaje {
