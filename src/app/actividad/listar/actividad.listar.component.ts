@@ -235,8 +235,6 @@ ngOnInit() {
         idActividadEstrategica:idActividadEstrategica
       };
 
-      console.log(actividadGestion)
-
       Swal.fire({
         title: "¿Estás seguro de modificar?",
         icon:"question",

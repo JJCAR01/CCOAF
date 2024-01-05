@@ -28,7 +28,6 @@ import { LoginGuard} from './guards/login.guard';
 
 
 const routes: Routes = [
-  { path: '',redirectTo:'login',pathMatch:"full"},
   { path: "login", component: LoginComponent},
 
   { path: "panel", component: PanelAdminComponent,canActivate:[LoginGuard],
@@ -59,6 +58,8 @@ const routes: Routes = [
     { path: 'listarSprint/:idProyecto/pat/:patNombre', component: SprintListarComponent, outlet: 'OutletAdmin' },
     { path: "crearSprint", component: SprintCrearComponent, outlet:"OutletAdmin"},
   ]},
+
+  { path: '**', redirectTo: 'login' },
 
 ];
 
