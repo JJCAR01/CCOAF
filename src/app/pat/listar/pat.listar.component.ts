@@ -90,8 +90,8 @@ export class PatListarComponent implements OnInit{
           const procesosArray = procesosString.split(',').map((proceso: string) => proceso.trim());
     
           // Verificar si son todas las direcciones y todos los procesos
-          const sonTodasLasDirecciones = direccionesArray.includes('TODAS_LAS_DIRECCIONES');
-          const sonTodosLosProcesos = procesosArray.includes('TODO_LOS_PROCESOS');
+          const sonTodasLasDirecciones = direccionesArray.includes('TODAS LAS DIRECCIONES');
+          const sonTodosLosProcesos = procesosArray.includes('TODOS LOS PROCESOS');
     
           // Filtrar los datos según las direcciones y procesos del payload
           this.pats = data.filter((d: any) => {

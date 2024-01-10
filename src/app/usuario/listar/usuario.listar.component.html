@@ -41,10 +41,14 @@
                     <td>{{ usuario.correo }}</td>
                     <td>{{ obtenerNombreCargo(usuario.idCargo) }}</td>
                     <td>
-                        <li *ngFor="let direccion of usuario.direcciones">{{ direccion | formatEnum }}</li>
+                        <li *ngFor="let direccion of usuario.direcciones">
+                            {{ direccion.nombre }}
+                        </li>
                     </td>                    
                     <td>
-                          <li *ngFor="let proceso of usuario.procesos">{{ proceso | formatEnum }}</li>
+                        <li *ngFor="let direccion of usuario.procesos">
+                            {{ direccion.nombre }}
+                        </li>
                     </td>            
                     <td>
                         <button title="Eliminar usuario" class="btn btn-outline-danger" (click)="eliminarUsuario(usuario.idUsuario)">

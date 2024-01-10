@@ -3,6 +3,7 @@ import { UsuarioService } from '../services/usuario.service';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import Swal from 'sweetalert2';
 import { CargoService } from 'src/app/cargo/services/cargo.service';
+import { DireccionService } from 'src/app/direccion/services/direccion.service';
 
 @Component({
   selector: 'app-root',
@@ -13,11 +14,12 @@ export class UsuarioListarComponent implements OnInit{
   title = 'listarUsuario';
   usuarios: any[] = [];
   cargos: any[] = [];
+  direcciones: any[] = [];
   busqueda: any;
   
     constructor(private usuarioService: UsuarioService, 
       private auth:AuthService,
-      private cargoService:CargoService
+      private cargoService:CargoService,
 
       ) { }  
 
@@ -30,10 +32,8 @@ export class UsuarioListarComponent implements OnInit{
       this.cargoService.listar(this.auth.obtenerHeader()).subscribe(
         (data: any) => {
           this.cargos = data;
-          console.log(this.usuarios)
       },
         (error) => {
-          console.log(error);
         }
       );
     }

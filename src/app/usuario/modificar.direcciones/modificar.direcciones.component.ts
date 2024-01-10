@@ -5,6 +5,8 @@ import Swal from 'sweetalert2';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EDireccion } from 'src/app/area/edireccion';
 import { EProceso } from 'src/app/pat/listar/eproceso';
+import { ProcesoService } from 'src/app/proceso/services/proceso.service';
+import { DireccionService } from 'src/app/direccion/services/direccion.service';
 
 @Component({
   selector: 'app-root',
@@ -14,6 +16,8 @@ import { EProceso } from 'src/app/pat/listar/eproceso';
 export class ModificarDireccionesComponent implements OnInit {
   usuarios: any[] = [];
   busqueda: any;
+  direcciones:any;
+  procesos:any;
   direccionesLista:any;
   procesosLista:any;
   deshabilitar: boolean = true;
@@ -29,6 +33,8 @@ export class ModificarDireccionesComponent implements OnInit {
 
   constructor(private usuarioService: UsuarioService, 
     private auth:AuthService,private formBuilder: FormBuilder,
+    private direccionService:DireccionService,
+    private procesosService:ProcesoService
     ) {
       this.formDireccion = this.formBuilder.group({
         direcciones: ['', Validators.required],
@@ -40,18 +46,38 @@ export class ModificarDireccionesComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarUsuarios();
-    this.direccionesLista = Object.values(EDireccion);
-    this.procesosLista = Object.values(EProceso);
-    throw new Error('Method not implemented.');
+    this.cargarDirecciones();
+    this.cargarProcesos();
   }
 
   cargarUsuarios() {
     this.usuarioService.listarUsuario(this.auth.obtenerHeader()).toPromise().then(
       (data: any) => {
         this.usuarios = data;
+        console.log(this.usuarios)
       },
       (error) => {
         Swal.fire('Error', error.error.mensajeTecnico, 'error');
+      }
+    );
+  }
+  
+  cargarDirecciones() {
+    this.direccionService.listar(this.auth.obtenerHeader()).subscribe(
+      (data: any) => {
+        this.direcciones = data;
+    },
+      (error) => {
+      }
+    );
+  }
+  
+  cargarProcesos() {
+    this.procesosService.listar(this.auth.obtenerHeader()).subscribe(
+      (data: any) => {
+        this.procesos = data;
+    },
+      (error) => {
       }
     );
   }
@@ -234,46 +260,36 @@ export class ModificarDireccionesComponent implements OnInit {
 
   seleccionarDireccion() {
     const direccionSeleccionada = this.formDireccion.get('direcciones')?.value;
-    const direccionEnEnum = direccionSeleccionada
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/\s+/g, '_')
-    .toUpperCase();
-
-    // Verificar si la dirección ya existe en la lista antes de agregarla
-    if (!this.listaDeDireccionesSeleccionadas.includes(direccionEnEnum)) {
-      this.listaDeDireccionesSeleccionadas.push(direccionEnEnum);
+    if (!this.direcciones.includes(direccionSeleccionada)) {
+      this.listaDeDireccionesSeleccionadas.push(direccionSeleccionada);
     }
   }
 
   seleccionarProceso() {
     const procesoSeleccionada = this.formProceso.get('procesos')?.value;
-    const procesoEnEnum = procesoSeleccionada
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/\s+/g, '_')
-    .toUpperCase();
-
-    // Verificar si la dirección ya existe en la lista antes de agregarla
-    if (!this.listaDeProcesosSeleccionadas.includes(procesoEnEnum)) {
-      this.listaDeProcesosSeleccionadas.push(procesoEnEnum);
+    if (!this.procesos.includes(procesoSeleccionada)) {
+      this.listaDeProcesosSeleccionadas.push(procesoSeleccionada);
     }
   }
 
   obtengoUsuario(idUsuario: number,usuario:any) {
+
     this.listaDeDireccionesSeleccionadas = [];
     this.listaDeProcesosSeleccionadas = [];
-    this.idUsuario = idUsuario;
-    this.nombreUsuarioSeleccionado = usuario.nombre +' '+ usuario.apellidos
-    this.direccionesUsuarioSeleccionado = usuario.direcciones;
-    this.procesosUsuarioSeleccionado = usuario.procesos
 
-    this.formDireccion.patchValue({
-      direcciones: this.direccionesUsuarioSeleccionado,
-    });
+    if (usuario && usuario.nombre && usuario.apellidos && usuario.direcciones && usuario.procesos) {
+      this.idUsuario = idUsuario;
+      this.nombreUsuarioSeleccionado = usuario.nombre + ' ' + usuario.apellidos;
+      this.direccionesUsuarioSeleccionado = usuario.direcciones;
+      this.procesosUsuarioSeleccionado = usuario.procesos;
 
-    this.formProceso.patchValue({
-      procesos: this.procesosUsuarioSeleccionado,
-    });
+      this.formDireccion.patchValue({
+        direcciones: this.direccionesUsuarioSeleccionado,
+      });
+
+      this.formProceso.patchValue({
+        procesos: this.procesosUsuarioSeleccionado,
+      });
+    } 
   }
  }

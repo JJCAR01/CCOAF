@@ -18,7 +18,7 @@
                             </div>
                             <div class="form-floating mb-3">
                                 <select class="form-select" id="direccion" formControlName="direccion">
-                                    <option *ngFor="let direccion of direccionEnumList" [value]="direccion">{{ direccion }}</option>
+                                    <option *ngFor="let direccion of direcciones" [value]="direccion">{{ direccion }}</option>
                                 </select>
                                 <label for="direccion" class="form-label">Dirección</label>
                             </div>          

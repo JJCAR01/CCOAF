@@ -32,10 +32,14 @@
                 <tr *ngFor="let usuario of usuarios | buscar: busqueda">
                     <td>{{ usuario.nombre }} {{usuario.apellidos }}</td>
                     <td>
-                      <li *ngFor="let direccion of usuario.direcciones">{{ direccion | formatEnum }}</li>
+                      <li *ngFor="let direccion of usuario.direcciones">
+                        {{ direccion.nombre }}
+                    </li>
                     </td>                    
                     <td>
-                        <li *ngFor="let proceso of usuario.procesos">{{ proceso | formatEnum }}</li>
+                      <li *ngFor="let direccion of usuario.procesos">
+                        {{ direccion.nombre }}
+                    </li>
                     </td>    
                     <td>
                       <div>
@@ -78,18 +82,18 @@
                 <h3>Usuario:</h3>
                 <h6 class="mb-2">{{nombreUsuarioSeleccionado}}</h6>
                 <h3>Direcciones actuales:</h3>
-                <h6 *ngFor="let direcciones of direccionesUsuarioSeleccionado">{{ direcciones | formatEnum}} </h6>
+                <h6 *ngFor="let direcciones of direccionesUsuarioSeleccionado">{{ direcciones.nombre }} </h6>
                 <div class="form-floating mb-2">
                   <div class="input">
                     <select class="form-select" id="direcciones" formControlName="direcciones">
                       <option value="" disabled selected>Seleccione las direcciones<span class="required-field">*</span></option>
-                      <option *ngFor="let direccion of direccionesLista" [value]="direccion">{{ direccion }}</option>
+                      <option *ngFor="let direccion of direcciones" [value]="direccion.nombre">{{ direccion.nombre }}</option>
                     </select>
                     <button (click)="seleccionarDireccion()" class="btn btn-secondary btn-input">Agregar dirección</button>
                   </div>
                 </div>
                 <div class="direcciones-lista">
-                  <h6 *ngFor="let direcciones of listaDeDireccionesSeleccionadas">{{ direcciones | formatEnum }}</h6>
+                  <h6 *ngFor="let direccionSeleccionada of listaDeDireccionesSeleccionadas">{{ direccionSeleccionada }}</h6>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -114,18 +118,18 @@
                 <h3>Usuario:</h3>
                 <h6 class="mb-2">{{nombreUsuarioSeleccionado}}</h6>
                 <h3>Direcciones actuales:</h3>
-                <h6 *ngFor="let direcciones of direccionesUsuarioSeleccionado">{{ direcciones | formatEnum}} </h6>
+                <h6 *ngFor="let direcciones of direccionesUsuarioSeleccionado">{{ direcciones.nombre | formatEnum}} </h6>
                 <div class="form-floating mb-2">
                   <div class="input">
                     <select class="form-select" id="direcciones" formControlName="direcciones">
                       <option value="" disabled selected>Seleccione las direccion a eliminar<span class="required-field">*</span></option>
-                      <option *ngFor="let direccion of direccionesUsuarioSeleccionado" [value]="direccion">{{ direccion | formatEnum}}</option>
+                      <option *ngFor="let direccion of direccionesUsuarioSeleccionado" [value]="direccion.nombre">{{ direccion.nombre }}</option>
                     </select>
                     <button (click)="seleccionarDireccion()" class="btn btn-secondary btn-input">Dirección a eliminar</button>
                   </div>
                 </div>
                 <div class="direcciones-lista">
-                  <h6 *ngFor="let direcciones of listaDeDireccionesSeleccionadas">{{ direcciones | formatEnum }}</h6>
+                  <h6 *ngFor="let direccionSeleccionada of listaDeDireccionesSeleccionadas">{{ direccionSeleccionada}}</h6>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -149,18 +153,18 @@
                 <h3>Usuario:</h3>
                 <h6 class="mb-2">{{nombreUsuarioSeleccionado}}</h6>
                 <h3>Procesos actuales:</h3>
-                <h6 *ngFor="let procesos of procesosUsuarioSeleccionado">{{ procesos  | formatEnum}} </h6>
+                <h6 *ngFor="let procesos of procesosUsuarioSeleccionado">{{ procesos.nombre }} </h6>
                 <div class="form-floating mb-2">
                   <div class="input">
                     <select class="form-select" id="procesos" formControlName="procesos">
                       <option value="" disabled selected>Seleccione las direccion a eliminar<span class="required-field">*</span></option>
-                      <option *ngFor="let proceso of procesosUsuarioSeleccionado" [value]="proceso">{{ proceso | formatEnum}}</option>
+                      <option *ngFor="let proceso of procesos" [value]="proceso.nombre">{{ proceso.nombre }}</option>
                     </select>
                     <button (click)="seleccionarProceso()" class="btn btn-secondary btn-input">Proceso a eliminar</button>
                   </div>
                 </div>
                 <div class="direcciones-lista">
-                  <h6 *ngFor="let procesos of listaDeProcesosSeleccionadas">{{ procesos | formatEnum }}</h6>
+                  <h6 *ngFor="let procesoSeleccionada of listaDeProcesosSeleccionadas">{{ procesoSeleccionada}}</h6>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -184,18 +188,18 @@
                 <h3>Usuario:</h3>
                 <h6 class="mb-2">{{nombreUsuarioSeleccionado}}</h6>
                 <h3>Procesos actuales:</h3>
-                <h6 *ngFor="let procesos of procesosUsuarioSeleccionado">{{ procesos  | formatEnum}} </h6>
+                <h6 *ngFor="let procesos of procesosUsuarioSeleccionado">{{ procesos.nombre }} </h6>
                 <div class="form-floating mb-2">
                   <div class="input">
                     <select class="form-select" id="procesos" formControlName="procesos">
                       <option value="" disabled selected>Seleccione los procesos<span class="required-field">*</span></option>
-                      <option *ngFor="let proceso of procesosLista" [value]="proceso">{{ proceso }}</option>
+                      <option *ngFor="let proceso of procesos" [value]="proceso.nombre">{{ proceso.nombre }}</option>
                     </select>
                     <button (click)="seleccionarProceso()" class="btn btn-secondary btn-input">Agregar proceso</button>
                   </div>
                 </div>
                 <div class="direcciones-lista">
-                  <h6 *ngFor="let procesos of listaDeProcesosSeleccionadas">{{ procesos | formatEnum }}</h6>
+                  <h6 *ngFor="let procesoSeleccionada of listaDeProcesosSeleccionadas">{{ procesoSeleccionada}}</h6>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

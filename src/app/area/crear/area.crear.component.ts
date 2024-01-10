@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, ReactiveFormsModule,FormGroup,Validators, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
+import { FormBuilder,FormGroup,Validators } from '@angular/forms';
 import { AreaService } from '../services/area.service';
 import { AuthService } from 'src/app/login/auth/auth.service';
-import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
-import { EDireccion } from '../edireccion';
+import { DireccionService } from 'src/app/direccion/services/direccion.service';
 
 
 @Component({
@@ -15,9 +14,11 @@ import { EDireccion } from '../edireccion';
 export class AreaCrearComponent implements OnInit {
   title = 'crearArea';
   direccionEnumList: string[] = [];
+  direcciones: any[] = [];
   form:FormGroup;
 
   constructor(private areaService: AreaService,private auth: AuthService,
+    private direccionService: DireccionService,
     private formBuilder: FormBuilder) 
     { 
       this.form = this.formBuilder.group({
@@ -26,11 +27,19 @@ export class AreaCrearComponent implements OnInit {
       });
     }
   ngOnInit(): void {
-    this.direccionEnumList = Object.values(EDireccion);
+    this.cargarDirecciones();
+  }
+
+  cargarDirecciones() {
+    this.direccionService.listar(this.auth.obtenerHeader()).subscribe(
+      (data: any) => {
+        console.log(data)
+        this.direcciones = data;
+    })
   }
   crearArea(){
     const nombre = this.form.get('nombre')?.value;
-    const direccion = this.form.value.direccion.toUpperCase().replace(/\s+/g, '_');
+    const direccion = this.form.value.direccion;
     const body = {
       nombre: nombre,
       direccion:direccion

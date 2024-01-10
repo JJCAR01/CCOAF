@@ -45,14 +45,14 @@
                     <div class="input">
                       <select class="form-select" id="direcciones" formControlName="direcciones">
                         <option value="" disabled selected>Seleccione las direcciones<span class="required-field">*</span></option>
-                        <option *ngFor="let direccion of direccionesLista" [value]="direccion">{{ direccion }}</option>
+                        <option *ngFor="let direccion of direcciones" [value]="direccion.nombre">{{ direccion.nombre }}</option>
                       </select>
                       <button (click)="agregarDirecciones()" class="btn btn-outline-success btn-input">Agregar dirección</button>
                     </div>
                   </div>
                   <div class="direcciones-lista">
                     <span *ngFor="let direccionSeleccionada of listaDeDireccionesSeleccionadas">
-                      <h6>{{ direccionSeleccionada | formatEnum }},</h6>
+                      <h6>{{ direccionSeleccionada}},</h6>
                     </span>
                   </div>
                   
@@ -60,26 +60,26 @@
                     <div class="input">
                       <select class="form-select" id="procesos" formControlName="procesos">
                         <option value="" disabled selected>Seleccione el proceso<span class="required-field">*</span></option>
-                        <option *ngFor="let proceso of procesosLista" [value]="proceso">{{ proceso }}</option>          
+                        <option *ngFor="let proceso of procesos" [value]="proceso.nombre">{{ proceso.nombre }}</option>          
                       </select>
                       <button (click)="agregarProcesos()" class="btn btn-outline-success btn-input">Agregar proceso</button>
                     </div> 
                   </div>
                   <div class="direcciones-lista">
                     <span *ngFor="let lista of listaDeProcesosSeleccionadas">
-                      <h6>{{ lista | formatEnum }},</h6>
+                      <h6>{{ lista }},</h6>
                     </span>
                   </div>
 
                   <div class="form-floating mb-2">
                     <select class="form-select" id="idCargo" formControlName="idCargo">
                       <option value="" disabled selected>Seleccione el cargo<span class="required-field">*</span></option>
-                      <option *ngFor="let cargo of cargos" [value]="cargo.idCargo">{{ cargo.nombre | formatEnum }}</option>
+                      <option *ngFor="let cargo of cargos" [value]="cargo.idCargo">{{ cargo.nombre}}</option>
                     </select>
                   </div>
                   <div class="d-flex justify-content-center">
                     <button type="button" class="btn btn-secondary btn-block me-2"
-                      [routerLink]="['/panelAdmin', { outlets: { 'OutletAdmin': ['listarUsuario'] } }]"
+                      [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarUsuario'] } }]"
                       >Atrás</button>
                     <button type="submit" class="btn btn-success btn-block btn-lg" [disabled]="!form.valid">Registrar</button>
                   </div>

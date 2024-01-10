@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { UsuarioService } from '../services/usuario.service';
 import { CargoService } from 'src/app/cargo/services/cargo.service';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import Swal from 'sweetalert2';
-import { EDireccion } from 'src/app/area/edireccion';
-import { EProceso } from 'src/app/pat/listar/eproceso';
+import { ProcesoService } from 'src/app/proceso/services/proceso.service';
+import { DireccionService } from 'src/app/direccion/services/direccion.service';
 
 @Component({
   selector: 'app-root',
@@ -19,10 +19,15 @@ export class UsuarioCrearComponent implements OnInit {
   listaDeDireccionesSeleccionadas: string[] = [];
   listaDeProcesosSeleccionadas: string[] = [];
   cargos: any[] = [];
+  procesos: any[] = [];
+  direcciones: any[] = [];
   roles: any[] =[];
   form:FormGroup;
   
-  constructor(private usuarioService: UsuarioService, private formBuilder: FormBuilder, private cargoService:CargoService
+  constructor(private usuarioService: UsuarioService, 
+    private procesoService: ProcesoService, 
+    private direccionService: DireccionService, 
+    private formBuilder: FormBuilder, private cargoService:CargoService
     ,private auth:AuthService) 
   { 
     this.form = this.formBuilder.group({
@@ -40,40 +45,29 @@ export class UsuarioCrearComponent implements OnInit {
     });
   }
   ngOnInit(): void {
-    this.procesosLista = Object.values(EProceso);
-    this.direccionesLista = Object.values(EDireccion);
     this.cargarCargos();
+    this.cargarDirecciones();
+    this.cargarProcesos();
   }
 
   agregarDirecciones() {
     const direccionSeleccionada = this.form.get('direcciones')?.value;
-    const direccionEnEnum = this.formatearProceso(direccionSeleccionada)
 
     // Verificar si la dirección ya existe en la lista antes de agregarla
-    if (!this.listaDeDireccionesSeleccionadas.includes(direccionEnEnum)) {
-      this.listaDeDireccionesSeleccionadas.push(direccionEnEnum);
+    if (!this.listaDeDireccionesSeleccionadas.includes(direccionSeleccionada)) {
+      this.listaDeDireccionesSeleccionadas.push(direccionSeleccionada);
     }
   }
 
   agregarProcesos() {
     const procesoSeleccionado = this.form.get('procesos')?.value;
-    const procesoEnEnum = this.formatearProceso(procesoSeleccionado);
     
     // Verificar si el proceso ya existe en la lista antes de agregarlo
-    if (!this.listaDeProcesosSeleccionadas.includes(procesoEnEnum)) {
-      this.listaDeProcesosSeleccionadas.push(procesoEnEnum);
+    if (!this.listaDeProcesosSeleccionadas.includes(procesoSeleccionado)) {
+      this.listaDeProcesosSeleccionadas.push(procesoSeleccionado);
     }
     
   }
-  
-  formatearProceso(proceso: string): string {
-    return proceso.normalize('NFD')
-                   .replace(/[\u0300-\u036f]/g, '')
-                   .replace(/\s+/g, '_')
-                   .toUpperCase();
-  }
-  
-  
   
   cargarCargos() {
     this.cargoService.listar(this.auth.obtenerHeader()).subscribe(
@@ -86,8 +80,28 @@ export class UsuarioCrearComponent implements OnInit {
     );
   }
 
+  cargarDirecciones() {
+    this.direccionService.listar(this.auth.obtenerHeader()).subscribe(
+      (data: any) => {
+        this.direcciones = data;
+    },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+  cargarProcesos() {
+    this.procesoService.listar(this.auth.obtenerHeader()).subscribe(
+      (data: any) => {
+        this.procesos = data;
+    },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
   crearUsuario() {
-    this.listaDeDireccionesSeleccionadas
     if (this.form.valid) {
       const usuarioData = {
         nombre: this.form.get('nombre')?.value,

@@ -1,28 +1,16 @@
-.abs-center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 10vh;
-  }
-
-  .abs-abajo {
-    min-height: 15vh;
-  }
-
-  body {
-    font-family: 'Roboto',serif;
-    margin: 0;
-    padding: 0;
+.row {
+  margin-top: 10dvh;
+  justify-content: center;
 }
-h2 {
-  border-radius: 50px;
-  text-align: center;
-  background-color: #504f4f;
-  color: #e7e5e5;
-  padding: 10px;
-  margin: 0;
+.card {
+  border: 1px solid #838282; /* Establece un borde sólido */
+  border-radius: 30px; /* Agrega esquinas redondeadas */
+  padding: 30px; /* Agrega espacio interior para el contenido */
+  box-shadow: 0 4px 8px rgba(192, 181, 181, 0.2); /* Agrega una sombra */
+  background-color: #fff; /* Establece un fondo blanco */
 }
-.form-label {
-  text-align: right;
-  font-family: 'Roboto',monospace;
+
+.card h2 {
+  margin-top: 0; /* Elimina el margen superior del título */
+  text-align: center; /* Centra el título */
 }
