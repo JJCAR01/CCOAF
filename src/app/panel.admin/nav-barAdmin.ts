@@ -58,4 +58,16 @@ export const navbarAdminData = [
         label: 'Modificar direcciones',
         adminOnly: true
     },
+    {
+        routeLink: 'crearDireciones',
+        imageSource: 'assets/direccion.png',
+        label: 'Direcciones',
+        adminOnly: true
+    },
+    {
+        routeLink: 'crearProcesos',
+        imageSource: 'assets/proceso.png',
+        label: 'Procesos',
+        adminOnly: true
+    },
 ];

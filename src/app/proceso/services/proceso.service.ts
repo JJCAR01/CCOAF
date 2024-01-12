@@ -22,7 +22,7 @@ export class ProcesoService {
   modificar(proceso : any,idProceso:number,headers?: HttpHeaders){
     return this.http.put(`${environment.apiUrl}/ccoa/procesos/${idProceso}`,proceso,{headers});
   }
-  eliminarTarea(idProceso:number,headers?: HttpHeaders){
+  eliminar(idProceso:number,headers?: HttpHeaders){
     return this.http.delete(`${environment.apiUrl}/ccoa/procesos/${idProceso}`,{headers});
   }
 

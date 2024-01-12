@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="direccion.crear.component.scss">
+    <title>Direcciones</title>
+</head>
+<body>
+    <h1 class="mb-2">Direcciones</h1>
+    <div class="d-flex align-items-end">
+      <div class="flex-grow-1">
+        <div class="input-group">
+          <span class="input-group-text">Buscar:</span>
+          <input type="text" class="form-control" [(ngModel)]="busqueda" />
+        </div>
+      </div>
+      <div class="ms-3">
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalCrearDireccion">Crear dirección</button>
+      </div>
+    </div>
+
+    <div *ngFor="let direccion of direcciones | buscar: busqueda" class="container-sm">
+        <ul class="list-group mt-2">
+            <li class="list-group-item">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="col-lg-4">{{ direccion.nombre }}</span>
+                    <span>
+                        
+                        <button class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarDireccion" (click)="direccionSeleccionado(direccion.idDireccion,direccion)"
+                        ><i class="bi bi-pen-fill"></i></button>
+                        <button class="btn btn-outline-danger" (click)="eliminarDireccion(direccion.idDireccion)" ><i class="bi bi-trash3-fill"></i></button>
+                    </span>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="modal fade" id="modalModificarDireccion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog ">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Modificar dirección</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form [formGroup]="form" (ngSubmit)="modificarDireccion()">
+                <div class="mb-3">
+                  <label for="nombre" class="form-label">Nombre</label>
+                  <input type="text" class="form-control" id="nombre" formControlName="nombre" [value]="nombreSeleccionado">
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                  <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Guardar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="modalCrearDireccion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Crear dirección</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form [formGroup]="form" (ngSubmit)="crearDireccion()">
+                <div class="mb-3">
+                  <label for="nombre" class="form-label">Nombre</label>
+                  <input type="text" class="form-control" id="nombre" formControlName="nombre">
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                  <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Guardar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+</body>
+</html>

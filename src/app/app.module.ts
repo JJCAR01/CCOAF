@@ -29,6 +29,8 @@ import { ProyectoPendienteListarComponent } from './proyecto/pendientes/proyecto
 import { ActividadEstrategicaPendienteListarComponent } from './actividadestrategica/pendiente/actividadestrategica.pendiente.component';
 import { ModificarDireccionesComponent } from './usuario/modificar.direcciones/modificar.direcciones.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { ProcesoCrearComponent } from './proceso/crear/proceso.crear.component';
+import { DireccionCrearComponent } from './direccion/crear/direccion.crear.component';
 
 import { EnumPipe } from 'src/pipes/enum.pipes';
 import { ComasPipe } from 'src/pipes/comas.pipes';
@@ -54,7 +56,8 @@ import { CommonModule } from '@angular/common';
     CargoCrearComponent,CargoListarComponent,UsuarioCrearComponent,UsuarioListarComponent, BuscarPipe,EnumPipe,PatListarComponent,
     PatCrearComponent,TipogeListarComponent,ActividadCrearComponent, ActividadListarComponent,TipoGECrearComponent,
     SprintListarComponent,SprintCrearComponent, ProyectoListarComponent, ProyectoPendienteListarComponent,
-    ActividadEstrategicaPendienteListarComponent, ComasPipe, ModificarDireccionesComponent,DashboardComponent
+    ActividadEstrategicaPendienteListarComponent, ComasPipe, ModificarDireccionesComponent,DashboardComponent,
+    DireccionCrearComponent,ProcesoCrearComponent
   ],
   imports: [
     CommonModule,

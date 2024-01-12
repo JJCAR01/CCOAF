@@ -3,8 +3,6 @@ import { UsuarioService } from '../services/usuario.service';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import Swal from 'sweetalert2';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { EDireccion } from 'src/app/area/edireccion';
-import { EProceso } from 'src/app/pat/listar/eproceso';
 import { ProcesoService } from 'src/app/proceso/services/proceso.service';
 import { DireccionService } from 'src/app/direccion/services/direccion.service';
 
@@ -54,7 +52,6 @@ export class ModificarDireccionesComponent implements OnInit {
     this.usuarioService.listarUsuario(this.auth.obtenerHeader()).toPromise().then(
       (data: any) => {
         this.usuarios = data;
-        console.log(this.usuarios)
       },
       (error) => {
         Swal.fire('Error', error.error.mensajeTecnico, 'error');
@@ -66,20 +63,14 @@ export class ModificarDireccionesComponent implements OnInit {
     this.direccionService.listar(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
         this.direcciones = data;
-    },
-      (error) => {
-      }
-    );
+    });
   }
   
   cargarProcesos() {
     this.procesosService.listar(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
         this.procesos = data;
-    },
-      (error) => {
-      }
-    );
+    });
   }
 
   modificarDireccionDeUsuario() {
@@ -116,7 +107,12 @@ export class ModificarDireccionesComponent implements OnInit {
                 });
               },
               (error) => {
-                Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
+                Swal.fire({
+                  title:'Solicitud no válida!',
+                  text: error.error.mensajeHumano,
+                  icon: "error",
+                  confirmButtonColor: '#0E823F',
+                });
               }
             );
           }
@@ -159,7 +155,12 @@ export class ModificarDireccionesComponent implements OnInit {
                 });
               },
               (error) => {
-                Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
+                Swal.fire({
+                  title:'Solicitud no válida!',
+                  text: error.error.mensajeHumano,
+                  icon: "error",
+                  confirmButtonColor: '#0E823F',
+                });
               }
             );
           }
@@ -203,7 +204,12 @@ export class ModificarDireccionesComponent implements OnInit {
                 });
               },
               (error) => {
-                Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
+                Swal.fire({
+                  title:'Solicitud no válida!',
+                  text: error.error.mensajeHumano,
+                  icon: "error",
+                  confirmButtonColor: '#0E823F',
+                });
               }
             );
           }
@@ -248,7 +254,12 @@ export class ModificarDireccionesComponent implements OnInit {
                 });
               },
               (error) => {
-                Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
+                Swal.fire({
+                  title:'Solicitud no válida!',
+                  text: error.error.mensajeHumano,
+                  icon: "error",
+                  confirmButtonColor: '#0E823F',
+                });
               }
             );
           }

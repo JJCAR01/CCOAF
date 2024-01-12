@@ -22,7 +22,7 @@ export class DireccionService {
   modificar(direccion : any,idDireccion:number,headers?: HttpHeaders){
     return this.http.put(`${environment.apiUrl}/ccoa/direcciones/${idDireccion}`,direccion,{headers});
   }
-  eliminarTarea(idDireccion:number,headers?: HttpHeaders){
+  eliminar(idDireccion:number,headers?: HttpHeaders){
     return this.http.delete(`${environment.apiUrl}/ccoa/direcciones/${idDireccion}`,{headers});
   }
 

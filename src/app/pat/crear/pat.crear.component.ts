@@ -5,8 +5,8 @@ import { PatService } from '../services/pat.service';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import Swal from 'sweetalert2';
 import { Pat } from './pat';
-import { EProceso } from '../listar/eproceso';
-import { EDireccion } from 'src/app/area/edireccion';
+import { ProcesoService } from 'src/app/proceso/services/proceso.service';
+import { DireccionService } from 'src/app/direccion/services/direccion.service';
 
 @Component({
   selector: 'app-root',
@@ -15,14 +15,15 @@ import { EDireccion } from 'src/app/area/edireccion';
 })
 export class PatCrearComponent implements OnInit{
   title = 'crearPat';
-  procesosEnumList: string[] = [];
-  direccionesLista: string[] = [];
+  procesos: any;
+  direcciones: any;
   pat:Pat = new Pat();
   usuarios: any[] = [];
   form:FormGroup;
   
   constructor(private patService:PatService,private usuarioService: UsuarioService,
-    private formBuilder: FormBuilder,private auth:AuthService) 
+    private formBuilder: FormBuilder,private auth:AuthService,
+    private procesoService:ProcesoService, private direccionService:DireccionService) 
   { this.form = this.formBuilder.group({
     nombre: ['', Validators.required],
     fechaAnual: ['', Validators.required],
@@ -33,29 +34,37 @@ export class PatCrearComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.procesosEnumList = Object.values(EProceso);
-    this.direccionesLista = Object.values(EDireccion);
     this.cargarUsuarios();
+    this.cargarDirecciones()
+    this.cargarProcesos()
   }
 
   cargarUsuarios() {
     this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
         this.usuarios = data;
-    },
-      (error) => {
-        console.log(error);
-      }
-    );
+    });
+  }
+
+  cargarProcesos() {
+    this.procesoService.listar(this.auth.obtenerHeader()).subscribe(
+      (data: any) => {
+        this.procesos = data;
+    })
+  }
+  cargarDirecciones() {
+    this.direccionService.listar(this.auth.obtenerHeader()).subscribe(
+      (data: any) => {
+        this.direcciones = data;
+    })
   }
 
   crearPat() { 
     this.pat.nombre = this.form.value.nombre;
     this.pat.fechaAnual = this.form.value.fechaAnual;
     this.pat.direccion = this.form.value.direccion;
-    this.pat.proceso = this.form.value.proceso.toUpperCase().replace(/\s+/g, '_');
+    this.pat.proceso = this.form.value.proceso;
     this.pat.idUsuario = this.form.value.idUsuario;
-        // Luego, envía 'cargo' al backend usando tu servicio.
         this.patService.crearPat(this.pat,this.auth.obtenerHeader()).subscribe(
           (response) => {
             Swal.fire({
@@ -76,9 +85,20 @@ export class PatCrearComponent implements OnInit{
                 title:"Error!!!",
                 text:error.error.mensajeHumano, 
                 icon:"error",
+                confirmButtonColor: '#0E823F',
               }
             );
           }
         );
+  }
+
+  
+  obtenerProceso(idProceso: number) {
+    const proceso = this.procesos.find((u:any) => u.idProceso === idProceso);
+    return proceso ? proceso.nombre : '';
+  }
+  obtenerDireccion(idDireccion: number) {
+    const direccion = this.direcciones.find((u:any) => u.idDireccion === idDireccion);
+    return direccion ? direccion.nombre : '';
   }
 }

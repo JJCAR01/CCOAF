@@ -9,14 +9,14 @@
 </head>
 <body>
     <h1 class="mb-2">Lista de Usuarios</h1>
-    <div class="row mt-2">
-        <div class="col-lg-4" >
-            <div class="input-group ">
-                <span class="input-group-text buscador">Buscar:</span>
+    <div class="d-flex align-items-end">
+        <div class="flex-grow-1">
+            <div class="input-group">
+            <span class="input-group-text">Buscar:</span>
                 <input type="text" class="form-control" [(ngModel)]="busqueda" />
             </div>
         </div>
-        <div class="col-lg-4 mb-2 ms-5">
+        <div class="ms-1">
             <button [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['crearUsuario'] } }]"
                 type="button" class="btn btn-success">
                 Crear nuevo usuario

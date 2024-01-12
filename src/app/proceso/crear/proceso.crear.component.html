@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="proceso.crear.component.scss">
+    <title>Procesos</title>
+</head>
+<body>
+    <h1 class="mb-2">Procesos</h1>
+    <div class="d-flex align-items-end">
+      <div class="flex-grow-1">
+        <div class="input-group">
+          <span class="input-group-text">Buscar:</span>
+          <input type="text" class="form-control" [(ngModel)]="busqueda" />
+        </div>
+      </div>
+      <div class="ms-3">
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalCrearProceso">Crear proceso</button>
+      </div>
+    </div>
+
+    <div *ngFor="let proceso of procesos | buscar: busqueda" class="container-sm">
+        <ul class="list-group mt-2">
+            <li class="list-group-item">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="col-lg-4">{{ proceso.nombre }}</span>
+                    <span>
+                        
+                        <button class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarProceso" (click)="procesoSeleccionado(proceso.idProceso,proceso)"
+                        ><i class="bi bi-pen-fill"></i></button>
+                        <button class="btn btn-outline-danger" (click)="eliminarProceso(proceso.idProceso)" ><i class="bi bi-trash3-fill"></i></button>
+                    </span>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="modal fade" id="modalModificarProceso" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Modificar proceso</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form [formGroup]="form" (ngSubmit)="modificarProceso()">
+                <div class="mb-3">
+                  <label for="nombre" class="form-label">Nombre</label>
+                  <input type="text" class="form-control" id="nombre" formControlName="nombre" [value]="nombreSeleccionado">
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                  <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Guardar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="modalCrearProceso" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Crear proceso</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form [formGroup]="form" (ngSubmit)="crearProceso()">
+                <div class="mb-3">
+                  <label for="nombre" class="form-label">Nombre</label>
+                  <input type="text" class="form-control" id="nombre" formControlName="nombre">
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                  <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Guardar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+</body>
+</html>

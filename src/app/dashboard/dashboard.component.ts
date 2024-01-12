@@ -5,6 +5,7 @@ import { AuthService } from '../login/auth/auth.service';
 import { ActividadService } from '../actividad/services/actividad.service';
 import { TipoGEService } from '../gestion/services/tipoGE.service';
 import { Chart, registerables } from 'chart.js/auto';
+import { AnyObject } from 'chart.js/dist/types/basic';
 
 Chart.register(...registerables);
 
@@ -15,7 +16,8 @@ Chart.register(...registerables);
 })
 export class DashboardComponent implements OnInit {
   title = 'dashboard';
-  datoPat: any;
+  idsPats: any[] = []
+  datoPat: any[] = [];
   dataActvidadesEstrategicas: any;
   dataAct: any;
   datoProyectos:any;
@@ -51,27 +53,36 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.obtenerDatos();
+    this.patService.getPatsData().subscribe((patsData: any[]) => {
+      if (patsData && Array.isArray(patsData)) {
+        this.idsPats = patsData.map((pat: any) => pat.idPat);
+
+        // Iterar sobre los IDs de Pats y cargar las actividades estratégicas
+        for (const idPat of this.idsPats) {
+          this.patService.listarPatPorId(idPat,this.auth.obtenerHeader()).subscribe((result : any) => {
+            this.datoPat.push(result);
+            if (this.datoPat != null) {
+              this.nombrePats = [];
+              this.porcentajePats = [];
+              for (let i = 0; i < this.datoPat.length; i++) {
+                this.nombrePats.push(this.datoPat[i].nombre);
+                this.porcentajePats.push(this.datoPat[i].porcentaje);
+                console.log(this.nombrePats)
+              }
+            }
+            // Actualizar chartPrincipal con los datos iniciales
+            this.chartPrincipal.data.labels = this.nombrePats;
+            this.chartPrincipal.data.datasets[0].data = this.porcentajePats;
+            this.chartPrincipal.update();
+          });
+        }
+        
+        
+      }
+      
+    });
     this.inicializarGraficoPrincipal();
     this.inicializarGraficos();
-  }
-
-  obtenerDatos(): void {
-    this.patService.listarPat(this.auth.obtenerHeader()).subscribe(result => {
-      this.datoPat = result;
-      if (this.datoPat != null) {
-        this.nombrePats = [];
-        this.porcentajePats = [];
-        for (let i = 0; i < this.datoPat.length; i++) {
-          this.nombrePats.push(this.datoPat[i].nombre);
-          this.porcentajePats.push(this.datoPat[i].porcentaje);
-        }
-      }
-      // Actualizar chartPrincipal con los datos iniciales
-      this.chartPrincipal.data.labels = this.nombrePats;
-      this.chartPrincipal.data.datasets[0].data = this.porcentajePats;
-      this.chartPrincipal.update();
-    });
   }
 
   async obtenerDatosPorActividades(idPat: number) {

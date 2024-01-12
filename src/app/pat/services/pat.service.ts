@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment.development';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PatService {
+  private patsDataSubject: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
   constructor(private http: HttpClient) {
   }
 
@@ -17,13 +18,21 @@ export class PatService {
   listarPat<T>(headers?: HttpHeaders):Observable<T>{
     return this.http.get<T>(`${environment.apiUrl}/ccoa/pats`,{headers});
   }
-  listarPatPorId<T>(idPat:number,headers?: HttpHeaders):Observable<T>{
-    return this.http.get<T>(`${environment.apiUrl}/ccoa/pats/${idPat}`,{headers});
+  listarPatPorId<T>(idPat:number,headers?: HttpHeaders){
+    return this.http.get(`${environment.apiUrl}/ccoa/pats/${idPat}`,{headers});
   }
   modificarPat<T>(pat : any,idPat:number,headers?: HttpHeaders):Observable<T>{
     return this.http.put<T>(`${environment.apiUrl}/ccoa/pats/${idPat}`,pat,{headers});
   }
   eliminarPat<T>(idPat:number,headers?: HttpHeaders):Observable<T>{
     return this.http.delete<T>(`${environment.apiUrl}/ccoa/pats/${idPat}`,{headers});
+  }
+
+  getPatsData(): Observable<any[]> {
+    return this.patsDataSubject.asObservable();
+  }
+
+  setPatsData(pats: any[]): void {
+    this.patsDataSubject.next(pats);
   }
 }

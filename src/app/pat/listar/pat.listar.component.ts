@@ -6,8 +6,8 @@ import { UsuarioService } from 'src/app/usuario/services/usuario.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TipoGEService } from 'src/app/gestion/services/tipoGE.service';
 import { ActividadService } from 'src/app/actividad/services/actividad.service';
-import { EProceso } from './eproceso';
 import { NgbModal, NgbModalRef  } from '@ng-bootstrap/ng-bootstrap';
+import { ProcesoService } from 'src/app/proceso/services/proceso.service';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +18,6 @@ export class PatListarComponent implements OnInit{
   private modalRef: NgbModalRef | undefined;
   title = 'listarPat';
 
-  procesosEnumList: string[] = Object.values(EProceso);
   pats: any[] = [];
   usuarios:any[] =[];
   direccion:any;
@@ -42,12 +41,14 @@ export class PatListarComponent implements OnInit{
   sumadorActividadGestionAbiertos=0;
   sumadorActividadEstrategicasTerminados=0;
   sumadorActividadEstrategicasAbiertos=0;
+  procesos:any;
   form:FormGroup;
   
     constructor(
       private patService: PatService,private auth:AuthService,
       private usuarioService:UsuarioService, private formBuilder: FormBuilder,
-      private tipoService:TipoGEService, private actividadService:ActividadService) 
+      private tipoService:TipoGEService, private actividadService:ActividadService,
+      private procesoService:ProcesoService) 
       {
         this.form = this.formBuilder.group({
           nombre:['', Validators.required],
@@ -59,6 +60,7 @@ export class PatListarComponent implements OnInit{
     ngOnInit() {
       this.cargarPats();
       this.cargarUsuario();
+      this.cargarProcesos()
     }
     cargarUsuario() {
       this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
@@ -71,6 +73,13 @@ export class PatListarComponent implements OnInit{
       );
     }
 
+    cargarProcesos() {
+      this.procesoService.listar(this.auth.obtenerHeader()).subscribe(
+        (data: any) => {
+          this.procesos = data;
+      })
+    }
+
     cargarPats() {
       this.patService.listarPat(this.auth.obtenerHeader()).toPromise().then(
         (data: any) => {
@@ -79,40 +88,41 @@ export class PatListarComponent implements OnInit{
     
           // Decodificar el payload del token
           const payloadBase64 = token.split('.')[1];
-          const decodedPayload = JSON.parse(atob(payloadBase64));
-
-          // Remover corchetes alrededor de la cadena de direcciones y procesos
-          const direccionesString = decodedPayload.direccion.replace(/^\[|\]$/g, '');
-          const procesosString = decodedPayload.proceso.replace(/^\[|\]$/g, '');
+          const payloadBytes = new Uint8Array(atob(payloadBase64).split('').map(char => char.charCodeAt(0)));
+          const decodedPayload = JSON.parse(new TextDecoder().decode(payloadBytes));
 
           // Convertir las cadenas de direcciones y procesos a arrays
-          const direccionesArray = direccionesString.split(',').map((direccion: string) => direccion.trim());
-          const procesosArray = procesosString.split(',').map((proceso: string) => proceso.trim());
+          const direccionesArray = decodedPayload.direccion.split(',').map((direccion: string) => direccion.trim());
+          const procesosArray = decodedPayload.proceso.split(',').map((proceso: string) => proceso.trim());
+
     
           // Verificar si son todas las direcciones y todos los procesos
           const sonTodasLasDirecciones = direccionesArray.includes('TODAS LAS DIRECCIONES');
           const sonTodosLosProcesos = procesosArray.includes('TODOS LOS PROCESOS');
-    
+          
+
           // Filtrar los datos según las direcciones y procesos del payload
-          this.pats = data.filter((d: any) => {
+          const patsFiltrados = data.filter((d: any) => {
             if (sonTodasLasDirecciones && sonTodosLosProcesos) {
               return true;
-            } else if (sonTodasLasDirecciones ){
-              procesosArray.includes(d.proceso);
+            } else if (sonTodasLasDirecciones && procesosArray.includes(d.proceso)) {
+              return true;
+            } else if (direccionesArray.includes(d.direccion.nombre) && procesosArray.includes(d.proceso.nombre)) {
+              return true;
             } else {
-              // Aplicar los filtros si no son todas las direcciones y todos los procesos
-              return direccionesArray.some((direccion: string) =>
-                d.direccion.toLowerCase() === direccion.toLowerCase()
-              ) && procesosArray.includes(d.proceso);
+              return false;
             }
+
           });
     
           // Actualizar la cantidad de pats
-          this.cantidadPats = this.pats.length;
+          this.cantidadPats = patsFiltrados.length;
 
           // Cargar las actividades estratégicas relacionadas con los planes anuales
-          this.cargarActividadesEstrategica(this.pats);
-          this.cargarPatsActividadGestion(this.pats);
+          this.cargarActividadesEstrategica(patsFiltrados);
+          this.cargarPatsActividadGestion(patsFiltrados);
+          this.patService.setPatsData(patsFiltrados);
+          this.pats = patsFiltrados;
         },
         (error) => {
           Swal.fire(error.error.mensajeTecnico);
@@ -239,7 +249,7 @@ export class PatListarComponent implements OnInit{
       if (this.form.valid && this.selectedPatId) {
         const nombre = this.form.get('nombre')?.value;
         const fechaAnual = this.form.get('fechaAnual')?.value;
-        const proceso = this.form.get('proceso')?.value.toUpperCase().replace(/\s+/g, '_');
+        const proceso = this.form.get('proceso')?.value;
         const idUsuario = this.usuario;
         const pat = {
           nombre: nombre,
@@ -343,7 +353,7 @@ export class PatListarComponent implements OnInit{
       this.selectedPatId = idPat;
       this.nombrePatSeleccionado = pat.nombre;
       this.fechaAnualSeleccionada = pat.fechaAnual;
-      this.procesoSeleccionado = pat.proceso;
+      this.procesoSeleccionado = pat.proceso.nombre;
       this.usuario = pat.idUsuario
 
       this.form.patchValue({
@@ -371,12 +381,5 @@ export class PatListarComponent implements OnInit{
         return 'porcentaje-cien';
       }
     }
-    // Función para convertir entre valores mostrados y valores reales 
-    convertirProceso(valor: string): string {
-      const valorMinuscSinTildes = valor.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-      return valorMinuscSinTildes;
-    }
-    obtenerProcesoMinuscula(valor: EProceso): string {
-      return valor.replace(/_/g, ' ');
-    }
+
 }

@@ -13,7 +13,6 @@ import { DireccionService } from 'src/app/direccion/services/direccion.service';
 })
 export class AreaCrearComponent implements OnInit {
   title = 'crearArea';
-  direccionEnumList: string[] = [];
   direcciones: any[] = [];
   form:FormGroup;
 
@@ -25,7 +24,7 @@ export class AreaCrearComponent implements OnInit {
         nombre: ['', Validators.required],
         direccion: ['', Validators.required],
       });
-    }
+  }
   ngOnInit(): void {
     this.cargarDirecciones();
   }
@@ -33,18 +32,18 @@ export class AreaCrearComponent implements OnInit {
   cargarDirecciones() {
     this.direccionService.listar(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
-        console.log(data)
+        
         this.direcciones = data;
     })
   }
   crearArea(){
     const nombre = this.form.get('nombre')?.value;
-    const direccion = this.form.value.direccion;
-    const body = {
+    const direccion = this.form.get('direccion')?.value
+    const area = {
       nombre: nombre,
       direccion:direccion
     };
-    this.areaService.crear(body,this.auth.obtenerHeader()).toPromise().then(response =>{
+    this.areaService.crear(area,this.auth.obtenerHeader()).toPromise().then(response =>{
       Swal.fire({
         title:"Creado!!!",
         text:'El área se ha creado.', 
@@ -62,6 +61,7 @@ export class AreaCrearComponent implements OnInit {
           title:"Error!!!",
           text:error.error.mensajeHumano, 
           icon:"error",
+          confirmButtonColor: '#0E823F',
         }
       );
     } )

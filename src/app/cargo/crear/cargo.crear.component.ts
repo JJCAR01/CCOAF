@@ -76,6 +76,7 @@ export class CargoCrearComponent {
                 title:"Error!!!",
                 text:error.error.mensajeHumano, 
                 icon:"error",
+                confirmButtonColor: '#0E823F',
               }
             );
           }

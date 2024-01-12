@@ -9,36 +9,42 @@
 </head>
 <body>
     <h1 class="mb-2">Cargos</h1>
-    <div class="row mt-2">
-        <div class="col-lg-4" >
+    <div class="d-flex align-items-end">
+        <div class="flex-grow-1">
             <div class="input-group">
-                <span class="input-group-text buscador ms-5">Buscar:</span>
-                <input type="text" class="form-control ms-2" [(ngModel)]="busqueda" />
+            <span class="input-group-text">Buscar:</span>
+                <input type="text" class="form-control" [(ngModel)]="busqueda" />
             </div>
         </div>
-        <div class="col-lg-4 mb-2 ms-5">
+        <div class="ms-1">
             <button [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['crearCargo'] } }]"
                 type="button" class="btn btn-success">
                 Crear nuevo Cargo
             </button>
         </div>
     </div>
-
-    <div *ngFor="let cargo of cargos | buscar: busqueda" class="container">
-        <ul class="list-group mt-1">
-            <li class="list-group-item">
-                <div class="d-flex justify-content-between align-items-center">
-                <span class="col-lg-4">{{ cargo.nombre }}</span>
-                <span class="col-lg-4">{{ obtenerNombreArea(cargo.idArea) }}</span>
-                    <span>
-                        <button class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarCargo" (click)="cargoSeleccionado(cargo.idCargo,cargo)"
+    <main class="main text-center smaller-main">
+      <table class="table table-bordered">
+        <thead class="table table-color">
+              <tr>
+                <th >Nombre </th>
+                <th >Área</th>
+                <th></th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr *ngFor="let cargo of cargos | buscar: busqueda">
+                  <td>{{ cargo.nombre}}</td>
+                  <td>{{ obtenerNombreArea(cargo.idArea)}}</td>         
+                  <td>
+                    <button class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarCargo" (click)="cargoSeleccionado(cargo.idCargo,cargo)"
                         ><i class="bi bi-pen-fill"></i></button>
                         <button class="btn btn-outline-danger" (click)="eliminarCargo(cargo.idCargo)" ><i class="bi bi-trash3-fill"></i></button>
-                    </span>
-                </div>
-            </li>
-        </ul>
-    </div>
+                  </td>
+              </tr>
+          </tbody>
+          </table>
+    </main>
 
     <div class="modal fade" id="modalModificarCargo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -52,6 +58,13 @@
                 <div class="mb-3">
                   <label for="nombre" class="form-label">Nombre</label>
                   <input type="text" class="form-control" id="nombre" formControlName="nombre" [value]="nombreCargoSeleccionado">
+                </div>
+                <div class="mb-3">
+                  <label for="idArea" class="form-label">Área</label>
+                  <select class="form-select" id="idArea" formControlName="idArea" [(value)]="areaSeleccionada">
+                    <option *ngFor="let area of areas" [value]="area.idArea"> {{ area.nombre }}
+                    </option>
+                  </select>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

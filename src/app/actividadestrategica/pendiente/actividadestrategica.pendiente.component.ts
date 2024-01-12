@@ -28,18 +28,25 @@ export class ActividadEstrategicaPendienteListarComponent implements OnInit {
     private router:Router
     ){ }
 
-  ngOnInit(): void {
-    this.cargarActividadesEstrategicaPendientes();
-    this.cargarUsuario()
-  }
-
-
-  cargarActividadesEstrategicaPendientes() {
-    this.tipoService.listarActividadEstrategica(this.auth.obtenerHeader()).subscribe((data: any) => {
-      this.actividadesEstrategicasPendientes = data.filter((pendiente: any) => pendiente.avance < 100);
-
-    });
-  }
+    ngOnInit(): void {
+      this.cargarUsuario();
+    
+      this.patService.getPatsData().subscribe((patsData: any[]) => {
+        if (patsData && patsData.length > 0) {
+          // Obtener los IDs de los Pats
+          const idsPats = patsData.map(pat => pat.idPat);
+    
+          // Iterar sobre los IDs de Pats y cargar las actividades estratégicas
+          for (const idPat of idsPats) {
+            this.tipoService.listarActividadEstrategicaPorIdPat(idPat, this.auth.obtenerHeader())
+              .subscribe((data: any) => {
+                this.actividadesEstrategicasPendientes = data.filter((pendiente: any) => pendiente.avance < 100);
+              });
+          }
+        }
+      });
+    }
+    
 
   irADetalles(actividad: any) {
     // Obtén el nombre del PAT antes de navegar

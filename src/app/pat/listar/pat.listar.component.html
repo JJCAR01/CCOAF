@@ -71,6 +71,7 @@
         <tr>
           <th class="column-programa">Programa</th> 
           <th class="column-fecha">Año</th>
+          <th class="column-proceso">Dirección</th>
           <th class="column-proceso">Proceso</th>
           <th>Porcentaje avance</th>
           <th class="column-usuario">Responsable</th>
@@ -82,7 +83,8 @@
           <tr title="{{pat.nombre}}" >
             <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]" >{{ pat.nombre }}</td>
             <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]">{{ pat.fechaAnual }}</td>
-            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]">{{ obtenerProcesoMinuscula(pat.proceso) | formatEnum }}</td>
+            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]">{{ pat.direccion.nombre}}</td>
+            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]">{{ pat.proceso.nombre}}</td>
             <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]"
                 [ngClass]="colorPorcentaje(pat.porcentaje)">{{ pat.porcentaje | number : '1.2-2' }} %</td>
             <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]">{{ obtenerNombreUsuario(pat.idUsuario) }} </td>
@@ -122,8 +124,8 @@
             <div class="mb-3">
               <label for="proceso" class="form-label">Proceso</label>
               <select class="form-select" id="proceso" formControlName="proceso" [(value)]="procesoSeleccionado">
-                <option *ngFor="let proceso of procesosEnumList" [value]="convertirProceso(proceso)">
-                  {{ proceso }}
+                <option *ngFor="let proceso of procesos" [value]="proceso.nombre">
+                  {{ proceso.nombre }}
                 </option>
               </select>
             </div>

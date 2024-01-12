@@ -33,7 +33,7 @@ export class UsuarioCrearComponent implements OnInit {
     this.form = this.formBuilder.group({
       nombre: ['', Validators.required],
       apellido: ['', Validators.required],
-      correo: ['', Validators.required],
+      correo: ['', [Validators.required,Validators.email]],
       password: ['', Validators.required],
       idCargo: ['', Validators.required],
       nombreRol: ['', Validators.required],
@@ -131,6 +131,8 @@ export class UsuarioCrearComponent implements OnInit {
             }
           );
             this.form.reset();
+            this.listaDeDireccionesSeleccionadas = [];
+            this.listaDeProcesosSeleccionadas = [];
         },
         (error) => {
           Swal.fire(

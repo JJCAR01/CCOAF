@@ -9,10 +9,10 @@
 </head>
 <body>
     <h1 class="mb-2">Modificar direcciones y procesos</h1>
-    <div>
-        <div class="col-lg-4 " >
+    <div class="d-flex align-items-end">
+      <div class="flex-grow-1">
           <div class="input-group">
-            <span class="input-group-text buscador">Buscar:</span>
+          <span class="input-group-text">Buscar:</span>
             <input type="text" class="form-control" [(ngModel)]="busqueda" />
           </div>
         </div>
@@ -158,7 +158,7 @@
                   <div class="input">
                     <select class="form-select" id="procesos" formControlName="procesos">
                       <option value="" disabled selected>Seleccione las direccion a eliminar<span class="required-field">*</span></option>
-                      <option *ngFor="let proceso of procesos" [value]="proceso.nombre">{{ proceso.nombre }}</option>
+                      <option *ngFor="let proceso of procesosUsuarioSeleccionado" [value]="proceso.nombre">{{ proceso.nombre }}</option>
                     </select>
                     <button (click)="seleccionarProceso()" class="btn btn-secondary btn-input">Proceso a eliminar</button>
                   </div>

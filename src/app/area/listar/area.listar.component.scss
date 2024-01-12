@@ -2,10 +2,6 @@
     font-family: "Roboto";
   }
 
-.buscador input{
-    max-width: 100px;
-    align-items: center;
-}
 
 h1 {
     font-family: "Roboto", unset;
@@ -62,3 +58,25 @@ h2 {
     color: #fff;
     border: none;
 }
+
+.smaller-main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 10px;
+
+    th, td {
+      text-align: center; // Centra horizontalmente el texto
+      vertical-align: middle; // Centra verticalmente el texto
+    }
+
+}
+.table-color th{
+    background-color: #bbbbbb;
+  }
+  td {
+    cursor: pointer;
+  }
+  th{
+    color: #161515c0;
+  }

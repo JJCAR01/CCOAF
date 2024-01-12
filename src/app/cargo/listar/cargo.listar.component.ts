@@ -17,7 +17,7 @@ export class CargoListarComponent {
     areas: any[] = [];
     idCargoSeleccionado:number| undefined;
     nombreCargoSeleccionado:any;
-    idAreaSeleccionada:number| undefined;
+    areaSeleccionada:any;
     form:FormGroup;
     busqueda: any;
   
@@ -101,7 +101,7 @@ export class CargoListarComponent {
       const idArea = this.form.get('idArea')?.value;
       const cargo = {
         nombre: nombre,
-        idArea:this.idAreaSeleccionada
+        idArea:idArea
       }
       Swal.fire({
         icon:"question",
@@ -128,7 +128,11 @@ export class CargoListarComponent {
                 });
               },
               (error) => {
-                Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
+                Swal.fire({
+                  title: "Solicitud no válida", 
+                  text: error.error.mensajeHumano, 
+                  icon :"error", 
+                  confirmButtonColor: '#0E823F'});
               }
             );
           }
@@ -139,11 +143,11 @@ export class CargoListarComponent {
   cargoSeleccionado(idCargo: number,cargo:any) {
     this.idCargoSeleccionado = idCargo;
     this.nombreCargoSeleccionado = cargo.nombre;
-    this.idAreaSeleccionada = cargo.idArea
+    this.areaSeleccionada = cargo.idArea
 
     this.form.patchValue({
       nombre: this.nombreCargoSeleccionado,
-      idArea:this.idAreaSeleccionada
+      idArea:this.areaSeleccionada
     });
   }
 

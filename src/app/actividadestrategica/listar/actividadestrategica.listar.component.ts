@@ -26,33 +26,34 @@ export class ActividadestrategicaListarComponent implements OnInit{
     private router:Router){}
 
   ngOnInit(): void {
-    this.cargarActividadesEstrategicas();
     this.cargarUsuario();
+    this.patService.getPatsData().subscribe((patsData: any[]) => {
+      if (patsData && patsData.length > 0) {
+        // Obtener los IDs de los Pats
+        const idsPats = patsData.map(pat => pat.idPat);
 
-  }
-
-  cargarActividadesEstrategicas(){
-    this.tipoService
-      .listarActividadEstrategica(this.auth.obtenerHeader()) 
-      .toPromise()
-      .then(
-        (data: any) => {
-          this.actividadesEstrategicas = data;
-        },
-        (error) => {
-          Swal.fire(error.error.mensajeTecnico,'', 'error');
+        // Iterar sobre los IDs de Pats y cargar las actividades estratégicas
+        for (const idPat of idsPats) {
+          this.tipoService.listarActividadEstrategicaPorIdPat(idPat, this.auth.obtenerHeader())
+            .toPromise()
+            .then(
+              (data: any) => {
+                // Concatenar las actividades estratégicas obtenidas para todos los Pats
+                this.actividadesEstrategicas = data;
+              },
+              (error) => {
+                Swal.fire(error.error.mensajeTecnico, '', 'error');
+              }
+            );
         }
-      );
+      }
+    })
   }
   cargarUsuario() {
     this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
         this.usuarios = data;
-    },
-      (error) => {
-        console.log(error);
-      }
-    );
+    })
   }
 
   irADetalles(actividad: any) {
@@ -62,9 +63,6 @@ export class ActividadestrategicaListarComponent implements OnInit{
         const patNombre = data.nombre;
         // Navega a la página de detalles con el nombre asociado al idPat
         this.router.navigate(['/panel', { outlets: { 'OutletAdmin': ['listarActividad', actividad.idActividadEstrategica, 'pat', patNombre] } }]);
-      },
-      (error) => {
-        console.error('Error al obtener el nombre del PAT:', error);
       }
     );
   }

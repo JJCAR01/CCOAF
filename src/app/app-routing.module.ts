@@ -23,6 +23,8 @@ import { ProyectoPendienteListarComponent } from './proyecto/pendientes/proyecto
 import { ActividadestrategicaListarComponent } from './actividadestrategica/listar/actividadestrategica.listar.component';
 import { ActividadEstrategicaPendienteListarComponent } from './actividadestrategica/pendiente/actividadestrategica.pendiente.component';
 import { ModificarDireccionesComponent } from './usuario/modificar.direcciones/modificar.direcciones.component';
+import { DireccionCrearComponent } from './direccion/crear/direccion.crear.component';
+import { ProcesoCrearComponent } from './proceso/crear/proceso.crear.component';
 import { LoginGuard} from './guards/login.guard';
 
 
@@ -57,6 +59,8 @@ const routes: Routes = [
     { path: 'listarActividad/:idActividadEstrategica/pat/:patNombre', component: ActividadListarComponent, outlet: 'OutletAdmin' },
     { path: 'listarSprint/:idProyecto/pat/:patNombre', component: SprintListarComponent, outlet: 'OutletAdmin' },
     { path: "crearSprint", component: SprintCrearComponent, outlet:"OutletAdmin"},
+    { path: "crearProcesos", component: ProcesoCrearComponent, outlet:"OutletAdmin"},
+    { path: "crearDireciones", component: DireccionCrearComponent, outlet:"OutletAdmin"},
   ]},
 
   { path: '**', redirectTo: 'login' },

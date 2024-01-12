@@ -3,8 +3,8 @@ import { AreaService } from '../services/area.service';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import { HttpHeaders } from '@angular/common/http';
 import Swal from 'sweetalert2';
-import { EDireccion } from '../edireccion';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DireccionService } from 'src/app/direccion/services/direccion.service';
 
 @Component({
   selector: 'app-root:not(p)',
@@ -13,18 +13,19 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class AreaListarComponent implements OnInit {
   title = 'listarArea';
-  direccionEnumList: string[] = Object.values(EDireccion);
   areas: any[] = [];
   idAreaSeleccionada:number|undefined;
   nombreAreaSeleccionada:any;
   direccionSeleccionada:any;
   form:FormGroup
   busqueda: any;
+  direcciones:any;
 
   constructor(
     private areaService: AreaService,
     private auth: AuthService,
-    private formBuilder:FormBuilder
+    private formBuilder:FormBuilder,
+    private direccionService:DireccionService
 
   ) {this.form = this.formBuilder.group({
     nombre:['', Validators.required],
@@ -34,6 +35,7 @@ export class AreaListarComponent implements OnInit {
   ngOnInit() {
     if (this.auth.isAuthenticated()) {
       this.cargarAreas();
+      this.cargarDirecciones()
     }
   }
 
@@ -50,6 +52,14 @@ export class AreaListarComponent implements OnInit {
         }
       );
   }
+
+  cargarDirecciones() {
+    this.direccionService.listar(this.auth.obtenerHeader()).subscribe(
+      (data: any) => {
+        this.direcciones = data;
+    })
+  }
+  
   eliminarArea(idArea: number) {
       const areaAEliminar = this.areas.find(area => area.idArea === idArea);
 
@@ -81,6 +91,7 @@ export class AreaListarComponent implements OnInit {
               title:'Solicitud no válida!',
               text: error.error.mensajeHumano,
               icon: "error",
+              confirmButtonColor: '#0E823F',
             });
           }
         );
@@ -90,7 +101,7 @@ export class AreaListarComponent implements OnInit {
   modificarArea() {
     if (this.form.valid ) {
       const nombre = this.form.get('nombre')?.value;
-      const direccion = this.form.get('direccion')?.value.toUpperCase().replace(/\s+/g, '_');
+      const direccion = this.form.get('direccion')?.value;
       const area = {
         nombre: nombre,
         direccion: direccion,
@@ -120,7 +131,11 @@ export class AreaListarComponent implements OnInit {
                 });
               },
               (error) => {
-                Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
+                Swal.fire({
+                  title: "Solicitud no válida", 
+                  text: error.error.mensajeHumano, 
+                  icon :"error", 
+                  confirmButtonColor: '#0E823F'});
               }
             );
           }
@@ -128,10 +143,12 @@ export class AreaListarComponent implements OnInit {
       });
     } 
   }
+
+  
   areaSeleccionada(idArea: number,area:any) {
     this.idAreaSeleccionada = idArea;
     this.nombreAreaSeleccionada = area.nombre;
-    this.direccionSeleccionada = area.direccion;
+    this.direccionSeleccionada = area.idDireccion;
 
     this.form.patchValue({
       nombre: this.nombreAreaSeleccionada,
@@ -139,12 +156,11 @@ export class AreaListarComponent implements OnInit {
     });
   }
 
-  // Función para convertir entre valores mostrados y valores reales 
-  convertirDireccion(valor: string): string {
-    const valorMinuscSinTildes = valor.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    return valorMinuscSinTildes;
-  }
-  obtenerProcesoMinuscula(valor: EDireccion): string {
-    return valor.replace(/_/g, ' ');
+  obtenerDireccion(idDireccion: number) {
+    if (this.direcciones) {
+      const direccion = this.direcciones.find((u: any) => u.idDireccion === idDireccion);
+      return direccion ? direccion.nombre : '';
+    }
+    return '';
   }
 }
