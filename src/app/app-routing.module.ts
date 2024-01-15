@@ -12,10 +12,10 @@ import { PanelAdminComponent } from "./panel.admin/panel.admin.component";
 import { PatCrearComponent } from './pat/crear/pat.crear.component';
 import { PatListarComponent } from './pat/listar/pat.listar.component';
 import { TipogeListarComponent } from './gestion/listar/tipoGE.listar.component';
-import { ActividadCrearComponent } from './actividad/crear/actividad.crear.component';
+import { ActividadCrearComponent } from './actividad/crear.actividad/actividad.crear.component';
 import { ActividadListarComponent } from './actividad/listar/actividad.listar.component';
 import { SprintListarComponent } from './sprint/listar/sprint.listar.component';
-import { TipoGECrearComponent } from './gestion/crear/tipoGE.crear.component';
+import { TipoGECrearComponent } from './gestion/crear.estrategica/tipoGE.crear.component';
 import { SprintCrearComponent } from './sprint/crear/sprint.crear.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProyectoListarComponent } from './proyecto/listar/proyecto.listar.component';
@@ -25,7 +25,9 @@ import { ActividadEstrategicaPendienteListarComponent } from './actividadestrate
 import { ModificarDireccionesComponent } from './usuario/modificar.direcciones/modificar.direcciones.component';
 import { DireccionCrearComponent } from './direccion/crear/direccion.crear.component';
 import { ProcesoCrearComponent } from './proceso/crear/proceso.crear.component';
+import { CrearProyectoComponent } from './actividad/crear.proyecto/crear.proyecto.component';
 import { LoginGuard} from './guards/login.guard';
+import { CrearGestionComponent } from './gestion/crear.gestion/crear.gestion.component';
 
 
 
@@ -54,13 +56,15 @@ const routes: Routes = [
     { path: "crearPat", component: PatCrearComponent, outlet:"OutletAdmin"},
     { path: "listarPat", component: PatListarComponent, outlet:"OutletAdmin"},   
     { path: "listarTipoGE/:idPat", component: TipogeListarComponent, outlet:"OutletAdmin" },
-    { path: "crearTipoGE", component: TipoGECrearComponent, outlet:"OutletAdmin"}, 
+    { path: "crearActividadEstrategica", component: TipoGECrearComponent, outlet:"OutletAdmin"}, 
     { path: "crearActividad", component: ActividadCrearComponent, outlet:"OutletAdmin"}, 
     { path: 'listarActividad/:idActividadEstrategica/pat/:patNombre', component: ActividadListarComponent, outlet: 'OutletAdmin' },
     { path: 'listarSprint/:idProyecto/pat/:patNombre', component: SprintListarComponent, outlet: 'OutletAdmin' },
     { path: "crearSprint", component: SprintCrearComponent, outlet:"OutletAdmin"},
     { path: "crearProcesos", component: ProcesoCrearComponent, outlet:"OutletAdmin"},
     { path: "crearDireciones", component: DireccionCrearComponent, outlet:"OutletAdmin"},
+    { path: "crearProyecto", component: CrearProyectoComponent, outlet:"OutletAdmin"},
+    { path: "crearActividadGestion", component: CrearGestionComponent, outlet:"OutletAdmin"},
   ]},
 
   { path: '**', redirectTo: 'login' },

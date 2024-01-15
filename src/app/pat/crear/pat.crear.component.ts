@@ -83,7 +83,7 @@ export class PatCrearComponent implements OnInit{
             Swal.fire(
               {
                 title:"Error!!!",
-                text:error.error.mensajeHumano, 
+                text:error.error.mensajeTecnico, 
                 icon:"error",
                 confirmButtonColor: '#0E823F',
               }

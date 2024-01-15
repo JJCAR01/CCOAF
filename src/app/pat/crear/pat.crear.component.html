@@ -14,36 +14,38 @@
                             <h2 class="text-center">Crear plan Anual de trabajo</h2>
 
                             <form [formGroup]="form" (ngSubmit)="crearPat()">
-                                <!-- Elimina [(ngModel)] y usa solo formControlName para los campos -->
                                 <div class="form-floating mb-3">
                                     <input type="text" id="nombre" class="form-control form-control-lg" formControlName="nombre" placeholder="nombre">
-                                    <label class="form-label" for="nombre">Nombre</label>
+                                    <label class="form-label" for="nombre">Nombre<span class="required-field">*</span></label>
                                 </div>
 
                                 <div class="form-floating mb-3">
                                     <input type="number" id="fechaAnual" class="form-control form-control-lg" formControlName="fechaAnual" placeholder="Año">
-                                    <label class="form-label" for="fechaAnual">Año</label>
+                                    <label class="form-label" for="fechaAnual">Año<span class="required-field">*</span></label>
                                 </div>
 
                                 <div class="form-floating mb-3">
                                     <select class="form-select" id="direccion" formControlName="direccion">
+                                        <option value="" disabled selected> Seleccione la direccion<span class="required-field">*</span></option>
                                         <option *ngFor="let direccion of direcciones" [value]="direccion.nombre">{{ direccion.nombre }}</option>
                                     </select>
-                                    <label for="proceso" class="form-label">Dirección</label>
+                                    <label for="proceso" class="form-label">Dirección<span class="required-field">*</span></label>
                                 </div>
 
                                 <div class="form-floating mb-3">
                                     <select class="form-select" id="proceso" formControlName="proceso">
+                                        <option value="" disabled selected> Seleccione el proceso<span class="required-field">*</span></option>
                                         <option *ngFor="let proceso of procesos" [value]="proceso.nombre">{{ proceso.nombre }}</option>
                                     </select>
-                                    <label for="proceso" class="form-label">Proceso</label>
+                                    <label for="proceso" class="form-label">Proceso<span class="required-field">*</span></label>
                                 </div>
 
                                 <div class="form-floating mb-3">
                                     <select class="form-select" id="idUsuario" formControlName="idUsuario">
+                                        <option value="" disabled selected> Seleccione el usuario responsable<span class="required-field">*</span></option>
                                         <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario">{{ usuario.nombre + ' ' + usuario.apellidos | formatEnum }}</option>
                                     </select>
-                                    <label for="idUsuario" placeholder="usuario">Responsable:</label>
+                                    <label for="idUsuario" placeholder="usuario">Responsable:<span class="required-field">*</span></label>
                                 </div>
 
                                 <div class="d-flex justify-content-center">

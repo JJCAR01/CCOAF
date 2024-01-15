@@ -18,15 +18,15 @@
                         <form [formGroup]="form" (ngSubmit)="crearSprint()">
                             <div class="form-floating mb-3">
                                 <textarea type="text" id="descripcion" class="form-control form-control-lg" formControlName="descripcion" placeholder="descripcion"></textarea>
-                                <label class="form-label" for="descripcion">Descripcion</label>
+                                <label class="form-label" for="descripcion">Descripcion<span class="required-field">*</span></label>
                             </div>
                             <div class="form-floating mb-3">
                                 <input type="date" id="fechaInicial" class="form-control form-control-lg" formControlName="fechaInicial" placeholder="Fecha Inicial"  >
-                                <label class="form-label" for="fechaInicial">Fecha Inicial</label>
+                                <label class="form-label" for="fechaInicial">Fecha Inicial<span class="required-field">*</span></label>
                             </div>
                             <div class="form-floating mb-3">
                                 <input type="date" id="fechaFinal" class="form-control form-control-lg" formControlName="fechaFinal" placeholder="Fecha Final" >
-                                <label class="form-label" for="fechaFinal">Fecha Final</label>
+                                <label class="form-label" for="fechaFinal">Fecha Final<span class="required-field">*</span></label>
                             </div>                        
                             <div class="d-flex justify-content-center">
                                 <button type="button" class="btn btn-secondary btn-block me-2"

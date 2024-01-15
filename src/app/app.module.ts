@@ -20,7 +20,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import { BuscarPipe } from 'src/pipes/buscar.pipes';
 
-import { ActividadCrearComponent } from './actividad/crear/actividad.crear.component';
+import { ActividadCrearComponent } from './actividad/crear.actividad/actividad.crear.component';
 import { ActividadListarComponent } from './actividad/listar/actividad.listar.component';
 import { SprintListarComponent } from './sprint/listar/sprint.listar.component';
 import { SprintCrearComponent } from './sprint/crear/sprint.crear.component';
@@ -31,10 +31,12 @@ import { ModificarDireccionesComponent } from './usuario/modificar.direcciones/m
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProcesoCrearComponent } from './proceso/crear/proceso.crear.component';
 import { DireccionCrearComponent } from './direccion/crear/direccion.crear.component';
+import { CrearProyectoComponent } from './actividad/crear.proyecto/crear.proyecto.component';
+import { CrearGestionComponent } from './gestion/crear.gestion/crear.gestion.component';
 
 import { EnumPipe } from 'src/pipes/enum.pipes';
 import { ComasPipe } from 'src/pipes/comas.pipes';
-import { TipoGECrearComponent } from './gestion/crear/tipoGE.crear.component';
+import { TipoGECrearComponent } from './gestion/crear.estrategica/tipoGE.crear.component';
 import { environment } from 'src/environments/environment.development';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { AngularFireStorageModule } from '@angular/fire/compat/storage';
@@ -57,7 +59,7 @@ import { CommonModule } from '@angular/common';
     PatCrearComponent,TipogeListarComponent,ActividadCrearComponent, ActividadListarComponent,TipoGECrearComponent,
     SprintListarComponent,SprintCrearComponent, ProyectoListarComponent, ProyectoPendienteListarComponent,
     ActividadEstrategicaPendienteListarComponent, ComasPipe, ModificarDireccionesComponent,DashboardComponent,
-    DireccionCrearComponent,ProcesoCrearComponent
+    DireccionCrearComponent,ProcesoCrearComponent,CrearProyectoComponent,CrearGestionComponent
   ],
   imports: [
     CommonModule,

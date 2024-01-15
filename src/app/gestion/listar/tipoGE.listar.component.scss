@@ -75,7 +75,7 @@ h3 {
 .nav-item {
   margin-top: 10px;
   text-align: center;
-  width: 47%;
+  flex:  1;
   background: rgba(170, 170, 170, 0.315);
   
   a:active, // Aplica el estilo cuando el enlace está activo
@@ -255,6 +255,9 @@ th{
   color: #161515c0;
 }
 
+.required-field {
+  color: red
+}
 
 
 

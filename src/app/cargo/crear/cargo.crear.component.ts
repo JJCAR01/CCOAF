@@ -68,13 +68,12 @@ export class CargoCrearComponent {
               }
             );
             this.form.reset();
-            console.log(response);
           },
           (error) => {
             Swal.fire(
               {
                 title:"Error!!!",
-                text:error.error.mensajeHumano, 
+                text:error.error.mensajeTecnico, 
                 icon:"error",
                 confirmButtonColor: '#0E823F',
               }

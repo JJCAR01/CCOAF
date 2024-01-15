@@ -14,13 +14,14 @@
                         <form [formGroup]="form" (ngSubmit)="crearArea()">
                             <div class="form-floating mb-3">
                                 <input type="text" id="nombre" class="form-control form-control-lg" formControlName="nombre" placeholder="Nombre">
-                                <label class="form-label" for="nombre">Nombre</label>
+                                <label class="form-label" for="nombre">Nombre<span class="required-field">*</span></label>
                             </div>
                             <div class="form-floating mb-3">
                                 <select class="form-select" id="direccion" formControlName="direccion">
+                                    <option value="" disabled selected>Seleccione la direccion<span class="required-field">*</span></option>
                                     <option *ngFor="let direccion of direcciones" [value]="direccion.idDireccion">{{ direccion.nombre }}</option>
                                 </select>
-                                <label for="direccion" class="form-label">Dirección</label>
+                                <label for="direccion" class="form-label">Dirección<span class="required-field">*</span></label>
                             </div>          
                             <div class="d-flex justify-content-center">
                                 <button type="button" class="btn btn-secondary btn-block me-2"

@@ -52,13 +52,23 @@ export class ProyectoListarComponent implements OnInit {
                         this.proyectos = data;
                       },
                       (error) => {
-                        Swal.fire(error.error.mensajeTecnico,'', 'error');
+                        Swal.fire({
+                          title:'Solicitud no válida!',
+                          text: error.error.mensajeHumano,
+                          icon: "error",
+                          confirmButtonColor: '#0E823F',
+                        });
                       }
                     );
                   }
               },
               (error) => {
-                Swal.fire(error.error.mensajeTecnico, '', 'error');
+                Swal.fire({
+                  title:'Solicitud no válida!',
+                  text: error.error.mensajeHumano,
+                  icon: "error",
+                  confirmButtonColor: '#0E823F',
+                });
               }
             );
         }

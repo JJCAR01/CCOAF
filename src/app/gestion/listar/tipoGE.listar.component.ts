@@ -103,17 +103,20 @@ export class TipogeListarComponent implements OnInit {
     this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
         this.usuarios = data;
-    },
-      (error) => {
-        Swal.fire({
-          title:'Error al cargar los usuarios',
-          text:error.error.mensajeHumano,
-          icon:'error',
-          confirmButtonColor: '#0E823F',
-        })
-      }
-    );
+    });
   }
+
+  toggleBotonesAdicionales() {
+    const btnOpcion1 = document.getElementById('btnOpcion1');
+    const btnOpcion2 = document.getElementById('btnOpcion2');
+
+    if (btnOpcion1 && btnOpcion2) {
+      btnOpcion1.classList.toggle('d-none');
+      btnOpcion2.classList.toggle('d-none');
+    }
+  }
+
+
   cargarGestiones(idPat: number) {
     // Utiliza idPat en tu solicitud para cargar las gestiones relacionadas
     this.gestionService
@@ -122,11 +125,7 @@ export class TipogeListarComponent implements OnInit {
       .then(
         (data: any) => {
           this.gestiones = data;
-        },
-        (error) => {
-          Swal.fire('Error!',error.error.mensajeTecnico,'error');
-        }
-      );
+        });
   }
 
   cargarActividadesEstrategicas(idPat: number) {
@@ -350,6 +349,7 @@ export class TipogeListarComponent implements OnInit {
               
               this.cargarTareas(this.idActividadGestionSeleccionado,'ACTIVIDAD_GESTION')
               this.formCrearTarea.reset()
+              this.cargarGestiones(this.idPat)
             });
           },
           (error) => {

@@ -6,7 +6,6 @@ import { ActivatedRoute } from '@angular/router';
 import { UsuarioService } from 'src/app/usuario/services/usuario.service';
 import Swal from 'sweetalert2';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Proyecto } from '../crear/proyecto';
 import { EEstado } from 'src/app/gestion/listar/EEstado';
 import { TareaService } from 'src/app/tarea/services/tarea.service';
 import { EModalidad } from './emodalidad';
@@ -107,6 +106,7 @@ ngOnInit() {
       },
     );
   });
+  
 
   this.cargarUsuario();
   this.crearTarea();
@@ -121,6 +121,16 @@ ngOnInit() {
         Swal.fire('Error', error.error.mensajeTecnico,'error');
       }
     );
+  }
+
+  toggleBotonesAdicionales() {
+    const btnOpcion1 = document.getElementById('btnOpcion1');
+    const btnOpcion2 = document.getElementById('btnOpcion2');
+
+    if (btnOpcion1 && btnOpcion2) {
+      btnOpcion1.classList.toggle('d-none');
+      btnOpcion2.classList.toggle('d-none');
+    }
   }
 
   cargarGestiones(idActividadEstrategica: number) {
@@ -179,7 +189,12 @@ ngOnInit() {
             });
           },
           (error) => {
-            Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
+            Swal.fire({
+              title:'Solicitud no válida!',
+              text: error.error.mensajeTecnico,
+              icon: "error",
+              confirmButtonColor: '#0E823F',
+            });
           }
         );
       }
@@ -212,7 +227,12 @@ ngOnInit() {
             });
           },
           (error) => {
-            Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
+            Swal.fire({
+              title:'Solicitud no válida!',
+              text: error.error.mensajeTecnico,
+              icon: "error",
+              confirmButtonColor: '#0E823F',
+            });
           }
         );
       }
@@ -259,7 +279,12 @@ ngOnInit() {
               });
               },
           (error) => {
-            Swal.fire('Error!!!',error.error.mensajeTecnico, 'error');
+            Swal.fire({
+              title:'Solicitud no válida!',
+              text: error.error.mensajeTecnico,
+              icon: "error",
+              confirmButtonColor: '#0E823F',
+            });
           }
         );
         }
@@ -308,12 +333,17 @@ ngOnInit() {
                 text: "El proyecto se ha modificado",
                 icon: "success",
                 confirmButtonColor: '#0E823F',
-              }).then((value) => {
+              }).then(() => {
                 this.cargarProyectos(this.idActividadEstrategica)
               });
             },
             (error) => {
-              Swal.fire('Error', error.error.mensajeHumano, 'error');
+              Swal.fire({
+                title:'Solicitud no válida!',
+                text: error.error.mensajeTecnico,
+                icon: "error",
+                confirmButtonColor: '#0E823F',
+              });
             }
           );
         }
@@ -361,10 +391,16 @@ ngOnInit() {
             }).then(()=>{
               this.cargarTareas(this.idActividadGestionSeleccionado,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')
               this.formCrearTarea.reset()
+              this.cargarGestiones(this.idActividadEstrategica)
             });
           },
           (error) => {
-            Swal.fire('Error',error.error.mensajeHumano, "error");
+            Swal.fire({
+              title:'Solicitud no válida!',
+              text: error.error.mensajeTecnico,
+              icon: "error",
+              confirmButtonColor: '#0E823F',
+            });
           }
         );
     }
@@ -401,7 +437,12 @@ ngOnInit() {
                 });
               },
               (error) => {
-                Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
+                Swal.fire({
+                  title:'Solicitud no válida!',
+                  text: error.error.mensajeTecnico,
+                  icon: "error",
+                  confirmButtonColor: '#0E823F',
+                });
               }
             );
         }
@@ -433,7 +474,12 @@ ngOnInit() {
             });
           },
           (error) => {
-            Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
+            Swal.fire({
+              title:'Solicitud no válida!',
+              text: error.error.mensajeTecnico,
+              icon: "error",
+              confirmButtonColor: '#0E823F',
+            });
           }
         );
       }

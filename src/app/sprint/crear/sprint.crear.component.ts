@@ -66,11 +66,21 @@ export class SprintCrearComponent implements OnInit{
         // Luego, envía 'cargo' al backend usando tu servicio.
         this.sprintService.crearSprint(sprint,this.auth.obtenerHeader()).subscribe(
           (response) => {
-            Swal.fire("Creado Satisfactoriamente", 'El sprint con el nombre ' + sprint.descripcion + ', se ha creado!!', "success");
+            Swal.fire({
+              title:'Creado!!!',
+              text: "El sprint se ha eliminado.",
+              icon: "success",
+              confirmButtonColor: '#0E823F'
+            });
             this.form.reset();
           },
           (error) => {
-            Swal.fire("Error",error.error.mensajeTecnico,"error");
+            Swal.fire({
+              title:'Solicitud no válida!',
+              text: error.error.mensajeTecnico,
+              icon: "error",
+              confirmButtonColor: '#0E823F',
+            });
           }
         );
   }

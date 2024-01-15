@@ -17,16 +17,16 @@
                             <form [formGroup]="form" (ngSubmit)="crearCargo()">
                                 <div class="form-floating mb-2">
                                     <input type="text" id="nombre" class="form-control form-control-lg" formControlName="nombre" placeholder="Nombre">
-                                    <label class="form-label" for="nombre">Nombre</label>
+                                    <label class="form-label" for="nombre">Nombre<span class="required-field">*</span></label>
                                 </div>
 
-                                <div class="form-floating mb-2">
+                                <div class="form-floating mb-3">
                                     <select class="form-select" id="idArea" formControlName="idArea">
-                                      <option value="" disabled selected>Seleccione el área<span class="required-field">*</span></option>
-                                      <option *ngFor="let area of areas" [value]="area.idArea">{{ area.nombre}}</option>
+                                        <option value="" disabled selected>Seleccione el area<span class="required-field">*</span></option>
+                                        <option *ngFor="let area of areas" [value]="area.idArea">{{ area.nombre }}</option>
                                     </select>
-                                </div>
-                                
+                                    <label for="idArea" class="form-label">Área<span class="required-field">*</span></label>
+                                </div>  
                                 <div class="d-flex justify-content-center">
                                     <button type="button" class="btn btn-secondary btn-block me-2"
                                             [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarCargo'] } }]"

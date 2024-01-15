@@ -1,4 +1,4 @@
 export enum EModalidad {
-    IN_HOUSE =  'In house',
-    EXTRENO = 'Externo',
+    IN_HOUSE =  'IN_HOUSE',
+    EXTRENO = 'EXTERNO',
 }

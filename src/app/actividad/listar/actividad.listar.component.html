@@ -33,25 +33,39 @@
     </div>
   </div>
   <ul class="nav nav-tabs header" id="myTab" role="tablist">
-    <li class="header ">
+    <li class="header me-1">
       <button title="Volver"
         type="button" class="btn btn-success" 
         [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', patEstrategica] } }]">
         <i class="bi bi-arrow-return-left"></i>
       </button>
     </li>
-    <li class="nav-item">
+    <li class="nav-item me-1">
       <a class="nav-link active" id="proyectos-tab" data-bs-toggle="tab" href="#proyectos" role="tab" aria-controls="proyectos" aria-selected="true">Proyectos</a>
     </li>
-    <li class="nav-item">
+    <li class="nav-item me-1">
       <a class="nav-link" id="actividades-tab" data-bs-toggle="tab" href="#actividades" role="tab" aria-controls="actividades" aria-selected="false">Actividades de gestión</a>
     </li>
     <li class="header">
-      <button title="Agregar"
-        type="button" class="btn btn-success" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['crearActividad'] } }]"
-        [queryParams]="{ idActividadEstrategica , actividadNombre }">
+      <div class="btn-group">
+        <!-- Botón original -->
+        <button title="Agregar"
+                type="button"
+                class="btn btn-success me-1"
+                (click)="toggleBotonesAdicionales()">
           <i class="bi bi-plus-lg"></i>
         </button>
+        <button id="btnOpcion1"
+                class="btn btn-outline-success d-none me-1" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['crearProyecto'] } }]"
+                [queryParams]="{ idActividadEstrategica,actividadNombre }">
+          Crear proyecto
+        </button>
+        <button id="btnOpcion2"
+              class="btn btn-outline-success d-none" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['crearActividad'] } }]"
+              [queryParams]="{ idActividadEstrategica,actividadNombre }">
+          Crear actividad de gestión
+        </button>
+      </div>
     </li>
   </ul>
   <div class="tab-content" id="myTabContent">
@@ -360,16 +374,17 @@
           <div class="modal-body">
             <form [formGroup]="formCrearTarea" (ngSubmit)="crearTarea()">
               <div class="mb-3">
-                <label for="nombre" class="form-label">Nombre</label>
+                <label for="nombre" class="form-label">Nombre<span class="required-field">*</span></label>
                 <input type="text" class="form-control" id="nombre" formControlName="nombre">
               </div>
               <div class="mb-3">
-                <label for="descripcion" class="form-label">Descripcion</label>
+                <label for="descripcion" class="form-label">Descripcion<span class="required-field">*</span></label>
                 <input type="text" class="form-control" id="descripcion" formControlName="descripcion">
               </div>
               <div class="mb-3">
-                <label for="idUsuario" placeholder="usuario">Responsable:</label>
+                <label for="idUsuario" placeholder="usuario">Responsable:<span class="required-field">*</span></label>
                 <select class="form-select" id="idUsuario" formControlName="idUsuario">
+                    <option value="" disabled selected> Seleccione el usuario responsable<span class="required-field">*</span></option>
                     <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario">{{ usuario.nombre + ' ' + usuario.apellidos | formatEnum }}</option>
                 </select>
             </div>

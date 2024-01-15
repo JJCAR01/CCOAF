@@ -56,13 +56,12 @@ export class ProcesoCrearComponent implements OnInit {
       this.form.reset();
       this.cargarProcesos()
     },error =>{
-      Swal.fire(
-        {
-          title:"Error!!!",
-          text:error.error.mensajeHumano, 
-          icon:"error",
-        }
-      );
+      Swal.fire({
+        title:'Solicitud no válida!',
+        text: error.error.mensajeTecnico,
+        icon: "error",
+        confirmButtonColor: '#0E823F',
+      });
     } )
   }
 
@@ -94,8 +93,9 @@ export class ProcesoCrearComponent implements OnInit {
         (error:any) => {
           Swal.fire({
             title:'Solicitud no válida!',
-            text: error.error.mensajeHumano,
+            text: error.error.mensajeTecnico,
             icon: "error",
+            confirmButtonColor: '#0E823F',
           });
         }
       );
@@ -133,7 +133,12 @@ export class ProcesoCrearComponent implements OnInit {
                 });
               },
               (error) => {
-                Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
+                Swal.fire({
+                  title:'Solicitud no válida!',
+                  text: error.error.mensajeTecnico,
+                  icon: "error",
+                  confirmButtonColor: '#0E823F',
+                });
               }
             );
           }
