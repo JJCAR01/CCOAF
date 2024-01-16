@@ -27,22 +27,7 @@
                     <input type="email" id="correo" class="form-control form-control-lg" formControlName="correo" placeholder="correo">
                     <label class="form-label" for="correo">Correo<span class="required-field">*</span></label>
                   </div>
-                  <div class="row mb-2">
-                    <div class="col-md-6">
-                      <div class="form-floating">
-                        <input type="password" id="password" class="form-control form-control-lg" formControlName="password" placeholder="password">
-                        <label class="form-label" for="password">Contraseña<span class="required-field">*</span></label>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="form-floating">
-                        <input type="password" id="cpassword" class="form-control form-control-lg" formControlName="cpassword" placeholder="cpassword">
-                        <label class="form-label" for="cpassword">Confirmar contraseña<span class="required-field">*</span></label>   
-                      </div>
-                    </div> 
-                    <span>Requisitos para crear la contraseña</span>
-                    <span *ngIf="form.errors?.['passwordMatchError']" class="error-message">No coinciden las contraseñas</span>
-                  </div>
+
                   <div class="row mb-2">
                     <div class="col-md-6">
                       <div class="d-md-flex justify-content-start align-items-center py-2">
@@ -72,20 +57,21 @@
                         <option value="" disabled selected>Seleccione las direcciones<span class="required-field">*</span></option>
                         <option *ngFor="let direccion of direcciones" [value]="direccion.nombre">{{ direccion.nombre }}</option>
                       </select>
-                      <button (click)="agregarDirecciones()" class="btn btn-outline-success btn-input">Agregar dirección</button>
+                      <button (click)="agregarDirecciones()" class="btn btn-outline-success btn-input" type="button">Agregar dirección</button>
+
                     </div>
                   </div>
                   <div class="direcciones-lista">
                       <h6 *ngFor="let direccionSeleccionada of listaDeDireccionesSeleccionadas">{{ direccionSeleccionada}}</h6>
                   </div>
                   
-                  <div class="form-floating mb-2">
+                  <div class="form-floating mb-4">
                     <div class="input">
                       <select class="form-select me-4" id="procesos" formControlName="procesos">
                         <option value="" disabled selected>Seleccione el proceso<span class="required-field">*</span></option>
                         <option *ngFor="let proceso of procesos" [value]="proceso.nombre">{{ proceso.nombre }}</option>          
                       </select>
-                      <button (click)="agregarProcesos()" class="btn btn-outline-success btn-input">Agregar proceso</button>
+                      <button (click)="agregarProcesos()" class="btn btn-outline-success btn-input" type="button">Agregar proceso</button>
                     </div> 
                   </div>
                   <div class="direcciones-lista">

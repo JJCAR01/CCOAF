@@ -23,6 +23,10 @@ export class UsuarioService {
     return this.http.delete(`${environment.apiUrl}/ccoa/usuarios/${idUsuario}`,{headers});
   }
 
+  modificarAgregarPass(usuario : any,idUsuario:number,headers?: HttpHeaders){
+    return this.http.put(`${environment.apiUrl}/ccoa/usuarios/pass/${idUsuario}`,usuario,{headers});
+  }
+
   modificar(usuario : any,idUsuario:number,headers?: HttpHeaders){
     return this.http.put(`${environment.apiUrl}/ccoa/usuarios/${idUsuario}`,usuario,{headers});
   }

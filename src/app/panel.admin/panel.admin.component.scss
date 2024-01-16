@@ -6,7 +6,7 @@
     position: fixed;
     z-index: 1;
     top: 0;
-    width: 5rem;
+    width: 5rem ;
     height: 100vh;
 
     .logo-container {
@@ -53,7 +53,7 @@
 }
 
 .sidenav-collapsed {
-    width: 16.5625rem;
+    width: 16rem;
 }
 
 .sidenav-nav {
@@ -136,5 +136,29 @@
     width: 100%; /* Ajusta el ancho según tus necesidades */
   }
   
+  @media (max-width: 1366px) {
+    .sidenav .sidenav-nav-item .sidenav-nav-link .sidenav-link-image {  
+        font-size: 10px;
+        width: 1.5rem;
+        min-width: 1.5rem;
+    }
 
-  
+    .sidenav .sidenav-nav-item .sidenav-nav-link {
+        width: 90%; /* Haz que el enlace ocupe todo el ancho del sidenav */
+        height: 1.8rem; /* Ajusta la altura según tus necesidades */
+    }
+
+    .logout-container {
+        margin-top: 0.625rem; /* Ajusta el margen superior según tus necesidades */
+    }
+
+    .logout-container .logo-text {
+        visibility: visible; /* Asegúrate de que el texto del logo sea visible */
+    }
+
+    .logout-container .logo {
+        font-size: 10px; /* Ajusta el tamaño del logo según tus necesidades en píxeles o em */
+        text-align: left;
+    }
+}
+

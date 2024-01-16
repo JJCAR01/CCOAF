@@ -37,7 +37,7 @@
             </thead>
             <tbody>
                 <tr *ngFor="let usuario of usuarios | buscar: busqueda">
-                    <td>{{ usuario.nombre | formatEnum }} {{ usuario.apellidos | formatEnum }}</td>
+                    <td>{{ usuario.nombre }} {{ usuario.apellidos  }}</td>
                     <td>{{ usuario.correo }}</td>
                     <td>{{ obtenerNombreCargo(usuario.idCargo) }}</td>
                     <td>
@@ -51,7 +51,15 @@
                         </li>
                     </td>            
                     <td>
-                        <button title="Eliminar usuario" class="btn btn-outline-danger" (click)="eliminarUsuario(usuario.idUsuario)">
+                        <button title="Editar información de usuario"  type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modificarUsuario" 
+                        (click)="obtengoUsuario(usuario.idUsuario,usuario)">
+                            <i class="bi bi-pen-fill"></i>
+                        </button>
+                        <button title="Agregar contraseña"  type="button" class="btn btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#agregarPass" 
+                        (click)="obtengoUsuario(usuario.idUsuario,usuario)">
+                            <i class="bi bi-key-fill"></i>
+                        </button>
+                        <button title="Eliminar usuario" type="button" class="btn btn-outline-danger" (click)="eliminarUsuario(usuario.idUsuario)">
                             <i class="bi bi-trash3-fill"></i>
                         </button>
                     </td>
@@ -59,12 +67,90 @@
             </tbody>
             </table>
     </main>
-      
+
+    <div class="modal fade" id="modificarUsuario" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title" id="exampleModalLabel">Agregar contraseña</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="formContrasena">
+              <h3>Usuario:</h3>
+              <h6 class="mb-2">{{nombreUsuario}}</h6>
+                    <div class=" mb-2">
+                      <<label for="nombre" class="form-label">Nombre</label>
+                      <input type="text" class="form-control" id="nombre" formControlName="nombre" [value]="nombreSeleccionado">
+                    </div>
+                    <div class="form-floating mb-2">
+                      <input id="apellido" class="form-control form-control-lg" formControlName="apellido" placeholder="apellido" [(value)]="apellidoSeleccionado">
+                      <label class="form-label" for="apellido">Apellido</label>
+                    </div>
+                    <div class="form-floating mb-2">
+                      <input id="correo" class="form-control form-control-lg" formControlName="correo" placeholder="correo" [(value)]="correoSeleccionado">
+                      <label class="form-label" for="correo">Correo</label>
+                    </div>
+                    <div class="form-floating mb-2">  
+                      <select class="form-select" id="idCargo" formControlName="idCargo" [(value)]="idCargoUsuario">
+                        <option *ngFor="let cargo of cargos" [value]="cargo.idCargo"> {{ cargo.nombre }}
+                        </option>
+                      </select>
+                      <label for="idCargo" class="form-label">Cargo</label>
+                    </div>
+                    
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-success" data-bs-dismiss="modal" (click)="modificarUsuario()">Guardar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="modal fade" id="agregarPass" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title" id="exampleModalLabel">Agregar contraseña</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="formContrasena">
+              <h3>Usuario:</h3>
+              <h6 class="mb-2">{{nombreUsuario}}</h6>
+                    <div class="form-floating mb-2">
+                      <input type="password" id="password" class="form-control form-control-lg" formControlName="password" placeholder="password">
+                      <label class="form-label" for="password">Contraseña<span class="required-field">*</span></label>
+                    </div>
+                    <div class="form-floating mb-2">
+                      <input type="password" id="cpassword" class="form-control form-control-lg" formControlName="cpassword" placeholder="cpassword">
+                      <label class="form-label" for="cpassword">Confirmar contraseña<span class="required-field">*</span></label>   
+                    </div>
+                    <h6>Requisitos para crear la contraseña:</h6>
+                    <ul class="nota">
+                      <li>Mínimo una minúscula</li>
+                      <li>Mínimo una mayúscula</li>
+                      <li>Mínimo un carácter especial</li>
+                      <li>Mínimo un número</li>
+                      <li>Mínimo 13 carácteres</li>
+                    </ul>
+                  <span *ngIf="formContrasena.errors?.['passwordMatchError']" class="error-message">No coinciden las contraseñas</span>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-success" data-bs-dismiss="modal" (click)="agregarPass()">Guardar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.4/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-  
-    
-    
+       
 </body>
 </html>
