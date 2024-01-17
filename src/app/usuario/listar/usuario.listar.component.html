@@ -72,16 +72,16 @@
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h2 class="modal-title" id="exampleModalLabel">Agregar contraseña</h2>
+            <h2 class="modal-title" id="exampleModalLabel">Modificar usuario</h2>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form [formGroup]="formContrasena">
+            <form [formGroup]="form">
               <h3>Usuario:</h3>
               <h6 class="mb-2">{{nombreUsuario}}</h6>
-                    <div class=" mb-2">
-                      <<label for="nombre" class="form-label">Nombre</label>
+                    <div class="form-floating mb-2">
                       <input type="text" class="form-control" id="nombre" formControlName="nombre" [value]="nombreSeleccionado">
+                      <label for="nombre" class="form-label">Nombre</label>
                     </div>
                     <div class="form-floating mb-2">
                       <input id="apellido" class="form-control form-control-lg" formControlName="apellido" placeholder="apellido" [(value)]="apellidoSeleccionado">

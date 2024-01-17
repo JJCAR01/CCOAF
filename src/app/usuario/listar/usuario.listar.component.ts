@@ -148,7 +148,7 @@ export class UsuarioListarComponent implements OnInit{
         const nombre = this.form.get('nombre')?.value;
         const apellido = this.form.get('apellido')?.value;
         const correo = this.form.get('correo')?.value;
-        const idCargo = this.idCargoUsuario;
+        const idCargo = this.form.get('idCargo')?.value;
         const pat = {
           nombre: nombre,
           apellido: apellido,

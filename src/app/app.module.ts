@@ -50,6 +50,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { LoginGuard } from './guards/login.guard';
 import { CommonModule } from '@angular/common';
+import { NgxCaptchaModule } from 'ngx-captcha';
 
 
 @NgModule({
@@ -68,12 +69,12 @@ import { CommonModule } from '@angular/common';
     HttpClientModule,
     AppRoutingModule,
     FormsModule,
-    FormsModule,
     AngularFireStorageModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideStorage(() => getStorage()),
     ReactiveFormsModule,
+    NgxCaptchaModule,
     AngularFireAuthModule,
     NgbModule,
     ],

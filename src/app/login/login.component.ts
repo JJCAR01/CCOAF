@@ -1,14 +1,12 @@
-import { Component ,OnInit,Injectable,AfterContentInit } from '@angular/core';
+import { Component ,OnInit,Injectable } from '@angular/core';
 import { LoginService } from './services/login.service';
 import jwt_decode from "jwt-decode";
 import Swal from 'sweetalert2';
 
-import { Validators,FormGroup,FormControl,AbstractControl} from '@angular/forms';
+import { Validators,FormGroup,FormControl} from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router'; 
 import { GoogleService } from './google/auth.google.service';
-import { AuthService } from './auth/auth.service';
-import { HttpHeaders } from '@angular/common/http';
 
 
 @Injectable({
@@ -21,7 +19,7 @@ import { HttpHeaders } from '@angular/common/http';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit{
-
+  siteKey : string = "6LfILVQpAAAAAGO2YpYhNu4z101RVPTqDHW0DbKp";
   loggedIn: boolean = false;
   isAdmin: boolean = false; // Agrega esta línea
 
@@ -36,6 +34,7 @@ export class LoginComponent implements OnInit{
   form = new FormGroup({
     correo: new FormControl('', Validators.required),
     password: new FormControl('', Validators.required),
+    recaptcha: new FormControl('',Validators.required)
   });
 
   ngOnInit():void {

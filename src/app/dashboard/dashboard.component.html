@@ -8,6 +8,7 @@
     <main class="main smaller-main">
       <form [formGroup]="form">
         <div class="form-floating mb-3">
+          
           <select class="form-select" id="pat" formControlName="pat" (change)="onPatSelect()">
             <option value="" disabled selected>Seleccione el pat a filtrar*</option>
             <option *ngFor="let pat of nombrePats" [value]="pat">{{ pat }}</option>

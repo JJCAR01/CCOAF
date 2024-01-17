@@ -33,6 +33,7 @@
                       <input type="password" id="password" class="form-control form-control-lg" formControlName="password" placeholder="Contraseña">
                       <label class="form-label" for="password">Contraseña</label>
                     </div>
+                    <ngx-recaptcha2 #captchaElem [siteKey]="siteKey" formControlName="recaptcha"></ngx-recaptcha2>
                     <div class="text-center pt-1 mb-4 pb-1">
                     <button class="btn btn-success btn-block fa-lg  mb-3" 
                       type="submit" [disabled]="!form.valid">Ingresar</button>
