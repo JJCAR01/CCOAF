@@ -58,7 +58,7 @@ export class CargoCrearComponent {
             Swal.fire(
               {
                 title:"Creado!!!",
-                text:'El área se ha creado.', 
+                text:'El cargo se ha creado.', 
                 icon:"success",
                 showCancelButton: true,
                 cancelButtonText: "Cancelar",

@@ -31,6 +31,20 @@
           <p> {{ obtenerNombreUsuario(usuarioPat).toLocaleUpperCase() }}</p>
         </div>
       </div>
+      <div class="row">
+        <div class="col-md-12">
+          <button title="Agregar actividad estratégica" type="button"
+                  class="btn btn-outline-success me-1" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['crearActividadEstrategica'] } }]"
+                  [queryParams]="{ idPat,  patNombre }">
+            Crear actividad estratégica
+          </button>
+          <button title="Agregar actividad gestión" type="button"
+                  class="btn btn-outline-success" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['crearActividadGestion'] } }]"
+                  [queryParams]="{  idPat,  patNombre  }">
+            Crear gestión del área
+          </button>
+        </div>
+      </div>
     </div>
   </div>
   <ul class="nav nav-tabs header" id="myTab" role="tablist">
@@ -46,27 +60,6 @@
     </li>
     <li class="nav-item me-1" title="Gestiones del área">
       <a class="nav-link" id="gestionarea-tab" data-bs-toggle="tab" href="#gestionarea" role="tab" aria-controls="gestionarea" aria-selected="false">Gestiones del área</a>
-    </li>
-    <li class="header">
-      <div class="btn-group">
-        <!-- Botón original -->
-        <button title="Agregar"
-                type="button"
-                class="btn btn-success me-1"
-                (click)="toggleBotonesAdicionales()">
-          <i class="bi bi-plus-lg"></i>
-        </button>
-        <button id="btnOpcion1"
-                class="btn btn-outline-success d-none me-1" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['crearActividadEstrategica'] } }]"
-                [queryParams]="{ idPat,  patNombre }">
-          Crear actividad estratégica
-        </button>
-        <button id="btnOpcion2"
-              class="btn btn-outline-success d-none" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['crearActividadGestion'] } }]"
-              [queryParams]="{  idPat,  patNombre  }">
-          Crear gestión del área
-        </button>
-      </div>
     </li>
   </ul>
   <div class="tab-content" id="myTabContent">
@@ -173,8 +166,9 @@
                   <thead class="table-active">
                     <tr>
                       <th class="column-nombreTarea">Nombre</th>
+                      <th class="column-periodicidad">Periodicidad</th>
                       <th>
-                        <div class="d-flex flex-column">
+                        <div class="column-estado">
                           <span>Estado</span>
                           <div class="d-flex">
                             <div class="col">
@@ -192,9 +186,10 @@
                           </div>
                         </div>
                       </th>
-                      <th class="column-observacion">Observacion</th>
-                      <th>Responsable</th>
-                      <th class="mb-3">Acciones </th>
+                      <th class="column-porcentaje">Porcentaje</th>
+                      <th class="column-descripcion">Descripción</th>
+                      <th class="column-responsableTarea">Responsable</th>
+                      <th class="column-accionesTarea">Acciones </th>
                       <th class="column-crear"><button title="Crear" class="btn btn-success me-1" data-bs-toggle="modal" data-bs-target="#modalCreartarea" (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)"
                         ><i class="bi bi-plus-lg"></i></button></th>
                     </tr>
@@ -203,6 +198,7 @@
                     <ng-container *ngFor="let tarea of tareas" >
                       <tr title="{{ tarea.nombre }}">
                         <td >{{ tarea.nombre }}</td>
+                        <td >{{ tarea.periodicidad | formatEnum }}</td>
                         <td>
                           <div class="d-flex">
                             <div class="col en-backlog">
@@ -220,12 +216,16 @@
                           </div>
                         </td>
 
+                        <td  data-bs-toggle="modal" data-bs-target="#modalModificarPorcentaje">{{ tarea.porcentaje }}<i class="bi bi-arrow-clockwise"></i></td>
                         <td>{{ tarea.descripcion }}</td>
                         <td>{{ obtenerNombreUsuario(tarea.idUsuario).toLocaleUpperCase() }}</td>
                         <td>
-                          <button title="Modificar" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarTarea" (click)="obtenerTarea(tarea.idTarea,tarea)"
+                          <button title="Modificar Tarea" class="btn btn-outline-secondary me-1"  data-bs-toggle="modal" data-bs-target="#modalModificarTarea"(click)="obtenerTareaAModificar(tarea.idTarea,tarea)"><i class="bi bi-pencil-square"></i></button>
+                          <button title="Modificar estado" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarEstado" (click)="obtenerTarea(tarea.idTarea,tarea)"
                           ><i class="bi bi-pen-fill"></i></button>
-                          <button title="Eliminar" class="btn btn-outline-danger" (click)="eliminarTarea(tarea.idTarea)" (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)"><i class="bi bi-trash3-fill"></i></button>
+                          <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarTarea(tarea.idTarea)" (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)"><i class="bi bi-trash3-fill"></i></button>
+                          <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerTarea(tarea.idTarea,tarea)"><i class="bi bi-node-plus-fill"></i></button>
+                          <button title="Ver observación" class="btn btn-outline-dark" (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)"><i class="bi bi-eye-fill"></i></button>
                         </td>
                       </tr>
                     </ng-container>
@@ -301,15 +301,103 @@
       </div>
     </div>
   </div>
+  <div class="modal fade" id="modalAgregarObservacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Agregar observación</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="formGestion" (ngSubmit)="modificarActividadGestion()">
+            <div class="mb-3">
+              <label for="fechaInicial" class="form-label">Fecha Inicial</label>
+              <input type="date" class="form-control" id="fechaInicial" formControlName="fechaInicial">
+            </div>
+            <div class="mb-3">
+              <label for="nombre" class="form-label">Nombre</label>
+              <input type="text" class="form-control" id="nombre" formControlName="nombre">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="modalModificarPorcentaje" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Resgitrar avance</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="formGestion" (ngSubmit)="modificarActividadGestion()">
+            <div class="mb-3">
+              <label for="porcentaje" class="form-label">Porcentaje</label>
+              <input type="number" class="form-control" id="porcentaje" formControlName="porcentaje">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="modal fade" id="modalModificarTarea" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered  modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Modificar Tarea</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Modificar tarea</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <form [formGroup]="formTarea" (ngSubmit)="modificarTarea()">
+            <div class="mb-3">
+              <label for="nombre" class="form-label">Nombre</label>
+              <input type="text" class="form-control" id="nombre" formControlName="nombre">
+            </div>
+            <div class="mb-3">
+              <label for="periodicidad" placeholder="periodicidad">Periodicidad:</label>
+              <select class="form-select" id="periodicidad" formControlName="periodicidad">
+                  <option value="" disabled selected> Seleccione la periodicidad<span class="required-field">*</span></option>
+                  <option *ngFor="let periodicidad of periodiciadEnumLista" [value]="periodicidad">{{ periodicidad }}</option>
+              </select>
+          </div>
+            <div class="mb-3">
+              <label for="descripcion" class="form-label">Descripcion</label>
+              <input type="text" class="form-control" id="descripcion" formControlName="descripcion" >
+            </div>
+            <div class="mb-3">
+              <label for="idUsuario" placeholder="usuario">Responsable:</label>
+              <select class="form-select" id="idUsuario" formControlName="idUsuario">
+                  <option value="" disabled selected> Seleccione el usuario responsable<span class="required-field">*</span></option>
+                  <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario">{{ usuario.nombre + ' ' + usuario.apellidos | formatEnum }}</option>
+              </select>
+          </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="modalModificarEstado" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered  modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modificar estado de la tarea</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="formModificarEstadoTarea" (ngSubmit)="modificarEstado()">
             <div class="mb-3 custom-input">
               <label for="nombre" class="form-label">{{ nombreTarea }}</label>
             </div>
@@ -349,7 +437,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form [formGroup]="formCrearTarea" (ngSubmit)="crearTarea()">
+          <form [formGroup]="formTarea" (ngSubmit)="crearTarea()">
             <div class="mb-3">
               <label for="nombre" class="form-label">Nombre<span class="required-field">*</span></label>
               <input type="text" class="form-control" id="nombre" formControlName="nombre">

@@ -30,6 +30,20 @@
           <p> {{ obtenerNombreUsuario(usuarioEstrategica).toLocaleUpperCase() }}</p>
         </div>
       </div>
+      <div class="row">
+        <div class="col-md-12">
+          <button title="Agregar proyecto" type="button"
+            class="btn btn-outline-success   me-1" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['crearProyecto'] } }]"
+            [queryParams]="{ idActividadEstrategica,actividadNombre }">
+      Crear proyecto
+          </button>
+          <button title="Agregar actividad gestión" type="button"
+          class="btn btn-outline-success" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['crearActividad'] } }]"
+          [queryParams]="{ idActividadEstrategica,actividadNombre }">
+      Crear actividad de gestión
+          </button>
+        </div>
+      </div>
     </div>
   </div>
   <ul class="nav nav-tabs header" id="myTab" role="tablist">
@@ -45,27 +59,6 @@
     </li>
     <li class="nav-item me-1">
       <a class="nav-link" id="actividades-tab" data-bs-toggle="tab" href="#actividades" role="tab" aria-controls="actividades" aria-selected="false">Actividades de gestión</a>
-    </li>
-    <li class="header">
-      <div class="btn-group">
-        <!-- Botón original -->
-        <button title="Agregar"
-                type="button"
-                class="btn btn-success me-1"
-                (click)="toggleBotonesAdicionales()">
-          <i class="bi bi-plus-lg"></i>
-        </button>
-        <button id="btnOpcion1"
-                class="btn btn-outline-success d-none me-1" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['crearProyecto'] } }]"
-                [queryParams]="{ idActividadEstrategica,actividadNombre }">
-          Crear proyecto
-        </button>
-        <button id="btnOpcion2"
-              class="btn btn-outline-success d-none" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['crearActividad'] } }]"
-              [queryParams]="{ idActividadEstrategica,actividadNombre }">
-          Crear actividad de gestión
-        </button>
-      </div>
     </li>
   </ul>
   <div class="tab-content" id="myTabContent">

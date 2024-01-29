@@ -55,7 +55,7 @@ export const navbarAdminData = [
     {
         routeLink: 'modificarDirecciones',
         imageSource: 'assets/direcciones.png',
-        label: 'Modificar direcciones',
+        label: 'Permiso de usuarios',
         adminOnly: true
     },
     {

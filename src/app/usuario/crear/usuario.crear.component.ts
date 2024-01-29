@@ -34,10 +34,15 @@ export class UsuarioCrearComponent implements OnInit {
       nombre: ['', Validators.required],
       apellido: ['', Validators.required],
       correo: ['', [Validators.required,Validators.email]],
+      password: ['', Validators.required],
+      cpassword: ['', Validators.required], 
       idCargo: ['', Validators.required],
       nombreRol: ['', Validators.required],
       direcciones: ['', Validators.required],
       procesos:['',Validators.required]
+    }, 
+    {
+      validators : matchpassword
     });
   
   }
@@ -104,6 +109,7 @@ export class UsuarioCrearComponent implements OnInit {
         nombre: this.form.get('nombre')?.value,
         apellido: this.form.get('apellido')?.value,
         correo: this.form.get('correo')?.value,
+        password: this.form.get('password')?.value,
         idCargo: this.form.get('idCargo')?.value,
         direcciones: this.listaDeDireccionesSeleccionadas,
         procesos: this.listaDeProcesosSeleccionadas,
@@ -143,4 +149,16 @@ export class UsuarioCrearComponent implements OnInit {
     
   }
 
+}
+
+const matchpassword :ValidatorFn = (control:AbstractControl):ValidationErrors|null =>{
+
+  let password = control.get('password');
+  let cpassword = control.get('cpassword');
+  if(password && cpassword && password?.value != cpassword?.value){
+    return{
+      passwordMatchError : true
+    }
+  }
+  return null;
 }

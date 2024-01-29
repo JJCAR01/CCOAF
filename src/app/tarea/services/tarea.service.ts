@@ -33,6 +33,9 @@ export class TareaService {
   modificarTarea(tarea : any,idTarea:number,headers?: HttpHeaders){
     return this.http.put(`${environment.apiUrl}/ccoa/tareas/${idTarea}`,tarea,{headers});
   }
+  modificarEstadoTarea(tarea : any,idTarea:number,headers?: HttpHeaders){
+    return this.http.put(`${environment.apiUrl}/ccoa/tareas/estado/${idTarea}`,tarea,{headers});
+  }
   eliminarTarea(idTarea:number,headers?: HttpHeaders){
     return this.http.delete(`${environment.apiUrl}/ccoa/tareas/${idTarea}`,{headers});
   }

@@ -8,6 +8,7 @@ import { UsuarioService } from 'src/app/usuario/services/usuario.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TareaService } from 'src/app/tarea/services/tarea.service';
 import { EEstado } from './EEstado';
+import { EPeriodicidad } from './EPeriodicidad';
 
 @Component({
   selector: 'app-root:not(p)',
@@ -19,6 +20,7 @@ export class TipogeListarComponent implements OnInit {
   title = 'listarTipoGE';
   elementoSeleccionado: string = 'actividadese';
   estadoEnumList: string[] = [];
+  periodiciadEnumLista: string[] = [];
   gestiones: any[] = [];
   actividades: any[] = [];
   pats: any[] = [];
@@ -45,8 +47,8 @@ export class TipogeListarComponent implements OnInit {
   estadoTarea:any;
   formGestion:FormGroup;
   formEstrategica:FormGroup;
+  formModificarEstadoTarea:FormGroup;
   formTarea:FormGroup;
-  formCrearTarea:FormGroup
 
   constructor(
     private gestionService: TipoGEService,private auth: AuthService,
@@ -64,12 +66,13 @@ export class TipogeListarComponent implements OnInit {
       fechaInicial: ['', Validators.required],
       fechaFinal: ['', Validators.required],
     });
-    this.formTarea = this.formBuilder.group({
+    this.formModificarEstadoTarea = this.formBuilder.group({
       estado: ['', Validators.required],
     });
-    this.formCrearTarea = this.formBuilder.group({
+    this.formTarea = this.formBuilder.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
+      periodicidad: ['', Validators.required],
       idUsuario: ['', Validators.required],
     });
   }
@@ -96,7 +99,7 @@ export class TipogeListarComponent implements OnInit {
     this.cargarUsuario();
     this.crearTarea();
     this.estadoEnumList = Object.values(EEstado);
-    
+    this.periodiciadEnumLista = Object.values(EPeriodicidad);
   }
 
   cargarUsuario() {
@@ -105,17 +108,6 @@ export class TipogeListarComponent implements OnInit {
         this.usuarios = data;
     });
   }
-
-  toggleBotonesAdicionales() {
-    const btnOpcion1 = document.getElementById('btnOpcion1');
-    const btnOpcion2 = document.getElementById('btnOpcion2');
-
-    if (btnOpcion1 && btnOpcion2) {
-      btnOpcion1.classList.toggle('d-none');
-      btnOpcion2.classList.toggle('d-none');
-    }
-  }
-
 
   cargarGestiones(idPat: number) {
     // Utiliza idPat en tu solicitud para cargar las gestiones relacionadas
@@ -323,10 +315,10 @@ export class TipogeListarComponent implements OnInit {
     )};
   } 
   crearTarea() {
-    if (this.formCrearTarea.valid) {
-      const nombre = this.formCrearTarea.get('nombre')?.value;
-      const descripcion = this.formCrearTarea.get('descripcion')?.value;
-      const idUsuario = this.formCrearTarea.get('idUsuario')?.value;
+    if (this.formTarea.valid) {
+      const nombre = this.formTarea.get('nombre')?.value;
+      const descripcion = this.formTarea.get('descripcion')?.value;
+      const idUsuario = this.formTarea.get('idUsuario')?.value;
       
       const tarea = {
         nombre: nombre,
@@ -348,7 +340,7 @@ export class TipogeListarComponent implements OnInit {
             }).then(()=>{
               
               this.cargarTareas(this.idActividadGestionSeleccionado,'ACTIVIDAD_GESTION')
-              this.formCrearTarea.reset()
+              this.formTarea.reset()
               this.cargarGestiones(this.idPat)
             });
           },
@@ -358,11 +350,56 @@ export class TipogeListarComponent implements OnInit {
         );
     }
   }
-  modificarTarea() {
-    if (this.formTarea.valid) {
-      const estado = this.formTarea.get('estado')?.value;
+  modificarEstado() {
+    if (this.formModificarEstadoTarea.valid) {
+      const estado = this.formModificarEstadoTarea.get('estado')?.value;
       const tareaModificar = {
         estado: estado,
+      };
+      Swal.fire({
+        title: "¿Deseas modificarlo?",
+        text: "La gestión del área se ha modificado",
+        icon: "question",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: '#0E823F',
+        reverseButtons: true, 
+      })
+      .then((confirmacion) => {
+        if (confirmacion.isConfirmed) {
+          this.tareaService.modificarEstadoTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
+              (response) => {
+                Swal.fire({
+                  icon : 'success',
+                  title : 'Modificado!!!',
+                  text : 'Se ha modificado la tarea.',
+                  confirmButtonColor: '#0E823F',
+                }).then(()=>{
+                  this.cargarGestiones(this.idPat)
+                  this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION')
+                  this.formModificarEstadoTarea.reset()  
+                });               
+              },
+              (error) => {
+                Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
+              }
+            );
+        } 
+      });
+    }
+  }
+  modificarTarea() {
+    if (this.formTarea.valid) {
+      const nombre = this.formTarea.get('nombre')?.value;
+      const periodicidad = this.formTarea.get('periodicidad')?.value;
+      const descripcion = this.formTarea.get('descripcion')?.value;
+      const idUsuario = this.formTarea.get('idUsuario')?.value;
+      const tareaModificar = {
+        nombre: nombre,
+        periodicidad: periodicidad,
+        descripcion: descripcion,
+        idUsuario: idUsuario,
       };
       Swal.fire({
         title: "¿Deseas modificarlo?",
@@ -386,7 +423,7 @@ export class TipogeListarComponent implements OnInit {
                 }).then(()=>{
                   this.cargarGestiones(this.idPat)
                   this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION')
-                  this.formTarea.reset()  
+                  this.formModificarEstadoTarea.reset()  
                 });               
               },
               (error) => {
@@ -452,8 +489,21 @@ export class TipogeListarComponent implements OnInit {
 
     this.estadoTarea = tarea.estado
 
-    this.formTarea.patchValue({
+    this.formModificarEstadoTarea.patchValue({
       estado: this.estadoTarea,
+    });
+  }
+  obtenerTareaAModificar(idTarea: number,tarea:any) {
+    this.idTareaSeleccionado = idTarea;
+    this.nombreTarea = tarea.nombre;
+    this.idTareaTipo = tarea.idASE;
+    
+
+    this.formTarea.patchValue({
+      nombre : tarea.nombre,
+      descripcion : tarea.descripcion,
+      periodicidad : tarea.periodicidad,
+      idUsuario : tarea.idUsuario,
     });
   }
   obtenerActividadEstrategica(idActividadEstrategica: number,actividadEstrategica:any) {

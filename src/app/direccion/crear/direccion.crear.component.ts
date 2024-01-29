@@ -104,7 +104,14 @@ export class DireccionCrearComponent implements OnInit {
   });
   }
   modificarDireccion() {
-    if (this.form.valid ) {
+    if(this.nombreSeleccionado == "TODAS LAS DIRECCIONES"){
+      Swal.fire({
+        title:'Solicitud no válida!',
+        text: 'La dirección con el nombre TODAS LAS DIRECCIONES, no se puede modificar!!!',
+        icon: "warning",
+        confirmButtonColor: '#0E823F',
+      });
+    } else if (this.form.valid ) {
       const nombre = this.form.get('nombre')?.value;
       const direccion = {
         nombre: nombre,
@@ -154,5 +161,6 @@ export class DireccionCrearComponent implements OnInit {
     this.form.patchValue({
       nombre: this.nombreSeleccionado,
     });
+
   }
 }

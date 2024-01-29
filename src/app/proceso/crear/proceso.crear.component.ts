@@ -103,7 +103,14 @@ export class ProcesoCrearComponent implements OnInit {
   });
   }
   modificarProceso() {
-    if (this.form.valid ) {
+    if(this.nombreSeleccionado == "TODOS LOS PROCESOS"){
+      Swal.fire({
+        title:'Solicitud no válida!',
+        text: 'El proceso con el nombre TODOS LOS PROCESOS, no se puede modificar!!!',
+        icon: "warning",
+        confirmButtonColor: '#0E823F',
+      });
+    } else if (this.form.valid ) {
       const nombre = this.form.get('nombre')?.value;
       const direccion = {
         nombre: nombre,
