@@ -161,6 +161,7 @@ button {
 .column-estado {
   width: 500px; /* Ajusta el ancho a tu preferencia */
 }
+
 th,td {
   vertical-align: middle;
   text-align: center; /* Centra el texto horizontalmente en las celdas del encabezado */
@@ -274,6 +275,10 @@ th{
 
 .required-field {
   color: red
+}
+
+.colorear-icono {
+  color: #07685a; /* Puedes cambiar "red" por el color que desees */
 }
 
 

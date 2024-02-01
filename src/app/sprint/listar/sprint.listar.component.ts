@@ -9,9 +9,11 @@ import { UsuarioService } from 'src/app/usuario/services/usuario.service';
 import Swal from 'sweetalert2';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { TareaService } from "src/app/tarea/services/tarea.service";
-import { EEstado } from "src/app/gestion/listar/EEstado";
+import { EEstado } from "src/enums/eestado";
 import { initializeApp } from 'firebase/app';
 import { environment } from "src/environments/environment.development";
+import { ObservacionService } from "src/app/observacion/services/observacion.service";
+import { EPeriodicidad } from "src/enums/eperiodicidad";
 
 @Component({
   selector: 'app-sprint',
@@ -25,10 +27,12 @@ export class SprintListarComponent implements OnInit {
   nombreArchivoSeleccionado: string = '';
   archivoSeleccionado: File | null = null;
   estadoEnumList: string[] = [];
+  periodiciadEnumLista: string[] = [];
   sprints: any[] = [];
   proyectos: any[] = [];
   tareas:any[] =[];
   usuarios:any[] =[];
+  observaciones:any[] =[];
   documentoObtenido:any;
   patNombre:any;
   nombreSprint:any;
@@ -45,11 +49,15 @@ export class SprintListarComponent implements OnInit {
   idSprintSeleccionado:any;
   idTareaSeleccionado:any;
   nombreTarea:any;
+  periodicidadTarea:any;
+  porcentajeTarea:any;
   idTareaTipo:any;
   estadoTarea:any;
-  formTarea:FormGroup;
   formSprint:FormGroup;
-  formCrearTarea:FormGroup
+  formModificarEstadoTarea:FormGroup;
+  formModificarPorcentaje:FormGroup;
+  formTarea:FormGroup;
+  formObservacion:FormGroup;
   
 
   constructor(
@@ -60,7 +68,7 @@ export class SprintListarComponent implements OnInit {
     private usuarioService :UsuarioService,
     private formBuilder: FormBuilder,
     private tareaService: TareaService,
-
+    private observacionService: ObservacionService,
 
   ) { 
     this.formSprint = this.formBuilder.group({
@@ -68,12 +76,21 @@ export class SprintListarComponent implements OnInit {
       fechaInicial: ['', Validators.required],
       fechaFinal: ['', Validators.required],
     });
-    this.formTarea = this.formBuilder.group({
+    this.formModificarEstadoTarea = this.formBuilder.group({
       estado: ['', Validators.required],
     });
-    this.formCrearTarea = this.formBuilder.group({
+    this.formModificarPorcentaje = this.formBuilder.group({
+      porcentaje: ['', Validators.required],
+    });
+    this.formObservacion = this.formBuilder.group({
+      idTarea: ['', Validators.required],
+      fecha: [this.obtenerFechaActual(), Validators.required],
+      nombre: ['', Validators.required],
+    });
+    this.formTarea = this.formBuilder.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
+      periodicidad: ['', Validators.required],
       idUsuario: ['', Validators.required],
     });
   }
@@ -103,6 +120,14 @@ export class SprintListarComponent implements OnInit {
     this.cargarUsuario();
     this.crearTarea();
     this.estadoEnumList = Object.values(EEstado);
+    this.periodiciadEnumLista = Object.values(EPeriodicidad);
+  }
+  private obtenerFechaActual(): string {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+    const day = ('0' + currentDate.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
   }
 
 
@@ -370,16 +395,31 @@ export class SprintListarComponent implements OnInit {
         }
     )};
   } 
+  cargarObservaciones(idTarea:any) {
+    this.observacionService
+      .listarTareaPorTarea(idTarea,this.auth.obtenerHeader()) 
+      .toPromise()
+      .then(
+        (data: any) => {
+        this.observaciones = data;
+        },
+        (error) => {
+          Swal.fire('Error',error.error.mensajeHumano,'error');
+        }
+    )
+  } 
   crearTarea() {
-    if (this.formCrearTarea.valid) {
-      const nombre = this.formCrearTarea.get('nombre')?.value;
-      const descripcion = this.formCrearTarea.get('descripcion')?.value;
-      const idUsuario = this.formCrearTarea.get('idUsuario')?.value;
+    if (this.formTarea.valid) {
+      const nombre = this.formTarea.get('nombre')?.value;
+      const descripcion = this.formTarea.get('descripcion')?.value;
+      const periodicidad = this.formTarea.get('periodicidad')?.value;
+      const idUsuario = this.formTarea.get('idUsuario')?.value;
       
       const tarea = {
         nombre: nombre,
         descripcion: descripcion,
         estado: EEstado.EN_BACKLOG,
+        periodicidad: periodicidad,
         tipoASE: 'SPRINT',
         idASE: this.idSprintSeleccionado,
         idUsuario: idUsuario,
@@ -394,9 +434,9 @@ export class SprintListarComponent implements OnInit {
               icon: "success",
               confirmButtonColor: '#0E823F',
             }).then(()=>{
-              this.cargarSprints(this.idProyecto)
-              this.cargarTareas(this.idSprintSeleccionado,'SPRINT')
-              this.formCrearTarea.reset()
+              this.cargarTareas(this.idSprintSeleccionado,'SPRINT');
+              this.formTarea.reset();
+              this.cargarSprints(this.idProyecto);
             });
           },
           (error) => {
@@ -410,15 +450,136 @@ export class SprintListarComponent implements OnInit {
         );
     }
   }
-  modificarTarea() {
-    if (this.formTarea.valid) {
-      const estado = this.formTarea.get('estado')?.value;
+  crearObservacion() {
+    if (this.formObservacion.valid) {
+      const fecha = this.formObservacion.get('fecha')?.value;
+      const nombre = this.formObservacion.get('nombre')?.value;
+      const idTarea = this.idTareaSeleccionado;
+
+      const observacion = {
+        idTarea: idTarea,
+        nombre: nombre,
+        fecha: fecha,
+      };
+      this.observacionService
+        .crearObservacion(observacion,this.auth.obtenerHeader())
+        .subscribe(
+          (response) => {
+            Swal.fire({
+              title: "Creado!!!",
+              text: "Se ha creado la observación",
+              icon: "success",
+              confirmButtonColor: '#0E823F',
+            }).then(()=>{
+              
+              this.formObservacion.reset()
+            });
+          },
+          (error) => {
+            Swal.fire('Error',error.error.mensajeHumano, "error");
+          }
+        );
+    }
+  }
+  modificarEstado() {
+    if (this.formModificarEstadoTarea.valid) {
+      const estado = this.formModificarEstadoTarea.get('estado')?.value;
       const tareaModificar = {
         estado: estado,
       };
-
       Swal.fire({
-        title: "Modificado!!!",
+        title: "¿Deseas modificarlo?",
+        text: "Una vez modificado no podrás revertir los cambios",
+        icon: "question",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: '#0E823F',
+        reverseButtons: true, 
+      })
+      .then((confirmacion) => {
+        if (confirmacion.isConfirmed) {
+          this.tareaService.modificarEstadoTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
+              (response) => {
+                Swal.fire({
+                  icon : 'success',
+                  title : 'Modificado!!!',
+                  text : 'Se ha modificado la tarea.',
+                  confirmButtonColor: '#0E823F',
+                }).then(()=>{
+                  this.cargarSprints(this.idProyecto);
+                  this.cargarTareas(this.idTareaTipo,'SPRINT');
+                  this.formTarea.reset();
+                });               
+              },
+              (error) => {
+                Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
+              }
+            );
+        } 
+      });
+    }
+  }
+  modificarPorcentaje() {
+    if(this.periodicidadTarea == "UNICA_VEZ"){
+      Swal.fire({
+        title:'Solicitud no válida!',
+        text: 'La tarea a editar no se puede modificar, porque su periodicidad es única.',
+        icon: "warning",
+        confirmButtonColor: '#0E823F',
+      });
+    } else if (this.formModificarPorcentaje.valid) {
+      const porcentaje = this.formModificarPorcentaje.get('porcentaje')?.value;
+      const tareaModificar = {
+        porcentaje: porcentaje,
+      };
+      Swal.fire({
+        title: "¿Deseas modificarlo?",
+        text: "Una vez modificado no podrás revertir los cambios",
+        icon: "question",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: '#0E823F',
+        reverseButtons: true, 
+      })
+      .then((confirmacion) => {
+        if (confirmacion.isConfirmed) {
+          this.tareaService.modificarPorcentajeTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
+              (response) => {
+                Swal.fire({
+                  icon : 'success',
+                  title : 'Modificado!!!',
+                  text : 'Se ha modificado la tarea.',
+                  confirmButtonColor: '#0E823F',
+                }).then(()=>{
+                  this.cargarSprints(this.idProyecto);
+                    this.cargarTareas(this.idTareaTipo,'SPRINT');
+                    this.formTarea.reset();
+                });               
+              },
+              (error) => {
+                Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
+              }
+            );
+        } 
+      });
+    }
+  }
+  modificarTarea() {
+    if (this.formTarea.valid) {
+      const nombre = this.formTarea.get('nombre')?.value;
+      const periodicidad = this.formTarea.get('periodicidad')?.value;
+      const descripcion = this.formTarea.get('descripcion')?.value;
+      const idUsuario = this.formTarea.get('idUsuario')?.value;
+      const tareaModificar = {
+        nombre: nombre,
+        periodicidad: periodicidad,
+        descripcion: descripcion,
+        idUsuario: idUsuario,
+      };
+      Swal.fire({
+        title: "¿Deseas modificarlo?",
         text: "La gestión del área se ha modificado",
         icon: "question",
         showCancelButton: true,
@@ -429,33 +590,32 @@ export class SprintListarComponent implements OnInit {
       })
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
-          this.tareaService.modificarTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader())
-            .subscribe(
+          this.tareaService.modificarTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
               (response) => {
-                this.cargarTareas(this.idTareaTipo,'SPRINT')
                 Swal.fire({
-                  title: "Modificado!!!",
-                  text: "La gestión del área se ha modificado",
-                  icon: "success",
+                  icon : 'success',
+                  title : 'Modificado!!!',
+                  text : 'Se ha modificado la tarea.',
                   confirmButtonColor: '#0E823F',
-                }).then(() => {
-                  this.formTarea.reset()
-              });
-          },
-          (error) => {
-            Swal.fire('Error',error.error.mensajeHumano, "error");
-          }
-        );
-        }
-    })
-      
+                }).then(()=>{
+                  this.cargarSprints(this.idProyecto);
+                  this.cargarTareas(this.idTareaTipo,'SPRINT');
+                  this.formTarea.reset();
+                });               
+              },
+              (error) => {
+                Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
+              }
+            );
+        } 
+      });
     }
   }
-  eliminarTarea(idTarea: number) {
+  eliminarTarea(idTarea: number, idSprint: number) {
     Swal.fire({
         title: "¿Estás seguro?",
         text: "Una vez eliminado, no podrás recuperar este elemento.",
-        icon: "warning",
+        icon: "question",
         showCancelButton: true,
         cancelButtonText: "Cancelar",
         confirmButtonText: "Confirmar",
@@ -466,14 +626,14 @@ export class SprintListarComponent implements OnInit {
         if (confirmacion.isConfirmed) {
         this.tareaService.eliminarTarea(idTarea, this.auth.obtenerHeader()).subscribe(
           (response) => {
+
             Swal.fire({
               title:"Eliminado!!!", 
               text:"La tarea se ha eliminado.", 
               icon:"success",
-              confirmButtonColor: '#0E823F', 
-            }).then(() => {
-              this.cargarTareas(this.idSprintSeleccionado,'SPRINT')
+              confirmButtonColor: '#0E823F',             
             });
+            this.cargarTareas(idSprint,'SPRINT')
           },
           (error) => {
             Swal.fire({
@@ -504,10 +664,32 @@ export class SprintListarComponent implements OnInit {
     this.idTareaSeleccionado = idTarea;
     this.nombreTarea = tarea.nombre;
     this.idTareaTipo = tarea.idASE;
-    this.estadoTarea = tarea.estado
+    this.estadoTarea = tarea.estado;
+    this.porcentajeTarea = tarea.porcentaje;
+    this.periodicidadTarea = tarea.periodicidad;
+
+    this.formModificarEstadoTarea.patchValue({
+      estado: this.estadoTarea,
+    });
+    this.formModificarPorcentaje.patchValue({
+      porcentaje: this.estadoTarea,
+    });
+
+    this.formObservacion.patchValue({
+      idTarea: this.idTareaSeleccionado,
+    });
+  }
+  obtenerTareaAModificar(idTarea: number,tarea:any) {
+    this.idTareaSeleccionado = idTarea;
+    this.nombreTarea = tarea.nombre;
+    this.idTareaTipo = tarea.idASE;
+    
 
     this.formTarea.patchValue({
-      estado : this.estadoTarea,
+      nombre : tarea.nombre,
+      descripcion : tarea.descripcion,
+      periodicidad : tarea.periodicidad,
+      idUsuario : tarea.idUsuario,
     });
   }
   

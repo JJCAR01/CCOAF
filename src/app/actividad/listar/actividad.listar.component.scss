@@ -126,28 +126,50 @@ button {
 }
 
 .column-nombre {
-  width: 490px; /* Ajusta el ancho a tu preferencia */
+  width: 650px; /* Ajusta el ancho a tu preferencia */
 }
-.fila-nombre {
-  text-align: left;
+.column-nombreTarea {
+  width: 250px; /* Ajusta el ancho a tu preferencia */
+}
+.column-periodicidad {
+  width: 100px; /* Ajusta el ancho a tu preferencia */
+}
+.column-porcentaje {
+  width: 90px; /* Ajusta el ancho a tu preferencia */
+}
+.column-responsableTarea {
+  width: 200px; /* Ajusta el ancho a tu preferencia */
+}
+.column-accionesTarea {
+  width: 235px; /* Ajusta el ancho a tu preferencia */
 }
 .column-estado {
   width: 500px; /* Ajusta el ancho a tu preferencia */
 }
-.column-planeacion {
-  width: 100px; /* Ajusta el ancho a tu preferencia */
+.fila-nombre {
+  text-align: left;
 }
-.column-presupuesto {
-  width: 120px; /* Ajusta el ancho a tu preferencia */
+.column-fecha {
+  width: 110px; /* Ajusta el ancho a tu preferencia */
 }
 .column-duracion {
-  width: 80px; /* Ajusta el ancho a tu preferencia */
+  width: 100px; /* Ajusta el ancho a tu preferencia */
 }
-.column-totalsprint {
-  width: 20px; /* Ajusta el ancho a tu preferencia */
+.column-dias {
+  width: 100px; /* Ajusta el ancho a tu preferencia */
 }
-.column-acciones {
-  width: 155px; /* Ajusta el ancho a tu preferencia */
+.column-responsable {
+  width: 300px; /* Ajusta el ancho a tu preferencia */
+}
+
+.column-descripcion {
+  width: 300px; /* Ajusta el ancho a tu preferencia */
+}
+.column-crear {
+  width: 50px; /* Ajusta el ancho a tu preferencia */
+}
+.column-estado {
+  width: 500px; /* Ajusta el ancho a tu preferencia */
 }
 th,td {
   vertical-align: middle;
@@ -260,4 +282,8 @@ th{
 
 .required-field {
   color: red
+}
+
+.colorear-icono {
+  color: #07685a; /* Puedes cambiar "red" por el color que desees */
 }

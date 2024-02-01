@@ -12,7 +12,7 @@
     
 </head>
 <body>
-  <div class="row-with-button mb-1">
+  <div class="row-with-button">
     <div>
       <div class="row">
         <div class="responsable-info">
@@ -28,13 +28,13 @@
         </div>
         <div class="responsable-info">
           <h2 title="Responsble"><i class="bi bi-person-circle tamaño-iconos color-iconoResponsable"></i> Responsable:</h2>
-          <p> {{ obtenerNombreUsuario(usuarioPat).toLocaleUpperCase() }}</p>
+          <p> {{ obtenerNombreUsuario(usuarioPat) }}</p>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-12">
+      <div class="row text-center">
+        <div class="d-flex justify-content-center">
           <button title="Agregar actividad estratégica" type="button"
-                  class="btn btn-outline-success me-1" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['crearActividadEstrategica'] } }]"
+                  class="btn btn-outline-success me-1 ms-2" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['crearActividadEstrategica'] } }]"
                   [queryParams]="{ idPat,  patNombre }">
             Crear actividad estratégica
           </button>
@@ -97,7 +97,7 @@
                 <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]" 
                       [ngClass]="colorPorcentaje(actividad.avance)">{{ actividad.avance }} %</td>
                 <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]">
-                      {{ obtenerNombreUsuario(actividad.idUsuario).toLocaleUpperCase() }}</td>
+                      {{ obtenerNombreUsuario(actividad.idUsuario) }}</td>
                 <td >
                   <button title="Ver" class="btn btn-outline-primary me-1" 
                   [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]"
@@ -148,15 +148,21 @@
                   </div>
                   <div class="col-md-3">
                     <h6>Usuario</h6>
-                    {{ obtenerNombreUsuario(gestion.idUsuario).toLocaleUpperCase() }}
+                    {{ obtenerNombreUsuario(gestion.idUsuario) }}
                   </div>
-                  <div class="col-md-1">
+                  <div class="col-md-2">
                     <button title="Modificar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarGestion" (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)">
                       <i class="bi bi-pen-fill"></i>
                     </button>
                   <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarGestion(gestion.idActividadGestion)"><i class="bi bi-trash3-fill"></i></button>
-                  </div>
-                  
+                  <button title="Agregar documento" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#agregarDocumento"
+                  (click)="abrirModalAgregarDocumento(gestion.idActividadGestion)"
+                      ><i class="bi bi-folder-plus"></i>
+                    </button>
+                  <button title="Ver documento" class="btn btn-outline-primary me-1"
+                  (click)="obtenerDocumento(gestion.idActividadGestion)">            
+                    <i class="bi bi-file-earmark-check"></i></button>
+                </div>   
               </div>
             </div>
           </div>
@@ -215,17 +221,19 @@
                             </div>
                           </div>
                         </td>
-
-                        <td  data-bs-toggle="modal" data-bs-target="#modalModificarPorcentaje">{{ tarea.porcentaje }}<i class="bi bi-arrow-clockwise"></i></td>
+                        <td data-bs-toggle="modal" (click)="obtenerTarea(tarea.idTarea, tarea)" [attr.data-bs-target]="(tarea.periodicidad !== 'UNICA_VEZ') ? '#modalModificarPorcentaje' : null">
+                          {{ tarea.porcentaje }}%
+                          <i class="bi bi-arrow-clockwise colorear-icono" [hidden]="tarea.periodicidad === 'UNICA_VEZ'"></i>
+                        </td>
                         <td>{{ tarea.descripcion }}</td>
-                        <td>{{ obtenerNombreUsuario(tarea.idUsuario).toLocaleUpperCase() }}</td>
+                        <td>{{ obtenerNombreUsuario(tarea.idUsuario) }}</td>
                         <td>
                           <button title="Modificar Tarea" class="btn btn-outline-secondary me-1"  data-bs-toggle="modal" data-bs-target="#modalModificarTarea"(click)="obtenerTareaAModificar(tarea.idTarea,tarea)"><i class="bi bi-pencil-square"></i></button>
                           <button title="Modificar estado" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarEstado" (click)="obtenerTarea(tarea.idTarea,tarea)"
                           ><i class="bi bi-pen-fill"></i></button>
-                          <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarTarea(tarea.idTarea)" (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)"><i class="bi bi-trash3-fill"></i></button>
+                          <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarTarea(tarea.idTarea,gestion.idActividadGestion)" ><i class="bi bi-trash3-fill"></i></button>
                           <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerTarea(tarea.idTarea,tarea)"><i class="bi bi-node-plus-fill"></i></button>
-                          <button title="Ver observación" class="btn btn-outline-dark" (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)"><i class="bi bi-eye-fill"></i></button>
+                          <button title="Ver observación" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(tarea.idTarea)"><i class="bi bi-eye-fill"></i></button>
                         </td>
                       </tr>
                     </ng-container>
@@ -238,6 +246,32 @@
       </main>
     </div>
   </div> 
+  <div class="modal fade" id="agregarDocumento" tabindex="-1" aria-labelledby="modalAgregar" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalAgregar">Agregar entrega</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3 d-flex">
+              <label>Adjuntar documento</label>
+              <div class="input-group" title="Click para cargar el archivo">
+                  <label class="input-group-text" for="formFileMultiple">Cargar Archivo</label>
+                  <input type="file" class="form-control campo-carga" id="formFileMultiple" accept=".pdf, .doc, .docx, .odt, .xls, .xlsx, .ppt, .pptx, .zip" style="display:none;" (change)="documento($event, idActividadGestionSeleccionado)">
+                  <span id="nombreArchivoSeleccionado" class="ml-2">{{ nombreArchivoSeleccionado }}</span>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-success" (click)="subirDocumento($event)" data-bs-dismiss="modal">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
    
   <div class="modal fade" id="modalModificar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -301,6 +335,35 @@
       </div>
     </div>
   </div>
+  <div class="modal fade" id="modalVerObservacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Observaciones</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-bordered table-hover">
+            <thead class="table table-color">
+                <th>Fecha</th>
+                <th>Nombre</th>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let observacion of observaciones">
+                  <tr>
+                    <td>{{ observacion.fecha }}</td>
+                    <td>{{ observacion.nombre }} </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="modal fade" id="modalAgregarObservacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
@@ -309,10 +372,10 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form [formGroup]="formGestion" (ngSubmit)="modificarActividadGestion()">
+          <form [formGroup]="formObservacion" (ngSubmit)="crearObservacion()">
             <div class="mb-3">
-              <label for="fechaInicial" class="form-label">Fecha Inicial</label>
-              <input type="date" class="form-control" id="fechaInicial" formControlName="fechaInicial">
+              <label for="fecha" class="form-label">Fecha</label>
+              <input type="date" class="form-control" id="fecha" formControlName="fecha">
             </div>
             <div class="mb-3">
               <label for="nombre" class="form-label">Nombre</label>
@@ -331,15 +394,16 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Resgitrar avance</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Registrar avance</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form [formGroup]="formGestion" (ngSubmit)="modificarActividadGestion()">
-            <div class="mb-3">
-              <label for="porcentaje" class="form-label">Porcentaje</label>
-              <input type="number" class="form-control" id="porcentaje" formControlName="porcentaje">
+          <form [formGroup]="formModificarPorcentaje" (ngSubmit)="modificarPorcentaje()">
+            <div class="form-floating mb-2">
+              <input type="number" id="porcentaje" class="form-control form-control-lg" formControlName="porcentaje" placeholder="Porcentaje (%)">
+              <label for="porcentaje" class="form-label" >Porcentaje (%)<span class="required-field">*</span></label> 
             </div>
+            <span class="text-center" >Recuerda que lo valores que puedes digitar van de 0 a 100</span>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
               <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Guardar</button>
@@ -366,7 +430,7 @@
               <label for="periodicidad" placeholder="periodicidad">Periodicidad:</label>
               <select class="form-select" id="periodicidad" formControlName="periodicidad">
                   <option value="" disabled selected> Seleccione la periodicidad<span class="required-field">*</span></option>
-                  <option *ngFor="let periodicidad of periodiciadEnumLista" [value]="periodicidad">{{ periodicidad }}</option>
+                  <option *ngFor="let periodicidad of periodiciadEnumLista" [value]="periodicidad">{{ periodicidad | formatEnum }}</option>
               </select>
           </div>
             <div class="mb-3">
@@ -442,6 +506,13 @@
               <label for="nombre" class="form-label">Nombre<span class="required-field">*</span></label>
               <input type="text" class="form-control" id="nombre" formControlName="nombre">
             </div>
+            <div class="mb-3">
+              <label for="periodicidad" placeholder="periodicidad">Periodicidad:</label>
+              <select class="form-select" id="periodicidad" formControlName="periodicidad">
+                  <option value="" disabled selected> Seleccione la periodicidad<span class="required-field">*</span></option>
+                  <option *ngFor="let periodicidad of periodiciadEnumLista" [value]="periodicidad">{{ periodicidad | formatEnum }}</option>
+              </select>
+          </div>
             <div class="mb-3">
               <label for="descripcion" class="form-label">Descripcion<span class="required-field">*</span></label>
               <input type="text" class="form-control" id="descripcion" formControlName="descripcion">

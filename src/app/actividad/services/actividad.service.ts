@@ -12,6 +12,12 @@ export class ActividadService {
   crearActividadGestionActividadEstrategica(gestionActividadEstrategica : any,headers?: HttpHeaders){
     return this.http.post(`${environment.apiUrl}/ccoa/gestionesestrategicas`,gestionActividadEstrategica,{headers});
   }
+  guardarDocumento(documento : any,idGestionActividadEstrategica:number,headers?: HttpHeaders){
+    return this.http.put(`${environment.apiUrl}/ccoa/gestionesestrategicas/archivo/${idGestionActividadEstrategica}`, documento,{headers});
+  }
+  obtenerDocumento(idGestionActividadEstrategica:number,headers?: HttpHeaders){
+    return this.http.get(`${environment.apiUrl}/ccoa/gestionesestrategicas/archivo/${idGestionActividadEstrategica}`,{headers});
+  }
   listarActividadGestionActividadEstrategica(headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/gestionesestrategicas`,{headers});
   }

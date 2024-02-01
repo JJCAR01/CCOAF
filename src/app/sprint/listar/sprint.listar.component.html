@@ -27,7 +27,7 @@
         </div>
         <div class="responsable-info">
           <h3 title="Responsble"><i class="bi bi-person-circle me-1 color-iconoResponsable"></i>Responsable:</h3>
-          <p> {{ obtenerNombreUsuario(proyectoUsuario).toLocaleUpperCase() }}</p>
+          <p> {{ obtenerNombreUsuario(proyectoUsuario) }}</p>
         </div>
         <div class="responsable-info ">
           <h3 title="Total sprint"><i class="bi bi-skip-end-circle me-1 color-iconoTotal"></i>Total Sprint:</h3>
@@ -101,7 +101,8 @@
               <table class="table table-sm">
                 <thead class="table-active">
                   <tr>
-                    <th class="column-nombre">Nombre</th>
+                    <th class="column-nombreTarea">Nombre</th>
+                    <th class="column-periodicidad">Periodicidad</th>
                     <th>
                       <div class="d-flex flex-column">
                         <span>Estado</span>
@@ -121,9 +122,10 @@
                         </div>
                       </div>
                     </th>
-                    <th class="column-observacion">Observacion</th>
-                    <th>Responsable</th>
-                    <th class="mb-3">Acciones </th>
+                    <th class="column-porcentaje">Porcentaje</th>
+                    <th class="column-descripcion">Descripción</th>
+                    <th class="column-responsableTarea">Responsable</th>
+                    <th class="column-accionesTarea">Acciones </th>
                       <th class="column-crear"><button title="Crear" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalCreartarea" (click)="obtenerSprint(sprint.idSprint,sprint)"
                         ><i class="bi bi-plus-lg"></i></button></th>
                   </tr>
@@ -132,6 +134,7 @@
                   <ng-container *ngFor="let tarea of tareas" >
                     <tr title="{{tarea.nombre}}">
                       <td>{{ tarea.nombre }}</td>
+                      <td >{{ tarea.periodicidad | formatEnum }}</td>
                       <td>
                         <div class="d-flex">
                           <div class="col en-backlog">
@@ -148,15 +151,20 @@
                           </div>
                         </div>
                       </td>
-                      
-                      
-                      <td>{{ tarea.descripcion }}</td>
-                      <td>{{ obtenerNombreUsuario(tarea.idUsuario).toLocaleUpperCase() }}</td>
-                      <td>
-                        <button title="Modificar" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarTarea" (click)="obtenerTarea(tarea.idTarea,tarea)"
-                        ><i class="bi bi-pen-fill"></i></button>
-                        <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarTarea(tarea.idTarea)" (click)="obtenerSprint(sprint.idSprint,sprint)"><i class="bi bi-trash3-fill"></i></button>
+                      <td data-bs-toggle="modal" (click)="obtenerTarea(tarea.idTarea, tarea)" [attr.data-bs-target]="(tarea.periodicidad !== 'UNICA_VEZ') ? '#modalModificarPorcentaje' : null">
+                        {{ tarea.porcentaje }}%
+                        <i class="bi bi-arrow-clockwise colorear-icono" [hidden]="tarea.periodicidad === 'UNICA_VEZ'"></i>
                       </td>
+                        <td>{{ tarea.descripcion }}</td>
+                        <td>{{ obtenerNombreUsuario(tarea.idUsuario) }}</td>
+                        <td>
+                          <button title="Modificar Tarea" class="btn btn-outline-secondary me-1"  data-bs-toggle="modal" data-bs-target="#modalModificarTarea"(click)="obtenerTareaAModificar(tarea.idTarea,tarea)"><i class="bi bi-pencil-square"></i></button>
+                          <button title="Modificar estado" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarEstado" (click)="obtenerTarea(tarea.idTarea,tarea)"
+                          ><i class="bi bi-pen-fill"></i></button>
+                          <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarTarea(tarea.idTarea, sprint.idSprint)"><i class="bi bi-trash3-fill"></i></button>
+                          <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerTarea(tarea.idTarea,tarea)"><i class="bi bi-node-plus-fill"></i></button>
+                          <button title="Ver observación" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(tarea.idTarea)"><i class="bi bi-eye-fill"></i></button>
+                        </td>
                     </tr>
                   </ng-container>
                 </tbody>
@@ -225,16 +233,133 @@
       </div>
     </div>
   </div>
-  <div class="modal fade" id="modalModificarTarea" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
-  data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+  <div class="modal fade" id="modalVerObservacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Modificar Tarea</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Observaciones</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-bordered table-hover">
+            <thead class="table table-color">
+                <th>Fecha</th>
+                <th>Nombre</th>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let observacion of observaciones">
+                  <tr>
+                    <td>{{ observacion.fecha }}</td>
+                    <td>{{ observacion.nombre }} </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="modalAgregarObservacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Agregar observación</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="formObservacion" (ngSubmit)="crearObservacion()">
+            <div class="mb-3">
+              <label for="fecha" class="form-label">Fecha</label>
+              <input type="date" class="form-control" id="fecha" formControlName="fecha">
+            </div>
+            <div class="mb-3">
+              <label for="nombre" class="form-label">Nombre</label>
+              <input type="text" class="form-control" id="nombre" formControlName="nombre">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="modalModificarPorcentaje" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Registrar avance</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="formModificarPorcentaje" (ngSubmit)="modificarPorcentaje()">
+            <div class="form-floating mb-2">
+              <input type="number" id="porcentaje" class="form-control form-control-lg" formControlName="porcentaje" placeholder="Porcentaje (%)">
+              <label for="porcentaje" class="form-label" >Porcentaje (%)<span class="required-field">*</span></label> 
+            </div>
+            <span class="text-center" >Recuerda que lo valores que puedes digitar van de 0 a 100</span>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="modalModificarTarea" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered  modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modificar tarea</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <form [formGroup]="formTarea" (ngSubmit)="modificarTarea()">
+            <div class="mb-3">
+              <label for="nombre" class="form-label">Nombre</label>
+              <input type="text" class="form-control" id="nombre" formControlName="nombre">
+            </div>
+            <div class="mb-3">
+              <label for="periodicidad" placeholder="periodicidad">Periodicidad:</label>
+              <select class="form-select" id="periodicidad" formControlName="periodicidad">
+                  <option value="" disabled selected> Seleccione la periodicidad<span class="required-field">*</span></option>
+                  <option *ngFor="let periodicidad of periodiciadEnumLista" [value]="periodicidad">{{ periodicidad | formatEnum  }}</option>
+              </select>
+          </div>
+            <div class="mb-3">
+              <label for="descripcion" class="form-label">Descripcion</label>
+              <input type="text" class="form-control" id="descripcion" formControlName="descripcion" >
+            </div>
+            <div class="mb-3">
+              <label for="idUsuario" placeholder="usuario">Responsable:</label>
+              <select class="form-select" id="idUsuario" formControlName="idUsuario">
+                  <option value="" disabled selected> Seleccione el usuario responsable<span class="required-field">*</span></option>
+                  <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario">{{ usuario.nombre + ' ' + usuario.apellidos | formatEnum }}</option>
+              </select>
+          </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="modalModificarEstado" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered  modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modificar estado de la tarea</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="formModificarEstadoTarea" (ngSubmit)="modificarEstado()">
             <div class="mb-3 custom-input">
               <label for="nombre" class="form-label">{{ nombreTarea }}</label>
             </div>
@@ -246,15 +371,15 @@
               </div>
               <div class="form-check form-check-inline en-proceso">
                 <input class="form-check-input en-proceso" type="radio" name="estado" id="en-proceso" value="EN_PROCESO" formControlName="estado" />
-                <label class="form-check-label" for="en-proceso ">EN PROCESO</label>
+                <label class="form-check-label en-proceso" for="en-proceso ">EN PROCESO</label>
               </div>
               <div class="form-check form-check-inline terminado">
                 <input class="form-check-input terminado" type="radio" name="estado" id="terminado" value="TERMINADO" formControlName="estado" />
                 <label class="form-check-label" for="terminado">TERMINADO</label>
-              </div>
+             </div>
               <div class="form-check form-check-inline impedimento">
                 <input class="form-check-input impedimento" type="radio" name="estado" id="impedimento" value="IMPEDIMENTO" formControlName="estado" />
-                <label class="form-check-label " for="impedimento">IMPEDIMENTO</label>
+                <label class="form-check-label" for="impedimento">IMPEDIMENTO</label>
               </div>
             </div>
             <div class="modal-footer">
@@ -274,11 +399,18 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form [formGroup]="formCrearTarea" (ngSubmit)="crearTarea()">
+          <form [formGroup]="formTarea" (ngSubmit)="crearTarea()">
             <div class="mb-3">
               <label for="nombre" class="form-label">Nombre<span class="required-field">*</span></label>
               <input type="text" class="form-control" id="nombre" formControlName="nombre">
             </div>
+            <div class="mb-3">
+              <label for="periodicidad" placeholder="periodicidad">Periodicidad:</label>
+              <select class="form-select" id="periodicidad" formControlName="periodicidad">
+                  <option value="" disabled selected> Seleccione la periodicidad<span class="required-field">*</span></option>
+                  <option *ngFor="let periodicidad of periodiciadEnumLista" [value]="periodicidad">{{ periodicidad | formatEnum }}</option>
+              </select>
+          </div>
             <div class="mb-3">
               <label for="descripcion" class="form-label">Descripcion<span class="required-field">*</span></label>
               <input type="text" class="form-control" id="descripcion" formControlName="descripcion">
@@ -286,7 +418,7 @@
             <div class="mb-3">
               <label for="idUsuario" placeholder="usuario">Responsable:<span class="required-field">*</span></label>
               <select class="form-select" id="idUsuario" formControlName="idUsuario">
-                <option value="" disabled selected> Seleccione el usuario responsable<span class="required-field">*</span></option>
+                  <option value="" disabled selected> Seleccione el usuario responsable<span class="required-field">*</span></option>
                   <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario">{{ usuario.nombre + ' ' + usuario.apellidos | formatEnum }}</option>
               </select>
           </div>
@@ -299,7 +431,6 @@
       </div>
     </div>
   </div>
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.4/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>

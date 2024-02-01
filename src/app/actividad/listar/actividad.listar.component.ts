@@ -6,10 +6,15 @@ import { ActivatedRoute } from '@angular/router';
 import { UsuarioService } from 'src/app/usuario/services/usuario.service';
 import Swal from 'sweetalert2';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { EEstado } from 'src/app/gestion/listar/EEstado';
+import { EEstado } from 'src/enums/eestado';
 import { TareaService } from 'src/app/tarea/services/tarea.service';
-import { EModalidad } from './emodalidad';
-import { EPlaneacion } from './eplaneacion';
+import { EModalidad } from 'src/enums/emodalidad';
+import { EPlaneacion } from 'src/enums/eplaneacion';
+import { EPeriodicidad } from 'src/enums/eperiodicidad';
+import { ObservacionService } from 'src/app/observacion/services/observacion.service';
+import { initializeApp } from 'firebase/app';
+import { environment } from 'src/environments/environment.development';
+import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 
 @Component({
   selector: 'app-listar',
@@ -18,14 +23,21 @@ import { EPlaneacion } from './eplaneacion';
 })
 export class ActividadListarComponent implements OnInit{
   title = 'listarActividad';
+  pesoDeArchivo = 300 * 1024 * 1024; // 300 MB
+  extencionesPermitidas = /\.(doc|docx|xls|xlsx|ppt|pptx|zip|pdf)$/i;
+  nombreArchivoSeleccionado: string = '';
+  archivoSeleccionado: File | null = null;
+  documentoObtenido:any;
   modalidadEnumList: string[] = [];
   planeacionEnumList = Object.values(EPlaneacion);
   estadoEnumList: string[] = [];
+  periodiciadEnumLista: string[] = [];
   gestiones: any[] = [];
   proyectos: any[] = [];
   actividades: any[] = [];
   usuarios:any[] =[];
   tareas:any[] =[];
+  observaciones:any[] =[];
   patNombre:any;
   actividadNombre:any;
   usuarioProyecto:any;
@@ -49,10 +61,14 @@ export class ActividadListarComponent implements OnInit{
   nombreTarea:any;
   estadoTarea:any;
   idTareaTipo:any;
+  periodicidadTarea:any;
+  porcentajeTarea:any;
   form:FormGroup;
   formProyecto:FormGroup;
+  formModificarEstadoTarea:FormGroup;
+  formModificarPorcentaje:FormGroup;
   formTarea:FormGroup;
-  formCrearTarea:FormGroup
+  formObservacion:FormGroup;
   busqueda: any;
 
   constructor(
@@ -62,7 +78,8 @@ export class ActividadListarComponent implements OnInit{
     private route: ActivatedRoute,
     private usuarioService :UsuarioService,
     private formBuilder: FormBuilder,
-    private tareaService: TareaService
+    private tareaService: TareaService,
+    private observacionService: ObservacionService,
   ) {
     this.form = this.formBuilder.group({
       nombre:['',Validators.required],
@@ -77,12 +94,21 @@ export class ActividadListarComponent implements OnInit{
       modalidad: ['', Validators.required],
       planeacionSprint:['', Validators.required],
     });
-    this.formTarea = this.formBuilder.group({
+    this.formModificarEstadoTarea = this.formBuilder.group({
       estado: ['', Validators.required],
     });
-    this.formCrearTarea = this.formBuilder.group({
+    this.formModificarPorcentaje = this.formBuilder.group({
+      porcentaje: ['', Validators.required],
+    });
+    this.formObservacion = this.formBuilder.group({
+      idTarea: ['', Validators.required],
+      fecha: [this.obtenerFechaActual(), Validators.required],
+      nombre: ['', Validators.required],
+    });
+    this.formTarea = this.formBuilder.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
+      periodicidad: ['', Validators.required],
       idUsuario: ['', Validators.required],
     });
 }
@@ -111,7 +137,17 @@ ngOnInit() {
   this.cargarUsuario();
   this.crearTarea();
   this.estadoEnumList = Object.values(EEstado);
+  this.periodiciadEnumLista = Object.values(EPeriodicidad);
 }
+
+private obtenerFechaActual(): string {
+  const currentDate = new Date();
+  const year = currentDate.getFullYear();
+  const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+  const day = ('0' + currentDate.getDate()).slice(-2);
+  return `${year}-${month}-${day}`;
+}
+
   cargarUsuario() {
     this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
@@ -121,16 +157,6 @@ ngOnInit() {
         Swal.fire('Error', error.error.mensajeTecnico,'error');
       }
     );
-  }
-
-  toggleBotonesAdicionales() {
-    const btnOpcion1 = document.getElementById('btnOpcion1');
-    const btnOpcion2 = document.getElementById('btnOpcion2');
-
-    if (btnOpcion1 && btnOpcion2) {
-      btnOpcion1.classList.toggle('d-none');
-      btnOpcion2.classList.toggle('d-none');
-    }
   }
 
   cargarGestiones(idActividadEstrategica: number) {
@@ -365,16 +391,31 @@ ngOnInit() {
         }
     )};
   } 
+  cargarObservaciones(idTarea:any) {
+    this.observacionService
+      .listarTareaPorTarea(idTarea,this.auth.obtenerHeader()) 
+      .toPromise()
+      .then(
+        (data: any) => {
+        this.observaciones = data;
+        },
+        (error) => {
+          Swal.fire('Error',error.error.mensajeHumano,'error');
+        }
+    )
+  } 
   crearTarea() {
-    if (this.formCrearTarea.valid) { 
-      const nombre = this.formCrearTarea.get('nombre')?.value;
-      const descripcion = this.formCrearTarea.get('descripcion')?.value;
-      const idUsuario = this.formCrearTarea.get('idUsuario')?.value;
+    if (this.formTarea.valid) {
+      const nombre = this.formTarea.get('nombre')?.value;
+      const descripcion = this.formTarea.get('descripcion')?.value;
+      const periodicidad = this.formTarea.get('periodicidad')?.value;
+      const idUsuario = this.formTarea.get('idUsuario')?.value;
       
       const tarea = {
         nombre: nombre,
         descripcion: descripcion,
         estado: EEstado.EN_BACKLOG,
+        periodicidad: periodicidad,
         tipoASE: 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA',
         idASE: this.idActividadGestionSeleccionado,
         idUsuario: idUsuario,
@@ -390,7 +431,7 @@ ngOnInit() {
               confirmButtonColor: '#0E823F',
             }).then(()=>{
               this.cargarTareas(this.idActividadGestionSeleccionado,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')
-              this.formCrearTarea.reset()
+              this.formTarea.reset()
               this.cargarGestiones(this.idActividadEstrategica)
             });
           },
@@ -405,14 +446,136 @@ ngOnInit() {
         );
     }
   }
-  modificarTarea() {
-    if (this.formTarea.valid) {
-      const estado = this.formTarea.get('estado')?.value;
+  crearObservacion() {
+    if (this.formObservacion.valid) {
+      const fecha = this.formObservacion.get('fecha')?.value;
+      const nombre = this.formObservacion.get('nombre')?.value;
+      const idTarea = this.idTareaSeleccionado;
+
+      const observacion = {
+        idTarea: idTarea,
+        nombre: nombre,
+        fecha: fecha,
+      };
+      this.observacionService
+        .crearObservacion(observacion,this.auth.obtenerHeader())
+        .subscribe(
+          (response) => {
+            Swal.fire({
+              title: "Creado!!!",
+              text: "Se ha creado la observación",
+              icon: "success",
+              confirmButtonColor: '#0E823F',
+            }).then(()=>{
+              
+              this.formObservacion.reset()
+            });
+          },
+          (error) => {
+            Swal.fire('Error',error.error.mensajeHumano, "error");
+          }
+        );
+    }
+  }
+  modificarEstado() {
+    if (this.formModificarEstadoTarea.valid) {
+      const estado = this.formModificarEstadoTarea.get('estado')?.value;
       const tareaModificar = {
         estado: estado,
       };
       Swal.fire({
-        title: "Modificado!!!",
+        title: "¿Deseas modificarlo?",
+        text: "Una vez modificado no podrás revertir los cambios",
+        icon: "question",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: '#0E823F',
+        reverseButtons: true, 
+      })
+      .then((confirmacion) => {
+        if (confirmacion.isConfirmed) {
+          this.tareaService.modificarEstadoTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
+              (response) => {
+                Swal.fire({
+                  icon : 'success',
+                  title : 'Modificado!!!',
+                  text : 'Se ha modificado la tarea.',
+                  confirmButtonColor: '#0E823F',
+                }).then(()=>{
+                  this.cargarGestiones(this.idActividadEstrategica);
+                  this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA');
+                  this.formTarea.reset();
+                });               
+              },
+              (error) => {
+                Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
+              }
+            );
+        } 
+      });
+    }
+  }
+  modificarPorcentaje() {
+    if(this.periodicidadTarea == "UNICA_VEZ"){
+      Swal.fire({
+        title:'Solicitud no válida!',
+        text: 'La tarea a editar no se puede modificar, porque su periodicidad es única.',
+        icon: "warning",
+        confirmButtonColor: '#0E823F',
+      });
+    } else if (this.formModificarPorcentaje.valid) {
+      const porcentaje = this.formModificarPorcentaje.get('porcentaje')?.value;
+      const tareaModificar = {
+        porcentaje: porcentaje,
+      };
+      Swal.fire({
+        title: "¿Deseas modificarlo?",
+        text: "Una vez modificado no podrás revertir los cambios",
+        icon: "question",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: '#0E823F',
+        reverseButtons: true, 
+      })
+      .then((confirmacion) => {
+        if (confirmacion.isConfirmed) {
+          this.tareaService.modificarPorcentajeTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
+              (response) => {
+                Swal.fire({
+                  icon : 'success',
+                  title : 'Modificado!!!',
+                  text : 'Se ha modificado la tarea.',
+                  confirmButtonColor: '#0E823F',
+                }).then(()=>{
+                  this.cargarGestiones(this.idActividadEstrategica);
+                    this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA');
+                    this.formTarea.reset();
+                });               
+              },
+              (error) => {
+                Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
+              }
+            );
+        } 
+      });
+    }
+  }
+  modificarTarea() {
+    if (this.formTarea.valid) {
+      const nombre = this.formTarea.get('nombre')?.value;
+      const periodicidad = this.formTarea.get('periodicidad')?.value;
+      const descripcion = this.formTarea.get('descripcion')?.value;
+      const idUsuario = this.formTarea.get('idUsuario')?.value;
+      const tareaModificar = {
+        nombre: nombre,
+        periodicidad: periodicidad,
+        descripcion: descripcion,
+        idUsuario: idUsuario,
+      };
+      Swal.fire({
+        title: "¿Deseas modificarlo?",
         text: "La gestión del área se ha modificado",
         icon: "question",
         showCancelButton: true,
@@ -428,28 +591,23 @@ ngOnInit() {
                 Swal.fire({
                   icon : 'success',
                   title : 'Modificado!!!',
-                  text : 'El ha modificado la tarea.',
+                  text : 'Se ha modificado la tarea.',
                   confirmButtonColor: '#0E823F',
-                  }).then(() => {
-                    this.cargarGestiones(this.idActividadEstrategica)
-                    this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')
-                    this.formTarea.reset()
-                });
+                }).then(()=>{
+                  this.cargarGestiones(this.idActividadEstrategica);
+                  this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA');
+                  this.formTarea.reset();
+                });               
               },
               (error) => {
-                Swal.fire({
-                  title:'Solicitud no válida!',
-                  text: error.error.mensajeTecnico,
-                  icon: "error",
-                  confirmButtonColor: '#0E823F',
-                });
+                Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
               }
             );
-        }
+        } 
       });
     }
   }
-  eliminarTarea(idTarea: number) {
+  eliminarTarea(idTarea: number, idActividadGestionActividadEstrategica: number) {
     Swal.fire({
         title: "¿Estás seguro?",
         text: "Una vez eliminado, no podrás recuperar este elemento.",
@@ -464,14 +622,14 @@ ngOnInit() {
         if (confirmacion.isConfirmed) {
         this.tareaService.eliminarTarea(idTarea, this.auth.obtenerHeader()).subscribe(
           (response) => {
+
             Swal.fire({
               title:"Eliminado!!!", 
               text:"La tarea se ha eliminado.", 
               icon:"success",
-              confirmButtonColor: '#0E823F', 
-            }).then(() => {
-              this.cargarTareas(this.idActividadGestionSeleccionado,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')
+              confirmButtonColor: '#0E823F',             
             });
+            this.cargarTareas(idActividadGestionActividadEstrategica,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')
           },
           (error) => {
             Swal.fire({
@@ -484,6 +642,141 @@ ngOnInit() {
         );
       }
       });
+  }
+  async documento(event: any, idActividadGestionSeleccionado: number): Promise<void> {
+    this.idActividadGestionSeleccionado = idActividadGestionSeleccionado;
+    this.archivoSeleccionado = event.target.files[0];
+  
+    try {
+      await this.validarArchivo();
+      // Actualizar el nombre del archivo seleccionado
+      this.nombreArchivoSeleccionado = this.archivoSeleccionado ? this.archivoSeleccionado.name : '';
+      // Resto del código si la validación es exitosa
+    } catch (error) {
+      this.archivoSeleccionado = null;
+      this.nombreArchivoSeleccionado = '';
+    }
+  }
+  abrirModalAgregarDocumento(idActividadGestionActividadEstrategica: number): void {
+    this.idActividadGestionSeleccionado = idActividadGestionActividadEstrategica;
+  }
+
+
+  private validarArchivo(): boolean {
+    if (!this.archivoSeleccionado) {
+      // Puedes mostrar un mensaje de error o manejarlo de otra manera
+      return false;
+    }
+
+
+    const fileSize = this.archivoSeleccionado.size;
+    const fileName = this.archivoSeleccionado.name;
+
+    if (fileSize > this.pesoDeArchivo) {
+      alert('El archivo supera el límite de tamaño permitido (300MB).');
+      return false;
+    } else if (!this.extencionesPermitidas.test(fileName)) {
+      alert('Formato de archivo no permitido. Por favor, elija un archivo con una de las siguientes extensiones: .doc, .docx, .xls, .xlsx, .ppt, .pptx, .zip');
+      return false;
+    }
+
+    return true;
+  }
+  async subirDocumento(formulario: any) {
+    if (!this.archivoSeleccionado) {
+      // Puedes mostrar un mensaje de error o manejarlo de otra manera
+      return;
+    }
+      try {
+        const app = initializeApp(environment.firebase);
+        const storage = getStorage(app);
+        const storageRef = ref(storage, `actividadGestionActividadEstrategica/${this.idActividadGestionSeleccionado}/${this.archivoSeleccionado.name}`);
+        const snapshot = await uploadBytes(storageRef, this.archivoSeleccionado);
+        const downloadURL = await getDownloadURL(storageRef);
+        // Crear un objeto sprint que incluya la URL de descarga
+        const documento = {
+          rutaDocumento: downloadURL, // Asegúrate de que el nombre de la propiedad coincida con lo que espera tu backend
+        };
+        this.actividadService.guardarDocumento(documento, this.idActividadGestionSeleccionado, this.auth.obtenerHeaderDocumento()).subscribe(
+          (data: any) => {
+            Swal.fire({
+              title:'Archivo cargado!',
+              text:'El archivo se cargó correctamente',
+              icon:'success',
+              confirmButtonColor: '#0E823F',
+            })
+          },
+          (error) => {
+            Swal.fire({
+              title:'Hubo un error!!!',
+              text:error.error.mensajeTecnico,
+              icon:'error',
+              confirmButtonColor: '#0E823F',
+            })
+          }
+      );
+
+    } catch (error) {
+      Swal.fire({
+        title:'Hubo un error!!!',
+        text:'Error durante la subida del archivo',
+        icon:'error',
+        confirmButtonColor: '#0E823F',
+      })
+    }
+  }
+  obtenerDocumento(idActividadGestionActividadEstrategica: number) {
+
+    this.actividadService.obtenerDocumento(idActividadGestionActividadEstrategica, this.auth.obtenerHeaderDocumento()).subscribe(
+      (data: any) => {
+        this.documentoObtenido = data;
+  
+        // Verificar si this.documentoObtenido.rutaArchivo existe
+        if (this.documentoObtenido.rutaDocumento) {
+          // Extraer el nombre del archivo de la URL
+          const nombreArchivo = this.extraerNombreArchivo(this.documentoObtenido.rutaDocumento);
+
+          // Crear un enlace HTML
+          const enlaceHTML = `<a href="${this.documentoObtenido.rutaDocumento}" target="_blank">${nombreArchivo}</a>`;
+
+          Swal.fire({
+            title: 'Documento correspondiente a la actividad',
+            html: `Para previsualizar darle click al enlace: ${enlaceHTML}`,
+            confirmButtonColor: '#0E823F',
+            icon:'success'
+          });
+        }
+      },
+      (error: any) => {
+        Swal.fire({
+          title: 'Este sprint no tiene documentos adjuntos',
+          text: 'Cargue un documento para visualizarlo',
+          icon: 'info',
+          confirmButtonColor: '#0E823F',
+        });
+      }
+    );
+  }
+  
+  extraerNombreArchivo(rutaArchivo: string): string {
+    // Decodificar la URL para manejar códigos de escape
+    const nombreArchivoDecodificado = decodeURIComponent(rutaArchivo);
+  
+    // Buscar la posición de la última '/'
+    const posicionUltimaBarra = nombreArchivoDecodificado.lastIndexOf('/');
+  
+    // Buscar la posición del primer '?' después de la extensión
+    const posicionInterrogante = nombreArchivoDecodificado.indexOf('?', posicionUltimaBarra);
+  
+    // Verificar si se encontró la posición adecuada
+    if (posicionUltimaBarra !== -1 && posicionInterrogante !== -1) {
+      // Extraer el nombre del archivo
+      const nombreArchivo = nombreArchivoDecodificado.substring(posicionUltimaBarra + 1, posicionInterrogante);
+      return nombreArchivo;
+    } else {
+      console.error('No se pudo determinar el nombre del archivo desde la URL:', rutaArchivo);
+      return '';
+    }
   }
 
   obtenerActividadGestionActividadEstrategica(idActividadGestionActividadEstrategica: number,gestion:any) {
@@ -503,10 +796,32 @@ ngOnInit() {
     this.idTareaSeleccionado = idTarea;
     this.nombreTarea = tarea.nombre;
     this.idTareaTipo = tarea.idASE;
-    this.estadoTarea = tarea.estado
+    this.estadoTarea = tarea.estado;
+    this.porcentajeTarea = tarea.porcentaje;
+    this.periodicidadTarea = tarea.periodicidad;
+
+    this.formModificarEstadoTarea.patchValue({
+      estado: this.estadoTarea,
+    });
+    this.formModificarPorcentaje.patchValue({
+      porcentaje: this.estadoTarea,
+    });
+
+    this.formObservacion.patchValue({
+      idTarea: this.idTareaSeleccionado,
+    });
+  }
+  obtenerTareaAModificar(idTarea: number,tarea:any) {
+    this.idTareaSeleccionado = idTarea;
+    this.nombreTarea = tarea.nombre;
+    this.idTareaTipo = tarea.idASE;
+    
 
     this.formTarea.patchValue({
-      estado : this.estadoTarea,
+      nombre : tarea.nombre,
+      descripcion : tarea.descripcion,
+      periodicidad : tarea.periodicidad,
+      idUsuario : tarea.idUsuario,
     });
   }
   obtenerProyecto(idProyecto: number,proyecto:any) {

@@ -27,10 +27,13 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <span class="col-lg-4">{{ proceso.nombre }}</span>
                     <span>
-                        
-                        <button class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarProceso" (click)="procesoSeleccionado(proceso.idProceso,proceso)"
-                        ><i class="bi bi-pen-fill"></i></button>
-                        <button class="btn btn-outline-danger" (click)="eliminarProceso(proceso.idProceso)" ><i class="bi bi-trash3-fill"></i></button>
+                      <button *ngIf="proceso.nombre !== 'TODOS LOS PROCESOS'" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarProceso" (click)="procesoSeleccionado(proceso.idProceso, proceso)">
+                        <i class="bi bi-pen-fill"></i>
+                      </button>
+                      
+                      <button *ngIf="proceso.nombre !== 'TODOS LOS PROCESOS'" class="btn btn-outline-danger" (click)="eliminarProceso(proceso.idProceso)">
+                        <i class="bi bi-trash3-fill"></i>
+                      </button>
                     </span>
                 </div>
             </li>

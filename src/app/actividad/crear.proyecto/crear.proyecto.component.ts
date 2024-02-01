@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { EModalidad } from '../listar/emodalidad';
+import { EModalidad } from 'src/enums/emodalidad';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import { UsuarioService } from 'src/app/usuario/services/usuario.service';
 import { ActividadService } from '../services/actividad.service';

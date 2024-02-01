@@ -1,5 +1,4 @@
 import { Component, OnInit} from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ActividadService } from 'src/app/actividad/services/actividad.service';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import Swal from 'sweetalert2';

@@ -28,9 +28,14 @@
                     <span class="col-lg-4">{{ direccion.nombre }}</span>
                     <span>
                         
-                        <button class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarDireccion" (click)="direccionSeleccionado(direccion.idDireccion,direccion)"
-                        ><i class="bi bi-pen-fill"></i></button>
-                        <button class="btn btn-outline-danger" (click)="eliminarDireccion(direccion.idDireccion)" ><i class="bi bi-trash3-fill"></i></button>
+                      <button *ngIf="direccion.nombre !== 'TODAS LAS DIRECCIONES'" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarDireccion" (click)="direccionSeleccionado(direccion.idDireccion, direccion)">
+                        <i class="bi bi-pen-fill"></i>
+                      </button>
+                      
+                      <button *ngIf="direccion.nombre !== 'TODAS LAS DIRECCIONES'" class="btn btn-outline-danger" (click)="eliminarDireccion(direccion.idDireccion)">
+                        <i class="bi bi-trash3-fill"></i>
+                      </button>
+                      
                     </span>
                 </div>
             </li>

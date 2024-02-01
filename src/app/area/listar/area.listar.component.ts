@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AreaService } from '../services/area.service';
 import { AuthService } from 'src/app/login/auth/auth.service';
-import { HttpHeaders } from '@angular/common/http';
 import Swal from 'sweetalert2';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DireccionService } from 'src/app/direccion/services/direccion.service';

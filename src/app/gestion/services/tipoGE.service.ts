@@ -13,6 +13,12 @@ export class TipoGEService {
   crearGestion(gestion : any,headers?: HttpHeaders){
     return this.http.post(`${environment.apiUrl}/ccoa/gestiones`,gestion,{headers});
   }
+  guardarDocumento(documento : any,idActividadGestion:number,headers?: HttpHeaders){
+    return this.http.put(`${environment.apiUrl}/ccoa/gestiones/archivo/${idActividadGestion}`, documento,{headers});
+  }
+  obtenerDocumento(idActividadGestion:number,headers?: HttpHeaders){
+    return this.http.get(`${environment.apiUrl}/ccoa/gestiones/archivo/${idActividadGestion}`,{headers});
+  }
   listarGestion(headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/gestiones`,{headers});
   }

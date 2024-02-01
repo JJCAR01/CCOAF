@@ -5,7 +5,7 @@ import { UsuarioService } from 'src/app/usuario/services/usuario.service';
 import { ActividadService } from '../services/actividad.service';
 import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
-import { EModalidad } from '../listar/emodalidad';
+import { EModalidad } from 'src/enums/emodalidad';
 
 @Component({
   selector: 'app-crear',
@@ -18,7 +18,6 @@ export class ActividadCrearComponent implements OnInit{
   form: FormGroup;
   actividadNombre:any;
   idActividadEstrategica:any;
-  modalidadEnums = Object.values(EModalidad);
 
   constructor(private formBuilder: FormBuilder, private auth: AuthService,
     private actividadService:ActividadService, private usuarioService:UsuarioService,

@@ -1,17 +1,32 @@
 .body{
-  font-family: "Roboto",unset;
-  color: #000000;
+  font-family: "Roboto";
 }
 
 h1 {
+  font-family: "Roboto", unset;
+  color: #000000;
   font-size: xx-large;
   margin: 0;
   text-align: left;
 }
 
+
+h2 {
+  font-family: "Roboto", unset;
+  color: #000000;
+  font-size: x-large;
+  padding: 5px;
+  margin: 0;
+  text-align: left;
+}
 h3 {
+  font-family: "Roboto", initial;
   font-size: 15px;
   margin-bottom: 10px;
+}
+h4{
+  flex-grow: 1; /* Permitir que el texto "Epicas" ocupe el espacio restante */
+  text-align: center; /* Alinea el texto al centro */
 }
 .responsable-info {
   display: flex;
@@ -30,11 +45,22 @@ h3 {
   align-items: center; /* Alinear verticalmente los elementos dentro de .row */
 }
 
-.header {
-  justify-content: center;
-  margin-top: 10px;
-  display: flex;
-  justify-content: space-between;
+.responsable-info {
+  display: flex; /* Hacer que los elementos dentro de .responsable-info se muestren en línea */
+  align-items: center; /* Alinear verticalmente los elementos dentro de .responsable-info */
+}
+.responsable-info  h1{
+  display: flex; /* Hacer que los elementos dentro de .responsable-info se muestren en línea */
+  align-items: center; /* Alinear verticalmente los elementos dentro de .responsable-info */
+}
+
+.responsable-info h3 {
+  margin-top: 5px;
+  margin: 2px;
+}
+.responsable-info p {
+  margin-top: 5px;
+  margin: 5px;
 }
 
 
@@ -46,36 +72,56 @@ h3 {
   margin-top: 10px;
 }
 
+/* Estilos para los botones */
+.custom-button {
+  width: 100px; /* Ancho en píxeles */
+  height: 35px; /* Altura en píxeles */
+  text-align: center;
+}
+
+/* Estilos para alinear los botones a la derecha en la tabla */
 .button-container {
   text-align: right;
 }
 
-.custom-button {
-  width: 100px;
-  height: 35px;
-  text-align: center;
+.header {
+  justify-content: center;
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
 }
-
-.custom-eye {
-  width: auto;
-}
-
 
 
 .nav-item {
   margin-top: 10px;
   text-align: center;
-  width: 780px;
+  flex: 1;
+  background: rgba(170, 170, 170, 0.315);
+  
+  a:active, // Aplica el estilo cuando el enlace está activo
+  a:focus {  // Aplica el estilo cuando el enlace está enfocado
+    color: #000000;
+  }
 }
-
 .nav-link {
   font-family: 'Roboto', initial;
   font-size: 20px;
   color: rgb(0, 0, 0);
 }
+.nav-tabs .nav-item:hover {
+  background: rgba(156, 155, 155, 0.438);
+}
+
+.nav-tabs .nav-link:hover {
+  color:rgb(0, 0, 0);
+}
 
 button {
   width: auto; /* Ancho automático, ajustado al contenido */
+}
+
+.custom-eye {
+  width: auto;
 }
 .porcentaje-bajo {
   color: red; // Define el color rojo para porcentajes bajos.
@@ -89,29 +135,72 @@ button {
 .porcentaje-normal {
   color: rgb(172, 168, 168)
 }
+
 .column-nombre {
-  width: 450px; /* Ajusta el ancho a tu preferencia */
+  width: 650px; /* Ajusta el ancho a tu preferencia */
 }
-.column-observacion {
-  width: 300px; /* Ajusta el ancho a tu preferencia */
+.column-nombreTarea {
+  width: 250px; /* Ajusta el ancho a tu preferencia */
+}
+.column-periodicidad {
+  width: 100px; /* Ajusta el ancho a tu preferencia */
+}
+.column-porcentaje {
+  width: 90px; /* Ajusta el ancho a tu preferencia */
+}
+.column-responsableTarea {
+  width: 200px; /* Ajusta el ancho a tu preferencia */
+}
+.column-accionesTarea {
+  width: 235px; /* Ajusta el ancho a tu preferencia */
 }
 .column-estado {
-  width: 600px; /* Ajusta el ancho a tu preferencia */
+  width: 500px; /* Ajusta el ancho a tu preferencia */
+}
+.fila-nombre {
+  text-align: left;
+}
+.column-fecha {
+  width: 110px; /* Ajusta el ancho a tu preferencia */
+}
+.column-duracion {
+  width: 100px; /* Ajusta el ancho a tu preferencia */
+}
+.column-dias {
+  width: 100px; /* Ajusta el ancho a tu preferencia */
+}
+.column-responsable {
+  width: 300px; /* Ajusta el ancho a tu preferencia */
+}
+
+.column-descripcion {
+  width: 300px; /* Ajusta el ancho a tu preferencia */
 }
 .column-crear {
-  width: 10px; /* Ajusta el ancho a tu preferencia */
+  width: 50px; /* Ajusta el ancho a tu preferencia */
+}
+.column-estado {
+  width: 500px; /* Ajusta el ancho a tu preferencia */
 }
 th,td {
   vertical-align: middle;
   text-align: center; /* Centra el texto horizontalmente en las celdas del encabezado */
 }
 
+
+.en-backlog  {
+  color: rgb(87, 97, 89); /* Color para "EN BACKLOG" */
+}
 .en-backlog .form-check-input {
   color: rgb(87, 97, 89); /* Color para "EN BACKLOG" */
   border-color: rgb(87, 97, 89);
 }
 .en-backlog .form-check-label {
   color: rgb(87, 97, 89); /* Color para "EN BACKLOG" */
+}
+
+.en-proceso {
+  color: rgba(202, 139, 22, 0.925); /* Color para "EN PROCESO" */
 }
 .en-proceso .form-check-input {
   color: rgba(202, 139, 22, 0.925); /* Color para "EN PROCESO" */
@@ -121,6 +210,9 @@ th,td {
   color: rgba(202, 139, 22, 0.925); /* Color para "EN PROCESO" */
 }
 
+.terminado  {
+  color: green; /* Color para "TERMINADO" */
+}
 .terminado .form-check-input {
   color: green; /* Color para "TERMINADO" */
   border-color: green; /* Color del borde del checkbox */
@@ -129,6 +221,9 @@ th,td {
   color: green; /* Color para el texto "TERMINADO" si es necesario */
 }
 
+.impedimento  {
+  color: rgb(206, 49, 49); /* Color para "IMPEDIMENTO" */
+}
 .impedimento .form-check-input  {
   color: rgb(206, 49, 49); /* Color para "IMPEDIMENTO" */
   border-color: rgb(206, 49, 49);
@@ -141,49 +236,28 @@ th,td {
 .form-check-input {
   border: 1px solid #525050;  // Establecer un borde por defecto para todos los checkboxes
 }
-
-.form-check-input.en-backlog:checked,
-.form-check-input.en-proceso:checked,
-.form-check-input.terminado:checked,
-.form-check-input.impedimento:checked {
-  color: #552a2a;
-}
 .form-check-input.en-backlog:checked {
   background-color: rgb(87, 97, 89);
   border-color: rgb(87, 97, 89);
+  color: #552a2a;
 }
 
 .form-check-input.en-proceso:checked {
   background-color: rgba(202, 139, 22, 0.925);
   border-color: rgba(202, 139, 22, 0.925);
+  color: #552a2a;
 }
 
 .form-check-input.terminado:checked {
   background-color: green;
   border-color: green;
+  color: #552a2a;
 }
 
 .form-check-input.impedimento:checked {
   background-color: rgb(206, 49, 49);
   border-color:rgb(206, 49, 49);
-}
-
-
-.custom-file-button input[type=file] {
-  margin-left: -2px !important;
-}
-
-.custom-file-button input[type=file]::-webkit-file-upload-button {
-  display: none;
-}
-
-.custom-file-button input[type=file]::file-selector-button {
-  display: none;
-}
-
-.custom-file-button:hover label {
-  background-color: #dde0e3;
-  cursor: pointer;
+  color: #552a2a;
 }
 
 .bi-info {
@@ -193,6 +267,7 @@ th,td {
 .bi-info:hover {
   color: #ff8c00;
 }
+
 
 .color-iconoPorcentaje,
 .color-iconoFechaAnual,
@@ -227,4 +302,7 @@ th,td {
 
 .required-field {
   color: red
+}
+.colorear-icono {
+  color: #07685a; /* Puedes cambiar "red" por el color que desees */
 }
