@@ -95,25 +95,11 @@ export class ModificarDireccionesComponent implements OnInit {
           if (this.idUsuario != null) {
               this.usuarioService.modificarDireccion(usuarioModificarDirecciones, this.idUsuario, this.auth.obtenerHeader()).subscribe(
               (response) => {
-                Swal.fire({
-                  icon : 'success',
-                  title : 'Modificado!!!',
-                  text : 'La dirección del usuario se ha modificado.',
-                  confirmButtonColor: '#0E823F',
-                  }).then(() => {
+                this.swalSatisfactorio('modificado','direccion del usuario')
                     this.formDireccion.reset()
                     this.cargarUsuarios()
-                    
-                });
               },
-              (error) => {
-                Swal.fire({
-                  title:'Solicitud no válida!',
-                  text: error.error.mensajeHumano,
-                  icon: "error",
-                  confirmButtonColor: '#0E823F',
-                });
-              }
+              (error) => {this.swalError(error);}
             );
           }
         }
@@ -143,25 +129,11 @@ export class ModificarDireccionesComponent implements OnInit {
           if (this.idUsuario != null) {
               this.usuarioService.eliminarDireccion(direccionesAEliminar, this.idUsuario, this.auth.obtenerHeader()).subscribe(
               (response) => {
-                Swal.fire({
-                  icon : 'success',
-                  title : 'Modificado!!!',
-                  text : 'La dirección asociada al usuario se ha eliminado.',
-                  confirmButtonColor: '#0E823F',
-                  }).then(() => {
+                this.swalSatisfactorio('eliminado','direccion del usuario')
                     this.formDireccion.reset()
                     this.cargarUsuarios()
-                    
-                });
               },
-              (error) => {
-                Swal.fire({
-                  title:'Solicitud no válida!',
-                  text: error.error.mensajeHumano,
-                  icon: "error",
-                  confirmButtonColor: '#0E823F',
-                });
-              }
+              (error) => {this.swalError(error);}
             );
           }
         }
@@ -192,25 +164,11 @@ export class ModificarDireccionesComponent implements OnInit {
           if (this.idUsuario != null) {
               this.usuarioService.modificarProceso(usuarioModificarProcesos, this.idUsuario, this.auth.obtenerHeader()).subscribe(
               (response) => {
-                Swal.fire({
-                  icon : 'success',
-                  title : 'Modificado!!!',
-                  text : 'El proceso del usuario se ha modificado.',
-                  confirmButtonColor: '#0E823F',
-                  }).then(() => {
+                this.swalSatisfactorio('modificado','proceso del usuario')
                     this.formProceso.reset()
                     this.cargarUsuarios()
-                    
-                });
               },
-              (error) => {
-                Swal.fire({
-                  title:'Solicitud no válida!',
-                  text: error.error.mensajeHumano,
-                  icon: "error",
-                  confirmButtonColor: '#0E823F',
-                });
-              }
+              (error) => {this.swalError(error);}
             );
           }
         }
@@ -242,25 +200,11 @@ export class ModificarDireccionesComponent implements OnInit {
           if (this.idUsuario != null) {
               this.usuarioService.eliminarProceso(procesosAEliminar, this.idUsuario, this.auth.obtenerHeader()).subscribe(
               (response) => {
-                Swal.fire({
-                  icon : 'success',
-                  title : 'Modificado!!!',
-                  text : 'La dirección asociada al usuario se ha eliminado.',
-                  confirmButtonColor: '#0E823F',
-                  }).then(() => {
+                this.swalSatisfactorio('eliminado','proceso del usuario')
                     this.formProceso.reset()
                     this.cargarUsuarios()
-                    
-                });
               },
-              (error) => {
-                Swal.fire({
-                  title:'Solicitud no válida!',
-                  text: error.error.mensajeHumano,
-                  icon: "error",
-                  confirmButtonColor: '#0E823F',
-                });
-              }
+              (error) => {this.swalError(error);}
             );
           }
         }
@@ -303,4 +247,27 @@ export class ModificarDireccionesComponent implements OnInit {
       });
     } 
   }
+
+  swalSatisfactorio(metodo: string, tipo:string) {
+    Swal.fire({
+      title: `Se ha ${metodo}.`,
+      text: `El ${tipo} se ha ${metodo}!!`,
+      icon:'success',
+      confirmButtonColor: '#0E823F',
+    }
+    );
+    this.formDireccion.reset();
+    this.formProceso.reset();
+
+  }
+  swalError(error: any) {
+    Swal.fire(
+      {
+        title:"Error!!!",
+        text:error.error.mensajeHumano, 
+        icon:"error",
+        confirmButtonColor: '#0E823F',
+      }
+    );
+  } 
  }

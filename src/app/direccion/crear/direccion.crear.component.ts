@@ -38,36 +38,41 @@ export class DireccionCrearComponent implements OnInit {
   }
 
   crearDireccion(){
-    const nombre = this.form.get('nombre')?.value;
-    const proceso = {
-      nombre: nombre,
-    };
-    this.direccionService.crear(proceso,this.auth.obtenerHeader()).toPromise().then(response =>{
-      Swal.fire({
-        title:"Creado!!!",
-        text:'La dirección se ha creado.', 
-        icon:"success",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: '#0E823F',
-        reverseButtons: true, 
-      });
-      this.form.reset();
-      this.cargarDireciones()
-    },error =>{
-      Swal.fire(
-        {
-          title:"Error!!!",
-          text:error.error.mensajeTecnico, 
-          icon:"error",
+    if(this.form.valid){
+      const nombre = this.form.get('nombre')?.value;
+      const proceso = {
+        nombre: nombre,
+      };
+      this.direccionService.crear(proceso,this.auth.obtenerHeader()).toPromise().then(response =>{
+        Swal.fire({
+          title:"Creado!!!",
+          text:'La dirección se ha creado.', 
+          icon:"success",
+          showCancelButton: true,
+          cancelButtonText: "Cancelar",
+          confirmButtonText: "Confirmar",
           confirmButtonColor: '#0E823F',
-        }
-      );
-    } )
+          reverseButtons: true, 
+        });
+        this.form.reset();
+        this.cargarDireciones()
+      },error =>{
+        Swal.fire(
+          {
+            title:"Error!!!",
+            text:error.error.mensajeTecnico, 
+            icon:"error",
+            confirmButtonColor: '#0E823F',
+          }
+        );
+      } )
+    } else {
+      return Object.values(this.form.controls).forEach(control =>{
+        control.markAllAsTouched();
+      })
+    }
   }
   eliminarDireccion(idDireccion: number) {
-
     Swal.fire({
       icon:"question",
       title: "¿Estás seguro?",
@@ -161,6 +166,9 @@ export class DireccionCrearComponent implements OnInit {
     this.form.patchValue({
       nombre: this.nombreSeleccionado,
     });
+  }
 
+  get nombreVacio(){
+    return this.form.get('nombre')?.invalid && this.form.get('nombre')?.touched;
   }
 }

@@ -89,24 +89,11 @@ export class UsuarioListarComponent implements OnInit{
         if (confirmacion.isConfirmed) {
         this.usuarioService.eliminarUsuario(idUsuario, this.auth.obtenerHeader()).subscribe(
           (response) => {
-            Swal.fire({
-              title:'Eliminado!',
-              text: "El usuario se ha eliminado.",
-              icon: "success",
-              confirmButtonColor: '#0E823F'
-            }).then(() => {
+            this.swalSatisfactorio('eliminado','usuario')
               this.cargarUsuarios()
-            });
+
           },
-          (error) => {
-            Swal.fire({
-              title:'Solicitud no válida!',
-              text: error.error.mensajeHumano,
-              icon: "error",
-              confirmButtonText: "OK",
-              confirmButtonColor: '#0E823F'
-            });
-          }
+          (error) => {this.swalError(error);}
         );
       }
     });
@@ -119,27 +106,15 @@ export class UsuarioListarComponent implements OnInit{
       
       this.usuarioService.modificarAgregarPass(pass,this.idUsuario,this.auth.obtenerHeader()).subscribe(
         (response) => {
-          Swal.fire(
-            {
-              title:"Modificado!!!",
-              text:'Se ha creado la contraseña del usuario.', 
-              icon:"success",
-              confirmButtonColor: '#0E823F',
-            }
-          );
+          this.swalSatisfactorio('modificado','contrseña')
             this.formContrasena.reset();
         },
-        (error) => {
-          Swal.fire(
-            {
-              title:"Error!!!",
-              text:error.error.mensajeTecnico, 
-              icon:"error",
-              confirmButtonColor: '#0E823F',
-            }
-          );
-        }
+        (error) => {this.swalError(error);}
       );
+    } else {
+      return Object.values(this.formContrasena.controls).forEach(control =>{
+        control.markAllAsTouched();
+      })
     }
   }
 
@@ -170,25 +145,12 @@ export class UsuarioListarComponent implements OnInit{
           if (this.idUsuario != null) {
               this.usuarioService.modificar(pat, this.idUsuario, this.auth.obtenerHeader()).subscribe(
               (response) => {
-                Swal.fire({
-                  icon : 'success',
-                  title : 'Modificado!!!',
-                  text : 'El proceso del usuario se ha modificado.',
-                  confirmButtonColor: '#0E823F',
-                  }).then(() => {
+                this.swalSatisfactorio('modificado','usuario')
                     this.form.reset()
                     this.cargarUsuarios()
-                    
-                });
+
               },
-              (error) => {
-                Swal.fire({
-                  title:'Solicitud no válida!',
-                  text: error.error.mensajeHumano,
-                  icon: "error",
-                  confirmButtonColor: '#0E823F',
-                });
-              }
+              (error) => {this.swalError(error);}
             );
           }
         }
@@ -215,6 +177,35 @@ export class UsuarioListarComponent implements OnInit{
   obtenerNombreCargo(idCargo: number) {
     const ncargo = this.cargos.find((u) => u.idCargo === idCargo);
     return ncargo ? ncargo.nombre : '';
+  }
+  swalSatisfactorio(metodo: string, tipo:string) {
+    Swal.fire({
+      title: `Se ha ${metodo}.`,
+      text: `El ${tipo} se ha ${metodo}!!`,
+      icon:'success',
+      confirmButtonColor: '#0E823F',
+    }
+    );
+    this.form.reset();
+    this.formContrasena.reset();
+
+  }
+  swalError(error: any) {
+    Swal.fire(
+      {
+        title:"Error!!!",
+        text:error.error.mensajeHumano, 
+        icon:"error",
+        confirmButtonColor: '#0E823F',
+      }
+    );
+  } 
+
+  get passwordVacio(){
+    return this.formContrasena.get('password')?.invalid && this.formContrasena.get('password')?.touched;
+  }
+  get cpasswordVacio(){
+    return this.formContrasena.get('cpassword')?.invalid && this.formContrasena.get('cpassword')?.touched;
   }
 }
 

@@ -61,6 +61,7 @@ export class TipogeListarComponent implements OnInit {
   formEstrategica:FormGroup;
   formModificarEstadoTarea:FormGroup;
   formModificarPorcentaje:FormGroup;
+  formModificarTarea:FormGroup
   formTarea:FormGroup;
   formObservacion:FormGroup;
 
@@ -93,6 +94,12 @@ export class TipogeListarComponent implements OnInit {
       nombre: ['', Validators.required],
     });
     this.formTarea = this.formBuilder.group({
+      nombre: ['', Validators.required],
+      descripcion: ['', Validators.required],
+      periodicidad: ['', Validators.required],
+      idUsuario: ['', Validators.required],
+    });
+    this.formModificarTarea = this.formBuilder.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
       periodicidad: ['', Validators.required],
@@ -185,19 +192,11 @@ export class TipogeListarComponent implements OnInit {
     .then((confirmacion) => {
       if (confirmacion.isConfirmed) {
         this.gestionService.eliminarGestion(idActividadGestion, this.auth.obtenerHeader()).subscribe(
-          (response) => {
-            Swal.fire({
-              title:"Eliminado!!!",
-              text:"La gestión del área se ha eliminado.",
-              icon: "success",
-              confirmButtonColor: '#0E823F'
-            }).then(() => {
+          () => {
+            this.swalSatisfactorio('eliminado','actividad del área')
               this.cargarGestiones(this.idPat)
-            });
           },
-          (error) => {
-            Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
-          }
+          (error) => {this.swalError(error);}
         );
       }
     });
@@ -217,19 +216,11 @@ export class TipogeListarComponent implements OnInit {
     .then((confirmacion) => {
       if (confirmacion.isConfirmed) {
         this.gestionService.eliminarActividadEstrategica(idActividadEstrategica, this.auth.obtenerHeader()).subscribe(
-          (response) => {
-            Swal.fire({
-              title:"Eliminado!!!", 
-              text:"La actividad estratégica se ha eliminado.", 
-              icon:"success",
-              confirmButtonColor: '#0E823F',
-            }).then(() => {
+          () => {
+              this.swalSatisfactorio('eliminado','actividad estratégica')
               this.cargarActividadesEstrategicas(this.idPat)
-            });
           },
-          (error) => {
-            Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
-          }
+          (error) => {this.swalError(error);}
         );
       }
     });
@@ -264,18 +255,10 @@ export class TipogeListarComponent implements OnInit {
         .modificarActividadGestión(actividadGestion, this.idActividadGestionSeleccionado, this.auth.obtenerHeader())
         .subscribe(
           (response) => {
-            Swal.fire({
-              title: "Modificado!!!",
-              text: "La gestión del área se ha modificado",
-              icon: "success",
-              confirmButtonColor: '#0E823F',
-            }).then((value) => {
+            this.swalSatisfactorio('modificado','actividad del área')
               this.cargarGestiones(this.idPat)
-            });
           },
-          (error) => {
-            Swal.fire('Error',error.error.mensajeTecnico,"warning");
-          }
+          (error) => {this.swalError(error);}
         );
         }
       }) 
@@ -310,19 +293,11 @@ export class TipogeListarComponent implements OnInit {
           if (this.idActividadEstrategicaSeleccionado != null) {
           this.gestionService.modificarActividadEstrategica(actividadEstrategica, this.idActividadEstrategicaSeleccionado, this.auth.obtenerHeader())
           .subscribe(
-            (response) => {
-              Swal.fire({
-                title: "Modificado!!!",
-                text: "La actividad estratégica se ha modificado",
-                icon: "success",
-                confirmButtonColor: '#0E823F',
-              }).then((value) => {
+            () => {
+                this.swalSatisfactorio('modificado','actividad estratégica')
                 this.cargarActividadesEstrategicas(this.idPat)
-              });
             },
-            (error) => {
-              Swal.fire(error.error.mensajeHumano,error.error.mensajeTecnico,"warning");
-            }
+            (error) => {this.swalError(error);}
             );
             }
           }
@@ -378,22 +353,15 @@ export class TipogeListarComponent implements OnInit {
         .crearTarea(tarea,this.auth.obtenerHeader())
         .subscribe(
           (response) => {
-            Swal.fire({
-              title: "Creado!!!",
-              text: "Se ha creado la tarea.",
-              icon: "success",
-              confirmButtonColor: '#0E823F',
-            }).then(()=>{
-              
-              this.cargarTareas(this.idActividadGestionSeleccionado,'ACTIVIDAD_GESTION')
+              this.swalSatisfactorio('creado','tarea')
+              this.cargarTareas(this.idActividadGestionSeleccionado,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')
               this.formTarea.reset()
               this.cargarGestiones(this.idPat)
-            });
           },
-          (error) => {
-            Swal.fire('Error',error.error.mensajeHumano, "error");
-          }
+          (error) => {this.swalError(error);}
         );
+    } else {
+      return this.formTarea.markAllAsTouched();
     }
   }
   crearObservacion() {
@@ -411,19 +379,10 @@ export class TipogeListarComponent implements OnInit {
         .crearObservacion(observacion,this.auth.obtenerHeader())
         .subscribe(
           (response) => {
-            Swal.fire({
-              title: "Creado!!!",
-              text: "Se ha creado la observación.",
-              icon: "success",
-              confirmButtonColor: '#0E823F',
-            }).then(()=>{
-              
+              this.swalSatisfactorio('creado','observación')
               this.formObservacion.reset()
-            });
           },
-          (error) => {
-            Swal.fire('Error',error.error.mensajeHumano, "error");
-          }
+          (error) => {this.swalError(error);}
         );
     }
   }
@@ -446,21 +405,13 @@ export class TipogeListarComponent implements OnInit {
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
           this.tareaService.modificarEstadoTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
-              (response) => {
-                Swal.fire({
-                  icon : 'success',
-                  title : 'Modificado!!!',
-                  text : 'Se ha modificado la tarea.',
-                  confirmButtonColor: '#0E823F',
-                }).then(()=>{
-                  this.cargarGestiones(this.idPat)
-                  this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION')
-                  this.formModificarEstadoTarea.reset()  
-                });               
+              () => {
+                  this.swalSatisfactorio('modificado','estado de la tarea')
+                  this.cargarGestiones(this.idPat);
+                  this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION');
+                  this.formModificarEstadoTarea.reset();           
               },
-              (error) => {
-                Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
-              }
+              (error) => {this.swalError(error);}
             );
         } 
       });
@@ -492,32 +443,24 @@ export class TipogeListarComponent implements OnInit {
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
           this.tareaService.modificarPorcentajeTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
-              (response) => {
-                Swal.fire({
-                  icon : 'success',
-                  title : 'Modificado!!!',
-                  text : 'Se ha modificado la tarea.',
-                  confirmButtonColor: '#0E823F',
-                }).then(()=>{
+              () => {
+                  this.swalSatisfactorio('modificado','porcentaje de la actividad')
                   this.cargarGestiones(this.idPat)
                   this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION')
-                  this.formModificarPorcentaje.reset()  
-                });               
+                  this.formModificarPorcentaje.reset()              
               },
-              (error) => {
-                Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
-              }
+              (error) => {this.swalError(error);}
             );
         } 
       });
     }
   }
   modificarTarea() {
-    if (this.formTarea.valid) {
-      const nombre = this.formTarea.get('nombre')?.value;
-      const periodicidad = this.formTarea.get('periodicidad')?.value;
-      const descripcion = this.formTarea.get('descripcion')?.value;
-      const idUsuario = this.formTarea.get('idUsuario')?.value;
+    if (this.formModificarTarea.valid) {
+      const nombre = this.formModificarTarea.get('nombre')?.value;
+      const periodicidad = this.formModificarTarea.get('periodicidad')?.value;
+      const descripcion = this.formModificarTarea.get('descripcion')?.value;
+      const idUsuario = this.formModificarTarea.get('idUsuario')?.value;
       const tareaModificar = {
         nombre: nombre,
         periodicidad: periodicidad,
@@ -537,21 +480,13 @@ export class TipogeListarComponent implements OnInit {
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
           this.tareaService.modificarTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
-              (response) => {
-                Swal.fire({
-                  icon : 'success',
-                  title : 'Modificado!!!',
-                  text : 'Se ha modificado la tarea.',
-                  confirmButtonColor: '#0E823F',
-                }).then(()=>{
+              () => {
+                this.swalSatisfactorio('modificado','tarea')
                   this.cargarGestiones(this.idPat)
                   this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION')
-                  this.formModificarEstadoTarea.reset()  
-                });               
+                  this.formModificarEstadoTarea.reset()              
               },
-              (error) => {
-                Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
-              }
+              (error) => {this.swalError(error);}
             );
         } 
       });
@@ -573,18 +508,10 @@ export class TipogeListarComponent implements OnInit {
         if (confirmacion.isConfirmed) {
         this.tareaService.eliminarTarea(idTarea, this.auth.obtenerHeader()).subscribe(
           (response) => {
-            Swal.fire({
-              title:"Eliminado!!!", 
-              text:"La tarea se ha eliminado.", 
-              icon: "success",
-              confirmButtonColor: '#0E823F',}).then(() => {
-            }).then(()=>{
+            this.swalSatisfactorio('eliminado','tarea')
               this.cargarTareas(idActividadGestion,'ACTIVIDAD_GESTION')
-            }); 
           },
-          (error) => {
-            Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
-          }
+          (error) => {this.swalError(error);}
         );
       }
 
@@ -765,7 +692,7 @@ export class TipogeListarComponent implements OnInit {
     this.idTareaTipo = tarea.idASE;
     
 
-    this.formTarea.patchValue({
+    this.formModificarTarea.patchValue({
       nombre : tarea.nombre,
       descripcion : tarea.descripcion,
       periodicidad : tarea.periodicidad,
@@ -809,6 +736,50 @@ export class TipogeListarComponent implements OnInit {
   isEstado(tareaEstado:any, estado:any) {
     return tareaEstado === estado;
   }
- 
+
+  swalSatisfactorio(metodo: string, tipo:string) {
+    Swal.fire({
+      title: `Se ha ${metodo}.`,
+      text: `El ${tipo} se ha ${metodo}!!`,
+      icon:'success',
+      confirmButtonColor: '#0E823F',
+    }
+    );
+    this.formEstrategica.reset();
+    this.formGestion.reset();
+    this.formModificarEstadoTarea.reset();
+    this.formModificarPorcentaje.reset();
+    this.formObservacion.reset();
+    this.formTarea.reset();
+    this.formModificarTarea.reset();
+  }
+  swalError(error: any) {
+    Swal.fire(
+      {
+        title:"Error!!!",
+        text:error.error.mensajeHumano, 
+        icon:"error",
+        confirmButtonColor: '#0E823F',
+      }
+    );
+  } 
+  get nombreVacio(){
+    return this.formTarea.get('nombre')?.invalid && this.formTarea.get('nombre')?.touched;
+  }
+  get descripcionVacio(){
+    return this.formTarea.get('descripcion')?.invalid && this.formTarea.get('descripcion')?.touched;
+  }
+  get periodicidadVacio(){
+    return this.formTarea.get('periodicidad')?.invalid && this.formTarea.get('periodicidad')?.touched;
+  }
+  get idUsuarioVacio(){
+    return this.formTarea.get('idUsuario')?.invalid && this.formTarea.get('idUsuario')?.touched;
+  }
+  get nombreObservacionVacio(){
+    return this.formObservacion.get('nombre')?.invalid && this.formObservacion.get('nombre')?.touched;
+  }
+  get fechaVacio(){
+    return this.formObservacion.get('fecha')?.invalid && this.formObservacion.get('fecha')?.touched;
+  }
 
 }

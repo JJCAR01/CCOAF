@@ -46,27 +46,31 @@ export class ActividadCrearComponent implements OnInit{
   }
 
   crearActividadOProyecto() {
-    const nombre = this.form.get('nombre')?.value;
-    const fechaInicial = this.form.get('fechaInicial')?.value
-    const fechaFinal = this.form.get('fechaFinal')?.value
-    const idUsuario = this.form.get('idUsuario')?.value
-    const idActividadEstrategica = this.idActividadEstrategica
-    const actividadGestion = {
-      idActividadEstrategica:idActividadEstrategica,
-      nombre: nombre,
-      fechaFinal:fechaFinal,
-      fechaInicial:fechaInicial,
-      idUsuario:idUsuario
-    };
-      this.actividadService
-        .crearActividadGestionActividadEstrategica(actividadGestion, this.auth.obtenerHeader()).subscribe(
-          () => {
-            this.handleSuccessResponse('Actividad de gestión');
-          },
-          (error) => {
-            this.handleErrorResponse(error);
-          }
-        );
+    if(this.form.valid){
+      const nombre = this.form.get('nombre')?.value;
+      const fechaInicial = this.form.get('fechaInicial')?.value
+      const fechaFinal = this.form.get('fechaFinal')?.value
+      const idUsuario = this.form.get('idUsuario')?.value
+      const idActividadEstrategica = this.idActividadEstrategica
+      const actividadGestion = {
+        idActividadEstrategica:idActividadEstrategica,
+        nombre: nombre,
+        fechaFinal:fechaFinal,
+        fechaInicial:fechaInicial,
+        idUsuario:idUsuario
+      };
+        this.actividadService
+          .crearActividadGestionActividadEstrategica(actividadGestion, this.auth.obtenerHeader()).subscribe(
+            () => {
+              this.handleSuccessResponse('Actividad de gestión');
+            },
+            (error) => {
+              this.handleErrorResponse(error);
+            }
+          );
+    } else {
+      return this.form.markAllAsTouched();
+    }
   }
 
   handleSuccessResponse(type: string) {
@@ -84,11 +88,24 @@ export class ActividadCrearComponent implements OnInit{
     Swal.fire(
       {
         title:"Error!!!",
-        text:error.error.mensajeTecnico, 
+        text:error.error.mensajeHumano, 
         icon:"error",
         confirmButtonColor: '#0E823F',
       }
     );
+  }
+
+  get nombreVacio(){
+    return this.form.get('nombre')?.invalid && this.form.get('nombre')?.touched;
+  }
+  get fechaInicialVacio(){
+    return this.form.get('fechaInicial')?.invalid && this.form.get('fechaInicial')?.touched;
+  }
+  get fechaFinalVacio(){
+    return this.form.get('fechaFinal')?.invalid && this.form.get('fechaFinal')?.touched;
+  }
+  get idUsuarioVacio(){
+    return this.form.get('idUsuario')?.invalid && this.form.get('idUsuario')?.touched;
   }
 
 }

@@ -14,11 +14,7 @@ export class LoginService {
   login(login : any): Observable<any>{
     return this.http.post(`${environment.apiUrl}/ccoa/auth/login`,login);
   }
-
-  authenticateWithGoogle() {
-    return this.http.get(`${environment.apiUrl}/login/oauth2/code/google`);
-  }
-
+  
   loginGoogle(google: any): Observable<any>{
     return this.http.post(`${environment.apiUrl}/ccoa/auth/google`, google);
   }

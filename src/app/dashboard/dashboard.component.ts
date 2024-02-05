@@ -67,7 +67,6 @@ export class DashboardComponent implements OnInit {
               for (let i = 0; i < this.datoPat.length; i++) {
                 this.nombrePats.push(this.datoPat[i].nombre);
                 this.porcentajePats.push(this.datoPat[i].porcentaje);
-                console.log(this.nombrePats)
               }
             }
             // Actualizar chartPrincipal con los datos iniciales

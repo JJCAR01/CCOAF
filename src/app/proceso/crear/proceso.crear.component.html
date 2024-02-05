@@ -72,13 +72,15 @@
             </div>
             <div class="modal-body">
               <form [formGroup]="form" (ngSubmit)="crearProceso()">
-                <div class="mb-3">
-                  <label for="nombre" class="form-label">Nombre<span class="required-field">*</span></label>
-                  <input type="text" class="form-control" id="nombre" formControlName="nombre">
+                <div class="form-floating mb-3">
+                  <input type="text" id="nombre" [class.is-invalid]="nombreVacio" class="form-control form-control-lg" formControlName="nombre"
+                   placeholder="Nombre">
+                  <label class="form-label" for="nombre">Nombre<span class="required-field">*</span></label>
+                  <small *ngIf="nombreVacio" class="text-danger">Este campo es obligatorio*</small>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                  <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Guardar</button>
+                  <button type="submit" class="btn btn-success" [attr.data-bs-dismiss]="form.valid ? 'modal' : null">Guardar</button>
                 </div>
               </form>
             </div>

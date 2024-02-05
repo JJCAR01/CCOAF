@@ -17,22 +17,25 @@
                         </div>
                         <form [formGroup]="form" (ngSubmit)="crearSprint()">
                             <div class="form-floating mb-3">
-                                <textarea type="text" id="descripcion" class="form-control form-control-lg" formControlName="descripcion" placeholder="descripcion"></textarea>
+                                <textarea type="text" id="descripcion" [class.is-invalid]="descripcionVacio" class="form-control form-control-lg" formControlName="descripcion" placeholder="descripcion"></textarea>
                                 <label class="form-label" for="descripcion">Descripcion<span class="required-field">*</span></label>
+                                <small *ngIf="descripcionVacio" class="text-danger">Este campo es obligatorio*</small>
                             </div>
                             <div class="form-floating mb-3">
-                                <input type="date" id="fechaInicial" class="form-control form-control-lg" formControlName="fechaInicial" placeholder="Fecha Inicial"  >
+                                <input type="date" id="fechaInicial" [class.is-invalid]="fechaInicialVacio" class="form-control form-control-lg" formControlName="fechaInicial" placeholder="Fecha Inicial"  >
                                 <label class="form-label" for="fechaInicial">Fecha Inicial<span class="required-field">*</span></label>
+                                <small *ngIf="fechaInicialVacio" class="text-danger">Este campo es obligatorio*</small>
                             </div>
                             <div class="form-floating mb-3">
-                                <input type="date" id="fechaFinal" class="form-control form-control-lg" formControlName="fechaFinal" placeholder="Fecha Final" >
+                                <input type="date" id="fechaFinal" [class.is-invalid]="fechaFinalVacio" class="form-control form-control-lg" formControlName="fechaFinal" placeholder="Fecha Final" >
                                 <label class="form-label" for="fechaFinal">Fecha Final<span class="required-field">*</span></label>
+                                <small *ngIf="fechaFinalVacio" class="text-danger">Este campo es obligatorio*</small>
                             </div>                        
                             <div class="d-flex justify-content-center">
                                 <button type="button" class="btn btn-secondary btn-block me-2"
                                     [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint',idProyecto,'pat',patNombre] } }]"
                                 > Atrás</button>
-                                <button type="submit" class="btn btn-success btn-block btn-lg " [disabled]="!form.valid">Registrar</button>
+                                <button type="submit" class="btn btn-success btn-lg">Registrar</button>
                             </div>
                         </form>
                     </div>

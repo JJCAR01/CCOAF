@@ -30,7 +30,7 @@ export class CrearProyectoComponent {
       idUsuario: ['', Validators.required],
       presupuesto: ['', Validators.required], // Agrega otros campos según sea necesario
       modalidad: ['', Validators.required],
-      valorEjecutado: ['', Validators.required],
+      valorEjecutado: [0, Validators.required],
       planeacionSprint: ['', Validators.required],
     });
   }
@@ -51,35 +51,41 @@ export class CrearProyectoComponent {
   }
 
   crearActividadOProyecto() {
-    const nombre = this.form.get('nombre')?.value;
-    const fechaInicial = this.form.get('fechaInicial')?.value
-    const fechaFinal = this.form.get('fechaFinal')?.value
-    const presupuesto = this.form.get('presupuesto')?.value
-    const modalidad = this.form.get('modalidad')?.value
-    const valorEjecutado = this.form.get('valorEjecutado')?.value
-    const planeacionSprint = this.form.get('planeacionSprint')?.value
-    const idUsuario = this.form.get('idUsuario')?.value
-    const idActividadEstrategica = this.idActividadEstrategica
-    const proyecto = {
-      idActividadEstrategica:idActividadEstrategica,
-      nombre: nombre,
-      fechaFinal:fechaFinal,
-      fechaInicial:fechaInicial,
-      presupuesto:presupuesto,
-      modalidad:modalidad,
-      valorEjecutado:valorEjecutado,
-      planeacionSprint:planeacionSprint,
-      idUsuario:idUsuario
-    };
-    this.actividadService
-        .crearProyecto(proyecto, this.auth.obtenerHeader()).subscribe(
-          (response) => {
-            this.handleSuccessResponse('proyecto');
-          },
-          (error) => {
-            this.handleErrorResponse(error);
-          }
-        );
+    if(this.form.valid){
+      const nombre = this.form.get('nombre')?.value;
+      const fechaInicial = this.form.get('fechaInicial')?.value
+      const fechaFinal = this.form.get('fechaFinal')?.value
+      const presupuesto = this.form.get('presupuesto')?.value
+      const modalidad = this.form.get('modalidad')?.value
+      const valorEjecutado = this.form.get('valorEjecutado')?.value
+      const planeacionSprint = this.form.get('planeacionSprint')?.value
+      const idUsuario = this.form.get('idUsuario')?.value
+      const idActividadEstrategica = this.idActividadEstrategica
+      const proyecto = {
+        idActividadEstrategica:idActividadEstrategica,
+        nombre: nombre,
+        fechaFinal:fechaFinal,
+        fechaInicial:fechaInicial,
+        presupuesto:presupuesto,
+        modalidad:modalidad,
+        valorEjecutado:valorEjecutado,
+        planeacionSprint:planeacionSprint,
+        idUsuario:idUsuario
+      };
+      this.actividadService
+          .crearProyecto(proyecto, this.auth.obtenerHeader()).subscribe(
+            (response) => {
+              this.handleSuccessResponse('proyecto');
+            },
+            (error) => {
+              this.handleErrorResponse(error);
+            }
+          );
+    } else {
+      return Object.values(this.form.controls).forEach(control =>{
+        control.markAllAsTouched();
+      })
+    }
   }
 
   handleSuccessResponse(type: string) {
@@ -101,5 +107,30 @@ export class CrearProyectoComponent {
         confirmButtonColor: '#0E823F',
       }
     );
+  }
+
+  get nombreVacio(){
+    return this.form.get('nombre')?.invalid && this.form.get('nombre')?.touched;
+  }
+  get fechaInicialVacio(){
+    return this.form.get('fechaInicial')?.invalid && this.form.get('fechaInicial')?.touched;
+  }
+  get fechaFinalVacio(){
+    return this.form.get('fechaFinal')?.invalid && this.form.get('fechaFinal')?.touched;
+  }
+  get idUsuarioVacio(){
+    return this.form.get('idUsuario')?.invalid && this.form.get('idUsuario')?.touched;
+  }
+  get presupuestoVacio(){
+    return this.form.get('presupuesto')?.invalid && this.form.get('presupuesto')?.touched;
+  }
+  get modalidadVacio(){
+    return this.form.get('modalidad')?.invalid && this.form.get('modalidad')?.touched;
+  }
+  get valorEjecutadoVacio(){
+    return this.form.get('valorEjecutado')?.invalid && this.form.get('valorEjecutado')?.touched;
+  }
+  get planeacionSprintVacio(){
+    return this.form.get('planeacionSprint')?.invalid && this.form.get('planeacionSprint')?.touched;
   }
 }

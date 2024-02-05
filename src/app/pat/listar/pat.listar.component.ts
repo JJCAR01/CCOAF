@@ -68,7 +68,7 @@ export class PatListarComponent implements OnInit{
           this.usuarios = data;
       },
         (error) => {
-          Swal.fire(error.error.mensajeTecnico);
+          this.swalError(error);
         }
       );
     }
@@ -125,7 +125,7 @@ export class PatListarComponent implements OnInit{
           this.pats = patsFiltrados;
         },
         (error) => {
-          Swal.fire(error.error.mensajeTecnico);
+          this.swalError(error);
         }
       );
     }
@@ -154,7 +154,7 @@ export class PatListarComponent implements OnInit{
           this.cantidadGestiones = numeroDeListas;
         },
         (error) => {
-          Swal.fire(error.error.mensajeTecnico);
+          this.swalError(error);
         }
       );
     }
@@ -186,7 +186,7 @@ export class PatListarComponent implements OnInit{
           
         },
         (error) => {
-          Swal.fire(error.error.mensajeTecnico);
+          this.swalError(error);
         }
       );
     }
@@ -214,7 +214,7 @@ export class PatListarComponent implements OnInit{
           this.cantidadGestionesActividadEstrategica = numeroDeListas;
         },
         (error) => {
-          Swal.fire(error.error.mensajeTecnico);
+          this.swalError(error);
         }
       );
     }
@@ -222,12 +222,12 @@ export class PatListarComponent implements OnInit{
     cargarPatsProyectos(proyectos: any[]) {
       // Obtener los IDs de las actividades estratégicas
       const idsProyectos = proyectos.map(proyecto => proyecto.idActividadEstrategica);
+
       this.actividadService.listarProyecto(this.auth.obtenerHeader()).toPromise().then(
         (data: any) => {
           this.proyectosFiltrados = data.filter((proyecto: any) =>
             idsProyectos.includes(proyecto.idActividadEstrategica)
           );
-
           this.proyectosFiltrados.forEach((proyecto:any) => {
             const terminadas = proyecto.avance;
             if (terminadas === 100) {
@@ -236,11 +236,11 @@ export class PatListarComponent implements OnInit{
               this.sumadorProyectosAbiertos += 1;
             }
           });
-          const numeroDeListas = Object.keys(data).length;
+          const numeroDeListas = this.proyectosFiltrados.length;
           this.cantidadProyectos = numeroDeListas;
         },
         (error) => {
-          Swal.fire(error.error.mensajeTecnico);
+          this.swalError(error);
         }
       );
     }
@@ -271,23 +271,11 @@ export class PatListarComponent implements OnInit{
           if (confirmacion.isConfirmed) {
             if (this.selectedPatId != null) {
                 this.patService.modificarPat(pat, this.selectedPatId, this.auth.obtenerHeader()).subscribe(
-                (response) => {
-                  Swal.fire({
-                    icon : 'success',
-                    title : 'Modificado!!!',
-                    text : 'El plan anual se ha modificado.',
-                    confirmButtonColor: '#0E823F',
-                    }).then(() => {
-                      this.cargarPats()
-                  });
+                () => {
+                  this.swalSatisfactorio('modificado','plan anual de trabajo')
                 },
                 (error) => {
-                  Swal.fire({
-                    title:'Solicitud no válida!',
-                    text: error.error.mensajeHumano,
-                    icon: "error",
-                    confirmButtonColor: '#0E823F',
-                  });
+                  this.swalError(error)
                 }
               );
             }
@@ -297,8 +285,6 @@ export class PatListarComponent implements OnInit{
     }
     
     eliminarPat(idPat: number) {
-      const patAEliminar = this.pats.find(pat => pat.idPat === idPat);
-
       Swal.fire({
         icon:"question",
         title: "¿Estás seguro?",
@@ -312,23 +298,12 @@ export class PatListarComponent implements OnInit{
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
           this.patService.eliminarPat(idPat, this.auth.obtenerHeader()).subscribe(
-            (response) => {
-              Swal.fire({
-                title:'Eliminado!',
-                text: "El pat se ha eliminado.",
-                icon: "success",
-                confirmButtonColor: '#0E823F'
-              }).then(() => {
-                  this.cargarPats()
-              });
+            () => {
+              this.swalSatisfactorio('eliminado','plan anual de trabajo');
+              this.cargarPats();
             },
             (error) => {
-              Swal.fire({
-                title:'Solicitud no válida!',
-                text: error.error.mensajeHumano,
-                icon: "error",
-                confirmButtonColor: '#0E823F',
-              });
+              this.swalError(error);
             }
           );
         }
@@ -386,6 +361,27 @@ export class PatListarComponent implements OnInit{
       } else {
         return 'porcentaje-cien';
       }
+    }
+
+    swalSatisfactorio(metodo: string, tipo:string) {
+      Swal.fire({
+        title: `Se ha ${metodo}.`,
+        text: `El ${tipo} se ha ${metodo}!!`,
+        icon:'success',
+        confirmButtonColor: '#0E823F',
+      }
+      );
+      this.form.reset();
+    }
+    swalError(error: any) {
+      Swal.fire(
+        {
+          title:"Error!!!",
+          text:error.error.mensajeHumano, 
+          icon:"error",
+          confirmButtonColor: '#0E823F',
+        }
+      );
     }
 
 }

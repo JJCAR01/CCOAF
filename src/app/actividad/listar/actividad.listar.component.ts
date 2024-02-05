@@ -68,6 +68,7 @@ export class ActividadListarComponent implements OnInit{
   formModificarEstadoTarea:FormGroup;
   formModificarPorcentaje:FormGroup;
   formTarea:FormGroup;
+  formModificarTarea:FormGroup;
   formObservacion:FormGroup;
   busqueda: any;
 
@@ -111,6 +112,12 @@ export class ActividadListarComponent implements OnInit{
       periodicidad: ['', Validators.required],
       idUsuario: ['', Validators.required],
     });
+    this.formModificarTarea = this.formBuilder.group({
+      nombre: ['', Validators.required],
+      descripcion: ['', Validators.required],
+      periodicidad: ['', Validators.required],
+      idUsuario: ['', Validators.required],
+    });
 }
 
 ngOnInit() {
@@ -132,8 +139,6 @@ ngOnInit() {
       },
     );
   });
-  
-
   this.cargarUsuario();
   this.crearTarea();
   this.estadoEnumList = Object.values(EEstado);
@@ -167,9 +172,7 @@ private obtenerFechaActual(): string {
         (data: any) => {
           this.gestiones = data;
         },
-        (error) => {
-          Swal.fire('Error', error.error.mensajeTecnico,'error');
-        }
+        (error) => {this.swalError(error);}
       );
   }
 
@@ -182,9 +185,7 @@ private obtenerFechaActual(): string {
         (data: any) => {
           this.proyectos = data;
         },
-        (error) => {
-          Swal.fire('Error',error.error.mensajeTecnico,'error');
-        }
+        (error) => {this.swalError(error);}
       );
   }
 
@@ -204,24 +205,11 @@ private obtenerFechaActual(): string {
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
         this.actividadService.eliminarActividadGestionActividadEstrategica(idActividadGestionActividadEstrategica, this.auth.obtenerHeader()).subscribe(
-          (response) => {
-            Swal.fire({
-              title:"Eliminado!!!", 
-              text:"La gestión del área se ha eliminado.",
-              icon: "success",
-              confirmButtonColor: '#0E823F',
-            }).then(() => {
+          () => {
+            this.swalSatisfactorio('eliminado','actividad de gestión')
               this.cargarGestiones(this.idActividadEstrategica)
-            });
           },
-          (error) => {
-            Swal.fire({
-              title:'Solicitud no válida!',
-              text: error.error.mensajeTecnico,
-              icon: "error",
-              confirmButtonColor: '#0E823F',
-            });
-          }
+          (error) => {this.swalError(error);}
         );
       }
       });
@@ -242,24 +230,11 @@ private obtenerFechaActual(): string {
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
         this.actividadService.eliminarProyecto(idProyecto, this.auth.obtenerHeader()).subscribe(
-          (response) => {
-            Swal.fire({
-              title:"Eliminado!!!",
-              text:"El proyecto se ha eliminado.",
-              icon:"success",
-              reverseButtons: true,  
-            }).then(() => {
+          () => {
+            this.swalSatisfactorio('eliminado','proyecto')
               this.cargarProyectos(this.idActividadEstrategica)
-            });
           },
-          (error) => {
-            Swal.fire({
-              title:'Solicitud no válida!',
-              text: error.error.mensajeTecnico,
-              icon: "error",
-              confirmButtonColor: '#0E823F',
-            });
-          }
+          (error) => {this.swalError(error);}
         );
       }
       });
@@ -294,24 +269,11 @@ private obtenerFechaActual(): string {
         if (confirmacion.isConfirmed) {
           this.actividadService.modificarActividadGestionActividadEstrategica(actividadGestion, this.idActividadGestionSeleccionado, this.auth.obtenerHeader())
             .subscribe(
-              (response) => {
-              Swal.fire({
-                title: "Modificado!!!",
-                text: "La gestión del área se ha modificado",
-                icon: "success",
-                confirmButtonColor: '#0E823F',
-              }).then((value) => {
+              () => {
+                this.swalSatisfactorio('modificado','actividad de gestión')
                 this.cargarGestiones(this.idActividadEstrategica)
-              });
               },
-          (error) => {
-            Swal.fire({
-              title:'Solicitud no válida!',
-              text: error.error.mensajeTecnico,
-              icon: "error",
-              confirmButtonColor: '#0E823F',
-            });
-          }
+              (error) => {this.swalError(error);}
         );
         }
       })
@@ -354,23 +316,10 @@ private obtenerFechaActual(): string {
           .modificarProyecto(proyecto, this.idProyectoSeleccionado, this.auth.obtenerHeader())
           .subscribe(
             (response) => {
-              Swal.fire({
-                title: "Modificado!!!",
-                text: "El proyecto se ha modificado",
-                icon: "success",
-                confirmButtonColor: '#0E823F',
-              }).then(() => {
+              this.swalSatisfactorio('modificado','proyecto')
                 this.cargarProyectos(this.idActividadEstrategica)
-              });
             },
-            (error) => {
-              Swal.fire({
-                title:'Solicitud no válida!',
-                text: error.error.mensajeTecnico,
-                icon: "error",
-                confirmButtonColor: '#0E823F',
-              });
-            }
+            (error) => {this.swalError(error);}
           );
         }
       })
@@ -423,27 +372,16 @@ private obtenerFechaActual(): string {
       this.tareaService
         .crearTarea(tarea,this.auth.obtenerHeader())
         .subscribe(
-          (response) => {
-            Swal.fire({
-              title: "Creado!!!",
-              text: "Se ha creado la tarea.",
-              icon: "success",
-              confirmButtonColor: '#0E823F',
-            }).then(()=>{
+          () => {
+            this.swalSatisfactorio('creado','tarea')
               this.cargarTareas(this.idActividadGestionSeleccionado,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')
               this.formTarea.reset()
               this.cargarGestiones(this.idActividadEstrategica)
-            });
           },
-          (error) => {
-            Swal.fire({
-              title:'Solicitud no válida!',
-              text: error.error.mensajeTecnico,
-              icon: "error",
-              confirmButtonColor: '#0E823F',
-            });
-          }
+          (error) => {this.swalError(error);}
         );
+    } else {
+        this.formTarea.markAllAsTouched();
     }
   }
   crearObservacion() {
@@ -460,21 +398,14 @@ private obtenerFechaActual(): string {
       this.observacionService
         .crearObservacion(observacion,this.auth.obtenerHeader())
         .subscribe(
-          (response) => {
-            Swal.fire({
-              title: "Creado!!!",
-              text: "Se ha creado la observación",
-              icon: "success",
-              confirmButtonColor: '#0E823F',
-            }).then(()=>{
-              
+          () => {
+            this.swalSatisfactorio('creado','observación')
               this.formObservacion.reset()
-            });
           },
-          (error) => {
-            Swal.fire('Error',error.error.mensajeHumano, "error");
-          }
+          (error) => {this.swalError(error);}
         );
+    } else {
+      return this.form.markAllAsTouched();
     }
   }
   modificarEstado() {
@@ -496,21 +427,13 @@ private obtenerFechaActual(): string {
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
           this.tareaService.modificarEstadoTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
-              (response) => {
-                Swal.fire({
-                  icon : 'success',
-                  title : 'Modificado!!!',
-                  text : 'Se ha modificado la tarea.',
-                  confirmButtonColor: '#0E823F',
-                }).then(()=>{
+              () => {
+                this.swalSatisfactorio('modificado','estado de la tarea')
                   this.cargarGestiones(this.idActividadEstrategica);
                   this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA');
-                  this.formTarea.reset();
-                });               
+                  this.formTarea.reset();             
               },
-              (error) => {
-                Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
-              }
+              (error) => {this.swalError(error);}
             );
         } 
       });
@@ -543,31 +466,23 @@ private obtenerFechaActual(): string {
         if (confirmacion.isConfirmed) {
           this.tareaService.modificarPorcentajeTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
               (response) => {
-                Swal.fire({
-                  icon : 'success',
-                  title : 'Modificado!!!',
-                  text : 'Se ha modificado la tarea.',
-                  confirmButtonColor: '#0E823F',
-                }).then(()=>{
+                this.swalSatisfactorio('modificado','porcentaje de la tarea')
                   this.cargarGestiones(this.idActividadEstrategica);
                     this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA');
-                    this.formTarea.reset();
-                });               
+                    this.formTarea.reset();              
               },
-              (error) => {
-                Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
-              }
+              (error) => {this.swalError(error);}
             );
         } 
       });
     }
   }
   modificarTarea() {
-    if (this.formTarea.valid) {
-      const nombre = this.formTarea.get('nombre')?.value;
-      const periodicidad = this.formTarea.get('periodicidad')?.value;
-      const descripcion = this.formTarea.get('descripcion')?.value;
-      const idUsuario = this.formTarea.get('idUsuario')?.value;
+    if (this.formModificarTarea.valid) {
+      const nombre = this.formModificarTarea.get('nombre')?.value;
+      const periodicidad = this.formModificarTarea.get('periodicidad')?.value;
+      const descripcion = this.formModificarTarea.get('descripcion')?.value;
+      const idUsuario = this.formModificarTarea.get('idUsuario')?.value;
       const tareaModificar = {
         nombre: nombre,
         periodicidad: periodicidad,
@@ -588,20 +503,12 @@ private obtenerFechaActual(): string {
         if (confirmacion.isConfirmed) {
           this.tareaService.modificarTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
               (response) => {
-                Swal.fire({
-                  icon : 'success',
-                  title : 'Modificado!!!',
-                  text : 'Se ha modificado la tarea.',
-                  confirmButtonColor: '#0E823F',
-                }).then(()=>{
+                this.swalSatisfactorio('modificado','tarea')
                   this.cargarGestiones(this.idActividadEstrategica);
                   this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA');
-                  this.formTarea.reset();
-                });               
+                  this.formTarea.reset();             
               },
-              (error) => {
-                Swal.fire("Solicitud no válida", error.error.mensajeHumano, "error");
-              }
+              (error) => {this.swalError(error);}
             );
         } 
       });
@@ -621,24 +528,11 @@ private obtenerFechaActual(): string {
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
         this.tareaService.eliminarTarea(idTarea, this.auth.obtenerHeader()).subscribe(
-          (response) => {
-
-            Swal.fire({
-              title:"Eliminado!!!", 
-              text:"La tarea se ha eliminado.", 
-              icon:"success",
-              confirmButtonColor: '#0E823F',             
-            });
+          () => {
+            this.swalSatisfactorio('eliminado','tarea')
             this.cargarTareas(idActividadGestionActividadEstrategica,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')
           },
-          (error) => {
-            Swal.fire({
-              title:'Solicitud no válida!',
-              text: error.error.mensajeTecnico,
-              icon: "error",
-              confirmButtonColor: '#0E823F',
-            });
-          }
+          (error) => {this.swalError(error);}
         );
       }
       });
@@ -715,7 +609,6 @@ private obtenerFechaActual(): string {
             })
           }
       );
-
     } catch (error) {
       Swal.fire({
         title:'Hubo un error!!!',
@@ -817,7 +710,7 @@ private obtenerFechaActual(): string {
     this.idTareaTipo = tarea.idASE;
     
 
-    this.formTarea.patchValue({
+    this.formModificarTarea.patchValue({
       nombre : tarea.nombre,
       descripcion : tarea.descripcion,
       periodicidad : tarea.periodicidad,
@@ -873,6 +766,51 @@ private obtenerFechaActual(): string {
 
   verModalidad(valor: string): string {
     return valor.toUpperCase().replace(/_/g, ' ');;
+  }
+  swalSatisfactorio(metodo: string, tipo:string) {
+    Swal.fire({
+      title: `Se ha ${metodo}.`,
+      text: `El ${tipo} se ha ${metodo}!!`,
+      icon:'success',
+      confirmButtonColor: '#0E823F',
+    }
+    );
+    this.form.reset();
+    this.formProyecto.reset();
+    this.formModificarEstadoTarea.reset();
+    this.formModificarPorcentaje.reset();
+    this.formObservacion.reset();
+    this.formTarea.reset();
+    this.formModificarTarea.reset();
+  }
+  swalError(error: any) {
+    Swal.fire(
+      {
+        title:"Error!!!",
+        text:error.error.mensajeHumano, 
+        icon:"error",
+        confirmButtonColor: '#0E823F',
+      }
+    );
+  } 
+
+  get nombreVacio(){
+    return this.formTarea.get('nombre')?.invalid && this.formTarea.get('nombre')?.touched;
+  }
+  get descripcionVacio(){
+    return this.formTarea.get('descripcion')?.invalid && this.formTarea.get('descripcion')?.touched;
+  }
+  get periodicidadVacio(){
+    return this.formTarea.get('periodicidad')?.invalid && this.formTarea.get('periodicidad')?.touched;
+  }
+  get idUsuarioVacio(){
+    return this.formTarea.get('idUsuario')?.invalid && this.formTarea.get('idUsuario')?.touched;
+  }
+  get nombreObservacionVacio(){
+    return this.formObservacion.get('nombre')?.invalid && this.formObservacion.get('nombre')?.touched;
+  }
+  get fechaVacio(){
+    return this.formObservacion.get('fecha')?.invalid && this.formObservacion.get('fecha')?.touched;
   }
   
 }

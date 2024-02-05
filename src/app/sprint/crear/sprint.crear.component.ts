@@ -52,36 +52,52 @@ export class SprintCrearComponent implements OnInit{
     );
   }
   crearSprint() { 
-    const descripcion = this.form.get('descripcion')?.value;
-    const fechaInicial = this.form.get('fechaInicial')?.value;
-    const fechaFinal = this.form.get('fechaFinal')?.value;
+    if(this.form.valid){
+      const descripcion = this.form.get('descripcion')?.value;
+      const fechaInicial = this.form.get('fechaInicial')?.value;
+      const fechaFinal = this.form.get('fechaFinal')?.value;
 
-    if (descripcion !== null) {
-      const sprint = {
-        descripcion: descripcion,
-        fechaInicial: fechaInicial,
-        fechaFinal: fechaFinal,
-        idProyecto: this.idProyecto, 
-      };
-        // Luego, envía 'cargo' al backend usando tu servicio.
-        this.sprintService.crearSprint(sprint,this.auth.obtenerHeader()).subscribe(
-          (response) => {
-            Swal.fire({
-              title:'Creado!!!',
-              text: "El sprint se ha eliminado.",
-              icon: "success",
-              confirmButtonColor: '#0E823F'
-            });
-            this.form.reset();
-          },
-          (error) => {
-            Swal.fire({
-              title:'Solicitud no válida!',
-              text: error.error.mensajeTecnico,
-              icon: "error",
-              confirmButtonColor: '#0E823F',
-            });
-          }
-        );
+      if (descripcion !== null) {
+        const sprint = {
+          descripcion: descripcion,
+          fechaInicial: fechaInicial,
+          fechaFinal: fechaFinal,
+          idProyecto: this.idProyecto, 
+        };
+          // Luego, envía 'cargo' al backend usando tu servicio.
+          this.sprintService.crearSprint(sprint,this.auth.obtenerHeader()).subscribe(
+            (response) => {
+              Swal.fire({
+                title:'Creado!!!',
+                text: "El sprint se ha eliminado.",
+                icon: "success",
+                confirmButtonColor: '#0E823F'
+              });
+              this.form.reset();
+            },
+            (error) => {
+              Swal.fire({
+                title:'Solicitud no válida!',
+                text: error.error.mensajeTecnico,
+                icon: "error",
+                confirmButtonColor: '#0E823F',
+              });
+            }
+          );
+      }
+    } else {
+      return this.form.markAllAsTouched();
+    }
   }
-}}
+  
+  get descripcionVacio(){
+    return this.form.get('descripcion')?.invalid && this.form.get('descripcion')?.touched;
+  }
+  get fechaInicialVacio(){
+    return this.form.get('fechaInicial')?.invalid && this.form.get('fechaInicial')?.touched;
+  }
+  get fechaFinalVacio(){
+    return this.form.get('fechaFinal')?.invalid && this.form.get('fechaFinal')?.touched;
+  }
+
+}

@@ -22,7 +22,7 @@ export class CargoCrearComponent {
     private areaService:AreaService, private auth:AuthService) 
   { this.form = this.formBuilder.group({
     nombre: ['', Validators.required],
-    idArea: [null, Validators.required], 
+    idArea: ['', Validators.required], 
   }); }
 
   ngOnInit(): void {
@@ -33,11 +33,7 @@ export class CargoCrearComponent {
     this.areaService.listar(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
         this.areas = data;
-    },
-      (error) => {
-        console.log(error);
-      }
-    );
+    });
   }
 
   crearCargo() { 
@@ -81,6 +77,16 @@ export class CargoCrearComponent {
           }
         );
       }
+    } else {
+      return Object.values(this.form.controls).forEach(control =>{
+        control.markAllAsTouched();
+      })
     }
+  }
+  get nombreVacio(){
+    return this.form.get('nombre')?.invalid && this.form.get('nombre')?.touched;
+  }
+  get areaVacio(){
+    return this.form.get('idArea')?.invalid && this.form.get('idArea')?.touched;
   }
 }

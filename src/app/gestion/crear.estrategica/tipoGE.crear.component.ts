@@ -78,6 +78,23 @@ export class TipoGECrearComponent implements OnInit {
               });
             }
           );
+    } else {
+      return Object.values(this.form.controls).forEach(control =>{
+        control.markAllAsTouched();
+      })
+    }
   }
+
+  get nombreVacio(){
+    return this.form.get('nombre')?.invalid && this.form.get('nombre')?.touched;
+  }
+  get fechaInicialVacio(){
+    return this.form.get('fechaInicial')?.invalid && this.form.get('fechaInicial')?.touched;
+  }
+  get fechaFinalVacio(){
+    return this.form.get('fechaFinal')?.invalid && this.form.get('fechaFinal')?.touched;
+  }
+  get idUsuarioVacio(){
+    return this.form.get('idUsuario')?.invalid && this.form.get('idUsuario')?.touched;
   }
 }

@@ -74,23 +74,10 @@ export class CargoListarComponent {
         if (confirmacion.isConfirmed) {
         this.cargoService.eliminar(idCargo, this.auth.obtenerHeader()).subscribe(
           (response) => {
-            Swal.fire({
-              title:'Eliminado!',
-              text: "El cargo se ha eliminado.",
-              icon: "success",
-              confirmButtonColor: '#0E823F'
-            }).then(() => {
+            this.swalSatisfactorio('eliminado','cargo')
               this.cargarCargos()
-            });
           },
-          (error) => {
-            Swal.fire(
-              {
-                title:'Solicitud no válida!',
-                text: error.error.mensajeHumano,
-                icon: "error",
-              })
-          }
+          (error) => {this.swalError(error);}
         );
       }
     });
@@ -118,22 +105,10 @@ export class CargoListarComponent {
           if (this.idCargoSeleccionado != null) {
               this.cargoService.modificarCargo(cargo, this.idCargoSeleccionado, this.auth.obtenerHeader()).subscribe(
               (response) => {
-                Swal.fire({
-                  icon : 'success',
-                  title : 'Modificado!!!',
-                  text : 'El cargo se ha modificado.',
-                  confirmButtonColor: '#0E823F',
-                  }).then(() => {
+                this.swalSatisfactorio('modificado','cargo')
                     this.cargarCargos()
-                });
               },
-              (error) => {
-                Swal.fire({
-                  title: "Solicitud no válida", 
-                  text: error.error.mensajeHumano, 
-                  icon :"error", 
-                  confirmButtonColor: '#0E823F'});
-              }
+              (error) => {this.swalError(error);}
             );
           }
         }
@@ -155,4 +130,24 @@ export class CargoListarComponent {
     const area = this.areas.find((u) => u.idArea === idArea);
     return area ? area.nombre : '';
   }
+  swalSatisfactorio(metodo: string, tipo:string) {
+    Swal.fire({
+      title: `Se ha ${metodo}.`,
+      text: `El ${tipo} se ha ${metodo}!!`,
+      icon:'success',
+      confirmButtonColor: '#0E823F',
+    }
+    );
+    this.form.reset();
+  }
+  swalError(error: any) {
+    Swal.fire(
+      {
+        title:"Error!!!",
+        text:error.error.mensajeHumano, 
+        icon:"error",
+        confirmButtonColor: '#0E823F',
+      }
+    );
+  } 
 }

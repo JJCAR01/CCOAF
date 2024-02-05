@@ -54,7 +54,6 @@ export class UsuarioCrearComponent implements OnInit {
 
   agregarDirecciones() {
     const direccionSeleccionada = this.form.get('direcciones')?.value;
-
     // Verificar si la dirección ya existe en la lista antes de agregarla
     if (!this.listaDeDireccionesSeleccionadas.includes(direccionSeleccionada)) {
       this.listaDeDireccionesSeleccionadas.push(direccionSeleccionada);
@@ -62,24 +61,18 @@ export class UsuarioCrearComponent implements OnInit {
   }
 
   agregarProcesos() {
-    const procesoSeleccionado = this.form.get('procesos')?.value;
-    
+    const procesoSeleccionado = this.form.get('procesos')?.value;  
     // Verificar si el proceso ya existe en la lista antes de agregarlo
     if (!this.listaDeProcesosSeleccionadas.includes(procesoSeleccionado)) {
       this.listaDeProcesosSeleccionadas.push(procesoSeleccionado);
     }
-    
   }
   
   cargarCargos() {
     this.cargoService.listar(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
         this.cargos = data;
-    },
-      (error) => {
-        console.log(error);
-      }
-    );
+    });
   }
 
   cargarDirecciones() {
@@ -145,8 +138,39 @@ export class UsuarioCrearComponent implements OnInit {
           );
         }
       );
+    } else {
+      return Object.values(this.form.controls).forEach(control =>{
+        control.markAllAsTouched();
+      })
     }
-    
+  }
+
+  get nombreVacio(){
+    return this.form.get('nombre')?.invalid && this.form.get('nombre')?.touched;
+  }
+  get apellidoVacio(){
+    return this.form.get('apellido')?.invalid && this.form.get('apellido')?.touched;
+  }
+  get correoVacio(){
+    return this.form.get('correo')?.invalid && this.form.get('correo')?.touched;
+  }
+  get passwordVacio(){
+    return this.form.get('password')?.invalid && this.form.get('password')?.touched;
+  }
+  get cpasswordVacio(){
+    return this.form.get('cpassword')?.invalid && this.form.get('cpassword')?.touched;
+  }
+  get idCargoVacio(){
+    return this.form.get('idCargo')?.invalid && this.form.get('idCargo')?.touched;
+  }
+  get nombreRolVacio(){
+    return this.form.get('nombreRol')?.invalid && this.form.get('nombreRol')?.touched;
+  }
+  get direccionesVacio(){
+    return this.form.get('direcciones')?.invalid && this.form.get('direcciones')?.touched;
+  }
+  get procesosVacio(){
+    return this.form.get('procesos')?.invalid && this.form.get('procesos')?.touched;
   }
 
 }

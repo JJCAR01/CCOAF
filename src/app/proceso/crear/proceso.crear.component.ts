@@ -38,35 +38,39 @@ export class ProcesoCrearComponent implements OnInit {
   }
 
   crearProceso(){
-    const nombre = this.form.get('nombre')?.value;
-    const proceso = {
-      nombre: nombre,
-    };
-    this.procesoService.crear(proceso,this.auth.obtenerHeader()).toPromise().then(response =>{
-      Swal.fire({
-        title:"Creado!!!",
-        text:'El proceso se ha creado.', 
-        icon:"success",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: '#0E823F',
-        reverseButtons: true, 
-      });
-      this.form.reset();
-      this.cargarProcesos()
-    },error =>{
-      Swal.fire({
-        title:'Solicitud no válida!',
-        text: error.error.mensajeTecnico,
-        icon: "error",
-        confirmButtonColor: '#0E823F',
-      });
-    } )
+    if(this.form.valid){
+      const nombre = this.form.get('nombre')?.value;
+      const proceso = {
+        nombre: nombre,
+      };
+      this.procesoService.crear(proceso,this.auth.obtenerHeader()).toPromise().then(response =>{
+        Swal.fire({
+          title:"Creado!!!",
+          text:'El proceso se ha creado.', 
+          icon:"success",
+          showCancelButton: true,
+          cancelButtonText: "Cancelar",
+          confirmButtonText: "Confirmar",
+          confirmButtonColor: '#0E823F',
+          reverseButtons: true, 
+        });
+        this.form.reset();
+        this.cargarProcesos()
+      },error =>{
+        Swal.fire({
+          title:'Solicitud no válida!',
+          text: error.error.mensajeHumano,
+          icon: "error",
+          confirmButtonColor: '#0E823F',
+        });
+      })
+    } else {
+      return this.form.markAllAsTouched();
+    }
   }
 
   eliminarProceso(idProceso: number) {
-
+    console.log(idProceso)
     Swal.fire({
       icon:"question",
       title: "¿Estás seguro?",
@@ -160,5 +164,9 @@ export class ProcesoCrearComponent implements OnInit {
     this.form.patchValue({
       nombre: this.nombreSeleccionado,
     });
+  }
+
+  get nombreVacio(){
+    return this.form.get('nombre')?.invalid && this.form.get('nombre')?.touched;
   }
 }

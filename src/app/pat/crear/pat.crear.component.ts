@@ -60,6 +60,7 @@ export class PatCrearComponent implements OnInit{
   }
 
   crearPat() { 
+    if(this.form.valid){
     this.pat.nombre = this.form.value.nombre;
     this.pat.fechaAnual = this.form.value.fechaAnual;
     this.pat.direccion = this.form.value.direccion;
@@ -90,6 +91,11 @@ export class PatCrearComponent implements OnInit{
             );
           }
         );
+    } else {
+      return Object.values(this.form.controls).forEach(control =>{
+        control.markAllAsTouched();
+      })
+    }
   }
 
   
@@ -100,5 +106,21 @@ export class PatCrearComponent implements OnInit{
   obtenerDireccion(idDireccion: number) {
     const direccion = this.direcciones.find((u:any) => u.idDireccion === idDireccion);
     return direccion ? direccion.nombre : '';
+  }
+
+  get nombreVacio(){
+    return this.form.get('nombre')?.invalid && this.form.get('nombre')?.touched;
+  }
+  get fechaAnualVacio(){
+    return this.form.get('fechaAnual')?.invalid && this.form.get('fechaAnual')?.touched;
+  }
+  get direccionVacio(){
+    return this.form.get('direccion')?.invalid && this.form.get('direccion')?.touched;
+  }
+  get procesoVacio(){
+    return this.form.get('proceso')?.invalid && this.form.get('proceso')?.touched;
+  }
+  get idUsuarioVacio(){
+    return this.form.get('idUsuario')?.invalid && this.form.get('idUsuario')?.touched;
   }
 }

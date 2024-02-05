@@ -118,16 +118,18 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form [formGroup]="formContrasena">
+            <form [formGroup]="formContrasena" (ngSubmit)="agregarPass()">
               <h3>Usuario:</h3>
               <h6 class="mb-2">{{nombreUsuario}}</h6>
                     <div class="form-floating mb-2">
-                      <input type="password" id="password" class="form-control form-control-lg" formControlName="password" placeholder="password">
+                      <input type="password" id="password" [class.is-invalid]="passwordVacio" class="form-control form-control-lg" formControlName="password" placeholder="password">
                       <label class="form-label" for="password">Contraseña<span class="required-field">*</span></label>
+                      <small *ngIf="passwordVacio" class="text-danger">Este campo es obligatorio*</small>
                     </div>
                     <div class="form-floating mb-2">
-                      <input type="password" id="cpassword" class="form-control form-control-lg" formControlName="cpassword" placeholder="cpassword">
+                      <input type="password" id="cpassword" [class.is-invalid]="cpasswordVacio" class="form-control form-control-lg" formControlName="cpassword" placeholder="cpassword">
                       <label class="form-label" for="cpassword">Confirmar contraseña<span class="required-field">*</span></label>   
+                      <small *ngIf="cpasswordVacio" class="text-danger">Este campo es obligatorio*</small>
                     </div>
                     <h6>Requisitos para crear la contraseña:</h6>
                     <ul class="nota">
@@ -140,7 +142,7 @@
                   <span *ngIf="formContrasena.errors?.['passwordMatchError']" class="error-message">No coinciden las contraseñas</span>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-success" data-bs-dismiss="modal" (click)="agregarPass()">Guardar</button>
+                <button type="submit" class="btn btn-success" [attr.data-bs-dismiss]="formContrasena.valid ? 'modal' : null">Guardar</button>
               </div>
             </form>
           </div>
