@@ -42,4 +42,17 @@ export class TareaService {
   eliminarTarea(idTarea:number,headers?: HttpHeaders){
     return this.http.delete(`${environment.apiUrl}/ccoa/tareas/${idTarea}`,{headers});
   }
+
+  crearObservacion(observacion : any,headers?: HttpHeaders){
+    return this.http.post(`${environment.apiUrl}/ccoa/tarea/observaciones`,observacion,{headers});
+  }
+  listarObservacion(headers?: HttpHeaders){
+    return this.http.get(`${environment.apiUrl}/ccoa/tarea/observaciones`,{headers});
+  }
+  listarObservacionPorId(idObservacionTarea:number,headers?: HttpHeaders){
+    return this.http.get(`${environment.apiUrl}/ccoa/tarea/observaciones/${idObservacionTarea}`,{headers});
+  }
+  listarPorIdTarea(idTarea:number,headers?: HttpHeaders){
+    return this.http.get(`${environment.apiUrl}/ccoa/tarea/observaciones/tareas/${idTarea}`,{headers});
+  }
 }

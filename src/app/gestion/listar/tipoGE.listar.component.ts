@@ -63,7 +63,9 @@ export class TipogeListarComponent implements OnInit {
   formModificarPorcentaje:FormGroup;
   formModificarTarea:FormGroup
   formTarea:FormGroup;
-  formObservacion:FormGroup;
+  formObservacionActividadEstrategica:FormGroup;
+  formObservacionActividadGestion:FormGroup;
+  formObservacionTarea:FormGroup;
 
   constructor(
     private gestionService: TipoGEService,private auth: AuthService,
@@ -88,10 +90,23 @@ export class TipogeListarComponent implements OnInit {
     this.formModificarPorcentaje = this.formBuilder.group({
       porcentaje: ['', Validators.required],
     });
-    this.formObservacion = this.formBuilder.group({
+    this.formObservacionActividadEstrategica = this.formBuilder.group({
       idTarea: ['', Validators.required],
       fecha: [this.obtenerFechaActual(), Validators.required],
       nombre: ['', Validators.required],
+      tipo:['ACTIVIDAD_ESTRATEGICA']
+    });
+    this.formObservacionActividadGestion = this.formBuilder.group({
+      idTarea: ['', Validators.required],
+      fecha: [this.obtenerFechaActual(), Validators.required],
+      nombre: ['', Validators.required],
+      tipo:['ACTIVIDAD_GESTION']
+    });
+    this.formObservacionTarea = this.formBuilder.group({
+      idTarea: ['', Validators.required],
+      fecha: [this.obtenerFechaActual(), Validators.required],
+      nombre: ['', Validators.required],
+      tipo:['TAREA']
     });
     this.formTarea = this.formBuilder.group({
       nombre: ['', Validators.required],
@@ -320,18 +335,29 @@ export class TipogeListarComponent implements OnInit {
         }
     )};
   } 
-  cargarObservaciones(idTarea:any) {
-    this.observacionService
-      .listarTareaPorTarea(idTarea,this.auth.obtenerHeader()) 
-      .toPromise()
-      .then(
-        (data: any) => {
-        this.observaciones = data;
-        },
-        (error) => {
-          Swal.fire('Error',error.error.mensajeHumano,'error');
-        }
-    )
+  cargarObservaciones(id:any,tipo:string) {
+    if(tipo === 'TAREA'){
+      this.tareaService
+        .listarPorIdTarea(id,this.auth.obtenerHeader()) .subscribe(
+          (data: any) => {
+            this.observaciones = data;
+          },
+        )
+    } else if( tipo === 'ACTIVIDAD_GESTION'){
+      this.gestionService
+        .listarObservacionPorIdActividadGestion(id,this.auth.obtenerHeader()) .subscribe(
+          (data: any) => {
+            this.observaciones = data;
+          },
+        )
+    } else if (tipo === 'ACTIVIDAD_ESTRATEGICA'){
+      this.gestionService
+        .listarObservacionPorIdActividadEstrategica(id,this.auth.obtenerHeader()) .subscribe(
+          (data: any) => {
+            this.observaciones = data;
+          },
+        )
+    }
   } 
   crearTarea() {
     if (this.formTarea.valid) {
@@ -365,22 +391,21 @@ export class TipogeListarComponent implements OnInit {
     }
   }
   crearObservacion() {
-    if (this.formObservacion.valid) {
-      const fecha = this.formObservacion.get('fecha')?.value;
-      const nombre = this.formObservacion.get('nombre')?.value;
-      const idTarea = this.idTareaSeleccionado;
+    if (this.formObservacionActividadEstrategica.valid) {
+      const fecha = this.formObservacionActividadEstrategica.get('fecha')?.value;
+      const nombre = this.formObservacionActividadEstrategica.get('nombre')?.value;
 
       const observacion = {
-        idTarea: idTarea,
+        idActividadEstrategica: this.idActividadEstrategicaSeleccionado,
         nombre: nombre,
         fecha: fecha,
       };
-      this.observacionService
-        .crearObservacion(observacion,this.auth.obtenerHeader())
+      this.gestionService
+        .crearObservacionActividadEstrategica(observacion,this.auth.obtenerHeader())
         .subscribe(
           (response) => {
               this.swalSatisfactorio('creado','observación')
-              this.formObservacion.reset()
+              this.formObservacionActividadEstrategica.reset()
           },
           (error) => {this.swalError(error);}
         );
@@ -514,7 +539,6 @@ export class TipogeListarComponent implements OnInit {
           (error) => {this.swalError(error);}
         );
       }
-
       }); 
   }
   async documento(event: any, idActividadGestionSeleccionado: number): Promise<void> {
@@ -533,28 +557,6 @@ export class TipogeListarComponent implements OnInit {
   }
   abrirModalAgregarDocumento(idActividadGestion: number): void {
     this.idActividadGestionSeleccionado = idActividadGestion;
-  }
-
-
-  private validarArchivo(): boolean {
-    if (!this.archivoSeleccionado) {
-      // Puedes mostrar un mensaje de error o manejarlo de otra manera
-      return false;
-    }
-
-
-    const fileSize = this.archivoSeleccionado.size;
-    const fileName = this.archivoSeleccionado.name;
-
-    if (fileSize > this.pesoDeArchivo) {
-      alert('El archivo supera el límite de tamaño permitido (300MB).');
-      return false;
-    } else if (!this.extencionesPermitidas.test(fileName)) {
-      alert('Formato de archivo no permitido. Por favor, elija un archivo con una de las siguientes extensiones: .doc, .docx, .xls, .xlsx, .ppt, .pptx, .zip');
-      return false;
-    }
-
-    return true;
   }
   async subirDocumento(formulario: any) {
     if (!this.archivoSeleccionado) {
@@ -666,6 +668,9 @@ export class TipogeListarComponent implements OnInit {
       fechaIncial: this.fechaInicialGestion,
       fechaFinal: this.fechaFinalGestion,
     });
+    this.formObservacionActividadGestion.patchValue({
+      idActividadGestion: this.idActividadGestionSeleccionado,
+    });
   }
   obtenerTarea(idTarea: number,tarea:any) {
     this.idTareaSeleccionado = idTarea;
@@ -682,7 +687,7 @@ export class TipogeListarComponent implements OnInit {
       porcentaje: this.estadoTarea,
     });
 
-    this.formObservacion.patchValue({
+    this.formObservacionTarea.patchValue({
       idTarea: this.idTareaSeleccionado,
     });
   }
@@ -711,6 +716,9 @@ export class TipogeListarComponent implements OnInit {
       nombre: this.nombreActividadGestion,
       fechaInicial: this.fechaInicialGestion,
       fechaFinal: this.fechaFinalGestion,
+    });
+    this.formObservacionActividadEstrategica.patchValue({
+      idActividadEstrategica: this.idActividadEstrategicaSeleccionado,
     });
   }
   obtenerNombreUsuario(idUsuario: number) {
@@ -749,7 +757,6 @@ export class TipogeListarComponent implements OnInit {
     this.formGestion.reset();
     this.formModificarEstadoTarea.reset();
     this.formModificarPorcentaje.reset();
-    this.formObservacion.reset();
     this.formTarea.reset();
     this.formModificarTarea.reset();
   }
@@ -776,10 +783,30 @@ export class TipogeListarComponent implements OnInit {
     return this.formTarea.get('idUsuario')?.invalid && this.formTarea.get('idUsuario')?.touched;
   }
   get nombreObservacionVacio(){
-    return this.formObservacion.get('nombre')?.invalid && this.formObservacion.get('nombre')?.touched;
+    return (this.formObservacionActividadEstrategica.get('nombre')?.invalid && this.formObservacionActividadEstrategica.get('nombre')?.touched) || 
+    (this.formObservacionActividadGestion.get('nombre')?.invalid && this.formObservacionActividadGestion.get('nombre')?.touched) || 
+    (this.formObservacionTarea.get('nombre')?.invalid && this.formObservacionTarea.get('nombre')?.touched);
   }
   get fechaVacio(){
-    return this.formObservacion.get('fecha')?.invalid && this.formObservacion.get('fecha')?.touched;
+    return this.formObservacionActividadEstrategica.get('fecha')?.invalid && this.formObservacionActividadEstrategica.get('fecha')?.touched;
+  }
+
+  private validarArchivo(): boolean {
+    if (!this.archivoSeleccionado) {
+      // Puedes mostrar un mensaje de error o manejarlo de otra manera
+      return false;
+    }
+    const fileSize = this.archivoSeleccionado.size;
+    const fileName = this.archivoSeleccionado.name;
+
+    if (fileSize > this.pesoDeArchivo) {
+      alert('El archivo supera el límite de tamaño permitido (300MB).');
+      return false;
+    } else if (!this.extencionesPermitidas.test(fileName)) {
+      alert('Formato de archivo no permitido. Por favor, elija un archivo con una de las siguientes extensiones: .doc, .docx, .xls, .xlsx, .ppt, .pptx, .zip');
+      return false;
+    }
+    return true;
   }
 
 }

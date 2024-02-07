@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment.development';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +34,18 @@ export class ActividadService {
   eliminarActividadGestionActividadEstrategica(idGestionActividadEstrategica:number,headers?: HttpHeaders){
     return this.http.delete(`${environment.apiUrl}/ccoa/gestionesestrategicas/${idGestionActividadEstrategica}`,{headers});
   }
+  crearObservacionActividadGestionActividadEstrategica(observacionActividadGestionActividadEstrategica : any,headers?: HttpHeaders): Observable<any[]>{
+    return this.http.post<any[]>(`${environment.apiUrl}/ccoa/gestionestrategica/observaciones`,observacionActividadGestionActividadEstrategica,{headers});
+  }
+  listarObservacionActividadGestionActividadEstrategica(headers?: HttpHeaders): Observable  <any[]>{
+    return this.http.get<any[]>(`${environment.apiUrl}/ccoa/gestionestrategica/observaciones`,{headers});
+  }
+  listarObservacionActividadGestionActividadEstrategicaPorId(idObservacionActividadGestionActividadEstrategica:number,headers?: HttpHeaders) : Observable<any[]>{
+    return this.http.get<any[]>(`${environment.apiUrl}/ccoa/gestionestrategica/observaciones/${idObservacionActividadGestionActividadEstrategica}`,{headers});
+  }
+  listarPorIdActividadGestionActividadEstrategica(idActividadGestionActividadEstrategica: number, headers?: HttpHeaders): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}/ccoa/gestionestrategica/observaciones/gestionesestrategicas/${idActividadGestionActividadEstrategica}`, { headers });
+  }
 
 
   crearProyecto(proyecto : any,headers?: HttpHeaders){
@@ -53,4 +66,17 @@ export class ActividadService {
   eliminarProyecto(idProyecto:number,headers?: HttpHeaders){
     return this.http.delete(`${environment.apiUrl}/ccoa/proyectos/${idProyecto}`,{headers});
   }
+  crearObservacionProyecto(observacionProyecto : any,headers?: HttpHeaders): Observable<any[]>{
+    return this.http.post<any[]>(`${environment.apiUrl}/ccoa/proyecto/observaciones`,observacionProyecto,{headers});
+  }
+  listarObservacionProyecto(headers?: HttpHeaders): Observable  <any[]>{
+    return this.http.get<any[]>(`${environment.apiUrl}/ccoa/proyecto/observaciones`,{headers});
+  }
+  listarObservacionProyectoPorId(idObservacionProyecto:number,headers?: HttpHeaders) : Observable<any[]>{
+    return this.http.get<any[]>(`${environment.apiUrl}/ccoa/proyecto/observaciones/${idObservacionProyecto}`,{headers});
+  }
+  listarPorIdProyecto(idProyecto: number, headers?: HttpHeaders): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}/ccoa/proyecto/observaciones/proyectos/${idProyecto}`, { headers });
+  }
+  
 }

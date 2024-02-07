@@ -35,4 +35,16 @@ export class SprintService {
   eliminarSprint(idSprint:number,headers?: HttpHeaders){
     return this.http.delete(`${environment.apiUrl}/ccoa/sprints/${idSprint}`,{headers});
   }
+  crearObservacionSprint(observacionSprint : any,headers?: HttpHeaders): Observable<any[]>{
+    return this.http.post<any[]>(`${environment.apiUrl}/ccoa/sprint/observaciones`,observacionSprint,{headers});
+  }
+  listarObservacionSprint(headers?: HttpHeaders): Observable  <any[]>{
+    return this.http.get<any[]>(`${environment.apiUrl}/ccoa/sprint/observaciones`,{headers});
+  }
+  listarObservacionSprintPorId(idObservacionSprint:number,headers?: HttpHeaders) : Observable<any[]>{
+    return this.http.get<any[]>(`${environment.apiUrl}/ccoa/sprint/observaciones/${idObservacionSprint}`,{headers});
+  }
+  listarPorIdSprint(idSprint: number, headers?: HttpHeaders): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}/ccoa/sprint/observaciones/sprints/${idSprint}`, { headers });
+  }
 }

@@ -92,11 +92,13 @@
               <button title="Ver" class="btn btn-outline-primary me-1" 
               [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]"
                 ><i class="bi bi-eye-fill"></i></button>
-                <button title="Editar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarPat" (click)="setSelectedPat(pat.idPat,pat)">
+                <button title="Editar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarPat" (click)="obtenerPat(pat.idPat,pat)">
                   <i class="bi bi-pen-fill"></i>
                 </button>
                   
               <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarPat(pat.idPat)"><i class="bi bi-trash3-fill"></i></button>
+              <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerPat(pat.idPat,pat)"><i class="bi bi-node-plus-fill"></i></button>
+              <button title="Ver observación" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(pat.idPat)"><i class="bi bi-eye-fill"></i></button>
             </td>
           </tr>
         </ng-container>
@@ -132,6 +134,64 @@
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
               <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="modalVerObservacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Observaciones</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-bordered table-hover">
+            <thead class="table table-color">
+                <th>Fecha</th>
+                <th>Nombre</th>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let observacion of observaciones">
+                  <tr>
+                    <td>{{ observacion.fecha }}</td>
+                    <td>{{ observacion.nombre }} </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="modalAgregarObservacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Agregar observación</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="formObservacion" (ngSubmit)="crearObservacion()">
+            <div class="form-floating">
+              <input type="date" id="fecha" [class.is-invalid]="fechaVacio" class="form-control mb-2" formControlName="fecha">
+              <label for="fecha"  class="form-label">Fecha</label>
+              <small *ngIf="fechaVacio" class="text-danger">Este campo es obligatorio*</small>
+            </div>
+            <div class="form-floating">
+              <input type="text" id="nombre" [class.is-invalid]="nombreObservacionVacio" class="form-control form-control-lg" formControlName="nombre"
+               placeholder="Nombre">
+              <label class="form-label" for="nombre">Nombre<span class="required-field">*</span></label>
+              <small *ngIf="nombreObservacionVacio" class="text-danger">Este campo es obligatorio*</small>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-success" [attr.data-bs-dismiss]="formObservacion.valid ? 'modal' : null">Guardar</button>
             </div>
           </form>
         </div>

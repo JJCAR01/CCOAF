@@ -8,6 +8,7 @@ import { TipoGEService } from 'src/app/gestion/services/tipoGE.service';
 import { ActividadService } from 'src/app/actividad/services/actividad.service';
 import { NgbModal, NgbModalRef  } from '@ng-bootstrap/ng-bootstrap';
 import { ProcesoService } from 'src/app/proceso/services/proceso.service';
+import { TareaService } from 'src/app/tarea/services/tarea.service';
 
 @Component({
   selector: 'app-root',
@@ -42,7 +43,9 @@ export class PatListarComponent implements OnInit{
   sumadorActividadEstrategicasTerminados=0;
   sumadorActividadEstrategicasAbiertos=0;
   procesos:any;
+  observaciones:any;
   form:FormGroup;
+  formObservacion:FormGroup;
   
     constructor(
       private patService: PatService,private auth:AuthService,
@@ -54,31 +57,40 @@ export class PatListarComponent implements OnInit{
           nombre:['', Validators.required],
           fechaAnual: ['', Validators.required],
           proceso: ['', Validators.required],
+        });
+        this.formObservacion = this.formBuilder.group({
+          idPat: ['', Validators.required],
+          fecha: [this.obtenerFechaActual(), Validators.required],
+          nombre: ['', Validators.required],
         }); 
        }  
 
     ngOnInit() {
       this.cargarPats();
       this.cargarUsuario();
-      this.cargarProcesos()
+      this.cargarProcesos();
     }
     cargarUsuario() {
       this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
         (data: any) => {
           this.usuarios = data;
-      },
-        (error) => {
-          this.swalError(error);
         }
       );
     }
-
     cargarProcesos() {
       this.procesoService.listar(this.auth.obtenerHeader()).subscribe(
         (data: any) => {
           this.procesos = data;
-      })
+        }
+      )
     }
+    cargarObservaciones(idPat:any) {
+      this.patService.listarObservacionPorIdPat(idPat,this.auth.obtenerHeader()).subscribe(
+          (data: any) => { 
+            this.observaciones = data; 
+          }
+      )
+    } 
 
     cargarPats() {
       this.patService.listarPat(this.auth.obtenerHeader()).toPromise().then(
@@ -309,6 +321,26 @@ export class PatListarComponent implements OnInit{
         }
       });
     }
+    crearObservacion() {
+      if (this.formObservacion.valid) {
+        const fecha = this.formObservacion.get('fecha')?.value;
+        const nombre = this.formObservacion.get('nombre')?.value;
+        const observacion = {
+          idPat: this.selectedPatId,
+          nombre: nombre,
+          fecha: fecha,
+        };
+        this.patService
+          .crearObservacion(observacion,this.auth.obtenerHeader())
+          .subscribe(
+            (response) => {
+                this.swalSatisfactorio('creado','observación')
+                this.formObservacion.reset()
+            },
+            (error) => {this.swalError(error);}
+          );
+      }
+    }
 
     sumarCantidadesGestion(data: any[]) {
       data.forEach((actividad: any) => {
@@ -330,7 +362,7 @@ export class PatListarComponent implements OnInit{
       return usuario ? usuario.nombre + " " + usuario.apellidos : '';
     }
 
-    setSelectedPat(idPat: number,pat:any) {
+    obtenerPat(idPat: number,pat:any) {
       this.selectedPatId = idPat;
       this.nombrePatSeleccionado = pat.nombre;
       this.fechaAnualSeleccionada = pat.fechaAnual;
@@ -341,6 +373,9 @@ export class PatListarComponent implements OnInit{
         nombre: this.nombrePatSeleccionado,
         fechaAnual: this.fechaAnualSeleccionada,
         proceso: this.procesoSeleccionado,
+      });
+      this.formObservacion.patchValue({
+        idPat: this.selectedPatId,
       });
     }
 
@@ -362,6 +397,12 @@ export class PatListarComponent implements OnInit{
         return 'porcentaje-cien';
       }
     }
+    get nombreObservacionVacio(){
+      return this.formObservacion.get('nombre')?.invalid && this.formObservacion.get('nombre')?.touched;
+    }
+    get fechaVacio(){
+      return this.formObservacion.get('fecha')?.invalid && this.formObservacion.get('fecha')?.touched;
+    }
 
     swalSatisfactorio(metodo: string, tipo:string) {
       Swal.fire({
@@ -382,6 +423,13 @@ export class PatListarComponent implements OnInit{
           confirmButtonColor: '#0E823F',
         }
       );
+    }
+    private obtenerFechaActual(): string {
+      const currentDate = new Date();
+      const year = currentDate.getFullYear();
+      const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+      const day = ('0' + currentDate.getDate()).slice(-2);
+      return `${year}-${month}-${day}`;
     }
 
 }

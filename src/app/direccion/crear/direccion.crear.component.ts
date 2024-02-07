@@ -60,7 +60,7 @@ export class DireccionCrearComponent implements OnInit {
         Swal.fire(
           {
             title:"Error!!!",
-            text:error.error.mensajeTecnico, 
+            text:error.error.mensajeHumano, 
             icon:"error",
             confirmButtonColor: '#0E823F',
           }
@@ -139,7 +139,7 @@ export class DireccionCrearComponent implements OnInit {
                 Swal.fire({
                   icon : 'success',
                   title : 'Modificado!!!',
-                  text : 'El área se ha modificado.',
+                  text : 'La direccion se ha modificado.',
                   confirmButtonColor: '#0E823F',
                   }).then(() => {
                     this.cargarDireciones()

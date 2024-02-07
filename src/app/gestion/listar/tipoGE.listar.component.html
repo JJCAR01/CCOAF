@@ -56,7 +56,7 @@
       </button>
     </li>
     <li class="nav-item me-1" title="Actividades estratégicas">
-      <a class="nav-link active" id="actividadese-tab" data-bs-toggle="tab" href="#actividadese" role="tab" aria-controls="actividadese" aria-selected="true">Actividades Estratégicas</a>
+      <a class="nav-link active" id="actividadese-tab" data-bs-toggle="tab" href="#actividadese" role="tab" aria-controls="actividadese" aria-selected="true">Actividades Estratégicas - PAT</a>
     </li>
     <li class="nav-item me-1" title="Gestiones del área">
       <a class="nav-link" id="gestionarea-tab" data-bs-toggle="tab" href="#gestionarea" role="tab" aria-controls="gestionarea" aria-selected="false">Gestiones del área</a>
@@ -73,9 +73,9 @@
               <th class="column-fecha">Fecha Final</th>
               <th class="column-duracion">Duracion (Días)</th>
               <th class="column-dias">Dias Restantes</th>
-              <th>Avance</th>
+              <th class="column-avance">Avance</th>
               <th class="column-responsable">Responsable</th>
-              <th>Acciones</th>
+              <th class="column-acciones">Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -105,7 +105,9 @@
                     <button title="Modificar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificar" (click)="obtenerActividadEstrategica(actividad.idActividadEstrategica,actividad)">
                       <i class="bi bi-pen-fill"></i>
                     </button>
-                  <button title="Eliminar" class="btn btn-outline-danger" (click)="eliminarActividadesEstrategica(actividad.idActividadEstrategica)"><i class="bi bi-trash3-fill"></i></button>
+                  <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarActividadesEstrategica(actividad.idActividadEstrategica)"><i class="bi bi-trash3-fill"></i></button>
+                  <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerTarea(actividad.idActividadEstrategica,actividad)"><i class="bi bi-node-plus-fill"></i></button>
+                  <button title="Ver observación" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(actividad.idActividadEstrategica,'ACTIVIDAD_ESTRATEGICA')"><i class="bi bi-eye-fill"></i></button>
                 </td>
               </tr>
             </ng-container>
@@ -122,11 +124,11 @@
               <h5 class="mb-0" >{{ gestion.nombre }}</h5>
               <div class="card-body">
                 <div class="row justify-content-center" title="{{gestion.nombre}}">
-                  <div class="col-md-2">
+                  <div class="col-md-1">
                     <h6>Fecha Inicial</h6>
                     {{ gestion.fechaInicial }}
                   </div>
-                  <div class="col-md-2">
+                  <div class="col-md-1">
                     <h6>Fecha Final</h6>
                     {{ gestion.fechaFinal }}
                   </div>
@@ -150,7 +152,7 @@
                     <h6>Usuario</h6>
                     {{ obtenerNombreUsuario(gestion.idUsuario) }}
                   </div>
-                  <div class="col-md-2">
+                  <div class="col-md-3">
                     <button title="Modificar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarGestion" (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)">
                       <i class="bi bi-pen-fill"></i>
                     </button>
@@ -162,6 +164,8 @@
                   <button title="Ver documento" class="btn btn-outline-primary me-1"
                   (click)="obtenerDocumento(gestion.idActividadGestion)">            
                     <i class="bi bi-file-earmark-check"></i></button>
+                    <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)"><i class="bi bi-node-plus-fill"></i></button>
+                    <button title="Ver observación" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(gestion.idActividadGestion,'ACTIVIDAD_GESTION')"><i class="bi bi-eye-fill"></i></button>
                 </div>   
               </div>
             </div>
@@ -233,7 +237,7 @@
                           ><i class="bi bi-pen-fill"></i></button>
                           <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarTarea(tarea.idTarea,gestion.idActividadGestion)" ><i class="bi bi-trash3-fill"></i></button>
                           <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerTarea(tarea.idTarea,tarea)"><i class="bi bi-node-plus-fill"></i></button>
-                          <button title="Ver observación" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(tarea.idTarea)"><i class="bi bi-eye-fill"></i></button>
+                          <button title="Ver observación" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(tarea.idTarea,'TAREA')"><i class="bi bi-eye-fill"></i></button>
                         </td>
                       </tr>
                     </ng-container>
@@ -372,7 +376,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form [formGroup]="formObservacion" (ngSubmit)="crearObservacion()">
+          <form [formGroup]="formObservacionActividadEstrategica" (ngSubmit)="crearObservacion()">
             <div class="form-floating">
               <input type="date" id="fecha" [class.is-invalid]="fechaVacio" class="form-control mb-2" formControlName="fecha">
               <label for="fecha"  class="form-label">Fecha</label>
@@ -386,7 +390,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <button type="submit" class="btn btn-success" [attr.data-bs-dismiss]="formObservacion.valid ? 'modal' : null">Guardar</button>
+              <button type="submit" class="btn btn-success" [attr.data-bs-dismiss]="formObservacionActividadEstrategica.valid ? 'modal' : null">Guardar</button>
             </div>
           </form>
         </div>
