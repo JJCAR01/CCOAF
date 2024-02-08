@@ -12,12 +12,14 @@ import Swal from 'sweetalert2';
   styleUrls: ['./crear.proyecto.component.scss'] // Verifica esta ruta
 })
 export class CrearProyectoComponent {
+  ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
   title = 'crearProyecto';
   usuarios: any[] = [];
   form: FormGroup;
   actividadNombre:any;
   idActividadEstrategica:any;
   modalidadEnums = Object.values(EModalidad);
+
 
   constructor(private formBuilder: FormBuilder, private auth: AuthService,
     private actividadService:ActividadService, private usuarioService:UsuarioService,

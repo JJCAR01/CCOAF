@@ -15,6 +15,7 @@ import Swal from 'sweetalert2';
 
 export class CargoCrearComponent {
   title = 'crearCargo';
+  ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
   areas: any[] = [];
   form:FormGroup;
   

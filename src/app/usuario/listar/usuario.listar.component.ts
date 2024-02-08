@@ -13,6 +13,7 @@ import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn,
 })
 export class UsuarioListarComponent implements OnInit{
   title = 'listarUsuario';
+  ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
   usuarios: any[] = [];
   cargos: any[] = [];
   direcciones: any[] = [];

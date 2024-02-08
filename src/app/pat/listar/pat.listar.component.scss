@@ -142,17 +142,20 @@ p {
     display: block; // O ajusta según sea necesario
   }
 
+.column-programa{
+    width: 20%;
+}
+.column-fecha{
+    width: 4%;
+}
+.column-direccion{
+    width: 10%;
+}
 .column-proceso{
     width: 15%;
 }
-.column-programa{
-    width: 25%;
-}
-.column-fecha{
-    width: 5%;
-}
 .column-usuario{
-    width: 25%;
+    width: 20%;
 }
 .column-acciones{
     width: 14%;

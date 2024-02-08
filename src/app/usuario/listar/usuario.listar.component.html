@@ -124,12 +124,12 @@
                     <div class="form-floating mb-2">
                       <input type="password" id="password" [class.is-invalid]="passwordVacio" class="form-control form-control-lg" formControlName="password" placeholder="password">
                       <label class="form-label" for="password">Contraseña<span class="required-field">*</span></label>
-                      <small *ngIf="passwordVacio" class="text-danger">Este campo es obligatorio*</small>
+                      <small *ngIf="passwordVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
                     </div>
                     <div class="form-floating mb-2">
                       <input type="password" id="cpassword" [class.is-invalid]="cpasswordVacio" class="form-control form-control-lg" formControlName="cpassword" placeholder="cpassword">
                       <label class="form-label" for="cpassword">Confirmar contraseña<span class="required-field">*</span></label>   
-                      <small *ngIf="cpasswordVacio" class="text-danger">Este campo es obligatorio*</small>
+                      <small *ngIf="cpasswordVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
                     </div>
                     <h6>Requisitos para crear la contraseña:</h6>
                     <ul class="nota">

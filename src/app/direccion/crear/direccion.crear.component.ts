@@ -11,6 +11,7 @@ import Swal from 'sweetalert2';
 })
 export class DireccionCrearComponent implements OnInit {
   title = 'crearDireccion';
+  ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
   form:FormGroup;
   direcciones:any;
   busqueda: any;

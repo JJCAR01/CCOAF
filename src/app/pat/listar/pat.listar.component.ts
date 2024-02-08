@@ -6,9 +6,14 @@ import { UsuarioService } from 'src/app/usuario/services/usuario.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TipoGEService } from 'src/app/gestion/services/tipoGE.service';
 import { ActividadService } from 'src/app/actividad/services/actividad.service';
-import { NgbModal, NgbModalRef  } from '@ng-bootstrap/ng-bootstrap';
 import { ProcesoService } from 'src/app/proceso/services/proceso.service';
-import { TareaService } from 'src/app/tarea/services/tarea.service';
+import { DireccionService } from 'src/app/direccion/services/direccion.service';
+import { Direccion } from '../../modelo/direccion';
+import { Proceso } from '../../modelo/proceso';
+import { Usuario } from 'src/app/modelo/usuario';
+import { ObservacionPat } from 'src/app/modelo/observacionpat';
+import { Pat } from 'src/app/modelo/pat';
+
 
 @Component({
   selector: 'app-root',
@@ -16,59 +21,65 @@ import { TareaService } from 'src/app/tarea/services/tarea.service';
   styleUrls: ['./pat.listar.component.scss']
 })
 export class PatListarComponent implements OnInit{
-  private modalRef: NgbModalRef | undefined;
   title = 'listarPat';
-
-  pats: any[] = [];
-  usuarios:any[] =[];
-  direccion:any;
+  ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
+  idPatSeleccionado: number | 0 = 0;
+  nombrePatSeleccionado: string | undefined;
+  fechaAnualSeleccionada: number | 0 = 0;
+  procesoSeleccionado: any | undefined;
+  direccionSeleccionada: any | undefined;
+  idUsuarioSeleccionado: any | 0 = 0;
+  cantidadPats: number | 0 = 0;
+  cantidadProyectos: number | 0 = 0;
+  cantidadGestiones: number | 0 = 0;
+  cantidadGestionesActividadEstrategica: number | 0 = 0;
+  cantidadEstrategicas: number | 0 = 0;
+  sumadorProyectosTerminados: number | 0 = 0;
+  sumadorProyectosAbiertos: number | 0 = 0;
+  sumadorActividadGestionTerminados: number | 0 = 0;
+  sumadorActividadGestionAbiertos: number | 0 = 0;
+  sumadorActividadEstrategicasTerminados: number | 0 = 0;
+  sumadorActividadEstrategicasAbiertos: number | 0 = 0;
+  actividadesFiltradas: string[] = [];
+  proyectosFiltrados: string[] = [];
+  actividadesGestionFiltradas: string[] = [];
+  pats: Pat[] = [];
+  usuarios: Usuario[] = [];
+  procesos: Proceso[] = [];
+  direcciones: Direccion[] = [];
+  observaciones: ObservacionPat[] = [];
   busqueda: any;
-  selectedPatId: number | null = null;
-  nombrePatSeleccionado:any;
-  fechaAnualSeleccionada:any;
-  procesoSeleccionado:any;
-  usuario:any;
-  actividadesFiltradas:any;
-  proyectosFiltrados:any;
-  actividadesGestionFiltradas:any;
-  cantidadPats:any;
-  cantidadProyectos:any;
-  cantidadGestiones:any;
-  cantidadGestionesActividadEstrategica:any;
-  cantidadEstrategicas:any;
-  sumadorProyectosTerminados=0;
-  sumadorProyectosAbiertos=0;
-  sumadorActividadGestionTerminados=0;
-  sumadorActividadGestionAbiertos=0;
-  sumadorActividadEstrategicasTerminados=0;
-  sumadorActividadEstrategicasAbiertos=0;
-  procesos:any;
-  observaciones:any;
-  form:FormGroup;
-  formObservacion:FormGroup;
-  
+  form: FormGroup;
+  formObservacion: FormGroup;
+
     constructor(
       private patService: PatService,private auth:AuthService,
       private usuarioService:UsuarioService, private formBuilder: FormBuilder,
       private tipoService:TipoGEService, private actividadService:ActividadService,
-      private procesoService:ProcesoService) 
+      private procesoService:ProcesoService, private direccionService:DireccionService) 
       {
         this.form = this.formBuilder.group({
           nombre:['', Validators.required],
           fechaAnual: ['', Validators.required],
           proceso: ['', Validators.required],
+          direccion: ['', Validators.required],
+          idUsuario: ['', Validators.required],
         });
         this.formObservacion = this.formBuilder.group({
           idPat: ['', Validators.required],
           fecha: [this.obtenerFechaActual(), Validators.required],
           nombre: ['', Validators.required],
         }); 
-       }  
+    }  
 
     ngOnInit() {
       this.cargarPats();
       this.cargarUsuario();
       this.cargarProcesos();
+      this.cargarDirecciones();
+    }
+    siguienteRuta(idPat: number){
+      return ['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', idPat] } }];
     }
     cargarUsuario() {
       this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
@@ -81,6 +92,13 @@ export class PatListarComponent implements OnInit{
       this.procesoService.listar(this.auth.obtenerHeader()).subscribe(
         (data: any) => {
           this.procesos = data;
+        }
+      )
+    }
+    cargarDirecciones() {
+      this.direccionService.listar(this.auth.obtenerHeader()).subscribe(
+        (data: any) => {
+          this.direcciones = data;
         }
       )
     }
@@ -258,15 +276,17 @@ export class PatListarComponent implements OnInit{
     }
 
     modificarPat() {
-      if (this.form.valid && this.selectedPatId) {
+      if (this.form.valid && this.idPatSeleccionado) {
         const nombre = this.form.get('nombre')?.value;
         const fechaAnual = this.form.get('fechaAnual')?.value;
         const proceso = this.form.get('proceso')?.value;
-        const idUsuario = this.usuario;
+        const direccion = this.form.get('direccion')?.value;
+        const idUsuario = this.form.get('idUsuario')?.value;
         const pat = {
           nombre: nombre,
           fechaAnual: fechaAnual,
           proceso: proceso,
+          direccion:direccion,
           idUsuario: idUsuario
         }
         Swal.fire({
@@ -281,10 +301,11 @@ export class PatListarComponent implements OnInit{
         })
         .then((confirmacion) => {
           if (confirmacion.isConfirmed) {
-            if (this.selectedPatId != null) {
-                this.patService.modificarPat(pat, this.selectedPatId, this.auth.obtenerHeader()).subscribe(
+            if (this.idPatSeleccionado != null) {
+                this.patService.modificarPat(pat, this.idPatSeleccionado, this.auth.obtenerHeader()).subscribe(
                 () => {
                   this.swalSatisfactorio('modificado','plan anual de trabajo')
+                  this.cargarPats();
                 },
                 (error) => {
                   this.swalError(error)
@@ -326,7 +347,7 @@ export class PatListarComponent implements OnInit{
         const fecha = this.formObservacion.get('fecha')?.value;
         const nombre = this.formObservacion.get('nombre')?.value;
         const observacion = {
-          idPat: this.selectedPatId,
+          idPat: this.idPatSeleccionado,
           nombre: nombre,
           fecha: fecha,
         };
@@ -363,19 +384,23 @@ export class PatListarComponent implements OnInit{
     }
 
     obtenerPat(idPat: number,pat:any) {
-      this.selectedPatId = idPat;
+
+      this.idPatSeleccionado = idPat;
       this.nombrePatSeleccionado = pat.nombre;
       this.fechaAnualSeleccionada = pat.fechaAnual;
       this.procesoSeleccionado = pat.proceso.nombre;
-      this.usuario = pat.idUsuario
+      this.direccionSeleccionada = pat.direccion.nombre;
+      this.idUsuarioSeleccionado = pat.idUsuario
 
       this.form.patchValue({
         nombre: this.nombrePatSeleccionado,
         fechaAnual: this.fechaAnualSeleccionada,
         proceso: this.procesoSeleccionado,
+        direccion: this.direccionSeleccionada,
+        idUsuario: this.idUsuarioSeleccionado
       });
       this.formObservacion.patchValue({
-        idPat: this.selectedPatId,
+        idPat: this.idPatSeleccionado,
       });
     }
 
@@ -431,5 +456,4 @@ export class PatListarComponent implements OnInit{
       const day = ('0' + currentDate.getDate()).slice(-2);
       return `${year}-${month}-${day}`;
     }
-
 }

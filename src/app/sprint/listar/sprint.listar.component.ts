@@ -22,6 +22,7 @@ import { EPeriodicidad } from "src/enums/eperiodicidad";
 })
 export class SprintListarComponent implements OnInit {
   title = 'listarSprint';
+  ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
   pesoDeArchivo = 300 * 1024 * 1024; // 300 MB
   extencionesPermitidas = /\.(doc|docx|xls|xlsx|ppt|pptx|zip|pdf)$/i;
   nombreArchivoSeleccionado: string = '';

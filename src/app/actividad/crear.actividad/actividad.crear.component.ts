@@ -14,6 +14,7 @@ import { EModalidad } from 'src/enums/emodalidad';
 })
 export class ActividadCrearComponent implements OnInit{
   title = 'crearActividad';
+  ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
   usuarios: any[] = [];
   form: FormGroup;
   actividadNombre:any;

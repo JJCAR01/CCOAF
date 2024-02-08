@@ -71,9 +71,11 @@
         <tr>
           <th class="column-programa">Programa</th> 
           <th class="column-fecha">Año</th>
-          <th class="column-proceso">Dirección</th>
+          <th class="column-direccion">Dirección</th>
           <th class="column-proceso">Proceso</th>
-          <th>Porcentaje avance</th>
+          <th>Porcentaje real</th>
+          <th>Porcentaje esperado</th>
+          <th>Cumplimiento</th>
           <th class="column-usuario">Responsable</th>
           <th class="column-acciones">Acciones</th> 
         </tr>
@@ -81,24 +83,30 @@
       <tbody>
         <ng-container *ngFor="let pat of pats | buscar: busqueda">
           <tr title="{{pat.nombre}}" >
-            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]" >{{ pat.nombre }}</td>
-            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]">{{ pat.fechaAnual }}</td>
-            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]">{{ pat.direccion.nombre}}</td>
-            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]">{{ pat.proceso.nombre}}</td>
-            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]"
-                [ngClass]="colorPorcentaje(pat.porcentaje)">{{ pat.porcentaje | number : '1.2-2' }} %</td>
-            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]">{{ obtenerNombreUsuario(pat.idUsuario) }} </td>
+            <td [routerLink]="siguienteRuta(pat.idPat)" >{{ pat.nombre }}</td>
+            <td [routerLink]="siguienteRuta(pat.idPat)">{{ pat.fechaAnual }}</td>
+            <td [routerLink]="siguienteRuta(pat.idPat)">{{ pat.direccion.nombre}}</td>
+            <td [routerLink]="siguienteRuta(pat.idPat)">{{ pat.proceso.nombre}}</td>
+            <td [routerLink]="siguienteRuta(pat.idPat)" [ngClass]="colorPorcentaje(pat.porcentaje)">{{ pat.porcentajeReal | number : '1.2-2' }} %</td>
+            <td [routerLink]="siguienteRuta(pat.idPat)" [ngClass]="colorPorcentaje(pat.porcentaje)">{{ pat.porcentajeEsperado | number : '1.2-2' }} %</td>
+            <td [routerLink]="siguienteRuta(pat.idPat)" [ngClass]="colorPorcentaje(pat.porcentaje)">{{ pat.porcentajeCumplimiento | number : '1.2-2' }} %</td>
+            <td [routerLink]="siguienteRuta(pat.idPat)">{{ obtenerNombreUsuario(pat.idUsuario) }} </td>
             <td>
-              <button title="Ver" class="btn btn-outline-primary me-1" 
-              [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]"
-                ><i class="bi bi-eye-fill"></i></button>
-                <button title="Editar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarPat" (click)="obtenerPat(pat.idPat,pat)">
+              <button title="Ver" class="btn btn-outline-primary me-1"  [routerLink]="siguienteRuta(pat.idPat)">
+                <i class="bi bi-eye-fill"></i>
+              </button>
+              <button title="Editar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarPat" (click)="obtenerPat(pat.idPat,pat)">
                   <i class="bi bi-pen-fill"></i>
-                </button>
-                  
-              <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarPat(pat.idPat)"><i class="bi bi-trash3-fill"></i></button>
-              <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerPat(pat.idPat,pat)"><i class="bi bi-node-plus-fill"></i></button>
-              <button title="Ver observación" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(pat.idPat)"><i class="bi bi-eye-fill"></i></button>
+              </button>                  
+              <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarPat(pat.idPat)">
+                <i class="bi bi-trash3-fill"></i>
+              </button>
+              <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerPat(pat.idPat,pat)">
+                <i class="bi bi-node-plus-fill"></i>
+              </button>
+              <button title="Ver observación" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(pat.idPat)">
+                <i class="bi bi-eye-fill"></i>
+              </button>
             </td>
           </tr>
         </ng-container>
@@ -107,7 +115,7 @@
   </main>
   
   <div class="modal fade" id="modalModificarPat" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Modificar Plan Anual de trabajo</h5>
@@ -115,21 +123,37 @@
         </div>
         <div class="modal-body">
           <form [formGroup]="form" (ngSubmit)="modificarPat()">
-            <div class="mb-3">
-              <label for="nombre" class="form-label">Nombre</label>
+            <div class="form-floating mb-2">
               <input type="text" class="form-control" id="nombre" formControlName="nombre" [value]="nombrePatSeleccionado">
+              <label for="nombre" class="form-label">Nombre</label>
             </div>
-            <div class="mb-3">
-              <label for="fechaAnual" class="form-label">Año</label>
+            <div class="form-floating mb-2">
               <input type="text" class="form-control" id="fechaAnual" formControlName="fechaAnual" [value]="fechaAnualSeleccionada">
+              <label for="fechaAnual" class="form-label">Año</label>
             </div>
-            <div class="mb-3">
-              <label for="proceso" class="form-label">Proceso</label>
+            <div class="form-floating mb-2">
+              <select class="form-select" id="direccion" formControlName="direccion" [(value)]="direccionSeleccionada">
+                <option *ngFor="let direccion of direcciones" [value]="direccion.nombre">
+                  {{ direccion.nombre }}
+                </option>
+              </select>
+              <label for="direccion" class="form-label">Direccion</label>
+            </div>
+            <div class="form-floating mb-1">
               <select class="form-select" id="proceso" formControlName="proceso" [(value)]="procesoSeleccionado">
                 <option *ngFor="let proceso of procesos" [value]="proceso.nombre">
                   {{ proceso.nombre }}
                 </option>
               </select>
+              <label for="proceso" class="form-label">Proceso</label>
+            </div>
+            <div class="form-floating mb-3">
+              <select class="form-select" id="idUsuario" formControlName="idUsuario" [(value)]="idUsuarioSeleccionado">
+                <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario">
+                  {{ usuario.nombre + ' ' + usuario.apellidos }}
+                </option>
+              </select>
+              <label for="idUsuario" class="form-label">Responsable</label>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -181,13 +205,13 @@
             <div class="form-floating">
               <input type="date" id="fecha" [class.is-invalid]="fechaVacio" class="form-control mb-2" formControlName="fecha">
               <label for="fecha"  class="form-label">Fecha</label>
-              <small *ngIf="fechaVacio" class="text-danger">Este campo es obligatorio*</small>
+              <small *ngIf="fechaVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
             </div>
             <div class="form-floating">
               <input type="text" id="nombre" [class.is-invalid]="nombreObservacionVacio" class="form-control form-control-lg" formControlName="nombre"
                placeholder="Nombre">
               <label class="form-label" for="nombre">Nombre<span class="required-field">*</span></label>
-              <small *ngIf="nombreObservacionVacio" class="text-danger">Este campo es obligatorio*</small>
+              <small *ngIf="nombreObservacionVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

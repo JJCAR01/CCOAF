@@ -19,7 +19,7 @@
                                     <input type="text" id="nombre" class="form-control form-control-lg" formControlName="nombre"
                                     [class.is-invalid] = "nombreVacio" placeholder="Nombre">
                                     <label class="form-label" for="nombre">Nombre<span class="required-field">*</span></label>
-                                    <small *ngIf="nombreVacio" class="text-danger">Este campo es obligatorio*</small>
+                                    <small *ngIf="nombreVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
                                 </div>
                                 <div class="form-floating mb-3">
                                     <select class="form-select" id="idArea" [class.is-invalid] = "areaVacio" formControlName="idArea">
@@ -27,7 +27,7 @@
                                         <option *ngFor="let area of areas" [value]="area.idArea">{{ area.nombre }}</option>
                                     </select>
                                     <label for="idArea" class="form-label">Área<span class="required-field">*</span></label>
-                                    <small *ngIf="areaVacio" class="text-danger">Este campo es obligatorio*</small>
+                                    <small *ngIf="areaVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
                                 </div>  
                                 <div class="d-flex justify-content-center">
                                     <button type="button" class="btn btn-secondary btn-block me-2"

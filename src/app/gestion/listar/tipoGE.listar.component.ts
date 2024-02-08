@@ -13,6 +13,11 @@ import { ObservacionService } from 'src/app/observacion/services/observacion.ser
 import { initializeApp } from 'firebase/app';
 import { environment } from 'src/environments/environment.development';
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
+import { Pat } from 'src/app/modelo/pat';
+import { Usuario } from 'src/app/modelo/usuario';
+import { ActividadEstrategica } from 'src/app/modelo/actividadestrategica';
+import { ActividadGestion } from 'src/app/modelo/actividadgestion';
+import { Tarea } from 'src/app/modelo/tarea';
 
 @Component({
   selector: 'app-root:not(p)',
@@ -22,41 +27,41 @@ import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 
 export class TipogeListarComponent implements OnInit {
   title = 'listarTipoGE';
+  ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
   pesoDeArchivo = 300 * 1024 * 1024; // 300 MB
   extencionesPermitidas = /\.(doc|docx|xls|xlsx|ppt|pptx|zip|pdf)$/i;
   nombreArchivoSeleccionado: string = '';
   archivoSeleccionado: File | null = null;
-  elementoSeleccionado: string = 'actividadese';
+  documentoObtenido:any;
+  usuarioPat:Usuario | undefined;
+  porcentajePat:number | 0 = 0;
+  nombrePat:string | undefined = '';
+  fechaAnualPat:number | undefined;
+  idPat:number | 0 = 0;
+  idUsuarioSeleccionado: any | 0 = 0;
+  idActividadGestionSeleccionado: number | 0 = 0;
+  nombreActividadGestion: string | undefined = '';
+  fechaInicialGestion:Date | undefined;
+  fechaFinalGestion:Date | undefined;
+  idActividadEstrategicaSeleccionado: number | 0 = 0;
+  nombreActividadEstrategica: string | undefined = '';
+  fechaInicialEstrategica: Date | undefined;
+  fechaFinalEstrategica: Date | undefined;
+  metaEstrategica: number | 0=0;
+  idTareaSeleccionado: number | 0 = 0;
+  idTareaTipo: number | 0 = 0;
+  nombreTarea: string | undefined = '';
+  estadoTarea: string | undefined = '';
+  porcentajeTarea: number | 0 = 0;
+  periodicidadTarea: string | undefined = '';
   estadoEnumList: string[] = [];
   periodiciadEnumLista: string[] = [];
-  gestiones: any[] = [];
-  actividades: any[] = [];
-  pats: any[] = [];
-  usuarios:any[] =[];
-  tareas:any[] =[];
+  gestiones: ActividadGestion[] = [];
+  actividades: ActividadEstrategica[] = [];
+  pats: Pat[] = [];
+  usuarios: Usuario[] = [];
+  tareas:Tarea[] =[];
   observaciones:any[] =[];
-  usuarioPat:any;
-  porcentajePat:any;
-  patNombre:any;
-  documentoObtenido:any;
-  anual:any;
-  idPat:any;
-  usuarioEstrategica:any;
-  usuarioGestion:any;
-  idActividadGestionSeleccionado:any;
-  nombreActividadGestion:any;
-  fechaInicialGestion:any;
-  fechaFinalGestion:any;
-  idActividadEstrategicaSeleccionado:any;
-  nombreActividadEstrategica:any;
-  fechaInicialEstrategica:any;
-  fechaFinalEstrategica:any;
-  idTareaSeleccionado:any;
-  idTareaTipo:any;
-  nombreTarea:any;
-  estadoTarea:any;
-  porcentajeTarea:any;
-  periodicidadTarea:any;
   formGestion:FormGroup;
   formEstrategica:FormGroup;
   formModificarEstadoTarea:FormGroup;
@@ -78,11 +83,14 @@ export class TipogeListarComponent implements OnInit {
       nombre: ['', Validators.required],
       fechaInicial: ['', Validators.required],
       fechaFinal: ['', Validators.required],
+      meta: ['', Validators.required],
+      idUsuario:['',Validators.required]
     });
     this.formGestion = this.formBuilder.group({
       nombre: ['', Validators.required],
       fechaInicial: ['', Validators.required],
       fechaFinal: ['', Validators.required],
+      idUsuario:['',Validators.required]
     });
     this.formModificarEstadoTarea = this.formBuilder.group({
       estado: ['', Validators.required],
@@ -130,21 +138,24 @@ export class TipogeListarComponent implements OnInit {
       const idPat = params['idPat'];
       this.patService.listarPatPorId(idPat,this.auth.obtenerHeader()).subscribe(
         (data: any) => {
-          this.patNombre = data.nombre;
-          this.idPat = data.idPat // Asignar el nombre del Pat a patNombre
-          this.porcentajePat = data.porcentaje
-          this.anual = data.fechaAnual
-          this.usuarioPat = data.idUsuario
+          this.nombrePat = data.nombre;
+          this.idPat = data.idPat; // Asignar el nombre del Pat a patNombre
+          this.porcentajePat = data.porcentajeReal;
+          this.fechaAnualPat = data.fechaAnual;
+          this.usuarioPat = data.idUsuario;
         }
       );
-
       this.cargarGestiones(idPat);
       this.cargarActividadesEstrategicas(idPat);
+      this.cargarUsuario();
     });
-    this.cargarUsuario();
+
     this.crearTarea();
     this.estadoEnumList = Object.values(EEstado);
     this.periodiciadEnumLista = Object.values(EPeriodicidad);
+  }
+  siguienteRuta(idActividadEstrategica: number, nombrePat : string){
+    return ['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', idActividadEstrategica,'pat', nombrePat] } }];
   }
 
   private obtenerFechaActual(): string {
@@ -165,39 +176,29 @@ export class TipogeListarComponent implements OnInit {
   cargarGestiones(idPat: number) {
     // Utiliza idPat en tu solicitud para cargar las gestiones relacionadas
     this.gestionService
-      .listarGestionPorIdPat(idPat, this.auth.obtenerHeader()) // Debes tener un método en tu servicio para listar gestiones por idPat
-      .toPromise()
-      .then(
+      .listarGestionPorIdPat(idPat, this.auth.obtenerHeader()).subscribe(
         (data: any) => {
           this.gestiones = data;
+
         });
   }
 
   cargarActividadesEstrategicas(idPat: number) {
     // Utiliza idPat en tu solicitud para cargar las epicas relacionadas
     this.gestionService
-      .listarActividadEstrategicaPorIdPat(idPat, this.auth.obtenerHeader()) // Debes tener un método en tu servicio para listar epicas por idPat
-      .toPromise()
-      .then(
+      .listarActividadEstrategicaPorIdPat(idPat, this.auth.obtenerHeader()).subscribe(
         (data: any) => {
           this.actividades = data;
-        },
-        (error) => {
-          Swal.fire({
-            text :error.error.mensajeTecnico,
-            title : 'Error!',
-            icon : 'error'
-          });
         }
       );
+    console.log(this.actividades)
   }
 
   eliminarGestion(idActividadGestion: number) {
-    const gestionAEliminar = this.gestiones.find(g => g.idActividadGestion === idActividadGestion);
     Swal.fire({
       icon:"question",
       title: "¿Estás seguro?",
-      text: "Una vez eliminado  el pat "  + gestionAEliminar.nombre + ", no podrás recuperar este elemento.",
+      text: "Una vez eliminada la actividad de gestión, no podrás recuperar este elemento.",
       showCancelButton: true,
       cancelButtonText: "Cancelar",
       confirmButtonText: "Confirmar",
@@ -217,11 +218,10 @@ export class TipogeListarComponent implements OnInit {
     });
   }
   eliminarActividadesEstrategica(idActividadEstrategica: number) {
-    const actividadAEliminar = this.actividades.find(a => a.idActividadEstrategica === idActividadEstrategica);
     Swal.fire({
       icon:"question",
       title: "¿Estás seguro?",
-      text: "Una vez eliminado  la actividad estratégica "  + actividadAEliminar.nombre + ", NO podrás recuperarlo.",
+      text: "Una vez eliminado la actividad estratégica, NO podrás recuperarlo.",
       showCancelButton: true,
       cancelButtonText: "Cancelar",
       confirmButtonText: "Confirmar",
@@ -246,7 +246,7 @@ export class TipogeListarComponent implements OnInit {
       const nombre = this.formGestion.get('nombre')?.value;
       const fechaInicial = this.formGestion.get('fechaInicial')?.value;
       const fechaFinal = this.formGestion.get('fechaFinal')?.value;
-      const idUsuario = this.usuarioGestion
+      const idUsuario = this.formGestion.get('idUsuario')?.value;
       const idPat = this.idPat
       const actividadGestion = {
         nombre: nombre,
@@ -284,12 +284,14 @@ export class TipogeListarComponent implements OnInit {
       const nombre = this.formEstrategica.get('nombre')?.value;
       const fechaInicial = this.formEstrategica.get('fechaInicial')?.value;
       const fechaFinal = this.formEstrategica.get('fechaFinal')?.value;
-      const idUsuario = this.usuarioEstrategica
+      const meta = this.formEstrategica.get('meta')?.value;
+      const idUsuario = this.formEstrategica.get('idUsuario')?.value;
       const idPat = this.idPat
       const actividadEstrategica = {
         nombre: nombre,
         fechaInicial: fechaInicial,
         fechaFinal: fechaFinal,
+        meta:meta,
         idUsuario :idUsuario,
         idPat : idPat
       };
@@ -659,7 +661,7 @@ export class TipogeListarComponent implements OnInit {
   obtenerActividadGestion(idActividadGestion: number,actividadGestion:any) {
     this.idActividadGestionSeleccionado = idActividadGestion;
     this.nombreActividadGestion = actividadGestion.nombre;
-    this.usuarioGestion = actividadGestion.idUsuario
+    this.idUsuarioSeleccionado = actividadGestion.idUsuario
     this.fechaInicialGestion = actividadGestion.fechaInicial
     this.fechaFinalGestion = actividadGestion.fechaFinal
 
@@ -667,6 +669,7 @@ export class TipogeListarComponent implements OnInit {
       nombre: this.nombreActividadGestion,
       fechaIncial: this.fechaInicialGestion,
       fechaFinal: this.fechaFinalGestion,
+      idUsuario: this.idUsuarioSeleccionado,
     });
     this.formObservacionActividadGestion.patchValue({
       idActividadGestion: this.idActividadGestionSeleccionado,
@@ -708,14 +711,17 @@ export class TipogeListarComponent implements OnInit {
     
     this.idActividadEstrategicaSeleccionado = idActividadEstrategica;
     this.nombreActividadEstrategica = actividadEstrategica.nombre;
-    this.usuarioEstrategica = actividadEstrategica.idUsuario
-    this.fechaInicialEstrategica = actividadEstrategica.fechaInicial
-    this.fechaFinalEstrategica = actividadEstrategica.fechaFinal  
+    this.idUsuarioSeleccionado = actividadEstrategica.idUsuario;
+    this.fechaInicialEstrategica = actividadEstrategica.fechaInicial;
+    this.fechaFinalEstrategica = actividadEstrategica.fechaFinal;  
+    this.metaEstrategica = actividadEstrategica.meta; 
 
     this.formEstrategica.patchValue({
       nombre: this.nombreActividadGestion,
       fechaInicial: this.fechaInicialGestion,
       fechaFinal: this.fechaFinalGestion,
+      meta: this.metaEstrategica,
+      idUsuario: this.idUsuarioSeleccionado,
     });
     this.formObservacionActividadEstrategica.patchValue({
       idActividadEstrategica: this.idActividadEstrategicaSeleccionado,

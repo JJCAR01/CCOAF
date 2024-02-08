@@ -4,9 +4,11 @@ import { UsuarioService } from 'src/app/usuario/services/usuario.service';
 import { PatService } from '../services/pat.service';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import Swal from 'sweetalert2';
-import { Pat } from './pat';
 import { ProcesoService } from 'src/app/proceso/services/proceso.service';
 import { DireccionService } from 'src/app/direccion/services/direccion.service';
+import { Usuario } from 'src/app/modelo/usuario';
+import { Proceso } from 'src/app/modelo/proceso';
+import { Direccion } from 'src/app/modelo/direccion';
 
 @Component({
   selector: 'app-root',
@@ -15,21 +17,22 @@ import { DireccionService } from 'src/app/direccion/services/direccion.service';
 })
 export class PatCrearComponent implements OnInit{
   title = 'crearPat';
-  procesos: any;
-  direcciones: any;
-  pat:Pat = new Pat();
-  usuarios: any[] = [];
+  ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
+  procesos: Proceso [] = [];
+  direcciones: Direccion [] = [];
+  usuarios: Usuario[] = [];
   form:FormGroup;
   
   constructor(private patService:PatService,private usuarioService: UsuarioService,
     private formBuilder: FormBuilder,private auth:AuthService,
     private procesoService:ProcesoService, private direccionService:DireccionService) 
-  { this.form = this.formBuilder.group({
-    nombre: ['', Validators.required],
-    fechaAnual: ['', Validators.required],
-    direccion: ['', Validators.required],
-    proceso: ['', Validators.required],
-    idUsuario: ['', Validators.required], 
+  { 
+    this.form = this.formBuilder.group({
+      nombre: ['', Validators.required],
+      fechaAnual: [this.obtenerAActual(), Validators.required],
+      direccion: ['', Validators.required],
+      proceso: ['', Validators.required],
+      idUsuario: ['', Validators.required], 
     }); 
   }
 
@@ -61,12 +64,20 @@ export class PatCrearComponent implements OnInit{
 
   crearPat() { 
     if(this.form.valid){
-    this.pat.nombre = this.form.value.nombre;
-    this.pat.fechaAnual = this.form.value.fechaAnual;
-    this.pat.direccion = this.form.value.direccion;
-    this.pat.proceso = this.form.value.proceso;
-    this.pat.idUsuario = this.form.value.idUsuario;
-        this.patService.crearPat(this.pat,this.auth.obtenerHeader()).subscribe(
+      const nombre = this.form.get('nombre')?.value;
+      const fechaAnual = this.form.get('fechaAnual')?.value;
+      const proceso = this.form.get('proceso')?.value;
+      const direccion = this.form.get('direccion')?.value;
+      const idUsuario = this.form.value.idUsuario;
+      const pat = {
+        nombre: nombre,
+        fechaAnual: fechaAnual,
+        proceso: proceso,
+        direccion:direccion,
+        idUsuario: idUsuario
+      }
+
+        this.patService.crearPat(pat,this.auth.obtenerHeader()).subscribe(
           (response) => {
             Swal.fire({
               title:"Creado!!!",
@@ -122,5 +133,10 @@ export class PatCrearComponent implements OnInit{
   }
   get idUsuarioVacio(){
     return this.form.get('idUsuario')?.invalid && this.form.get('idUsuario')?.touched;
+  }
+  private obtenerAActual(): any {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    return `${year}`;
   }
 }

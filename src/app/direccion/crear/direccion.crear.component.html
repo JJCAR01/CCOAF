@@ -78,7 +78,7 @@
                   <input type="text" id="nombre" [class.is-invalid]="nombreVacio" class="form-control form-control-lg" formControlName="nombre"
                    placeholder="Nombre">
                   <label class="form-label" for="nombre">Nombre<span class="required-field">*</span></label>
-                  <small *ngIf="nombreVacio" class="text-danger">Este campo es obligatorio*</small>
+                  <small *ngIf="nombreVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
               </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

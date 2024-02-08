@@ -5,6 +5,7 @@ import { UsuarioService } from 'src/app/usuario/services/usuario.service';
 import { TipoGEService } from '../services/tipoGE.service';
 import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
+import { Usuario } from 'src/app/modelo/usuario';
 
 @Component({
   selector: 'app-root',
@@ -13,10 +14,11 @@ import Swal from 'sweetalert2';
 })
 export class CrearGestionComponent {
   title = 'crearActividadGestion';
-  usuarios: any[] = [];
+  ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
+  usuarios: Usuario[] = [];
+  patNombre:string | undefined ;
+  idPat:number | 0 = 0;
   form: FormGroup;
-  patNombre:any;
-  idPat:any;
 
   constructor(private formBuilder: FormBuilder, private auth: AuthService,
     private tipoService:TipoGEService, private usuarioService:UsuarioService,

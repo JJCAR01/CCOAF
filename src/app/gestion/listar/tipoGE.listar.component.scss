@@ -115,9 +115,34 @@ button {
 .porcentaje-normal {
   color: rgb(172, 168, 168)
 }
+ 
+/* ------------------------------------- Tabla de Actividades estrategicas - PAT -----------------------*/
 .column-nombre {
-  width: 650px; /* Ajusta el ancho a tu preferencia */
+  width: 20%; /* Ajusta el ancho a tu preferencia */
 }
+.column-fecha {
+  width: 6%; /* Ajusta el ancho a tu preferencia */
+}
+.column-duracion {
+  width: 4%; /* Ajusta el ancho a tu preferencia */
+}
+.column-dias {
+  width: 4%; /* Ajusta el ancho a tu preferencia */
+}
+.column-acciones{
+  width: 14%;
+}
+.column-avance{
+  width: 4%;
+}
+.column-meta{
+  width: 2%;
+}
+.column-resultado{
+  width: 10%;
+}
+
+
 .column-nombreTarea {
   width: 250px; /* Ajusta el ancho a tu preferencia */
 }
@@ -126,12 +151,6 @@ button {
 }
 .column-porcentaje {
   width: 90px; /* Ajusta el ancho a tu preferencia */
-}
-.column-acciones{
-  width: 14%;
-}
-.column-avance{
-  width: 4%;
 }
 .column-responsableTarea {
   width: 200px; /* Ajusta el ancho a tu preferencia */
@@ -145,15 +164,8 @@ button {
 .fila-nombre {
   text-align: left;
 }
-.column-fecha {
-  width: 110px; /* Ajusta el ancho a tu preferencia */
-}
-.column-duracion {
-  width: 100px; /* Ajusta el ancho a tu preferencia */
-}
-.column-dias {
-  width: 100px; /* Ajusta el ancho a tu preferencia */
-}
+
+
 .column-responsable {
   width: 300px; /* Ajusta el ancho a tu preferencia */
 }

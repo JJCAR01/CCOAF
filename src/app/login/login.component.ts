@@ -19,6 +19,7 @@ import { GoogleService } from './google/auth.google.service';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit{
+  ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
   siteKey : string = "6LfILVQpAAAAAGO2YpYhNu4z101RVPTqDHW0DbKp";
   loggedIn: boolean = false;
   isAdmin: boolean = false; // Agrega esta línea
@@ -131,5 +132,15 @@ export class LoginComponent implements OnInit{
         icon:'warning',
         confirmButtonColor: '#0E823F'
     });
+  }
+
+  get correoVacio(){
+    return this.form.get('correo')?.invalid && this.form.get('correo')?.touched;
+  }
+  get passwordVacio(){
+    return this.form.get('password')?.invalid && this.form.get('password')?.touched;
+  }
+  get recaptchaVacio(){
+    return this.form.get('recaptcha')?.invalid && this.form.get('recaptcha')?.touched;
   }
 }

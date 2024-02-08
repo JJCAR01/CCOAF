@@ -14,6 +14,7 @@ import { DireccionService } from 'src/app/direccion/services/direccion.service';
 })
 export class UsuarioCrearComponent implements OnInit {
   title = 'crearUsuario';
+  ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
   procesosLista: any;
   direccionesLista: any;
   listaDeDireccionesSeleccionadas: string[] = [];

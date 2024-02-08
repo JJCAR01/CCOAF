@@ -14,6 +14,7 @@ import { throwError } from 'rxjs';
 })
 export class AreaCrearComponent implements OnInit {
   title = 'crearArea';
+  ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
   direcciones: any[] = [];
   form!:FormGroup;
 

@@ -11,6 +11,7 @@ import Swal from 'sweetalert2';
 })
 export class ProcesoCrearComponent implements OnInit {
   title = 'crearProceso';
+  ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
   form:FormGroup;
   procesos:any;
   busqueda: any;

@@ -23,6 +23,7 @@ import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 })
 export class ActividadListarComponent implements OnInit{
   title = 'listarActividad';
+  ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
   pesoDeArchivo = 300 * 1024 * 1024; // 300 MB
   extencionesPermitidas = /\.(doc|docx|xls|xlsx|ppt|pptx|zip|pdf)$/i;
   nombreArchivoSeleccionado: string = '';

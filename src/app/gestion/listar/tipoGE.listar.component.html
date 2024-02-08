@@ -16,7 +16,7 @@
     <div>
       <div class="row">
         <div class="responsable-info">
-          <h1><img src="/assets/Programas.png" width="30mp" alt="logo" id="logo" title="{{ patNombre }}"> {{ patNombre }} </h1>
+          <h1><img src="/assets/Programas.png" width="30mp" alt="logo" id="logo" title="{{ nombrePat }}"> {{ nombrePat }} </h1>
         </div>
         <div class="responsable-info">
           <h2 title="Porcentaje Actual" ><i class="bi bi-percent tamaño-iconos color-iconoPorcentaje"></i> Porcentaje de avance:</h2>
@@ -24,23 +24,23 @@
         </div>
         <div class="responsable-info">
           <h2 title="Año"><i class="bi bi-calendar3 tamaño-iconos color-iconoFechaAnual"></i> Año:</h2>
-          <p> {{ anual }}</p>
+          <p> {{ fechaAnualPat }}</p>
         </div>
         <div class="responsable-info">
           <h2 title="Responsble"><i class="bi bi-person-circle tamaño-iconos color-iconoResponsable"></i> Responsable:</h2>
-          <p> {{ obtenerNombreUsuario(usuarioPat) }}</p>
+          <p> {{ obtenerNombreUsuario(usuarioPat?.idUsuario!) }}</p>
         </div>
       </div>
       <div class="row text-center">
         <div class="d-flex justify-content-center">
           <button title="Agregar actividad estratégica" type="button"
                   class="btn btn-outline-success me-1 ms-2" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['crearActividadEstrategica'] } }]"
-                  [queryParams]="{ idPat,  patNombre }">
+                  [queryParams]="{ idPat,  nombrePat }">
             Crear actividad estratégica
           </button>
           <button title="Agregar actividad gestión" type="button"
                   class="btn btn-outline-success" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['crearActividadGestion'] } }]"
-                  [queryParams]="{  idPat,  patNombre  }">
+                  [queryParams]="{  idPat,  nombrePat  }">
             Crear gestión del área
           </button>
         </div>
@@ -73,7 +73,11 @@
               <th class="column-fecha">Fecha Final</th>
               <th class="column-duracion">Duracion (Días)</th>
               <th class="column-dias">Dias Restantes</th>
-              <th class="column-avance">Avance</th>
+              <th class="column-avance">Porcentaje real</th>
+              <th class="column-avance">Porcentaje esperado</th>
+              <th class="column-avance">Cumplimiento</th>
+              <th class="column-meta">Meta (KPI)</th>
+              <th class="column-resultado">Resultado</th>
               <th class="column-responsable">Responsable</th>
               <th class="column-acciones">Acciones</th>
             </tr>
@@ -81,33 +85,36 @@
           <tbody>
             <ng-container *ngFor="let actividad of actividades">
               <tr title="{{actividad.nombre}}">
-                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]" class="fila-nombre">
-                      {{ actividad.nombre }}</td>
-                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]">
-                      {{ actividad.fechaInicial }}</td>
-                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]">
-                      {{ actividad.fechaFinal }}</td>
-                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]">
-                      {{ actividad.duracion }}</td>
-                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]" 
-                      [ngClass]="colorPorcentaje(actividad.avance)">
-                      <span *ngIf="actividad.avance !== 100"[ngClass]="colorDias(actividad.diasRestantes)">{{ actividad.diasRestantes }}</span>
-                      <span *ngIf="actividad.avance === 100">Finalizado</span>
+                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" class="fila-nombre"> {{ actividad.nombre }}</td>
+                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)"> {{ actividad.fechaInicial }}</td>
+                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)"> {{ actividad.fechaFinal }}</td>
+                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)"> {{ actividad.duracion }}</td>
+                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" [ngClass]="colorPorcentaje(actividad.porcentajeReal)">
+                      <span *ngIf="actividad.porcentajeReal !== 100"[ngClass]="colorDias(actividad.diasRestantes)">{{ actividad.diasRestantes }}</span>
+                      <span *ngIf="actividad.porcentajeReal === 100">Finalizado</span>
                 </td>
-                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]" 
-                      [ngClass]="colorPorcentaje(actividad.avance)">{{ actividad.avance }} %</td>
-                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]">
-                      {{ obtenerNombreUsuario(actividad.idUsuario) }}</td>
+                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" [ngClass]="colorPorcentaje(actividad.porcentajeReal)">{{ actividad.porcentajeReal }} %</td>
+                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" [ngClass]="colorPorcentaje(actividad.porcentajeReal)">{{ actividad.porcentajeEsperado }} %</td>
+                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" [ngClass]="colorPorcentaje(actividad.porcentajeReal)">{{ actividad.porcentajeCumplimiento }} %</td>
+                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" >{{ actividad.meta }} </td>
+                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" >{{ actividad.resultado }}</td>
+                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)"> {{ obtenerNombreUsuario(actividad.idUsuario) }}</td>
                 <td >
-                  <button title="Ver" class="btn btn-outline-primary me-1" 
-                  [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarActividad', actividad.idActividadEstrategica,'pat', patNombre] } }]"
-                    ><i class="bi bi-eye-fill"></i></button>
+                  <button title="Ver" class="btn btn-outline-primary me-1" [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)">
+                    <i class="bi bi-eye-fill"></i>
+                  </button>
                     <button title="Modificar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificar" (click)="obtenerActividadEstrategica(actividad.idActividadEstrategica,actividad)">
                       <i class="bi bi-pen-fill"></i>
                     </button>
-                  <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarActividadesEstrategica(actividad.idActividadEstrategica)"><i class="bi bi-trash3-fill"></i></button>
-                  <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerTarea(actividad.idActividadEstrategica,actividad)"><i class="bi bi-node-plus-fill"></i></button>
-                  <button title="Ver observación" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(actividad.idActividadEstrategica,'ACTIVIDAD_ESTRATEGICA')"><i class="bi bi-eye-fill"></i></button>
+                  <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarActividadesEstrategica(actividad.idActividadEstrategica)">
+                    <i class="bi bi-trash3-fill"></i>
+                  </button>
+                  <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerTarea(actividad.idActividadEstrategica,actividad)">
+                    <i class="bi bi-node-plus-fill"></i>
+                  </button>
+                  <button title="Ver observación" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(actividad.idActividadEstrategica,'ACTIVIDAD_ESTRATEGICA')">
+                    <i class="bi bi-eye-fill"></i>
+                  </button>
                 </td>
               </tr>
             </ng-container>
@@ -136,19 +143,27 @@
                     <h6>Duración</h6>
                     {{ gestion.duracion }}    
                   </div>
-                  <div class="col-md-1" [ngClass]="colorPorcentaje(gestion.avance)">
-                    <span *ngIf="gestion.avance !== 100" [ngClass]="colorDias(gestion.diasRestantes)">
+                  <div class="col-md-1" [ngClass]="colorPorcentaje(gestion.porcentajeReal)">
+                    <span *ngIf="gestion.porcentajeReal !== 100" [ngClass]="colorDias(gestion.diasRestantes)">
                       <h6>Dias restantes</h6>
                       {{ gestion.diasRestantes }}
                       
                     </span>
-                    <span *ngIf="gestion.avance === 100">Finalizado</span>
+                    <span *ngIf="gestion.porcentajeReal === 100">Finalizado</span>
                   </div>
-                  <div class="col-md-1" [ngClass]="colorPorcentaje(gestion.avance)">
-                    <h6>Avance</h6>
-                    {{ gestion.avance }} %
+                  <div class="col-md-1" [ngClass]="colorPorcentaje(gestion.porcentajeReal)">
+                    <h6>Porcentaje real</h6>
+                    {{ gestion.porcentajeReal }} %
                   </div>
-                  <div class="col-md-3">
+                  <div class="col-md-1" [ngClass]="colorPorcentaje(gestion.porcentajeEsperado)">
+                    <h6>Porcentaje esperado</h6>
+                    {{ gestion.porcentajeEsperado }} %
+                  </div>
+                  <div class="col-md-1" [ngClass]="colorPorcentaje(gestion.porcentajeCumplimiento)">
+                    <h6>Cumplimiento</h6>
+                    {{ gestion.porcentajeCumplimiento }} %
+                  </div>
+                  <div class="col-md-2">
                     <h6>Usuario</h6>
                     {{ obtenerNombreUsuario(gestion.idUsuario) }}
                   </div>
@@ -226,7 +241,7 @@
                           </div>
                         </td>
                         <td data-bs-toggle="modal" (click)="obtenerTarea(tarea.idTarea, tarea)" [attr.data-bs-target]="(tarea.periodicidad !== 'UNICA_VEZ') ? '#modalModificarPorcentaje' : null">
-                          {{ tarea.porcentaje }}%
+                          {{ tarea.porcentajeReal }}%
                           <i class="bi bi-arrow-clockwise colorear-icono" [hidden]="tarea.periodicidad === 'UNICA_VEZ'"></i>
                         </td>
                         <td>{{ tarea.descripcion }}</td>
@@ -286,17 +301,29 @@
         </div>
         <div class="modal-body">
           <form [formGroup]="formEstrategica" (ngSubmit)="modificarActividadEstrategica()">
-            <div class="mb-3">
-              <label for="nombre" class="form-label">Nombre</label>
+            <div class="form-floating mb-2">
               <textarea type="text" class="form-control" id="nombre" formControlName="nombre" [ngModel]="nombreActividadEstrategica" ></textarea>
+              <label for="nombre" class="form-label">Nombre</label>
             </div>
-            <div class="mb-3">
-              <label for="fechaInicial" class="form-label">Fecha Inicial</label>
+            <div class="form-floating mb-2">
               <input type="date" class="form-control" id="fechaInicial" formControlName="fechaInicial" [ngModel]="fechaInicialEstrategica">
+              <label for="fechaInicial" class="form-label">Fecha Inicial</label>
             </div>  
-            <div class="mb-3">
-              <label for="fechaFinal" class="form-label">Fecha Final</label>
+            <div class="form-floating mb-2">
               <input type="date" class="form-control" id="fechaFinal" formControlName="fechaFinal" [ngModel]="fechaFinalEstrategica">
+              <label for="fechaFinal" class="form-label">Fecha Final</label>
+            </div>
+            <div class="form-floating mb-2">
+              <input type="number" class="form-control" id="meta" formControlName="meta" [ngModel]="metaEstrategica">
+              <label for="meta" class="form-label">Meta</label>
+            </div>
+            <div class="form-floating mb-3">
+              <select class="form-select" id="idUsuario" formControlName="idUsuario" [(value)]="idUsuarioSeleccionado">
+                <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario">
+                  {{ usuario.nombre + ' ' + usuario.apellidos }}
+                </option>
+              </select>
+              <label for="idUsuario" class="form-label">Responsable</label>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -318,17 +345,25 @@
         </div>
         <div class="modal-body">
           <form [formGroup]="formGestion" (ngSubmit)="modificarActividadGestion()">
-            <div class="mb-3">
-              <label for="nombre" class="form-label">Nombre</label>
+            <div class="form-floating mb-2">
               <input type="text" class="form-control" id="nombre" formControlName="nombre" [ngModel]="nombreActividadGestion" style="min-width: 100%;">
+              <label for="nombre" class="form-label">Nombre</label>
             </div>
-            <div class="mb-3">
-              <label for="fechaInicial" class="form-label">Fecha Inicial</label>
+            <div class="form-floating mb-2">
               <input type="date" class="form-control" id="fechaInicial" formControlName="fechaInicial" [ngModel]="fechaInicialGestion">
+              <label for="fechaInicial" class="form-label">Fecha Inicial</label>
             </div>
-            <div class="mb-3">
-              <label for="fechaFinal" class="form-label">Fecha Final</label>
+            <div class="form-floating mb-2">
               <input type="date" class="form-control" id="fechaFinal" formControlName="fechaFinal" [ngModel]="fechaFinalGestion">
+              <label for="fechaFinal" class="form-label">Fecha Final</label>
+            </div>
+            <div class="form-floating mb-3">
+              <select class="form-select" id="idUsuario" formControlName="idUsuario" [(value)]="idUsuarioSeleccionado">
+                <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario">
+                  {{ usuario.nombre + ' ' + usuario.apellidos }}
+                </option>
+              </select>
+              <label for="idUsuario" class="form-label">Responsable</label>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -380,13 +415,13 @@
             <div class="form-floating">
               <input type="date" id="fecha" [class.is-invalid]="fechaVacio" class="form-control mb-2" formControlName="fecha">
               <label for="fecha"  class="form-label">Fecha</label>
-              <small *ngIf="fechaVacio" class="text-danger">Este campo es obligatorio*</small>
+              <small *ngIf="fechaVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
             </div>
             <div class="form-floating">
               <input type="text" id="nombre" [class.is-invalid]="nombreObservacionVacio" class="form-control form-control-lg" formControlName="nombre"
                placeholder="Nombre">
               <label class="form-label" for="nombre">Nombre<span class="required-field">*</span></label>
-              <small *ngIf="nombreObservacionVacio" class="text-danger">Este campo es obligatorio*</small>
+              <small *ngIf="nombreObservacionVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -512,7 +547,7 @@
             <div class="form-floating mb-2">
               <input type="text" id="nombre" [class.is-invalid]="nombreVacio" class="form-control" formControlName="nombre" placeholder="Nombre">
               <label class="form-label" for="nombre">Nombre<span class="required-field">*</span></label>
-              <small *ngIf="nombreVacio" class="text-danger">Este campo es obligatorio*</small>
+              <small *ngIf="nombreVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
             </div>
             <div class="form-floating mb-2">
               <select class="form-select" id="periodicidad" [class.is-invalid]="periodicidadVacio" formControlName="periodicidad" >
@@ -520,12 +555,12 @@
                   <option *ngFor="let periodicidad of periodiciadEnumLista" [value]="periodicidad"  >{{ periodicidad | formatEnum}}</option>
               </select>
               <label for="periodicidad" placeholder="usuario">Responsable:<span class="required-field">*</span></label>
-              <small *ngIf="periodicidadVacio" class="text-danger">Este campo es obligatorio*</small>
+              <small *ngIf="periodicidadVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
             </div> 
             <div class="form-floating mb-2">
               <input type="text" id="descripcion" [class.is-invalid]="descripcionVacio" class="form-control" formControlName="descripcion" placeholder="descripcion">
               <label for="descripcion" class="form-label">Descripcion<span class="required-field">*</span></label>
-              <small *ngIf="descripcionVacio" class="text-danger">Este campo es obligatorio*</small>
+              <small *ngIf="descripcionVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
             </div>
             <div class="form-floating mb-2">
               <select class="form-select" id="idUsuario" formControlName="idUsuario">
@@ -533,7 +568,7 @@
                   <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario">{{ usuario.nombre + ' ' + usuario.apellidos | formatEnum }}</option>
               </select>
               <label for="idUsuario" placeholder="usuario">Responsable:<span class="required-field">*</span></label>
-              <small *ngIf="idUsuarioVacio" class="text-danger">Este campo es obligatorio*</small>
+              <small *ngIf="idUsuarioVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
           </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

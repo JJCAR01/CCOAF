@@ -5,6 +5,8 @@ import Swal from 'sweetalert2';
 import { TipoGEService } from '../services/tipoGE.service';
 import { UsuarioService } from 'src/app/usuario/services/usuario.service';
 import { ActivatedRoute } from '@angular/router';
+import { Usuario } from 'src/app/modelo/usuario';
+
 
 @Component({
   selector: 'app-tipo-ge.crear',
@@ -13,10 +15,11 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class TipoGECrearComponent implements OnInit {
   title = 'crearActividadEstrategica';
-  usuarios: any[] = [];
+  ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
+  usuarios: Usuario[] = [];
+  patNombre:string | undefined ;
+  idPat:number | 0=0;
   form: FormGroup;
-  patNombre:any;
-  idPat:any;
 
   constructor(private formBuilder: FormBuilder, private auth: AuthService,
     private tipoService:TipoGEService, private usuarioService:UsuarioService,
@@ -25,6 +28,7 @@ export class TipoGECrearComponent implements OnInit {
       nombre: ['', Validators.required],
       fechaInicial: ['', Validators.required],
       fechaFinal: ['', Validators.required],
+      meta: ['', Validators.required],
       idUsuario: ['', Validators.required],
     });
   }
@@ -49,6 +53,7 @@ export class TipoGECrearComponent implements OnInit {
       const nombre = this.form.get('nombre')?.value;
       const fechaInicial = this.form.get('fechaInicial')?.value;
       const fechaFinal = this.form.get('fechaFinal')?.value;
+      const meta = this.form.get('meta')?.value;
       const idUsuario = this.form.get('idUsuario')?.value;
       const idPat = this.idPat
 
@@ -56,6 +61,7 @@ export class TipoGECrearComponent implements OnInit {
           nombre: nombre,
           fechaInicial: fechaInicial,
           fechaFinal: fechaFinal,
+          meta:meta,
           idPat:idPat, 
           idUsuario: idUsuario,
         };
@@ -93,6 +99,9 @@ export class TipoGECrearComponent implements OnInit {
   }
   get fechaFinalVacio(){
     return this.form.get('fechaFinal')?.invalid && this.form.get('fechaFinal')?.touched;
+  }
+  get metaVacio(){
+    return this.form.get('meta')?.invalid && this.form.get('meta')?.touched;
   }
   get idUsuarioVacio(){
     return this.form.get('idUsuario')?.invalid && this.form.get('idUsuario')?.touched;

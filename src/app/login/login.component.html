@@ -26,12 +26,14 @@
                 <form [formGroup]="form" (ngSubmit)="login()">
                   <p class="text-center mb-1">Ingresar con cuenta asignada:</p>
                     <div class="form-floating mb-1" title="Correo">
-                      <input type="email" id="correo" class="form-control form-control-lg" formControlName="correo" placeholder="Correo">
+                      <input type="email" id="correo" [class.is-invalid]="correoVacio" class="form-control form-control-lg" formControlName="correo" placeholder="Correo">
                       <label class="form-label" for="correo">Correo</label>
+                      <small *ngIf="correoVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
                     </div>
                     <div class="form-floating mb-3" title="Contraseña">
-                      <input type="password" id="password" class="form-control form-control-lg" formControlName="password" placeholder="Contraseña">
+                      <input type="password" id="password" [class.is-invalid]="passwordVacio" class="form-control form-control-lg" formControlName="password" placeholder="Contraseña">
                       <label class="form-label" for="password">Contraseña</label>
+                      <small *ngIf="passwordVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
                     </div>
                     <ngx-recaptcha2 #captchaElem [siteKey]="siteKey" formControlName="recaptcha"></ngx-recaptcha2>
                     <div class="text-center pt-1 mb-4 pb-1">

@@ -13,14 +13,14 @@
                         <div class="form-floating">
                             <input type="text" id="nombre" [class.is-invalid]="nombreVacio"  class="form-control form-control-lg" formControlName="nombre" placeholder="nombre">
                             <label class="form-label" for="nombre">Nombre<span class="required-field">*</span></label>
-                            <small *ngIf="nombreVacio" class="text-danger">Este campo es obligatorio*</small>
+                            <small *ngIf="nombreVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating">
                             <input type="text" id="apellido" [class.is-invalid]="apellidoVacio"  class="form-control form-control-lg" formControlName="apellido" placeholder="apellido">
                             <label class="form-label" for="apellido">Apellidos<span class="required-field">*</span></label>
-                            <small *ngIf="apellidoVacio" class="text-danger">Este campo es obligatorio*</small>
+                            <small *ngIf="apellidoVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
                         </div>
                     </div>
                   </div>
@@ -28,7 +28,7 @@
                   <div class="form-floating mb-2">
                     <input type="email" id="correo" [class.is-invalid]="correoVacio"  class="form-control form-control-lg" formControlName="correo" placeholder="correo">
                     <label class="form-label" for="correo">Correo<span class="required-field">*</span></label>
-                    <small *ngIf="correoVacio" class="text-danger">Este campo es obligatorio*</small>
+                    <small *ngIf="correoVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
                   </div>
 
                   <div class="row d d-flex">
@@ -36,14 +36,14 @@
                       <div class="form-floating mb-2">
                         <input type="password" id="password" [class.is-invalid]="passwordVacio" class="form-control form-control-lg" formControlName="password" placeholder="password">
                         <label class="form-label" for="password">Contraseña<span class="required-field">*</span></label>
-                        <small *ngIf="passwordVacio" class="text-danger">Este campo es obligatorio*</small>
+                        <small *ngIf="passwordVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-floating mb-2">
                         <input type="password" id="cpassword" [class.is-invalid]="cpasswordVacio" class="form-control form-control-lg" formControlName="cpassword" placeholder="cpassword">
                         <label class="form-label" for="cpassword">Confirmar contraseña<span class="required-field">*</span></label>   
-                        <small *ngIf="cpasswordVacio" class="text-danger">Este campo es obligatorio*</small>
+                        <small *ngIf="cpasswordVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
                       </div>
                     </div>
                     <div class="col-md-12">
@@ -72,7 +72,7 @@
                           <label class="form-check-label" for="operador">Operador</label>
                         </div>
                       </div>
-                      <small *ngIf="nombreRolVacio" class="text-danger">Este campo es obligatorio*</small>
+                      <small *ngIf="nombreRolVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
                     </div>
                     <div class="col-md-6">
                       <div class="form-floating">
@@ -80,7 +80,7 @@
                           <option value="" disabled selected>Seleccione el cargo<span class="required-field">*</span></option>
                           <option *ngFor="let cargo of cargos" [value]="cargo.idCargo">{{ cargo.nombre}}</option>
                         </select>
-                        <small *ngIf="idCargoVacio" class="text-danger">Este campo es obligatorio*</small>
+                        <small *ngIf="idCargoVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
                       </div>
                     </div>
                   </div>

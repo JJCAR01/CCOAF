@@ -13,6 +13,7 @@ import Swal from 'sweetalert2';
 })
 export class SprintCrearComponent implements OnInit{
   title = 'crearSprint';
+  ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
   usuarios: any[] = [];
   form: FormGroup;
   patNombre:any;
