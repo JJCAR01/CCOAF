@@ -93,9 +93,9 @@
                       <span *ngIf="actividad.porcentajeReal !== 100"[ngClass]="colorDias(actividad.diasRestantes)">{{ actividad.diasRestantes }}</span>
                       <span *ngIf="actividad.porcentajeReal === 100">Finalizado</span>
                 </td>
-                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" [ngClass]="colorPorcentaje(actividad.porcentajeReal)">{{ actividad.porcentajeReal }} %</td>
-                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" [ngClass]="colorPorcentaje(actividad.porcentajeReal)">{{ actividad.porcentajeEsperado }} %</td>
-                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" [ngClass]="colorPorcentaje(actividad.porcentajeReal)">{{ actividad.porcentajeCumplimiento }} %</td>
+                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" [ngClass]="colorPorcentaje(actividad.porcentajeReal)">{{ actividad.porcentajeReal | number : '1.2-2' }} %</td>
+                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" [ngClass]="colorPorcentaje(actividad.porcentajeReal)">{{ actividad.porcentajeEsperado | number : '1.2-2' }} %</td>
+                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" [ngClass]="colorPorcentaje(actividad.porcentajeReal)">{{ actividad.porcentajeCumplimiento | number : '1.2-2' }} %</td>
                 <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" >{{ actividad.meta }} </td>
                 <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" >{{ actividad.resultado }}</td>
                 <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)"> {{ obtenerNombreUsuario(actividad.idUsuario) }}</td>
@@ -153,15 +153,15 @@
                   </div>
                   <div class="col-md-1" [ngClass]="colorPorcentaje(gestion.porcentajeReal)">
                     <h6>Porcentaje real</h6>
-                    {{ gestion.porcentajeReal }} %
+                    {{ gestion.porcentajeReal | number : '1.2-2' }} %
                   </div>
                   <div class="col-md-1" [ngClass]="colorPorcentaje(gestion.porcentajeEsperado)">
                     <h6>Porcentaje esperado</h6>
-                    {{ gestion.porcentajeEsperado }} %
+                    {{ gestion.porcentajeEsperado | number : '1.2-2' }} %
                   </div>
                   <div class="col-md-1" [ngClass]="colorPorcentaje(gestion.porcentajeCumplimiento)">
                     <h6>Cumplimiento</h6>
-                    {{ gestion.porcentajeCumplimiento }} %
+                    {{ gestion.porcentajeCumplimiento | number : '1.2-2' }} %
                   </div>
                   <div class="col-md-2">
                     <h6>Usuario</h6>
