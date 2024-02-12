@@ -32,6 +32,8 @@ export class PatCrearComponent implements OnInit{
       fechaAnual: [this.obtenerAActual(), Validators.required],
       direccion: ['', Validators.required],
       proceso: ['', Validators.required],
+      fechaInicial: ['', Validators.required],
+      fechaFinal: ['', Validators.required],
       idUsuario: ['', Validators.required], 
     }); 
   }
@@ -68,12 +70,16 @@ export class PatCrearComponent implements OnInit{
       const fechaAnual = this.form.get('fechaAnual')?.value;
       const proceso = this.form.get('proceso')?.value;
       const direccion = this.form.get('direccion')?.value;
+      const fechaInicial = this.form.get('fechaInicial')?.value;
+      const fechaFinal = this.form.get('fechaFinal')?.value;
       const idUsuario = this.form.value.idUsuario;
       const pat = {
         nombre: nombre,
         fechaAnual: fechaAnual,
         proceso: proceso,
         direccion:direccion,
+        fechaInicial:fechaInicial,
+        fechaFinal:fechaFinal,
         idUsuario: idUsuario
       }
 
@@ -130,6 +136,12 @@ export class PatCrearComponent implements OnInit{
   }
   get procesoVacio(){
     return this.form.get('proceso')?.invalid && this.form.get('proceso')?.touched;
+  }
+  get fechaInicialVacio(){
+    return this.form.get('fechaInicial')?.invalid && this.form.get('fechaInicial')?.touched;
+  }
+  get fechaFinalVacio(){
+    return this.form.get('fechaFinal')?.invalid && this.form.get('fechaFinal')?.touched;
   }
   get idUsuarioVacio(){
     return this.form.get('idUsuario')?.invalid && this.form.get('idUsuario')?.touched;

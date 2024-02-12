@@ -28,6 +28,17 @@
                                 </div>
 
                                 <div class="form-floating mb-3">
+                                    <input type="date" id="fechaInicial" [class.is-invalid]="fechaInicialVacio" class="form-control form-control-lg" formControlName="fechaInicial" placeholder="Fecha Inicial" >
+                                    <label class="form-label" for="fechaInicial">Fecha Inicial<span class="required-field">*</span></label>
+                                    <small *ngIf="fechaInicialVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="date" id="fechaFinal" [class.is-invalid]="fechaFinalVacio" class="form-control form-control-lg" formControlName="fechaFinal" placeholder="Fecha Final" >
+                                    <label class="form-label" for="fechaFinal">Fecha Final<span class="required-field">*</span></label>
+                                    <small *ngIf="fechaFinalVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
+                                </div>
+
+                                <div class="form-floating mb-3">
                                     <select class="form-select" id="direccion" [class.is-invalid]="direccionVacio" formControlName="direccion">
                                         <option value="" disabled selected> Seleccione la direccion<span class="required-field">*</span></option>
                                         <option *ngFor="let direccion of direcciones" [value]="direccion.nombre">{{ direccion.nombre }}</option>

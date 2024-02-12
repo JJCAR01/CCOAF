@@ -46,7 +46,7 @@ export class ActividadListarComponent implements OnInit{
   idActividadEstrategica:any;
   porcentajeEstrategica:any;
   usuarioEstrategica:any;
-  patEstrategica:any;
+  patEstrategica:number | 0 =0;
   idActividadGestionSeleccionado:any;
   nombreActividadGestion:any;
   fechaInicialGestion:any;
@@ -134,7 +134,7 @@ ngOnInit() {
         this.porcentajeEstrategica = data.avance;
         this.usuarioEstrategica = data.idUsuario;
         this.patEstrategica = data.idPat;
-
+        console.log(data.idPat)
         this.cargarGestiones(idActividadEstrategica);
         this.cargarProyectos(idActividadEstrategica);
       },
@@ -144,6 +144,7 @@ ngOnInit() {
   this.crearTarea();
   this.estadoEnumList = Object.values(EEstado);
   this.periodiciadEnumLista = Object.values(EPeriodicidad);
+
 }
 
 private obtenerFechaActual(): string {

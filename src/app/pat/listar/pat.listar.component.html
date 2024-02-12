@@ -73,9 +73,9 @@
           <th class="column-fecha">Año</th>
           <th class="column-direccion">Dirección</th>
           <th class="column-proceso">Proceso</th>
-          <th>Porcentaje real</th>
-          <th>Porcentaje esperado</th>
-          <th>Cumplimiento</th>
+          <th>% Avance real</th>
+          <th>&nbsp;&nbsp;%&nbsp;&nbsp;   Avance esperado</th>
+          <th>% Cumplimiento</th>
           <th class="column-usuario">Responsable</th>
           <th class="column-acciones">Acciones</th> 
         </tr>
@@ -83,16 +83,16 @@
       <tbody>
         <ng-container *ngFor="let pat of pats | buscar: busqueda">
           <tr title="{{pat.nombre}}" >
-            <td [routerLink]="siguienteRuta(pat.idPat)" >{{ pat.nombre }}</td>
-            <td [routerLink]="siguienteRuta(pat.idPat)">{{ pat.fechaAnual }}</td>
-            <td [routerLink]="siguienteRuta(pat.idPat)">{{ pat.direccion.nombre}}</td>
-            <td [routerLink]="siguienteRuta(pat.idPat)">{{ pat.proceso.nombre}}</td>
-            <td [routerLink]="siguienteRuta(pat.idPat)" [ngClass]="colorPorcentaje(pat.porcentaje)">{{ pat.porcentajeReal | number : '1.2-2' }} %</td>
-            <td [routerLink]="siguienteRuta(pat.idPat)" [ngClass]="colorPorcentaje(pat.porcentaje)">{{ pat.porcentajeEsperado | number : '1.2-2' }} %</td>
-            <td [routerLink]="siguienteRuta(pat.idPat)" [ngClass]="colorPorcentaje(pat.porcentaje)">{{ pat.porcentajeCumplimiento | number : '1.2-2' }} %</td>
-            <td [routerLink]="siguienteRuta(pat.idPat)">{{ obtenerNombreUsuario(pat.idUsuario) }} </td>
+            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]" >{{ pat.nombre }}</td>
+            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]">{{ pat.fechaAnual }}</td>
+            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]">{{ pat.direccion.nombre}}</td>
+            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]">{{ pat.proceso.nombre}}</td>
+            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]" [ngClass]="colorPorcentaje(pat.porcentaje)">{{ pat.porcentajeReal | number : '1.2-2' }} %</td>
+            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]" [ngClass]="colorPorcentaje(pat.porcentaje)">{{ pat.porcentajeEsperado | number : '1.2-2' }} %</td>
+            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]" [ngClass]="colorPorcentaje(pat.porcentaje)">{{ pat.porcentajeCumplimiento | number : '1.2-2' }} %</td>
+            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]">{{ obtenerNombreUsuario(pat.idUsuario) }} </td>
             <td>
-              <button title="Ver" class="btn btn-outline-primary me-1"  [routerLink]="siguienteRuta(pat.idPat)">
+              <button title="Ver" class="btn btn-outline-primary me-1"  [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]">
                 <i class="bi bi-eye-fill"></i>
               </button>
               <button title="Editar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarPat" (click)="obtenerPat(pat.idPat,pat)">

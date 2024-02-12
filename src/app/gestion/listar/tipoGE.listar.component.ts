@@ -28,6 +28,7 @@ import { Tarea } from 'src/app/modelo/tarea';
 export class TipogeListarComponent implements OnInit {
   title = 'listarTipoGE';
   ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
+  tipoFormulario: 'ACTIVIDAD_ESTRATEGICA' | 'ACTIVIDAD_GESTION' | 'TAREA' = 'ACTIVIDAD_ESTRATEGICA'; // Por defecto, muestra el formulario para actividad estratégica
   pesoDeArchivo = 300 * 1024 * 1024; // 300 MB
   extencionesPermitidas = /\.(doc|docx|xls|xlsx|ppt|pptx|zip|pdf)$/i;
   nombreArchivoSeleccionado: string = '';
@@ -62,15 +63,14 @@ export class TipogeListarComponent implements OnInit {
   usuarios: Usuario[] = [];
   tareas:Tarea[] =[];
   observaciones:any[] =[];
+  observacionesActividadesEstrategicas:any[] =[];
   formGestion:FormGroup;
   formEstrategica:FormGroup;
   formModificarEstadoTarea:FormGroup;
   formModificarPorcentaje:FormGroup;
   formModificarTarea:FormGroup
   formTarea:FormGroup;
-  formObservacionActividadEstrategica:FormGroup;
-  formObservacionActividadGestion:FormGroup;
-  formObservacionTarea:FormGroup;
+  formObservacion:FormGroup;
 
   constructor(
     private gestionService: TipoGEService,private auth: AuthService,
@@ -96,25 +96,12 @@ export class TipogeListarComponent implements OnInit {
       estado: ['', Validators.required],
     });
     this.formModificarPorcentaje = this.formBuilder.group({
-      porcentaje: ['', Validators.required],
+      porcentajeReal: ['', Validators.required],
     });
-    this.formObservacionActividadEstrategica = this.formBuilder.group({
-      idTarea: ['', Validators.required],
+    this.formObservacion = this.formBuilder.group({
+      id: ['', Validators.required],
       fecha: [this.obtenerFechaActual(), Validators.required],
       nombre: ['', Validators.required],
-      tipo:['ACTIVIDAD_ESTRATEGICA']
-    });
-    this.formObservacionActividadGestion = this.formBuilder.group({
-      idTarea: ['', Validators.required],
-      fecha: [this.obtenerFechaActual(), Validators.required],
-      nombre: ['', Validators.required],
-      tipo:['ACTIVIDAD_GESTION']
-    });
-    this.formObservacionTarea = this.formBuilder.group({
-      idTarea: ['', Validators.required],
-      fecha: [this.obtenerFechaActual(), Validators.required],
-      nombre: ['', Validators.required],
-      tipo:['TAREA']
     });
     this.formTarea = this.formBuilder.group({
       nombre: ['', Validators.required],
@@ -155,7 +142,7 @@ export class TipogeListarComponent implements OnInit {
     this.periodiciadEnumLista = Object.values(EPeriodicidad);
   }
   siguienteRuta(idActividadEstrategica: number, nombrePat : string){
-    return ['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', idActividadEstrategica,'pat', nombrePat] } }];
+    return ['/panel', { outlets: { 'OutletAdmin': ['listarActividad', idActividadEstrategica,'pat', nombrePat] } }];
   }
 
   private obtenerFechaActual(): string {
@@ -179,7 +166,6 @@ export class TipogeListarComponent implements OnInit {
       .listarGestionPorIdPat(idPat, this.auth.obtenerHeader()).subscribe(
         (data: any) => {
           this.gestiones = data;
-
         });
   }
 
@@ -191,9 +177,31 @@ export class TipogeListarComponent implements OnInit {
           this.actividades = data;
         }
       );
-    console.log(this.actividades)
   }
-
+  cargarObservaciones(id:any,tipo:string) {
+    if(tipo === 'TAREA'){
+      this.tareaService
+        .listarPorIdTarea(id,this.auth.obtenerHeader()) .subscribe(
+          (data: any) => {
+            this.observaciones = data;
+          },
+        )
+    } else if( tipo === 'ACTIVIDAD_GESTION'){
+      this.gestionService
+        .listarObservacionPorIdActividadGestion(id,this.auth.obtenerHeader()) .subscribe(
+          (data: any) => {
+            this.observaciones = data;
+          },
+        )
+    } else if (tipo === 'ACTIVIDAD_ESTRATEGICA'){
+      this.gestionService
+        .listarObservacionPorIdActividadEstrategica(id,this.auth.obtenerHeader()) .subscribe(
+          (data: any) => {
+            this.observaciones = data;
+          },
+        )
+    }
+  } 
   eliminarGestion(idActividadGestion: number) {
     Swal.fire({
       icon:"question",
@@ -337,30 +345,6 @@ export class TipogeListarComponent implements OnInit {
         }
     )};
   } 
-  cargarObservaciones(id:any,tipo:string) {
-    if(tipo === 'TAREA'){
-      this.tareaService
-        .listarPorIdTarea(id,this.auth.obtenerHeader()) .subscribe(
-          (data: any) => {
-            this.observaciones = data;
-          },
-        )
-    } else if( tipo === 'ACTIVIDAD_GESTION'){
-      this.gestionService
-        .listarObservacionPorIdActividadGestion(id,this.auth.obtenerHeader()) .subscribe(
-          (data: any) => {
-            this.observaciones = data;
-          },
-        )
-    } else if (tipo === 'ACTIVIDAD_ESTRATEGICA'){
-      this.gestionService
-        .listarObservacionPorIdActividadEstrategica(id,this.auth.obtenerHeader()) .subscribe(
-          (data: any) => {
-            this.observaciones = data;
-          },
-        )
-    }
-  } 
   crearTarea() {
     if (this.formTarea.valid) {
       const nombre = this.formTarea.get('nombre')?.value;
@@ -393,25 +377,60 @@ export class TipogeListarComponent implements OnInit {
     }
   }
   crearObservacion() {
-    if (this.formObservacionActividadEstrategica.valid) {
-      const fecha = this.formObservacionActividadEstrategica.get('fecha')?.value;
-      const nombre = this.formObservacionActividadEstrategica.get('nombre')?.value;
+    console.log(this.tipoFormulario)
+    if (this.formObservacion.valid) {
+      const fecha = this.formObservacion.get('fecha')?.value;
+      const nombre = this.formObservacion.get('nombre')?.value;
 
-      const observacion = {
-        idActividadEstrategica: this.idActividadEstrategicaSeleccionado,
-        nombre: nombre,
-        fecha: fecha,
-      };
-      this.gestionService
-        .crearObservacionActividadEstrategica(observacion,this.auth.obtenerHeader())
-        .subscribe(
-          (response) => {
-              this.swalSatisfactorio('creado','observación')
-              this.formObservacionActividadEstrategica.reset()
-          },
-          (error) => {this.swalError(error);}
-        );
+      if(this.tipoFormulario === 'TAREA'){
+        const observacion = {
+          idTarea: this.idTareaSeleccionado,
+          nombre: nombre,
+          fecha: fecha,
+        };
+        this.tareaService
+          .crearObservacion(observacion,this.auth.obtenerHeader())
+          .subscribe(
+            (response) => {
+                this.swalSatisfactorio('creado','observación')
+                this.formObservacion.reset()
+            },
+            (error) => {this.swalError(error);}
+          );
+      } else if( this.tipoFormulario === 'ACTIVIDAD_GESTION'){
+        const observacion = {
+          idActividadGestion: this.idActividadGestionSeleccionado,
+          nombre: nombre,
+          fecha: fecha,
+        };
+        console.log(observacion)
+        this.gestionService
+          .crearObservacionActividadGestion(observacion,this.auth.obtenerHeader())
+          .subscribe(
+            (response) => {
+                this.swalSatisfactorio('creado','observación')
+                this.formObservacion.reset()
+            },
+            (error) => {this.swalError(error);}
+          );
+      } else if (this.tipoFormulario === 'ACTIVIDAD_ESTRATEGICA'){;
+        const observacion = {
+          idActividadEstrategica: this.idActividadEstrategicaSeleccionado,
+          nombre: nombre,
+          fecha: fecha,
+        };
+        this.gestionService
+          .crearObservacionActividadEstrategica(observacion,this.auth.obtenerHeader())
+          .subscribe(
+            (response) => {
+                this.swalSatisfactorio('creado','observación')
+                this.formObservacion.reset()
+            },
+            (error) => {this.swalError(error);}
+          );
+      }
     }
+          
   }
   modificarEstado() {
     if (this.formModificarEstadoTarea.valid) {
@@ -453,9 +472,9 @@ export class TipogeListarComponent implements OnInit {
         confirmButtonColor: '#0E823F',
       });
     } else if (this.formModificarPorcentaje.valid) {
-      const porcentaje = this.formModificarPorcentaje.get('porcentaje')?.value;
+      const porcentajeReal = this.formModificarPorcentaje.get('porcentajeReal')?.value;
       const tareaModificar = {
-        porcentaje: porcentaje,
+        porcentajeReal: porcentajeReal,
       };
       Swal.fire({
         title: "¿Deseas modificarlo?",
@@ -659,11 +678,13 @@ export class TipogeListarComponent implements OnInit {
   
 
   obtenerActividadGestion(idActividadGestion: number,actividadGestion:any) {
+    this.tipoFormulario = 'ACTIVIDAD_GESTION';
     this.idActividadGestionSeleccionado = idActividadGestion;
     this.nombreActividadGestion = actividadGestion.nombre;
     this.idUsuarioSeleccionado = actividadGestion.idUsuario
     this.fechaInicialGestion = actividadGestion.fechaInicial
     this.fechaFinalGestion = actividadGestion.fechaFinal
+
 
     this.formGestion.patchValue({
       nombre: this.nombreActividadGestion,
@@ -671,8 +692,8 @@ export class TipogeListarComponent implements OnInit {
       fechaFinal: this.fechaFinalGestion,
       idUsuario: this.idUsuarioSeleccionado,
     });
-    this.formObservacionActividadGestion.patchValue({
-      idActividadGestion: this.idActividadGestionSeleccionado,
+    this.formObservacion.patchValue({
+      id: this.idActividadGestionSeleccionado,
     });
   }
   obtenerTarea(idTarea: number,tarea:any) {
@@ -680,25 +701,25 @@ export class TipogeListarComponent implements OnInit {
     this.nombreTarea = tarea.nombre;
     this.idTareaTipo = tarea.idASE;
     this.estadoTarea = tarea.estado;
-    this.porcentajeTarea = tarea.porcentaje;
+    this.porcentajeTarea = tarea.porcentajeReal;
     this.periodicidadTarea = tarea.periodicidad;
+    this.tipoFormulario = 'TAREA';
 
     this.formModificarEstadoTarea.patchValue({
       estado: this.estadoTarea,
     });
     this.formModificarPorcentaje.patchValue({
-      porcentaje: this.estadoTarea,
+      porcentajeReal: this.porcentajeTarea,
     });
 
-    this.formObservacionTarea.patchValue({
-      idTarea: this.idTareaSeleccionado,
+    this.formObservacion.patchValue({
+      id: this.idTareaSeleccionado,
     });
   }
   obtenerTareaAModificar(idTarea: number,tarea:any) {
     this.idTareaSeleccionado = idTarea;
     this.nombreTarea = tarea.nombre;
     this.idTareaTipo = tarea.idASE;
-    
 
     this.formModificarTarea.patchValue({
       nombre : tarea.nombre,
@@ -708,13 +729,13 @@ export class TipogeListarComponent implements OnInit {
     });
   }
   obtenerActividadEstrategica(idActividadEstrategica: number,actividadEstrategica:any) {
-    
+    this.tipoFormulario = 'ACTIVIDAD_ESTRATEGICA'; 
     this.idActividadEstrategicaSeleccionado = idActividadEstrategica;
     this.nombreActividadEstrategica = actividadEstrategica.nombre;
     this.idUsuarioSeleccionado = actividadEstrategica.idUsuario;
     this.fechaInicialEstrategica = actividadEstrategica.fechaInicial;
     this.fechaFinalEstrategica = actividadEstrategica.fechaFinal;  
-    this.metaEstrategica = actividadEstrategica.meta; 
+    this.metaEstrategica = actividadEstrategica.meta;
 
     this.formEstrategica.patchValue({
       nombre: this.nombreActividadGestion,
@@ -723,8 +744,8 @@ export class TipogeListarComponent implements OnInit {
       meta: this.metaEstrategica,
       idUsuario: this.idUsuarioSeleccionado,
     });
-    this.formObservacionActividadEstrategica.patchValue({
-      idActividadEstrategica: this.idActividadEstrategicaSeleccionado,
+    this.formObservacion.patchValue({
+      id: this.idActividadEstrategicaSeleccionado,
     });
   }
   obtenerNombreUsuario(idUsuario: number) {
@@ -789,12 +810,10 @@ export class TipogeListarComponent implements OnInit {
     return this.formTarea.get('idUsuario')?.invalid && this.formTarea.get('idUsuario')?.touched;
   }
   get nombreObservacionVacio(){
-    return (this.formObservacionActividadEstrategica.get('nombre')?.invalid && this.formObservacionActividadEstrategica.get('nombre')?.touched) || 
-    (this.formObservacionActividadGestion.get('nombre')?.invalid && this.formObservacionActividadGestion.get('nombre')?.touched) || 
-    (this.formObservacionTarea.get('nombre')?.invalid && this.formObservacionTarea.get('nombre')?.touched);
+    return (this.formObservacion.get('nombre')?.invalid && this.formObservacion.get('nombre')?.touched);
   }
   get fechaVacio(){
-    return this.formObservacionActividadEstrategica.get('fecha')?.invalid && this.formObservacionActividadEstrategica.get('fecha')?.touched;
+    return this.formObservacion.get('fecha')?.invalid && this.formObservacion.get('fecha')?.touched;
   }
 
   private validarArchivo(): boolean {

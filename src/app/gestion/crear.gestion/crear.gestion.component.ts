@@ -62,7 +62,7 @@ export class CrearGestionComponent {
           idPat: idPat, 
           idUsuario: idUsuario,
         };
-
+        
           this.tipoService.crearGestion(actividad,this.auth.obtenerHeader()).subscribe(
             (response) => {
               Swal.fire({

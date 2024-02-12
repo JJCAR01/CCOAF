@@ -70,12 +70,12 @@
             <tr>
               <th class="column-nombre">Nombre</th>
               <th class="column-fecha">Fecha Inicial</th>
-              <th class="column-fecha">Fecha Final</th>
+              <th class="column-fecha">&nbsp; Fecha &nbsp; Final</th>
               <th class="column-duracion">Duracion (Días)</th>
               <th class="column-dias">Dias Restantes</th>
-              <th class="column-avance">Porcentaje real</th>
-              <th class="column-avance">Porcentaje esperado</th>
-              <th class="column-avance">Cumplimiento</th>
+              <th class="column-avance">% Avance real</th>
+              <th class="column-avance">% Avance esperado</th>
+              <th class="column-avance">% Cumplimiento</th>
               <th class="column-meta">Meta (KPI)</th>
               <th class="column-resultado">Resultado</th>
               <th class="column-responsable">Responsable</th>
@@ -97,10 +97,10 @@
                 <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" [ngClass]="colorPorcentaje(actividad.porcentajeReal)">{{ actividad.porcentajeEsperado | number : '1.2-2' }} %</td>
                 <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" [ngClass]="colorPorcentaje(actividad.porcentajeReal)">{{ actividad.porcentajeCumplimiento | number : '1.2-2' }} %</td>
                 <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" >{{ actividad.meta }} </td>
-                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" >{{ actividad.resultado }}</td>
+                <td >{{ actividad.resultado }}</td>
                 <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)"> {{ obtenerNombreUsuario(actividad.idUsuario) }}</td>
                 <td >
-                  <button title="Ver" class="btn btn-outline-primary me-1" [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)">
+                  <button title="Ver" class="btn btn-outline-primary me-1" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarActividad', actividad.idActividadEstrategica ,'pat', nombrePat] } }]">
                     <i class="bi bi-eye-fill"></i>
                   </button>
                     <button title="Modificar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificar" (click)="obtenerActividadEstrategica(actividad.idActividadEstrategica,actividad)">
@@ -109,7 +109,7 @@
                   <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarActividadesEstrategica(actividad.idActividadEstrategica)">
                     <i class="bi bi-trash3-fill"></i>
                   </button>
-                  <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerTarea(actividad.idActividadEstrategica,actividad)">
+                  <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerActividadEstrategica(actividad.idActividadEstrategica,actividad)">
                     <i class="bi bi-node-plus-fill"></i>
                   </button>
                   <button title="Ver observación" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(actividad.idActividadEstrategica,'ACTIVIDAD_ESTRATEGICA')">
@@ -128,7 +128,7 @@
         <div *ngFor="let gestion of gestiones">
           <div class="card mb-2">
             <div class="card-header" role="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapse-' + gestion.idActividadGestion" (click)="cargarTareas(gestion.idActividadGestion,'ACTIVIDAD_GESTION')">
-              <h5 class="mb-0" >{{ gestion.nombre }}</h5>
+              <h5 class="nombre-gestion">{{ gestion.nombre }}</h5>
               <div class="card-body">
                 <div class="row justify-content-center" title="{{gestion.nombre}}">
                   <div class="col-md-1">
@@ -152,15 +152,15 @@
                     <span *ngIf="gestion.porcentajeReal === 100">Finalizado</span>
                   </div>
                   <div class="col-md-1" [ngClass]="colorPorcentaje(gestion.porcentajeReal)">
-                    <h6>Porcentaje real</h6>
+                    <h6>&nbsp;&nbsp;% Avance&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; real</h6>
                     {{ gestion.porcentajeReal | number : '1.2-2' }} %
                   </div>
                   <div class="col-md-1" [ngClass]="colorPorcentaje(gestion.porcentajeEsperado)">
-                    <h6>Porcentaje esperado</h6>
+                    <h6>% Avance esperado</h6>
                     {{ gestion.porcentajeEsperado | number : '1.2-2' }} %
                   </div>
                   <div class="col-md-1" [ngClass]="colorPorcentaje(gestion.porcentajeCumplimiento)">
-                    <h6>Cumplimiento</h6>
+                    <h6>&nbsp;%&nbsp;&nbsp; Cumplimiento</h6>
                     {{ gestion.porcentajeCumplimiento | number : '1.2-2' }} %
                   </div>
                   <div class="col-md-2">
@@ -179,7 +179,8 @@
                   <button title="Ver documento" class="btn btn-outline-primary me-1"
                   (click)="obtenerDocumento(gestion.idActividadGestion)">            
                     <i class="bi bi-file-earmark-check"></i></button>
-                    <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)"><i class="bi bi-node-plus-fill"></i></button>
+                    <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)">
+                      <i class="bi bi-node-plus-fill"></i></button>
                     <button title="Ver observación" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(gestion.idActividadGestion,'ACTIVIDAD_GESTION')"><i class="bi bi-eye-fill"></i></button>
                 </div>   
               </div>
@@ -251,7 +252,8 @@
                           <button title="Modificar estado" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarEstado" (click)="obtenerTarea(tarea.idTarea,tarea)"
                           ><i class="bi bi-pen-fill"></i></button>
                           <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarTarea(tarea.idTarea,gestion.idActividadGestion)" ><i class="bi bi-trash3-fill"></i></button>
-                          <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerTarea(tarea.idTarea,tarea)"><i class="bi bi-node-plus-fill"></i></button>
+                          <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerTarea(tarea.idTarea,tarea)">
+                            <i class="bi bi-node-plus-fill"></i></button>
                           <button title="Ver observación" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(tarea.idTarea,'TAREA')"><i class="bi bi-eye-fill"></i></button>
                         </td>
                       </tr>
@@ -411,7 +413,8 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form [formGroup]="formObservacionActividadEstrategica" (ngSubmit)="crearObservacion()">
+          <form [formGroup]="tipoFormulario === 'ACTIVIDAD_ESTRATEGICA' || 'ACTIVIDAD_GESTION' || 'TAREA' ? formObservacion : formObservacion" 
+          (ngSubmit)="crearObservacion()">
             <div class="form-floating">
               <input type="date" id="fecha" [class.is-invalid]="fechaVacio" class="form-control mb-2" formControlName="fecha">
               <label for="fecha"  class="form-label">Fecha</label>
@@ -425,7 +428,9 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <button type="submit" class="btn btn-success" [attr.data-bs-dismiss]="formObservacionActividadEstrategica.valid ? 'modal' : null">Guardar</button>
+              <button type="submit" class="btn btn-success" [attr.data-bs-dismiss]="(tipoFormulario === 'ACTIVIDAD_ESTRATEGICA' && formObservacion.valid) || 
+              (tipoFormulario === 'ACTIVIDAD_GESTION' && formObservacion.valid) ||
+              (tipoFormulario === 'TAREA' && formObservacion.valid) ? 'modal' : null">Guardar</button>
             </div>
           </form>
         </div>
@@ -442,8 +447,8 @@
         <div class="modal-body">
           <form [formGroup]="formModificarPorcentaje" (ngSubmit)="modificarPorcentaje()">
             <div class="form-floating mb-2">
-              <input type="number" id="porcentaje" class="form-control form-control-lg" formControlName="porcentaje" placeholder="Porcentaje (%)">
-              <label for="porcentaje" class="form-label" >Porcentaje (%)<span class="required-field">*</span></label> 
+              <input type="number" id="porcentajeReal" class="form-control form-control-lg" formControlName="porcentajeReal" placeholder="Porcentaje (%)">
+              <label for="porcentajeReal" class="form-label" >Porcentaje (%)<span class="required-field">*</span></label> 
             </div>
             <span class="text-center" >Recuerda que lo valores que puedes digitar van de 0 a 100</span>
             <div class="modal-footer">

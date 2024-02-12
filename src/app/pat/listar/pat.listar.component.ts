@@ -78,9 +78,6 @@ export class PatListarComponent implements OnInit{
       this.cargarProcesos();
       this.cargarDirecciones();
     }
-    siguienteRuta(idPat: number){
-      return ['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', idPat] } }];
-    }
     cargarUsuario() {
       this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
         (data: any) => {
