@@ -34,7 +34,7 @@ export class TipogeListarComponent implements OnInit {
   nombreArchivoSeleccionado: string = '';
   archivoSeleccionado: File | null = null;
   documentoObtenido:any;
-  usuarioPat:Usuario | undefined;
+  usuarioPat:number | 0 = 0;
   porcentajePat:number | 0 = 0;
   nombrePat:string | undefined = '';
   fechaAnualPat:number | undefined;
@@ -49,6 +49,7 @@ export class TipogeListarComponent implements OnInit {
   fechaInicialEstrategica: Date | undefined;
   fechaFinalEstrategica: Date | undefined;
   metaEstrategica: number | 0=0;
+  resultadoActividad: string | undefined = '';
   idTareaSeleccionado: number | 0 = 0;
   idTareaTipo: number | 0 = 0;
   nombreTarea: string | undefined = '';
@@ -71,6 +72,7 @@ export class TipogeListarComponent implements OnInit {
   formModificarTarea:FormGroup
   formTarea:FormGroup;
   formObservacion:FormGroup;
+  formAgregarResultado:FormGroup;
 
   constructor(
     private gestionService: TipoGEService,private auth: AuthService,
@@ -102,6 +104,9 @@ export class TipogeListarComponent implements OnInit {
       id: ['', Validators.required],
       fecha: [this.obtenerFechaActual(), Validators.required],
       nombre: ['', Validators.required],
+    });
+    this.formAgregarResultado = this.formBuilder.group({
+      resultado: ['', Validators.required],
     });
     this.formTarea = this.formBuilder.group({
       nombre: ['', Validators.required],
@@ -432,6 +437,22 @@ export class TipogeListarComponent implements OnInit {
     }
           
   }
+  agregarResultado() {
+    if (this.formAgregarResultado.valid) {
+      const resultado = this.formAgregarResultado.get('resultado')?.value;
+      const actividad = {
+        resultado: resultado,
+      };
+      this.gestionService.modificarResultadoActividadEstrategica(actividad, this.idActividadEstrategicaSeleccionado,this.auth.obtenerHeader()).subscribe(
+              () => {
+                  this.swalSatisfactorio('Agregado!','El resultado de la actividad estratégica')
+                  this.cargarActividadesEstrategicas(this.idPat);
+                  this.formAgregarResultado.reset();           
+              },
+              (error) => {this.swalError(error);}
+            );
+    }
+  }
   modificarEstado() {
     if (this.formModificarEstadoTarea.valid) {
       const estado = this.formModificarEstadoTarea.get('estado')?.value;
@@ -746,6 +767,9 @@ export class TipogeListarComponent implements OnInit {
     });
     this.formObservacion.patchValue({
       id: this.idActividadEstrategicaSeleccionado,
+    });
+    this.formObservacion.patchValue({
+      resultado: this.resultadoActividad,
     });
   }
   obtenerNombreUsuario(idUsuario: number) {

@@ -28,7 +28,7 @@
         </div>
         <div class="responsable-info">
           <h2 title="Responsble"><i class="bi bi-person-circle tamaño-iconos color-iconoResponsable"></i> Responsable:</h2>
-          <p> {{ obtenerNombreUsuario(usuarioPat?.idUsuario!) }}</p>
+          <p> {{ obtenerNombreUsuario(usuarioPat) }}</p>
         </div>
       </div>
       <div class="row text-center">
@@ -97,7 +97,7 @@
                 <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" [ngClass]="colorPorcentaje(actividad.porcentajeReal)">{{ actividad.porcentajeEsperado | number : '1.2-2' }} %</td>
                 <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" [ngClass]="colorPorcentaje(actividad.porcentajeReal)">{{ actividad.porcentajeCumplimiento | number : '1.2-2' }} %</td>
                 <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" >{{ actividad.meta }} </td>
-                <td >{{ actividad.resultado }}</td>
+                <td data-bs-toggle="modal" data-bs-target="#modalAgregarResultado" (click)="obtenerActividadEstrategica(actividad.idActividadEstrategica,actividad)">{{ actividad.resultado }}</td>
                 <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)"> {{ obtenerNombreUsuario(actividad.idUsuario) }}</td>
                 <td >
                   <button title="Ver" class="btn btn-outline-primary me-1" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarActividad', actividad.idActividadEstrategica ,'pat', nombrePat] } }]">
@@ -431,6 +431,28 @@
               <button type="submit" class="btn btn-success" [attr.data-bs-dismiss]="(tipoFormulario === 'ACTIVIDAD_ESTRATEGICA' && formObservacion.valid) || 
               (tipoFormulario === 'ACTIVIDAD_GESTION' && formObservacion.valid) ||
               (tipoFormulario === 'TAREA' && formObservacion.valid) ? 'modal' : null">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="modalAgregarResultado" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Registrar resultado</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="formAgregarResultado" (ngSubmit)="agregarResultado()">
+            <div class="form-floating mb-2">
+              <input type="text" id="resultado" class="form-control form-control-lg" formControlName="resultado" placeholder="resultado">
+              <label for="resultado" class="form-label">Resultado<span class="required-field">*</span></label> 
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Guardar</button>
             </div>
           </form>
         </div>

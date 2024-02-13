@@ -131,7 +131,7 @@ ngOnInit() {
       (data: any) => {
         this.actividadNombre = data.nombre;
         this.idActividadEstrategica = data.idActividadEstrategica;
-        this.porcentajeEstrategica = data.avance;
+        this.porcentajeEstrategica = data.porcentajeReal;
         this.usuarioEstrategica = data.idUsuario;
         this.patEstrategica = data.idPat;
         console.log(data.idPat)
@@ -342,18 +342,29 @@ private obtenerFechaActual(): string {
         }
     )};
   } 
-  cargarObservaciones(idTarea:any) {
-    this.observacionService
-      .listarTareaPorTarea(idTarea,this.auth.obtenerHeader()) 
-      .toPromise()
-      .then(
-        (data: any) => {
-        this.observaciones = data;
-        },
-        (error) => {
-          Swal.fire('Error',error.error.mensajeHumano,'error');
-        }
-    )
+  cargarObservaciones(id:any,tipo:string) {
+    if(tipo === 'TAREA'){
+      this.tareaService
+        .listarPorIdTarea(id,this.auth.obtenerHeader()) .subscribe(
+          (data: any) => {
+            this.observaciones = data;
+          },
+        )
+    } else if( tipo === 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA'){
+      this.actividadService
+        .listarObservacionActividadGestionActividadEstrategicaPorId(id,this.auth.obtenerHeader()) .subscribe(
+          (data: any) => {
+            this.observaciones = data;
+          },
+        )
+    } else if (tipo === 'PROYECTO'){
+      this.actividadService
+        .listarObservacionProyectoPorId(id,this.auth.obtenerHeader()) .subscribe(
+          (data: any) => {
+            this.observaciones = data;
+          },
+        )
+    }
   } 
   crearTarea() {
     if (this.formTarea.valid) {
