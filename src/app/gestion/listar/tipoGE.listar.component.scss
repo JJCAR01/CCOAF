@@ -18,18 +18,37 @@ h2 {
 }
 h3 {
   flex-grow: 1; /* Permitir que el texto "Epicas" ocupe el espacio restante */
+  font-family: "Roboto", inherit;
+}
+.titulo-actividades{
   text-align: center; /* Alinea el texto al centro */
 }
-
+.titulo-actividadesyproyectos{
+  text-align: right; /* Alinea el texto al centro */
+}
+.actividades {
+  text-align: center; /* Centrar horizontalmente el contenido */
+  align-items: center; /* Centrar verticalmente el contenido */
+}
+.actividadesyproyectos {
+  text-align: right; /* Centrar horizontalmente el contenido */
+  align-items: right; /* Centrar verticalmente el contenido */
+}
 .row {
   display: flex; /* Hacer que los elementos dentro de .row se muestren en línea */
   align-items: center; /* Alinear verticalmente los elementos dentro de .row */
 }
 
 .responsable-info {
-  display: flex; /* Hacer que los elementos dentro de .responsable-info se muestren en línea */
   align-items: center; /* Alinear verticalmente los elementos dentro de .responsable-info */
 }
+.responsable-info h2,
+.responsable-info p {
+  display: inline-block;
+  vertical-align: top; /* Alinear verticalmente la parte superior de los elementos */
+  margin: 0; /* Eliminar márgenes para evitar espacios no deseados */
+}
+
 .responsable-info  h1{
   display: flex; /* Hacer que los elementos dentro de .responsable-info se muestren en línea */
   align-items: center; /* Alinear verticalmente los elementos dentro de .responsable-info */
@@ -38,10 +57,6 @@ h3 {
 .responsable-info h2 {
   margin-top: 5px;
   margin: 2px;
-}
-.responsable-info p {
-  margin-top: 5px;
-  margin: 5px;
 }
 
 
@@ -130,7 +145,7 @@ button {
   width: 4%; /* Ajusta el ancho a tu preferencia */
 }
 .column-acciones{
-  width: 14%;
+  width: 11%;
 }
 .column-avance{
   width: 4%;
@@ -139,7 +154,10 @@ button {
   width: 2%;
 }
 .column-resultado{
-  width: 10%;
+  width: 15%;
+}
+.column-responsable {
+  width: 10%; /* Ajusta el ancho a tu preferencia */
 }
 
 
@@ -166,9 +184,7 @@ button {
 }
 
 
-.column-responsable {
-  width: 300px; /* Ajusta el ancho a tu preferencia */
-}
+
 
 .column-descripcion {
   width: 300px; /* Ajusta el ancho a tu preferencia */

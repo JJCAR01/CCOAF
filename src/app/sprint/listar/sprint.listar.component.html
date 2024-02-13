@@ -64,19 +64,27 @@
               <div class="row justify-content-center">
                 <div class="col-md-1">
                   <h6>N°</h6>{{ i + 1 }}</div>
-                <div class="col-md-2">
+                <div class="col-md-1">
                   <h6>Fecha Inicial</h6>
                   {{ sprint.fechaInicial }}
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-1">
                   <h6>Fecha Final</h6>
                   {{ sprint.fechaFinal }}
                 </div>
-                <div class="col-md-2" [ngClass]="colorPorcentaje(sprint.avance)">
-                  <h6>Avance</h6>
-                  {{ sprint.avance }} %
+                <div class="col-md-1" [ngClass]="colorPorcentaje(sprint.porcentajeReal)">
+                  <h6>&nbsp;&nbsp;% Avance&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; real</h6>
+                  {{ sprint.porcentajeReal | number : '1.2-2' }} %
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-1" [ngClass]="colorPorcentaje(sprint.porcentajeEsperado)">
+                  <h6>% Avance esperado</h6>
+                  {{ sprint.porcentajeEsperado | number : '1.2-2' }} %
+                </div>
+                <div class="col-md-1" [ngClass]="colorPorcentaje(sprint.porcentajeCumplimiento)">
+                  <h6>&nbsp;%&nbsp;&nbsp; Cumplimiento</h6>
+                  {{ sprint.porcentajeCumplimiento | number : '1.2-2' }} %
+                </div>
+                <div class="col-md-3">
                   <button title="Modificar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modificarSprint" (click)="obtenerSprint(sprint.idSprint,sprint)">
                     <i class="bi bi-pen-fill"></i>
                   </button>
@@ -88,6 +96,10 @@
                   <button title="Ver documento" class="btn btn-outline-primary me-1"
                   (click)="obtenerDocumento(sprint.idSprint)">            
                     <i class="bi bi-file-earmark-check"></i></button>
+                    <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerSprint(sprint.idSprint,sprint)">
+                      <i class="bi bi-node-plus-fill"></i></button>
+                    <button title="Ver observación" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(sprint.idSprint,'SPRINT')">
+                      <i class="bi bi-eye-fill"></i></button>
                 </div> 
             </div>
           </div>
@@ -152,7 +164,7 @@
                         </div>
                       </td>
                       <td data-bs-toggle="modal" (click)="obtenerTarea(tarea.idTarea, tarea)" [attr.data-bs-target]="(tarea.periodicidad !== 'UNICA_VEZ') ? '#modalModificarPorcentaje' : null">
-                        {{ tarea.porcentaje }}%
+                        {{ tarea.porcentajeReal }}%
                         <i class="bi bi-arrow-clockwise colorear-icono" [hidden]="tarea.periodicidad === 'UNICA_VEZ'"></i>
                       </td>
                         <td>{{ tarea.descripcion }}</td>
@@ -163,7 +175,7 @@
                           ><i class="bi bi-pen-fill"></i></button>
                           <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarTarea(tarea.idTarea, sprint.idSprint)"><i class="bi bi-trash3-fill"></i></button>
                           <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerTarea(tarea.idTarea,tarea)"><i class="bi bi-node-plus-fill"></i></button>
-                          <button title="Ver observación" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(tarea.idTarea)"><i class="bi bi-eye-fill"></i></button>
+                          <button title="Ver observación" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(tarea.idTarea,'TAREA')"><i class="bi bi-eye-fill"></i></button>
                         </td>
                     </tr>
                   </ng-container>
@@ -270,7 +282,8 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form [formGroup]="formObservacion" (ngSubmit)="crearObservacion()">
+          <form [formGroup]="tipoFormulario === 'SPRINT' || 'TAREA' ? formObservacion : formObservacion" 
+          (ngSubmit)="crearObservacion()">
             <div class="form-floating">
               <input type="date" id="fecha" [class.is-invalid]="fechaVacio" class="form-control mb-2" formControlName="fecha">
               <label for="fecha"  class="form-label">Fecha</label>
@@ -284,7 +297,8 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <button type="submit" class="btn btn-success" [attr.data-bs-dismiss]="formObservacion.valid ? 'modal' : null">Guardar</button>
+              <button type="submit" class="btn btn-success" [attr.data-bs-dismiss]="(tipoFormulario === 'SPRINT' && formObservacion.valid) ||
+              (tipoFormulario === 'TAREA' && formObservacion.valid) ? 'modal' : null">Guardar</button>
             </div>
           </form>
         </div>

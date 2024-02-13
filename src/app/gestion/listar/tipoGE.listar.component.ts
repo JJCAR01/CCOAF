@@ -35,7 +35,13 @@ export class TipogeListarComponent implements OnInit {
   archivoSeleccionado: File | null = null;
   documentoObtenido:any;
   usuarioPat:number | 0 = 0;
-  porcentajePat:number | 0 = 0;
+  porcentajeRealPat:number | 0 = 0;
+  porcentajeRealActividadesEstrategica:number | 0 = 0;
+  porcentajeEsperadoActividadesEstrategica:number | 0 = 0;
+  porcentajeCumplimientoActividadesEstrategica:number | 0 = 0;
+  porcentajeRealActividadesYProyectos:number | 0 = 0;
+  porcentajeEsperadoActividadesYProyectos:number | 0 = 0;
+  porcentajeCumplimientoActividadesYProyectos:number | 0 = 0;
   nombrePat:string | undefined = '';
   fechaAnualPat:number | undefined;
   idPat:number | 0 = 0;
@@ -64,7 +70,6 @@ export class TipogeListarComponent implements OnInit {
   usuarios: Usuario[] = [];
   tareas:Tarea[] =[];
   observaciones:any[] =[];
-  observacionesActividadesEstrategicas:any[] =[];
   formGestion:FormGroup;
   formEstrategica:FormGroup;
   formModificarEstadoTarea:FormGroup;
@@ -132,7 +137,7 @@ export class TipogeListarComponent implements OnInit {
         (data: any) => {
           this.nombrePat = data.nombre;
           this.idPat = data.idPat; // Asignar el nombre del Pat a patNombre
-          this.porcentajePat = data.porcentajeReal;
+          this.porcentajeRealPat = data.porcentajeReal;
           this.fechaAnualPat = data.fechaAnual;
           this.usuarioPat = data.idUsuario;
         }
@@ -180,6 +185,7 @@ export class TipogeListarComponent implements OnInit {
       .listarActividadEstrategicaPorIdPat(idPat, this.auth.obtenerHeader()).subscribe(
         (data: any) => {
           this.actividades = data;
+          this.porcentajeRealActividadesEstrategica += this.actividades.reduce((total, actividad) => total + actividad.porcentajeReal, 0);
         }
       );
   }
@@ -382,7 +388,6 @@ export class TipogeListarComponent implements OnInit {
     }
   }
   crearObservacion() {
-    console.log(this.tipoFormulario)
     if (this.formObservacion.valid) {
       const fecha = this.formObservacion.get('fecha')?.value;
       const nombre = this.formObservacion.get('nombre')?.value;
@@ -408,7 +413,6 @@ export class TipogeListarComponent implements OnInit {
           nombre: nombre,
           fecha: fecha,
         };
-        console.log(observacion)
         this.gestionService
           .crearObservacionActividadGestion(observacion,this.auth.obtenerHeader())
           .subscribe(
@@ -434,8 +438,9 @@ export class TipogeListarComponent implements OnInit {
             (error) => {this.swalError(error);}
           );
       }
-    }
-          
+    } else {
+      return this.formObservacion.markAllAsTouched();
+    }    
   }
   agregarResultado() {
     if (this.formAgregarResultado.valid) {
@@ -597,10 +602,15 @@ export class TipogeListarComponent implements OnInit {
       this.nombreArchivoSeleccionado = '';
     }
   }
-  abrirModalAgregarDocumento(idActividadGestion: number): void {
-    this.idActividadGestionSeleccionado = idActividadGestion;
+  abrirModalAgregarDocumento(idRecibido: number,tipo:string): void {
+    if(tipo === 'ACTIVIDAD_ESTRATEGICA'){
+      this.idActividadEstrategicaSeleccionado = idRecibido;
+    } else {
+      this.idActividadGestionSeleccionado = idRecibido;
+    }
   }
-  async subirDocumento(formulario: any) {
+  async subirDocumento(formulario: any,id:number,tipo:string) {
+
     if (!this.archivoSeleccionado) {
       // Puedes mostrar un mensaje de error o manejarlo de otra manera
       return;
@@ -608,31 +618,53 @@ export class TipogeListarComponent implements OnInit {
       try {
         const app = initializeApp(environment.firebase);
         const storage = getStorage(app);
-        const storageRef = ref(storage, `actividadGestion/${this.idActividadGestionSeleccionado}/${this.archivoSeleccionado.name}`);
+        const storageRef = ref(storage, `${tipo}/${id}/${this.archivoSeleccionado.name}`);
         const snapshot = await uploadBytes(storageRef, this.archivoSeleccionado);
         const downloadURL = await getDownloadURL(storageRef);
         // Crear un objeto sprint que incluya la URL de descarga
         const documento = {
           rutaDocumento: downloadURL, // Asegúrate de que el nombre de la propiedad coincida con lo que espera tu backend
         };
-        this.gestionService.guardarDocumento(documento, this.idActividadGestionSeleccionado, this.auth.obtenerHeaderDocumento()).subscribe(
-          (data: any) => {
-            Swal.fire({
-              title:'Archivo cargado!',
-              text:'El archivo se cargó correctamente',
-              icon:'success',
-              confirmButtonColor: '#0E823F',
-            })
-          },
-          (error) => {
-            Swal.fire({
-              title:'Hubo un error!!!',
-              text:error.error.mensajeTecnico,
-              icon:'error',
-              confirmButtonColor: '#0E823F',
-            })
-          }
-      );
+        if(tipo === 'actividadGestion'){
+          this.gestionService.guardarDocumento(documento, this.idActividadGestionSeleccionado, this.auth.obtenerHeaderDocumento()).subscribe(
+            (data: any) => {
+              Swal.fire({
+                title:'Archivo cargado!',
+                text:'El archivo se cargó correctamente',
+                icon:'success',
+                confirmButtonColor: '#0E823F',
+              })
+            },
+            (error) => {
+              Swal.fire({
+                title:'Hubo un error!!!',
+                text:error.error.mensajeTecnico,
+                icon:'error',
+                confirmButtonColor: '#0E823F',
+              })
+            }
+          );
+        } else if (tipo === 'actividadEstrategica'){
+          this.gestionService.guardarDocumentoAcividadEstrategica(documento, this.idActividadEstrategicaSeleccionado, this.auth.obtenerHeaderDocumento()).subscribe(
+            (data: any) => {
+              Swal.fire({
+                title:'Archivo cargado!',
+                text:'El archivo se cargó correctamente',
+                icon:'success',
+                confirmButtonColor: '#0E823F',
+              })
+            },
+            (error) => {
+              Swal.fire({
+                title:'Hubo un error!!!',
+                text:error.error.mensajeTecnico,
+                icon:'error',
+                confirmButtonColor: '#0E823F',
+              })
+            }
+        );
+        }
+        
 
     } catch (error) {
       Swal.fire({
@@ -643,37 +675,70 @@ export class TipogeListarComponent implements OnInit {
       })
     }
   }
-  obtenerDocumento(idActividadGestion: number) {
+  obtenerDocumento(id: number,tipo: string) {
 
-    this.gestionService.obtenerDocumento(idActividadGestion, this.auth.obtenerHeaderDocumento()).subscribe(
-      (data: any) => {
-        this.documentoObtenido = data;
+    if(tipo === 'ACTIVIDAD_GESTION'){
+      this.gestionService.obtenerDocumento(id, this.auth.obtenerHeaderDocumento()).subscribe(
+        (data: any) => {
+          this.documentoObtenido = data;
+    
+          // Verificar si this.documentoObtenido.rutaArchivo existe
+          if (this.documentoObtenido.rutaDocumento) {
+            // Extraer el nombre del archivo de la URL
+            const nombreArchivo = this.extraerNombreArchivo(this.documentoObtenido.rutaDocumento);
   
-        // Verificar si this.documentoObtenido.rutaArchivo existe
-        if (this.documentoObtenido.rutaDocumento) {
-          // Extraer el nombre del archivo de la URL
-          const nombreArchivo = this.extraerNombreArchivo(this.documentoObtenido.rutaDocumento);
-
-          // Crear un enlace HTML
-          const enlaceHTML = `<a href="${this.documentoObtenido.rutaDocumento}" target="_blank">${nombreArchivo}</a>`;
-
+            // Crear un enlace HTML
+            const enlaceHTML = `<a href="${this.documentoObtenido.rutaDocumento}" target="_blank">${nombreArchivo}</a>`;
+  
+            Swal.fire({
+              title: 'Documento correspondiente a la actividad',
+              html: `Para previsualizar darle click al enlace: ${enlaceHTML}`,
+              confirmButtonColor: '#0E823F',
+              icon:'success'
+            });
+          }
+        },
+        (error: any) => {
           Swal.fire({
-            title: 'Documento correspondiente a la actividad',
-            html: `Para previsualizar darle click al enlace: ${enlaceHTML}`,
+            title: 'La actividad no tiene documentos adjuntos',
+            text: 'Cargue un documento para visualizarlo',
+            icon: 'info',
             confirmButtonColor: '#0E823F',
-            icon:'success'
           });
         }
-      },
-      (error: any) => {
-        Swal.fire({
-          title: 'Este sprint no tiene documentos adjuntos',
-          text: 'Cargue un documento para visualizarlo',
-          icon: 'info',
-          confirmButtonColor: '#0E823F',
-        });
-      }
-    );
+      );
+    } else {
+      this.gestionService.obtenerDocumentoActividadEstrategica(id, this.auth.obtenerHeaderDocumento()).subscribe(
+        (data: any) => {
+          this.documentoObtenido = data;
+    
+          // Verificar si this.documentoObtenido.rutaArchivo existe
+          if (this.documentoObtenido.rutaDocumento) {
+            // Extraer el nombre del archivo de la URL
+            const nombreArchivo = this.extraerNombreArchivo(this.documentoObtenido.rutaDocumento);
+  
+            // Crear un enlace HTML
+            const enlaceHTML = `<a href="${this.documentoObtenido.rutaDocumento}" target="_blank">${nombreArchivo}</a>`;
+  
+            Swal.fire({
+              title: 'Documento correspondiente a la actividad',
+              html: `Para previsualizar darle click al enlace: ${enlaceHTML}`,
+              confirmButtonColor: '#0E823F',
+              icon:'success'
+            });
+          }
+        },
+        (error: any) => {
+          Swal.fire({
+            title: 'La actividad no tiene documentos adjuntos',
+            text: 'Cargue un documento para visualizarlo',
+            icon: 'info',
+            confirmButtonColor: '#0E823F',
+          });
+        }
+      );
+    }
+    
   }
   
   extraerNombreArchivo(rutaArchivo: string): string {

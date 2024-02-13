@@ -24,6 +24,7 @@ import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 export class ActividadListarComponent implements OnInit{
   title = 'listarActividad';
   ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
+  tipoFormulario: 'PROYECTO' | 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA' | 'TAREA' = 'PROYECTO';
   pesoDeArchivo = 300 * 1024 * 1024; // 300 MB
   extencionesPermitidas = /\.(doc|docx|xls|xlsx|ppt|pptx|zip|pdf)$/i;
   nombreArchivoSeleccionado: string = '';
@@ -47,11 +48,11 @@ export class ActividadListarComponent implements OnInit{
   porcentajeEstrategica:any;
   usuarioEstrategica:any;
   patEstrategica:number | 0 =0;
-  idActividadGestionSeleccionado:any;
+  idActividadGestionEstrategicaSeleccionado:number | 0 = 0;
   nombreActividadGestion:any;
   fechaInicialGestion:any;
   fechaFinalGestion:any;
-  idProyectoSeleccionado:any;
+  idProyectoSeleccionado:number | 0 = 0;
   nombreProyecto:any;
   presupuestoProyecto:any;
   fechaInicialProyecto:any;
@@ -100,10 +101,10 @@ export class ActividadListarComponent implements OnInit{
       estado: ['', Validators.required],
     });
     this.formModificarPorcentaje = this.formBuilder.group({
-      porcentaje: ['', Validators.required],
+      porcentajeReal: ['', Validators.required],
     });
     this.formObservacion = this.formBuilder.group({
-      idTarea: ['', Validators.required],
+      id: ['', Validators.required],
       fecha: [this.obtenerFechaActual(), Validators.required],
       nombre: ['', Validators.required],
     });
@@ -134,7 +135,6 @@ ngOnInit() {
         this.porcentajeEstrategica = data.porcentajeReal;
         this.usuarioEstrategica = data.idUsuario;
         this.patEstrategica = data.idPat;
-        console.log(data.idPat)
         this.cargarGestiones(idActividadEstrategica);
         this.cargarProyectos(idActividadEstrategica);
       },
@@ -159,11 +159,7 @@ private obtenerFechaActual(): string {
     this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
         this.usuarios = data;
-    },
-      (error) => {
-        Swal.fire('Error', error.error.mensajeTecnico,'error');
-      }
-    );
+    });
   }
 
   cargarGestiones(idActividadEstrategica: number) {
@@ -173,8 +169,7 @@ private obtenerFechaActual(): string {
       .then(
         (data: any) => {
           this.gestiones = data;
-        },
-        (error) => {this.swalError(error);}
+        }
       );
   }
 
@@ -186,13 +181,11 @@ private obtenerFechaActual(): string {
       .then(
         (data: any) => {
           this.proyectos = data;
-        },
-        (error) => {this.swalError(error);}
+        }
       );
   }
 
   eliminarGestion(idActividadGestionActividadEstrategica: number) {
-    const gestionAEliminar = this.gestiones.find(gest => gest.idActividadGestionActividadEstrategica === idActividadGestionActividadEstrategica);
 
       Swal.fire({
         title: "¿Estás seguro?",
@@ -217,7 +210,6 @@ private obtenerFechaActual(): string {
       });
   }
   eliminarProyecto(idProyecto: number) {
-    const proyectoAEliminar = this.proyectos.find(ep => ep.idProyecto === idProyecto);
 
       Swal.fire({
         title: "¿Estás seguro?",
@@ -242,7 +234,7 @@ private obtenerFechaActual(): string {
       });
   }
   modificarActividadGestion() {
-    if (this.form.valid && this.idActividadGestionSeleccionado) {
+    if (this.form.valid && this.idActividadGestionEstrategicaSeleccionado) {
       
       const nombre = this.form.get('nombre')?.value;
       const fechaInicial = this.form.get('fechaInicial')?.value;
@@ -269,7 +261,7 @@ private obtenerFechaActual(): string {
         reverseButtons: true, 
       }).then((confirmacion) => {
         if (confirmacion.isConfirmed) {
-          this.actividadService.modificarActividadGestionActividadEstrategica(actividadGestion, this.idActividadGestionSeleccionado, this.auth.obtenerHeader())
+          this.actividadService.modificarActividadGestionActividadEstrategica(actividadGestion, this.idActividadGestionEstrategicaSeleccionado, this.auth.obtenerHeader())
             .subscribe(
               () => {
                 this.swalSatisfactorio('modificado','actividad de gestión')
@@ -352,19 +344,20 @@ private obtenerFechaActual(): string {
         )
     } else if( tipo === 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA'){
       this.actividadService
-        .listarObservacionActividadGestionActividadEstrategicaPorId(id,this.auth.obtenerHeader()) .subscribe(
+        .listarObservacionPorIdActividadGestionActividadEstrategica(id,this.auth.obtenerHeader()) .subscribe(
           (data: any) => {
             this.observaciones = data;
           },
         )
     } else if (tipo === 'PROYECTO'){
       this.actividadService
-        .listarObservacionProyectoPorId(id,this.auth.obtenerHeader()) .subscribe(
+        .listarObservacionPorIdProyecto(id,this.auth.obtenerHeader()) .subscribe(
           (data: any) => {
             this.observaciones = data;
           },
         )
     }
+
   } 
   crearTarea() {
     if (this.formTarea.valid) {
@@ -379,7 +372,7 @@ private obtenerFechaActual(): string {
         estado: EEstado.EN_BACKLOG,
         periodicidad: periodicidad,
         tipoASE: 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA',
-        idASE: this.idActividadGestionSeleccionado,
+        idASE: this.idActividadGestionEstrategicaSeleccionado,
         idUsuario: idUsuario,
       };
       this.tareaService
@@ -387,7 +380,7 @@ private obtenerFechaActual(): string {
         .subscribe(
           () => {
             this.swalSatisfactorio('creado','tarea')
-              this.cargarTareas(this.idActividadGestionSeleccionado,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')
+              this.cargarTareas(this.idActividadGestionEstrategicaSeleccionado,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')
               this.formTarea.reset()
               this.cargarGestiones(this.idActividadEstrategica)
           },
@@ -401,25 +394,55 @@ private obtenerFechaActual(): string {
     if (this.formObservacion.valid) {
       const fecha = this.formObservacion.get('fecha')?.value;
       const nombre = this.formObservacion.get('nombre')?.value;
-      const idTarea = this.idTareaSeleccionado;
-
-      const observacion = {
-        idTarea: idTarea,
-        nombre: nombre,
-        fecha: fecha,
-      };
-      this.observacionService
-        .crearObservacion(observacion,this.auth.obtenerHeader())
-        .subscribe(
-          () => {
-            this.swalSatisfactorio('creado','observación')
-              this.formObservacion.reset()
-          },
-          (error) => {this.swalError(error);}
-        );
+      if(this.tipoFormulario === 'TAREA'){
+        const observacion = {
+          idTarea: this.idTareaSeleccionado,
+          nombre: nombre,
+          fecha: fecha,
+        };
+        this.tareaService
+          .crearObservacion(observacion,this.auth.obtenerHeader())
+          .subscribe(
+            (response) => {
+                this.swalSatisfactorio('creado','observación')
+                this.formObservacion.reset()
+            },
+            (error) => {this.swalError(error);}
+          );
+      } else if( this.tipoFormulario === 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA'){
+        const observacion = {
+          idActividadGestionEstrategica: this.idActividadGestionEstrategicaSeleccionado,
+          nombre: nombre,
+          fecha: fecha,
+        };
+        this.actividadService
+          .crearObservacionActividadGestionActividadEstrategica(observacion,this.auth.obtenerHeader())
+          .subscribe(
+            (response) => {
+                this.swalSatisfactorio('creado','observación')
+                this.formObservacion.reset()
+            },
+            (error) => {this.swalError(error);}
+          );
+      } else if (this.tipoFormulario === 'PROYECTO'){;
+        const observacion = {
+          idProyecto: this.idProyectoSeleccionado,
+          nombre: nombre,
+          fecha: fecha,
+        };
+        this.actividadService
+          .crearObservacionProyecto(observacion,this.auth.obtenerHeader())
+          .subscribe(
+            (response) => {
+                this.swalSatisfactorio('creado','observación')
+                this.formObservacion.reset()
+            },
+            (error) => {this.swalError(error);}
+          );
+      }
     } else {
-      return this.form.markAllAsTouched();
-    }
+      return this.formObservacion.markAllAsTouched();
+    }     
   }
   modificarEstado() {
     if (this.formModificarEstadoTarea.valid) {
@@ -461,9 +484,9 @@ private obtenerFechaActual(): string {
         confirmButtonColor: '#0E823F',
       });
     } else if (this.formModificarPorcentaje.valid) {
-      const porcentaje = this.formModificarPorcentaje.get('porcentaje')?.value;
+      const porcentajeReal = this.formModificarPorcentaje.get('porcentajeReal')?.value;
       const tareaModificar = {
-        porcentaje: porcentaje,
+        porcentajeReal: porcentajeReal,
       };
       Swal.fire({
         title: "¿Deseas modificarlo?",
@@ -551,7 +574,7 @@ private obtenerFechaActual(): string {
       });
   }
   async documento(event: any, idActividadGestionSeleccionado: number): Promise<void> {
-    this.idActividadGestionSeleccionado = idActividadGestionSeleccionado;
+    this.idActividadGestionEstrategicaSeleccionado = idActividadGestionSeleccionado;
     this.archivoSeleccionado = event.target.files[0];
   
     try {
@@ -564,8 +587,13 @@ private obtenerFechaActual(): string {
       this.nombreArchivoSeleccionado = '';
     }
   }
-  abrirModalAgregarDocumento(idActividadGestionActividadEstrategica: number): void {
-    this.idActividadGestionSeleccionado = idActividadGestionActividadEstrategica;
+  abrirModalAgregarDocumento(idSeleccionado: number,tipo:string): void {
+    if(tipo === 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA'){
+      this.idActividadGestionEstrategicaSeleccionado = idSeleccionado;
+    } else if( tipo === 'PROYECTO'){
+      this.idProyectoSeleccionado = idSeleccionado;
+    }
+
   }
 
 
@@ -589,7 +617,8 @@ private obtenerFechaActual(): string {
 
     return true;
   }
-  async subirDocumento(formulario: any) {
+  async subirDocumento(formulario: any,id:number,tipo:string) {
+
     if (!this.archivoSeleccionado) {
       // Puedes mostrar un mensaje de error o manejarlo de otra manera
       return;
@@ -597,31 +626,53 @@ private obtenerFechaActual(): string {
       try {
         const app = initializeApp(environment.firebase);
         const storage = getStorage(app);
-        const storageRef = ref(storage, `actividadGestionActividadEstrategica/${this.idActividadGestionSeleccionado}/${this.archivoSeleccionado.name}`);
+        const storageRef = ref(storage, `${tipo}/${id}/${this.archivoSeleccionado.name}`);
         const snapshot = await uploadBytes(storageRef, this.archivoSeleccionado);
         const downloadURL = await getDownloadURL(storageRef);
         // Crear un objeto sprint que incluya la URL de descarga
         const documento = {
           rutaDocumento: downloadURL, // Asegúrate de que el nombre de la propiedad coincida con lo que espera tu backend
         };
-        this.actividadService.guardarDocumento(documento, this.idActividadGestionSeleccionado, this.auth.obtenerHeaderDocumento()).subscribe(
-          (data: any) => {
-            Swal.fire({
-              title:'Archivo cargado!',
-              text:'El archivo se cargó correctamente',
-              icon:'success',
-              confirmButtonColor: '#0E823F',
-            })
-          },
-          (error) => {
-            Swal.fire({
-              title:'Hubo un error!!!',
-              text:error.error.mensajeTecnico,
-              icon:'error',
-              confirmButtonColor: '#0E823F',
-            })
-          }
-      );
+        if(tipo === 'actividadGestionEstrategica'){
+          this.actividadService.guardarDocumento(documento, this.idActividadGestionEstrategicaSeleccionado, this.auth.obtenerHeaderDocumento()).subscribe(
+            (data: any) => {
+              Swal.fire({
+                title:'Archivo cargado!',
+                text:'El archivo se cargó correctamente',
+                icon:'success',
+                confirmButtonColor: '#0E823F',
+              })
+            },
+            (error) => {
+              Swal.fire({
+                title:'Hubo un error!!!',
+                text:error.error.mensajeTecnico,
+                icon:'error',
+                confirmButtonColor: '#0E823F',
+              })
+            }
+          );
+        } else if (tipo === 'proyecto'){
+          this.actividadService.guardarDocumentoProyecto(documento, this.idProyectoSeleccionado, this.auth.obtenerHeaderDocumento()).subscribe(
+            (data: any) => {
+              Swal.fire({
+                title:'Archivo cargado!',
+                text:'El archivo se cargó correctamente',
+                icon:'success',
+                confirmButtonColor: '#0E823F',
+              })
+            },
+            (error) => {
+              Swal.fire({
+                title:'Hubo un error!!!',
+                text:error.error.mensajeTecnico,
+                icon:'error',
+                confirmButtonColor: '#0E823F',
+              })
+            }
+        );
+        }
+        
     } catch (error) {
       Swal.fire({
         title:'Hubo un error!!!',
@@ -631,37 +682,69 @@ private obtenerFechaActual(): string {
       })
     }
   }
-  obtenerDocumento(idActividadGestionActividadEstrategica: number) {
+  obtenerDocumento(id: number,tipo: string) {
 
-    this.actividadService.obtenerDocumento(idActividadGestionActividadEstrategica, this.auth.obtenerHeaderDocumento()).subscribe(
-      (data: any) => {
-        this.documentoObtenido = data;
+    if(tipo === 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA'){
+      this.actividadService.obtenerDocumento(id, this.auth.obtenerHeaderDocumento()).subscribe(
+        (data: any) => {
+          this.documentoObtenido = data;
+    
+          // Verificar si this.documentoObtenido.rutaArchivo existe
+          if (this.documentoObtenido.rutaDocumento) {
+            // Extraer el nombre del archivo de la URL
+            const nombreArchivo = this.extraerNombreArchivo(this.documentoObtenido.rutaDocumento);
   
-        // Verificar si this.documentoObtenido.rutaArchivo existe
-        if (this.documentoObtenido.rutaDocumento) {
-          // Extraer el nombre del archivo de la URL
-          const nombreArchivo = this.extraerNombreArchivo(this.documentoObtenido.rutaDocumento);
-
-          // Crear un enlace HTML
-          const enlaceHTML = `<a href="${this.documentoObtenido.rutaDocumento}" target="_blank">${nombreArchivo}</a>`;
-
+            // Crear un enlace HTML
+            const enlaceHTML = `<a href="${this.documentoObtenido.rutaDocumento}" target="_blank">${nombreArchivo}</a>`;
+  
+            Swal.fire({
+              title: 'Documento correspondiente a la actividad',
+              html: `Para previsualizar darle click al enlace: ${enlaceHTML}`,
+              confirmButtonColor: '#0E823F',
+              icon:'success'
+            });
+          }
+        },
+        (error: any) => {
           Swal.fire({
-            title: 'Documento correspondiente a la actividad',
-            html: `Para previsualizar darle click al enlace: ${enlaceHTML}`,
+            title: 'La actividad no tiene documentos adjuntos',
+            text: 'Cargue un documento para visualizarlo',
+            icon: 'info',
             confirmButtonColor: '#0E823F',
-            icon:'success'
           });
         }
-      },
-      (error: any) => {
-        Swal.fire({
-          title: 'Este sprint no tiene documentos adjuntos',
-          text: 'Cargue un documento para visualizarlo',
-          icon: 'info',
-          confirmButtonColor: '#0E823F',
-        });
-      }
-    );
+      );
+    } else {
+      this.actividadService.obtenerDocumentoProyecto(id, this.auth.obtenerHeaderDocumento()).subscribe(
+        (data: any) => {
+          this.documentoObtenido = data;
+    
+          // Verificar si this.documentoObtenido.rutaArchivo existe
+          if (this.documentoObtenido.rutaDocumento) {
+            // Extraer el nombre del archivo de la URL
+            const nombreArchivo = this.extraerNombreArchivo(this.documentoObtenido.rutaDocumento);
+  
+            // Crear un enlace HTML
+            const enlaceHTML = `<a href="${this.documentoObtenido.rutaDocumento}" target="_blank">${nombreArchivo}</a>`;
+  
+            Swal.fire({
+              title: 'Documento correspondiente a la actividad',
+              html: `Para previsualizar darle click al enlace: ${enlaceHTML}`,
+              confirmButtonColor: '#0E823F',
+              icon:'success'
+            });
+          }
+        },
+        (error: any) => {
+          Swal.fire({
+            title: 'La actividad no tiene documentos adjuntos',
+            text: 'Cargue un documento para visualizarlo',
+            icon: 'info',
+            confirmButtonColor: '#0E823F',
+          });
+        }
+      );
+    }
   }
   
   extraerNombreArchivo(rutaArchivo: string): string {
@@ -685,8 +768,9 @@ private obtenerFechaActual(): string {
     }
   }
 
-  obtenerActividadGestionActividadEstrategica(idActividadGestionActividadEstrategica: number,gestion:any) {
-    this.idActividadGestionSeleccionado = idActividadGestionActividadEstrategica;
+  obtenerActividadGestionEstrategica(idActividadGestionEstrategica: number,gestion:any) {
+    this.tipoFormulario = 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA';
+    this.idActividadGestionEstrategicaSeleccionado = idActividadGestionEstrategica;
     this.nombreActividadGestion = gestion.nombre;
     this.usuarioGestion = gestion.idUsuario,
     this.fechaInicialGestion = gestion.fechaInicial,
@@ -697,8 +781,12 @@ private obtenerFechaActual(): string {
       fechaIncial: this.fechaInicialGestion,
       fechaFinal: this.fechaFinalGestion,
     });
+    this.formObservacion.patchValue({
+      id: this.idActividadGestionEstrategicaSeleccionado,
+    });
   }
   obtenerTarea(idTarea: number,tarea:any) {
+    this.tipoFormulario = 'TAREA';
     this.idTareaSeleccionado = idTarea;
     this.nombreTarea = tarea.nombre;
     this.idTareaTipo = tarea.idASE;
@@ -714,7 +802,7 @@ private obtenerFechaActual(): string {
     });
 
     this.formObservacion.patchValue({
-      idTarea: this.idTareaSeleccionado,
+      id: this.idTareaSeleccionado,
     });
   }
   obtenerTareaAModificar(idTarea: number,tarea:any) {
@@ -731,6 +819,7 @@ private obtenerFechaActual(): string {
     });
   }
   obtenerProyecto(idProyecto: number,proyecto:any) {
+    this.tipoFormulario = 'PROYECTO';
     this.idProyectoSeleccionado = idProyecto;
     this.nombreProyecto = proyecto.nombre;
     this.usuarioProyecto = proyecto.idUsuario;
@@ -747,6 +836,9 @@ private obtenerFechaActual(): string {
       fechaFinal: this.fechaFinalProyecto,
       modalidad: this.modalidadProyecto,
       planeacionSprint:this.planeacionProyecto
+    });
+    this.formObservacion.patchValue({
+      id: this.idProyectoSeleccionado,
     });
   }
 

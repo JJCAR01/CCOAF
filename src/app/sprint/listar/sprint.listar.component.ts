@@ -23,6 +23,7 @@ import { EPeriodicidad } from "src/enums/eperiodicidad";
 export class SprintListarComponent implements OnInit {
   title = 'listarSprint';
   ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
+  tipoFormulario: 'SPRINT' | 'TAREA' = 'SPRINT';
   pesoDeArchivo = 300 * 1024 * 1024; // 300 MB
   extencionesPermitidas = /\.(doc|docx|xls|xlsx|ppt|pptx|zip|pdf)$/i;
   nombreArchivoSeleccionado: string = '';
@@ -85,7 +86,7 @@ export class SprintListarComponent implements OnInit {
       porcentaje: ['', Validators.required],
     });
     this.formObservacion = this.formBuilder.group({
-      idTarea: ['', Validators.required],
+      id: ['', Validators.required],
       fecha: [this.obtenerFechaActual(), Validators.required],
       nombre: ['', Validators.required],
     });
@@ -373,18 +374,23 @@ export class SprintListarComponent implements OnInit {
         }
     )};
   } 
-  cargarObservaciones(idTarea:any) {
-    this.observacionService
-      .listarTareaPorTarea(idTarea,this.auth.obtenerHeader()) 
-      .toPromise()
-      .then(
-        (data: any) => {
-        this.observaciones = data;
-        },
-        (error) => {
-          Swal.fire('Error',error.error.mensajeHumano,'error');
-        }
-    )
+  cargarObservaciones(id:any,tipo:string) {
+    console.log(tipo)
+    if(tipo === 'TAREA'){
+      this.tareaService
+        .listarPorIdTarea(id,this.auth.obtenerHeader()) .subscribe(
+          (data: any) => {
+            this.observaciones = data;
+          },
+        )
+    } else if( tipo === 'SPRINT'){
+      this.sprintService
+        .listarPorIdSprint(id,this.auth.obtenerHeader()) .subscribe(
+          (data: any) => {
+            this.observaciones = data;
+          },
+        )
+    } 
   } 
   crearTarea() {
     if (this.formTarea.valid) {
@@ -421,22 +427,38 @@ export class SprintListarComponent implements OnInit {
     if (this.formObservacion.valid) {
       const fecha = this.formObservacion.get('fecha')?.value;
       const nombre = this.formObservacion.get('nombre')?.value;
-      const idTarea = this.idTareaSeleccionado;
 
-      const observacion = {
-        idTarea: idTarea,
-        nombre: nombre,
-        fecha: fecha,
-      };
-      this.observacionService
-        .crearObservacion(observacion,this.auth.obtenerHeader())
-        .subscribe(
-          (response) => {
-            this.swalSatisfactorio('creada','observación')        
-              this.formObservacion.reset()
-          },
-          (error) => {this.swalError(error);}
-        );
+      if(this.tipoFormulario === 'TAREA'){
+        const observacion = {
+          idTarea: this.idTareaSeleccionado,
+          nombre: nombre,
+          fecha: fecha,
+        };
+        this.tareaService
+          .crearObservacion(observacion,this.auth.obtenerHeader())
+          .subscribe(
+            (response) => {
+                this.swalSatisfactorio('creado','observación')
+                this.formObservacion.reset()
+            },
+            (error) => {this.swalError(error);}
+          );
+      } else if( this.tipoFormulario === 'SPRINT'){
+        const observacion = {
+          idSprint: this.idSprintSeleccionado,
+          nombre: nombre,
+          fecha: fecha,
+        };
+        this.sprintService
+          .crearObservacionSprint(observacion,this.auth.obtenerHeader())
+          .subscribe(
+            (response) => {
+                this.swalSatisfactorio('creado','observación')
+                this.formObservacion.reset()
+            },
+            (error) => {this.swalError(error);}
+          );
+      } 
     } else {
       return this.formObservacion.markAllAsTouched();
     }
@@ -571,6 +593,7 @@ export class SprintListarComponent implements OnInit {
       });
   }
   obtenerSprint(idSprint: number,sprint:any) {
+    this.tipoFormulario = 'SPRINT';
     this.idSprintSeleccionado = idSprint;
     this.nombreSprint = sprint.descripcion;
     this.fechaInicialSprint = sprint.fechaInicial
@@ -581,8 +604,12 @@ export class SprintListarComponent implements OnInit {
       fechaInicial : this.fechaInicialSprint,
       fechaFinal : this.fechaFinalSprint
     });
+    this.formObservacion.patchValue({
+      id: this.idSprintSeleccionado,
+    });
   }
   obtenerTarea(idTarea: number,tarea:any) {
+    this.tipoFormulario = 'TAREA'
     this.idTareaSeleccionado = idTarea;
     this.nombreTarea = tarea.nombre;
     this.idTareaTipo = tarea.idASE;
@@ -598,7 +625,7 @@ export class SprintListarComponent implements OnInit {
     });
 
     this.formObservacion.patchValue({
-      idTarea: this.idTareaSeleccionado,
+      id: this.idTareaSeleccionado,
     });
   }
   obtenerTareaAModificar(idTarea: number,tarea:any) {
@@ -612,6 +639,7 @@ export class SprintListarComponent implements OnInit {
       periodicidad : tarea.periodicidad,
       idUsuario : tarea.idUsuario,
     });
+
   }
   
   obtenerNombreUsuario(idUsuario: number) {

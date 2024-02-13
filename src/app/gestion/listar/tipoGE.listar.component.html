@@ -14,34 +14,75 @@
 <body>
   <div class="row-with-button">
     <div>
-      <div class="row">
-        <div class="responsable-info">
-          <h1><img src="/assets/Programas.png" width="30mp" alt="logo" id="logo" title="{{ nombrePat }}"> {{ nombrePat }} </h1>
+      <div class="row mb-3">
+        <div class="col-md-4 ">
+          <div class="responsable-info">
+            <h1><img src="/assets/Programas.png" width="30mp" alt="logo" id="logo" title="{{ nombrePat }}"> {{ nombrePat }} </h1>
+          </div>
+          <div class="responsable-info">
+            <h2 title="Porcentaje Actual" ><i class="bi bi-percent tamaño-iconos color-iconoPorcentaje"></i> Porcentaje de avance:</h2>
+            <p [ngClass]="colorPorcentaje(porcentajeRealPat)">{{ porcentajeRealPat | number : '1.2-2' }} %</p>
+          </div>
+          <div class="responsable-info">
+            <h2 title="Año"><i class="bi bi-calendar3 tamaño-iconos color-iconoFechaAnual"></i> Año:</h2>
+            <p> {{ fechaAnualPat }}</p>
+          </div>
+          <div class="responsable-info">
+            <h2 title="Responsble"><i class="bi bi-person-circle tamaño-iconos color-iconoResponsable"></i> Responsable:</h2>
+            <p> {{ obtenerNombreUsuario(usuarioPat) }}</p>
+          </div>
         </div>
-        <div class="responsable-info">
-          <h2 title="Porcentaje Actual" ><i class="bi bi-percent tamaño-iconos color-iconoPorcentaje"></i> Porcentaje de avance:</h2>
-          <p [ngClass]="colorPorcentaje(porcentajePat)">{{ porcentajePat | number : '1.2-2' }} %</p>
+        <div class="col-md-4 actividades">
+          <div>
+            <h3 class="titulo-actividades"> Actividades estratégicas - PAT</h3>
+          </div>
+          <div class="responsable-info">
+            <h2 title="Porcentaje Real">Porcentaje Real:</h2>
+            <p [ngClass]="colorPorcentaje(porcentajeRealPat)">{{ porcentajeRealActividadesEstrategica | number : '1.2-2' }} %</p>
+          </div>
+          <div class="responsable-info">
+            <h2 title="Porcentaje Esperado">Porcentaje Esperado:</h2>
+            <p> {{ fechaAnualPat }}</p>
+          </div>
+          <div class="responsable-info">
+            <h2 title="Porcentaje Cumplimiento">Porcentaje Cumplimiento:</h2>
+            <p> {{ usuarioPat }}</p>
+          </div>
         </div>
-        <div class="responsable-info">
-          <h2 title="Año"><i class="bi bi-calendar3 tamaño-iconos color-iconoFechaAnual"></i> Año:</h2>
-          <p> {{ fechaAnualPat }}</p>
-        </div>
-        <div class="responsable-info">
-          <h2 title="Responsble"><i class="bi bi-person-circle tamaño-iconos color-iconoResponsable"></i> Responsable:</h2>
-          <p> {{ obtenerNombreUsuario(usuarioPat) }}</p>
+        <div class="col-md-4 actividades">
+          <div >
+            <h3 class="titulo-actividades"> Actividades y proyectos del área</h3>
+          </div>
+            <div class="responsable-info">
+              <h2 title="Porcentaje Real">Porcentaje real:</h2>
+              <p [ngClass]="colorPorcentaje(porcentajeRealPat)">{{ porcentajeRealPat | number : '1.2-2' }} %</p>
+            </div>
+            <div class="responsable-info">
+              <h2 title="Porcentaje Esperado">Porcentaje Esperado:</h2>
+              <p> {{ fechaAnualPat }}</p>
+            </div>
+            <div class="responsable-info">
+              <h2 title="Porcentaje Cumplimiento"> Porcentaje Cumplimiento:</h2>
+              <p> {{ usuarioPat }}</p>
+            </div>
         </div>
       </div>
       <div class="row text-center">
         <div class="d-flex justify-content-center">
           <button title="Agregar actividad estratégica" type="button"
-                  class="btn btn-outline-success me-1 ms-2" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['crearActividadEstrategica'] } }]"
+                  class="btn btn-outline-success me-1" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['crearActividadEstrategica'] } }]"
                   [queryParams]="{ idPat,  nombrePat }">
             Crear actividad estratégica
           </button>
           <button title="Agregar actividad gestión" type="button"
-                  class="btn btn-outline-success" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['crearActividadGestion'] } }]"
+                  class="btn btn-outline-success me-1" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['crearActividadGestion'] } }]"
                   [queryParams]="{  idPat,  nombrePat  }">
             Crear gestión del área
+          </button>
+          <button title="Agregar proyecto" type="button"
+                  class="btn btn-outline-success" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['crearProyecto'] } }]"
+                  [queryParams]="{  idPat,  nombrePat  }">
+            Crear proyecto
           </button>
         </div>
       </div>
@@ -60,6 +101,9 @@
     </li>
     <li class="nav-item me-1" title="Gestiones del área">
       <a class="nav-link" id="gestionarea-tab" data-bs-toggle="tab" href="#gestionarea" role="tab" aria-controls="gestionarea" aria-selected="false">Gestiones del área</a>
+    </li>
+    <li class="nav-item me-1" title="Proyectos del área">
+      <a class="nav-link" id="proyecto-tab" data-bs-toggle="tab" href="#proyecto" role="tab" aria-controls="proyecto" aria-selected="false">Proyectos del área</a>
     </li>
   </ul>
   <div class="tab-content" id="myTabContent">
@@ -100,15 +144,22 @@
                 <td data-bs-toggle="modal" data-bs-target="#modalAgregarResultado" (click)="obtenerActividadEstrategica(actividad.idActividadEstrategica,actividad)">{{ actividad.resultado }}</td>
                 <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)"> {{ obtenerNombreUsuario(actividad.idUsuario) }}</td>
                 <td >
-                  <button title="Ver" class="btn btn-outline-primary me-1" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarActividad', actividad.idActividadEstrategica ,'pat', nombrePat] } }]">
+                  <button title="Ver" class="btn btn-outline-primary me-1 mb-1" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarActividad', actividad.idActividadEstrategica ,'pat', nombrePat] } }]">
                     <i class="bi bi-eye-fill"></i>
                   </button>
-                    <button title="Modificar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificar" (click)="obtenerActividadEstrategica(actividad.idActividadEstrategica,actividad)">
+                    <button title="Modificar" type="button" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalModificar" (click)="obtenerActividadEstrategica(actividad.idActividadEstrategica,actividad)">
                       <i class="bi bi-pen-fill"></i>
                     </button>
-                  <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarActividadesEstrategica(actividad.idActividadEstrategica)">
+                  <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" (click)="eliminarActividadesEstrategica(actividad.idActividadEstrategica)">
                     <i class="bi bi-trash3-fill"></i>
                   </button>
+                  <button title="Agregar documento" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#agregarDocumentoActividadEstrategica"
+                  (click)="abrirModalAgregarDocumento(actividad.idActividadEstrategica,'ACTIVIDAD_ESTRATEGICA')"
+                      ><i class="bi bi-folder-plus"></i>
+                    </button>
+                  <button title="Ver documento" class="btn btn-outline-primary me-1 mb-1"
+                  (click)="obtenerDocumento(actividad.idActividadEstrategica,'ACTIVIDAD_ESTRATEGICA')">            
+                    <i class="bi bi-file-earmark-check"></i></button>
                   <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerActividadEstrategica(actividad.idActividadEstrategica,actividad)">
                     <i class="bi bi-node-plus-fill"></i>
                   </button>
@@ -173,11 +224,11 @@
                     </button>
                   <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarGestion(gestion.idActividadGestion)"><i class="bi bi-trash3-fill"></i></button>
                   <button title="Agregar documento" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#agregarDocumento"
-                  (click)="abrirModalAgregarDocumento(gestion.idActividadGestion)"
+                  (click)="abrirModalAgregarDocumento(gestion.idActividadGestion,'ACTIVIDAD_GESTION')"
                       ><i class="bi bi-folder-plus"></i>
                     </button>
                   <button title="Ver documento" class="btn btn-outline-primary me-1"
-                  (click)="obtenerDocumento(gestion.idActividadGestion)">            
+                  (click)="obtenerDocumento(gestion.idActividadGestion,'ACTIVIDAD_GESTION')">            
                     <i class="bi bi-file-earmark-check"></i></button>
                     <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)">
                       <i class="bi bi-node-plus-fill"></i></button>
@@ -286,7 +337,33 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <button type="button" class="btn btn-success" (click)="subirDocumento($event)" data-bs-dismiss="modal">Guardar</button>
+              <button type="button" class="btn btn-success" (click)="subirDocumento($event,idActividadGestionSeleccionado,'actividadGestion')" data-bs-dismiss="modal">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="agregarDocumentoActividadEstrategica" tabindex="-1" aria-labelledby="modalAgregar" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalAgregar">Agregar entrega</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3 d-flex">
+              <label>Adjuntar documento</label>
+              <div class="input-group" title="Click para cargar el archivo">
+                  <label class="input-group-text" for="formFileMultiple">Cargar Archivo</label>
+                  <input type="file" class="form-control campo-carga" id="formFileMultiple" accept=".pdf, .doc, .docx, .odt, .xls, .xlsx, .ppt, .pptx, .zip" style="display:none;" (change)="documento($event,idActividadEstrategicaSeleccionado)">
+                  <span id="nombreArchivoSeleccionado" class="ml-2">{{ nombreArchivoSeleccionado }}</span>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-success" (click)="subirDocumento($event,idActividadEstrategicaSeleccionado,'actividadEstrategica')" data-bs-dismiss="modal">Guardar</button>
             </div>
           </form>
         </div>
