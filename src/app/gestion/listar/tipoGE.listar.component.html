@@ -42,11 +42,11 @@
           </div>
           <div class="responsable-info">
             <h2 title="Porcentaje Esperado">Porcentaje Esperado:</h2>
-            <p> {{ fechaAnualPat }}</p>
+            <p> {{ porcentajeEsperadoActividadesEstrategica | number : '1.2-2'  }}</p>
           </div>
           <div class="responsable-info">
             <h2 title="Porcentaje Cumplimiento">Porcentaje Cumplimiento:</h2>
-            <p> {{ usuarioPat }}</p>
+            <p> {{ porcentajeCumplimientoActividadesEstrategica | number : '1.2-2'  }}</p>
           </div>
         </div>
         <div class="col-md-4 actividades">
@@ -55,15 +55,15 @@
           </div>
             <div class="responsable-info">
               <h2 title="Porcentaje Real">Porcentaje real:</h2>
-              <p [ngClass]="colorPorcentaje(porcentajeRealPat)">{{ porcentajeRealPat | number : '1.2-2' }} %</p>
+              <p [ngClass]="colorPorcentaje(porcentajeRealPat)">{{ porcentajeRealActividadesYProyectos | number : '1.2-2' }} %</p>
             </div>
             <div class="responsable-info">
               <h2 title="Porcentaje Esperado">Porcentaje Esperado:</h2>
-              <p> {{ fechaAnualPat }}</p>
+              <p> {{ porcentajeEsperadoActividadesYProyectos | number : '1.2-2' }}</p>
             </div>
             <div class="responsable-info">
               <h2 title="Porcentaje Cumplimiento"> Porcentaje Cumplimiento:</h2>
-              <p> {{ usuarioPat }}</p>
+              <p> {{ porcentajeCumplimientoActividadesYProyectos | number : '1.2-2' }}</p>
             </div>
         </div>
       </div>
@@ -80,7 +80,7 @@
             Crear gestión del área
           </button>
           <button title="Agregar proyecto" type="button"
-                  class="btn btn-outline-success" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['crearProyecto'] } }]"
+                  class="btn btn-outline-success" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['crearProyectoArea'] } }]"
                   [queryParams]="{  idPat,  nombrePat  }">
             Crear proyecto
           </button>
@@ -316,8 +316,82 @@
           </div>
         </div>
       </main>
-    </div>
   </div> 
+  <div class="tab-pane fade" id="proyecto" role="tabpanel" aria-labelledby="proyecto-tab">
+      <main class="main text-center smaller-main">
+        <table class="table table-bordered table-hover">
+          <thead class="table table-color">
+            <tr>
+              <th class="column-nombre">Nombre</th>
+              <th class="column-presupuesto">Presupuesto</th>
+              <th class="column-modalidad">Modalidad</th>
+              <th class="column-presupuesto">Valor Ejecutado</th>
+              <th class="column-fecha">Fecha inicial</th>
+              <th class="column-fecha">&nbsp; Fecha &nbsp; Final</th>
+              <th class="column-duracion">Duracion (Días)</th>
+              <th class="column-avance">% Avance real</th>
+              <th class="column-avance">% Avance esperado</th>
+              <th class="column-avance">% Cumplimiento</th>
+              <th class="column-planeacion">Planeación Sprint</th>
+              <th class="column-totalsprint">Total sprint</th>
+              <th class="column-acciones">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let proyecto of proyectosarea">
+              <tr title="{{proyecto.nombre}}">
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyectoArea, 'pat', nombrePat] } }]" class="fila-nombre">
+                      {{ proyecto.nombre }}</td>
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyectoArea, 'pat', nombrePat] } }]">
+                      {{ proyecto.presupuesto | currency : '$ ' : 'symbol' : '1.0-0' }}</td>
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyectoArea, 'pat', nombrePat] } }]">
+                      {{ proyecto.modalidad  | formatEnum  }}</td>
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyectoArea, 'pat', nombrePat] } }]">
+                      {{ proyecto.valorEjecutado | currency : '$ ' : 'symbol' : '1.0-0' }}</td>
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyectoArea, 'pat', nombrePat] } }]">
+                      {{ proyecto.fechaInicial }}</td>
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyectoArea, 'pat', nombrePat] } }]"> 
+                      {{ proyecto.fechaFinal }}</td>
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyectoArea, 'pat', nombrePat] } }]">
+                      {{ proyecto.duracion }}</td>
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyectoArea, 'pat', nombrePat] } }]" 
+                      [ngClass]="colorPorcentaje(proyecto.porcentajeReal)">{{ proyecto.porcentajeReal  | number : '1.2-2'  }} %</td>
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyectoArea, 'pat', nombrePat] } }]" 
+                      [ngClass]="colorPorcentaje(proyecto.porcentajeEsperado)">{{ proyecto.porcentajeEsperado | number : '1.2-2'  }} %</td> 
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyectoArea, 'pat', nombrePat] } }]" 
+                      [ngClass]="colorPorcentaje(proyecto.porcentajeCumplimiento)">{{ proyecto.porcentajeCumplimiento | number : '1.2-2'  }} %</td>     
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyectoArea, 'pat', nombrePat] } }]">
+                      {{ proyecto.planeacionSprint | formatEnum }}</td>
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyectoArea , 'pat', nombrePat] } }]">
+                      {{ proyecto.totalSprint }}</td>
+                <td>
+                  <button title="Ver" class="btn btn-outline-primary me-1 mb-1" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyectoArea, 'pat', nombrePat] } }]"
+                    ><i class="bi bi-eye-fill"></i></button>
+                  <button title="Modificar" type="button" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalModificarProyecto" (click)="obtenerActividadEstrategica(proyecto.idProyectoArea,proyecto)">
+                      <i class="bi bi-pen-fill"></i>
+                  </button>
+                  <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" (click)="eliminarActividadesEstrategica(proyecto.idProyectoArea)"><i class="bi bi-trash3-fill"></i></button>
+                  <button title="Agregar documento" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#agregarDocumentoProyecto"
+                  (click)="abrirModalAgregarDocumento(proyecto.idProyectoArea,'PROYECTO')"
+                      ><i class="bi bi-folder-plus"></i>
+                    </button>
+                  <button title="Ver documento" class="btn btn-outline-primary me-1 mb-1"
+                  (click)="obtenerDocumento(proyecto.idProyectoArea,'PROYECTO')">            
+                    <i class="bi bi-file-earmark-check"></i></button>
+                  <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerActividadEstrategica(proyecto.idProyectoArea,proyecto)">
+                    <i class="bi bi-node-plus-fill"></i>
+                  </button>
+                  <button title="Ver observación" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(proyecto.idProyectoArea,'PROYECTO')">
+                    <i class="bi bi-eye-fill"></i>
+                  </button>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </main>
+    </div>
+  </div>
   <div class="modal fade" id="agregarDocumento" tabindex="-1" aria-labelledby="modalAgregar" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">

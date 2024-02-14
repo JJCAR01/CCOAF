@@ -28,6 +28,7 @@ import { ProcesoCrearComponent } from './proceso/crear/proceso.crear.component';
 import { CrearProyectoComponent } from './actividad/crear.proyecto/crear.proyecto.component';
 import { LoginGuard} from './guards/login.guard';
 import { CrearGestionComponent } from './gestion/crear.gestion/crear.gestion.component';
+import { CrearProyectoareaComponent } from './gestion/crear.proyectoarea/crear.proyectoarea.component';
 
 
 
@@ -65,6 +66,7 @@ const routes: Routes = [
     { path: "crearDireciones", component: DireccionCrearComponent, outlet:"OutletAdmin"},
     { path: "crearProyecto", component: CrearProyectoComponent, outlet:"OutletAdmin"},
     { path: "crearActividadGestion", component: CrearGestionComponent, outlet:"OutletAdmin"},
+    { path: "crearProyectoArea", component: CrearProyectoareaComponent, outlet:"OutletAdmin"},
   ]},
 
   { path: '**', redirectTo: 'login' },

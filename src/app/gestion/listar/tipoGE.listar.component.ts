@@ -18,6 +18,7 @@ import { Usuario } from 'src/app/modelo/usuario';
 import { ActividadEstrategica } from 'src/app/modelo/actividadestrategica';
 import { ActividadGestion } from 'src/app/modelo/actividadgestion';
 import { Tarea } from 'src/app/modelo/tarea';
+import { ProyectoArea } from 'src/app/modelo/proyectoarea';
 
 @Component({
   selector: 'app-root:not(p)',
@@ -39,9 +40,15 @@ export class TipogeListarComponent implements OnInit {
   porcentajeRealActividadesEstrategica:number | 0 = 0;
   porcentajeEsperadoActividadesEstrategica:number | 0 = 0;
   porcentajeCumplimientoActividadesEstrategica:number | 0 = 0;
+  porcentajeRealActividadesGestion:number | 0 = 0;
+  porcentajeEsperadoActividadesGestion:number | 0 = 0;
+  porcentajeCumplimientoActividadesGestion:number | 0 = 0;
   porcentajeRealActividadesYProyectos:number | 0 = 0;
   porcentajeEsperadoActividadesYProyectos:number | 0 = 0;
   porcentajeCumplimientoActividadesYProyectos:number | 0 = 0;
+  porcentajeRealProyectosArea:number | 0 = 0;
+  porcentajeEsperadoProyectosArea:number | 0 = 0;
+  porcentajeCumplimientoProyectosArea:number | 0 = 0;
   nombrePat:string | undefined = '';
   fechaAnualPat:number | undefined;
   idPat:number | 0 = 0;
@@ -65,6 +72,7 @@ export class TipogeListarComponent implements OnInit {
   estadoEnumList: string[] = [];
   periodiciadEnumLista: string[] = [];
   gestiones: ActividadGestion[] = [];
+  proyectosarea: ProyectoArea[] = [];
   actividades: ActividadEstrategica[] = [];
   pats: Pat[] = [];
   usuarios: Usuario[] = [];
@@ -83,7 +91,7 @@ export class TipogeListarComponent implements OnInit {
     private gestionService: TipoGEService,private auth: AuthService,
     private patService: PatService,private route: ActivatedRoute,
     private usuarioService :UsuarioService,private formBuilder: FormBuilder,
-    private tareaService:TareaService,    private observacionService:ObservacionService
+    private tareaService:TareaService,  
   ) 
   
   { this.formEstrategica = this.formBuilder.group({
@@ -144,23 +152,20 @@ export class TipogeListarComponent implements OnInit {
       );
       this.cargarGestiones(idPat);
       this.cargarActividadesEstrategicas(idPat);
+      this.cargarProyectosArea(idPat);
       this.cargarUsuario();
     });
 
     this.crearTarea();
+
     this.estadoEnumList = Object.values(EEstado);
     this.periodiciadEnumLista = Object.values(EPeriodicidad);
+    this.porcentajeRealActividadesYProyectos += (this.porcentajeRealActividadesGestion + this.porcentajeRealProyectosArea) / 2;
+    this.porcentajeEsperadoActividadesYProyectos += (this.porcentajeEsperadoActividadesGestion + this.porcentajeEsperadoProyectosArea) / 2;
+    this.porcentajeCumplimientoActividadesYProyectos += (this.porcentajeCumplimientoActividadesGestion + this.porcentajeCumplimientoProyectosArea) / 2;
   }
   siguienteRuta(idActividadEstrategica: number, nombrePat : string){
     return ['/panel', { outlets: { 'OutletAdmin': ['listarActividad', idActividadEstrategica,'pat', nombrePat] } }];
-  }
-
-  private obtenerFechaActual(): string {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-    const day = ('0' + currentDate.getDate()).slice(-2);
-    return `${year}-${month}-${day}`;
   }
 
   cargarUsuario() {
@@ -169,25 +174,39 @@ export class TipogeListarComponent implements OnInit {
         this.usuarios = data;
     });
   }
-
-  cargarGestiones(idPat: number) {
-    // Utiliza idPat en tu solicitud para cargar las gestiones relacionadas
-    this.gestionService
-      .listarGestionPorIdPat(idPat, this.auth.obtenerHeader()).subscribe(
-        (data: any) => {
-          this.gestiones = data;
-        });
-  }
-
   cargarActividadesEstrategicas(idPat: number) {
     // Utiliza idPat en tu solicitud para cargar las epicas relacionadas
     this.gestionService
       .listarActividadEstrategicaPorIdPat(idPat, this.auth.obtenerHeader()).subscribe(
         (data: any) => {
           this.actividades = data;
-          this.porcentajeRealActividadesEstrategica += this.actividades.reduce((total, actividad) => total + actividad.porcentajeReal, 0);
+          this.porcentajeRealActividadesEstrategica += this.actividades.reduce((total, actividad) => total + actividad.porcentajeReal, 0) / this.actividades.length;
+          this.porcentajeEsperadoActividadesEstrategica += this.actividades.reduce((total, actividad) => total + actividad.porcentajeEsperado, 0) / this.actividades.length ;
+          this.porcentajeCumplimientoActividadesEstrategica += this.actividades.reduce((total, actividad) => total + actividad.porcentajeCumplimiento, 0) / this.actividades.length;        
         }
-      );
+      ); 
+  }
+  cargarProyectosArea(idPat: number) {
+    // Utiliza idPat en tu solicitud para cargar las gestiones relacionadas
+    this.gestionService
+      .listarProyectoAreaPorIdPat(idPat, this.auth.obtenerHeader()).subscribe(
+        (data: any) => {
+          this.proyectosarea = data;
+          this.porcentajeRealProyectosArea += this.proyectosarea.reduce((total, actividad) => total + actividad.porcentajeReal, 0) / this.proyectosarea.length;
+          this.porcentajeEsperadoProyectosArea += this.proyectosarea.reduce((total, actividad) => total + actividad.porcentajeEsperado, 0) / this.proyectosarea.length ;
+          this.porcentajeCumplimientoProyectosArea += this.proyectosarea.reduce((total, actividad) => total + actividad.porcentajeCumplimiento, 0) / this.proyectosarea.length;
+        });
+  }
+  cargarGestiones(idPat: number) {
+    // Utiliza idPat en tu solicitud para cargar las gestiones relacionadas
+    this.gestionService
+      .listarGestionPorIdPat(idPat, this.auth.obtenerHeader()).subscribe(
+        (data: any) => {
+          this.gestiones = data;
+          this.porcentajeRealActividadesGestion += this.gestiones.reduce((total, actividad) => total + actividad.porcentajeReal, 0) / this.gestiones.length;
+          this.porcentajeEsperadoActividadesGestion += this.gestiones.reduce((total, actividad) => total + actividad.porcentajeEsperado, 0) / this.gestiones.length;
+          this.porcentajeCumplimientoActividadesGestion += this.gestiones.reduce((total, actividad) => total + actividad.porcentajeCumplimiento, 0) / this.gestiones.length;
+        });
   }
   cargarObservaciones(id:any,tipo:string) {
     if(tipo === 'TAREA'){
@@ -921,6 +940,14 @@ export class TipogeListarComponent implements OnInit {
       return false;
     }
     return true;
+  }
+
+  private obtenerFechaActual(): string {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+    const day = ('0' + currentDate.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
   }
 
 }

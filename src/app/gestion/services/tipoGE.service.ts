@@ -91,4 +91,46 @@ export class TipoGEService {
   }
 
   
+
+  crearProyectoArea<T>(ProyectoArea : any,headers?:HttpHeaders):Observable<T>{
+    return this.http.post<T>(`${environment.apiUrl}/ccoa/proyectosarea`,ProyectoArea,{headers});
+  }
+  guardarDocumentoProyectoArea<T>(documento : any,idProyectoArea:number,headers?:HttpHeaders):Observable<T>{
+    return this.http.put<T>(`${environment.apiUrl}/ccoa/proyectosarea/archivo/${idProyectoArea}`, documento,{headers});
+  }
+  obtenerDocumentoProyectoArea<T>(idProyectoArea:number,headers?:HttpHeaders):Observable<T>{
+    return this.http.get<T>(`${environment.apiUrl}/ccoa/proyectosarea/archivo/${idProyectoArea}`,{headers});
+  }
+  listarProyectoArea<T>(headers?:HttpHeaders):Observable<T>{
+    return this.http.get<T>(`${environment.apiUrl}/ccoa/proyectosarea`,{headers});
+  }
+  listarProyectoAreaPorId<T>(idProyectoArea:number,headers?:HttpHeaders):Observable<T>{
+    return this.http.get<T>(`${environment.apiUrl}/ccoa/proyectosarea/${idProyectoArea}`,{headers});
+  }
+  listarProyectoAreaPorIdPat<T>(idPat:number,headers?:HttpHeaders):Observable<T>{
+    return this.http.get<T>(`${environment.apiUrl}/ccoa/proyectosarea/pat/${idPat}`,{headers});
+  }
+  modificarProyectoArea<T>(ProyectoArea : any,idProyectoArea:number,headers?:HttpHeaders):Observable<T>{
+    return this.http.put<T>(`${environment.apiUrl}/ccoa/proyectosarea/${idProyectoArea}`,ProyectoArea,{headers});
+  }
+  eliminarProyectoArea<T>(idProyectoArea:number,headers?:HttpHeaders):Observable<T>{
+    return this.http.delete<T>(`${environment.apiUrl}/ccoa/proyectosarea/${idProyectoArea}`,{headers});
+  }
+
+  crearObservacionProyectoArea<T>(observacionProyectoArea : any,headers?:HttpHeaders):Observable<T>{
+    return this.http.post<T>(`${environment.apiUrl}/ccoa/proyectoarea/observaciones`,observacionProyectoArea,{headers});
+  }
+  listarObservacionProyectoArea<T>(headers?:HttpHeaders):Observable<T>{
+    return this.http.get<T>(`${environment.apiUrl}/ccoa/proyectoarea/observaciones`,{headers});
+  }
+  listarObservacionProyectoAreaPorId<T>(idObservacionProyectoArea:number,headers?:HttpHeaders):Observable<T> {
+    return this.http.get<T>(`${environment.apiUrl}/ccoa/proyectoarea/observaciones/${idObservacionProyectoArea}`,{headers});
+  }
+  listarObservacionPorIdProyectoArea<T>(idProyectoArea: number, headers?:HttpHeaders):Observable<T> {
+    return this.http.get<T>(`${environment.apiUrl}/ccoa/proyectoarea/observaciones/proyectosarea/${idProyectoArea}`, { headers });
+  }
+
+
+
+  
 }

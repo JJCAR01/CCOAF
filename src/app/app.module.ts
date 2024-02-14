@@ -33,6 +33,7 @@ import { ProcesoCrearComponent } from './proceso/crear/proceso.crear.component';
 import { DireccionCrearComponent } from './direccion/crear/direccion.crear.component';
 import { CrearProyectoComponent } from './actividad/crear.proyecto/crear.proyecto.component';
 import { CrearGestionComponent } from './gestion/crear.gestion/crear.gestion.component';
+import { CrearProyectoareaComponent } from './gestion/crear.proyectoarea/crear.proyectoarea.component';
 
 import { EnumPipe } from 'src/pipes/enum.pipes';
 import { ComasPipe } from 'src/pipes/comas.pipes';
@@ -60,7 +61,7 @@ import { NgxCaptchaModule } from 'ngx-captcha';
     PatCrearComponent,TipogeListarComponent,ActividadCrearComponent, ActividadListarComponent,TipoGECrearComponent,
     SprintListarComponent,SprintCrearComponent, ProyectoListarComponent, ProyectoPendienteListarComponent,
     ActividadEstrategicaPendienteListarComponent, ComasPipe, ModificarDireccionesComponent,DashboardComponent,
-    DireccionCrearComponent,ProcesoCrearComponent,CrearProyectoComponent,CrearGestionComponent
+    DireccionCrearComponent,ProcesoCrearComponent,CrearProyectoComponent,CrearGestionComponent,CrearProyectoareaComponent
   ],
   imports: [
     CommonModule,
