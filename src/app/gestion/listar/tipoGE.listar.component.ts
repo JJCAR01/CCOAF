@@ -19,6 +19,8 @@ import { ActividadEstrategica } from 'src/app/modelo/actividadestrategica';
 import { ActividadGestion } from 'src/app/modelo/actividadgestion';
 import { Tarea } from 'src/app/modelo/tarea';
 import { ProyectoArea } from 'src/app/modelo/proyectoarea';
+import { EModalidad } from 'src/enums/emodalidad';
+import { EPlaneacion } from 'src/enums/eplaneacion';
 
 @Component({
   selector: 'app-root:not(p)',
@@ -29,10 +31,12 @@ import { ProyectoArea } from 'src/app/modelo/proyectoarea';
 export class TipogeListarComponent implements OnInit {
   title = 'listarTipoGE';
   ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
-  tipoFormulario: 'ACTIVIDAD_ESTRATEGICA' | 'ACTIVIDAD_GESTION' | 'TAREA' = 'ACTIVIDAD_ESTRATEGICA'; // Por defecto, muestra el formulario para actividad estratégica
+  tipoFormulario: 'ACTIVIDAD_ESTRATEGICA' | 'ACTIVIDAD_GESTION' | 'TAREA' | 'PROYECTO_AREA' = 'ACTIVIDAD_ESTRATEGICA'; // Por defecto, muestra el formulario para actividad estratégica
   pesoDeArchivo = 300 * 1024 * 1024; // 300 MB
   extencionesPermitidas = /\.(doc|docx|xls|xlsx|ppt|pptx|zip|pdf)$/i;
   nombreArchivoSeleccionado: string = '';
+  modalidadEnumList = Object.values(EModalidad);
+  planeacionEnumList = Object.values(EPlaneacion);
   archivoSeleccionado: File | null = null;
   documentoObtenido:any;
   usuarioPat:number | 0 = 0;
@@ -63,6 +67,14 @@ export class TipogeListarComponent implements OnInit {
   fechaFinalEstrategica: Date | undefined;
   metaEstrategica: number | 0=0;
   resultadoActividad: string | undefined = '';
+  idProyectoSeleccionado: number | 0 = 0;
+  nombreProyecto: string | undefined = '';
+  usuarioProyecto: number | 0=0;
+  presupuestoProyecto: number | 0=0;
+  fechaInicialProyecto: Date | undefined;
+  fechaFinalProyecto: Date | undefined;
+  modalidadProyecto = EModalidad;
+  planeacionProyecto = EPlaneacion;
   idTareaSeleccionado: number | 0 = 0;
   idTareaTipo: number | 0 = 0;
   nombreTarea: string | undefined = '';
@@ -86,6 +98,7 @@ export class TipogeListarComponent implements OnInit {
   formTarea:FormGroup;
   formObservacion:FormGroup;
   formAgregarResultado:FormGroup;
+  formProyecto:FormGroup;
 
   constructor(
     private gestionService: TipoGEService,private auth: AuthService,
@@ -106,6 +119,14 @@ export class TipogeListarComponent implements OnInit {
       fechaInicial: ['', Validators.required],
       fechaFinal: ['', Validators.required],
       idUsuario:['',Validators.required]
+    });
+    this.formProyecto = this.formBuilder.group({
+      nombre:['',Validators.required],
+      presupuesto: ['', Validators.required],
+      fechaInicial: ['', Validators.required],
+      fechaFinal: ['', Validators.required],
+      modalidad: ['', Validators.required],
+      planeacionSprint:['', Validators.required],
     });
     this.formModificarEstadoTarea = this.formBuilder.group({
       estado: ['', Validators.required],
@@ -137,7 +158,6 @@ export class TipogeListarComponent implements OnInit {
   
 
   ngOnInit() {
-    
     // Obtén el valor de idPat de la URL
     this.route.params.subscribe(params => {
       const idPat = params['idPat'];
@@ -230,6 +250,13 @@ export class TipogeListarComponent implements OnInit {
             this.observaciones = data;
           },
         )
+    } else if (tipo === 'PROYECTO_AREA'){
+      this.gestionService
+        .listarObservacionPorIdProyectoArea(id,this.auth.obtenerHeader()) .subscribe(
+          (data: any) => {
+            this.observaciones = data;
+          },
+        )
     }
   } 
   eliminarGestion(idActividadGestion: number) {
@@ -272,6 +299,29 @@ export class TipogeListarComponent implements OnInit {
           () => {
               this.swalSatisfactorio('eliminado','actividad estratégica')
               this.cargarActividadesEstrategicas(this.idPat)
+          },
+          (error) => {this.swalError(error);}
+        );
+      }
+    });
+  }
+  eliminarProyectoArea(idProyectoArea: number) {
+    Swal.fire({
+      icon:"question",
+      title: "¿Estás seguro?",
+      text: "Una vez eliminado el proyecto del área, NO podrás recuperarlo.",
+      showCancelButton: true,
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Confirmar",
+      confirmButtonColor: '#0E823F',
+      reverseButtons: true, 
+    })
+    .then((confirmacion) => {
+      if (confirmacion.isConfirmed) {
+        this.gestionService.eliminarProyectoArea(idProyectoArea, this.auth.obtenerHeader()).subscribe(
+          () => {
+              this.swalSatisfactorio('eliminado','proyecto del área')
+              this.cargarProyectosArea(this.idPat)
           },
           (error) => {this.swalError(error);}
         );
@@ -359,6 +409,52 @@ export class TipogeListarComponent implements OnInit {
         }) 
     }
   }
+  modificarProyecto() {
+    if (this.formProyecto.valid) {
+      const nombre = this.formProyecto.get('nombre')?.value;
+      const presupuesto = this.formProyecto.get('presupuesto')?.value;
+      const fechaInicial = this.formProyecto.get('fechaInicial')?.value;
+      const fechaFinal = this.formProyecto.get('fechaFinal')?.value;
+      const modalidad = this.formProyecto.get('modalidad')?.value;
+      const planeacionSprint = this.formProyecto.get('planeacionSprint')?.value;
+      const idPat = this.idPat;
+      const idUsuario = this.usuarioProyecto
+
+      const proyecto = {
+        nombre:nombre,
+        presupuesto:presupuesto,
+        fechaInicial: fechaInicial,
+        fechaFinal: fechaFinal,
+        modalidad:modalidad,
+        planeacionSprint: planeacionSprint,
+        idUsuario : idUsuario,
+        idActividadEstrategica : idPat
+      };
+
+      Swal.fire({
+        title: "¿Estás seguro de modificar?",
+        icon:"question",
+        text: "Una vez modificado no podrás revertir los cambios",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: '#0E823F',
+        reverseButtons: true, 
+      }).then((confirmacion) => {
+        if (confirmacion.isConfirmed) {
+        this.gestionService
+          .modificarProyectoArea(proyecto, this.idProyectoSeleccionado, this.auth.obtenerHeader())
+          .subscribe(
+            (response) => {
+              this.swalSatisfactorio('modificado','proyecto')
+                this.cargarProyectosArea(idPat)
+            },
+            (error) => {this.swalError(error);}
+          );
+        }
+      })
+    }
+  }
 
   cargarTareas(idASE:any, tipoASE:any) {
     if(tipoASE === 'ACTIVIDAD_GESTION'){
@@ -441,7 +537,7 @@ export class TipogeListarComponent implements OnInit {
             },
             (error) => {this.swalError(error);}
           );
-      } else if (this.tipoFormulario === 'ACTIVIDAD_ESTRATEGICA'){;
+      } else if (this.tipoFormulario === 'ACTIVIDAD_ESTRATEGICA'){
         const observacion = {
           idActividadEstrategica: this.idActividadEstrategicaSeleccionado,
           nombre: nombre,
@@ -456,7 +552,23 @@ export class TipogeListarComponent implements OnInit {
             },
             (error) => {this.swalError(error);}
           );
-      }
+        } else if (this.tipoFormulario === 'PROYECTO_AREA') {
+          const observacion = {
+            idProyectoArea: this.idProyectoSeleccionado,
+            nombre: nombre,
+            fecha: fecha,
+          };
+          this.gestionService
+            .crearObservacionProyectoArea(observacion,this.auth.obtenerHeader())
+            .subscribe(
+              (response) => {
+                  this.swalSatisfactorio('creado','observación')
+                  this.formObservacion.reset()
+              },
+              (error) => {this.swalError(error);}
+            );
+    
+        } 
     } else {
       return this.formObservacion.markAllAsTouched();
     }    
@@ -624,8 +736,10 @@ export class TipogeListarComponent implements OnInit {
   abrirModalAgregarDocumento(idRecibido: number,tipo:string): void {
     if(tipo === 'ACTIVIDAD_ESTRATEGICA'){
       this.idActividadEstrategicaSeleccionado = idRecibido;
-    } else {
+    } else if (tipo === 'ACTIVIDAD_GESTION'){
       this.idActividadGestionSeleccionado = idRecibido;
+    } else {
+      this.idProyectoSeleccionado = idRecibido;
     }
   }
   async subirDocumento(formulario: any,id:number,tipo:string) {
@@ -681,7 +795,26 @@ export class TipogeListarComponent implements OnInit {
                 confirmButtonColor: '#0E823F',
               })
             }
-        );
+          );
+        } else {
+          this.gestionService.guardarDocumentoProyectoArea(documento, this.idProyectoSeleccionado, this.auth.obtenerHeaderDocumento()).subscribe(
+            (data: any) => {
+              Swal.fire({
+                title:'Archivo cargado!',
+                text:'El archivo se cargó correctamente',
+                icon:'success',
+                confirmButtonColor: '#0E823F',
+              })
+            },
+            (error) => {
+              Swal.fire({
+                title:'Hubo un error!!!',
+                text:error.error.mensajeTecnico,
+                icon:'error',
+                confirmButtonColor: '#0E823F',
+              })
+            }
+          );
         }
         
 
@@ -726,7 +859,7 @@ export class TipogeListarComponent implements OnInit {
           });
         }
       );
-    } else {
+    } else if (tipo === 'ACTIVIDAD_ESTRATEGICA') {
       this.gestionService.obtenerDocumentoActividadEstrategica(id, this.auth.obtenerHeaderDocumento()).subscribe(
         (data: any) => {
           this.documentoObtenido = data;
@@ -756,8 +889,37 @@ export class TipogeListarComponent implements OnInit {
           });
         }
       );
-    }
+    } else {
+      this.gestionService.obtenerDocumentoProyectoArea(id, this.auth.obtenerHeaderDocumento()).subscribe(
+        (data: any) => {
+          this.documentoObtenido = data;
     
+          // Verificar si this.documentoObtenido.rutaArchivo existe
+          if (this.documentoObtenido.rutaDocumento) {
+            // Extraer el nombre del archivo de la URL
+            const nombreArchivo = this.extraerNombreArchivo(this.documentoObtenido.rutaDocumento);
+  
+            // Crear un enlace HTML
+            const enlaceHTML = `<a href="${this.documentoObtenido.rutaDocumento}" target="_blank">${nombreArchivo}</a>`;
+  
+            Swal.fire({
+              title: 'Documento correspondiente a la actividad',
+              html: `Para previsualizar darle click al enlace: ${enlaceHTML}`,
+              confirmButtonColor: '#0E823F',
+              icon:'success'
+            });
+          }
+        },
+        (error: any) => {
+          Swal.fire({
+            title: 'La actividad no tiene documentos adjuntos',
+            text: 'Cargue un documento para visualizarlo',
+            icon: 'info',
+            confirmButtonColor: '#0E823F',
+          });
+        }
+      );
+    }
   }
   
   extraerNombreArchivo(rutaArchivo: string): string {
@@ -856,6 +1018,29 @@ export class TipogeListarComponent implements OnInit {
       resultado: this.resultadoActividad,
     });
   }
+  obtenerProyectoArea(idProyectoArea: number,proyectoArea:any) {
+    this.tipoFormulario = 'PROYECTO_AREA'; 
+    this.idProyectoSeleccionado = idProyectoArea;
+    this.nombreProyecto = proyectoArea.nombre;
+    this.usuarioProyecto = proyectoArea.idUsuario;
+    this.presupuestoProyecto = proyectoArea.presupuesto
+    this.fechaInicialProyecto = proyectoArea.fechaInicial
+    this.fechaFinalProyecto = proyectoArea.fechaFinal
+    this.modalidadProyecto = proyectoArea.modalidad
+    this.planeacionProyecto = proyectoArea.planeacionSprint
+
+    this.formProyecto.patchValue({
+      nombre: this.nombreProyecto,
+      presupuesto: this.presupuestoProyecto,
+      fechaInicial: this.fechaInicialProyecto,
+      fechaFinal: this.fechaFinalProyecto,
+      modalidad: this.modalidadProyecto,
+      planeacionSprint:this.planeacionProyecto
+    });
+    this.formObservacion.patchValue({
+      id: this.idProyectoSeleccionado,
+    });
+  }
   obtenerNombreUsuario(idUsuario: number) {
     const usuario = this.usuarios.find((u) => u.idUsuario === idUsuario);
     return usuario ? usuario.nombre + " " + usuario.apellidos : '';
@@ -878,6 +1063,9 @@ export class TipogeListarComponent implements OnInit {
   }
   isEstado(tareaEstado:any, estado:any) {
     return tareaEstado === estado;
+  }
+  convertirModalidad(valor: string): string {
+    return valor.toUpperCase().replace(/ /g, '_');;
   }
 
   swalSatisfactorio(metodo: string, tipo:string) {

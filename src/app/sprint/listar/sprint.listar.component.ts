@@ -112,7 +112,7 @@ export class SprintListarComponent implements OnInit {
       this.actividadService.listarProyectoPorId(idProyecto,this.auth.obtenerHeader()).subscribe(
         (data: any) => {
           this.proyectoNombre = data.nombre
-          this.proyectoPorcentaje = data.avance
+          this.proyectoPorcentaje = data.porcentajeReal
           this.proyectoUsuario = data.idUsuario
           this.idProyecto = data.idProyecto 
           this.actividad = data.idActividadEstrategica

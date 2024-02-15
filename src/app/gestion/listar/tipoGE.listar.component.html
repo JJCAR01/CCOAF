@@ -340,48 +340,48 @@
           <tbody>
             <ng-container *ngFor="let proyecto of proyectosarea">
               <tr title="{{proyecto.nombre}}">
-                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyectoArea, 'pat', nombrePat] } }]" class="fila-nombre">
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprintProyectoArea', proyecto.idProyectoArea, 'pat', nombrePat] } }]" class="fila-nombre">
                       {{ proyecto.nombre }}</td>
-                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyectoArea, 'pat', nombrePat] } }]">
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprintProyectoArea', proyecto.idProyectoArea, 'pat', nombrePat] } }]">
                       {{ proyecto.presupuesto | currency : '$ ' : 'symbol' : '1.0-0' }}</td>
-                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyectoArea, 'pat', nombrePat] } }]">
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprintProyectoArea', proyecto.idProyectoArea, 'pat', nombrePat] } }]">
                       {{ proyecto.modalidad  | formatEnum  }}</td>
-                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyectoArea, 'pat', nombrePat] } }]">
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprintProyectoArea', proyecto.idProyectoArea, 'pat', nombrePat] } }]">
                       {{ proyecto.valorEjecutado | currency : '$ ' : 'symbol' : '1.0-0' }}</td>
-                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyectoArea, 'pat', nombrePat] } }]">
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprintProyectoArea', proyecto.idProyectoArea, 'pat', nombrePat] } }]">
                       {{ proyecto.fechaInicial }}</td>
-                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyectoArea, 'pat', nombrePat] } }]"> 
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprintProyectoArea', proyecto.idProyectoArea, 'pat', nombrePat] } }]"> 
                       {{ proyecto.fechaFinal }}</td>
-                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyectoArea, 'pat', nombrePat] } }]">
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprintProyectoArea', proyecto.idProyectoArea, 'pat', nombrePat] } }]">
                       {{ proyecto.duracion }}</td>
-                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyectoArea, 'pat', nombrePat] } }]" 
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprintProyectoArea', proyecto.idProyectoArea, 'pat', nombrePat] } }]" 
                       [ngClass]="colorPorcentaje(proyecto.porcentajeReal)">{{ proyecto.porcentajeReal  | number : '1.2-2'  }} %</td>
-                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyectoArea, 'pat', nombrePat] } }]" 
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprintProyectoArea', proyecto.idProyectoArea, 'pat', nombrePat] } }]" 
                       [ngClass]="colorPorcentaje(proyecto.porcentajeEsperado)">{{ proyecto.porcentajeEsperado | number : '1.2-2'  }} %</td> 
-                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyectoArea, 'pat', nombrePat] } }]" 
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprintProyectoArea', proyecto.idProyectoArea, 'pat', nombrePat] } }]" 
                       [ngClass]="colorPorcentaje(proyecto.porcentajeCumplimiento)">{{ proyecto.porcentajeCumplimiento | number : '1.2-2'  }} %</td>     
-                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyectoArea, 'pat', nombrePat] } }]">
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprintProyectoArea', proyecto.idProyectoArea, 'pat', nombrePat] } }]">
                       {{ proyecto.planeacionSprint | formatEnum }}</td>
-                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyectoArea , 'pat', nombrePat] } }]">
+                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprintProyectoArea', proyecto.idProyectoArea , 'pat', nombrePat] } }]">
                       {{ proyecto.totalSprint }}</td>
                 <td>
-                  <button title="Ver" class="btn btn-outline-primary me-1 mb-1" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyectoArea, 'pat', nombrePat] } }]"
+                  <button title="Ver" class="btn btn-outline-primary me-1 mb-1" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprintProyectoArea', proyecto.idProyectoArea, 'pat', nombrePat] } }]"
                     ><i class="bi bi-eye-fill"></i></button>
-                  <button title="Modificar" type="button" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalModificarProyecto" (click)="obtenerActividadEstrategica(proyecto.idProyectoArea,proyecto)">
+                  <button title="Modificar" type="button" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalModificarProyecto" (click)="obtenerProyectoArea(proyecto.idProyectoArea,proyecto)">
                       <i class="bi bi-pen-fill"></i>
                   </button>
-                  <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" (click)="eliminarActividadesEstrategica(proyecto.idProyectoArea)"><i class="bi bi-trash3-fill"></i></button>
-                  <button title="Agregar documento" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#agregarDocumentoProyecto"
+                  <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" (click)="eliminarProyectoArea(proyecto.idProyectoArea)"><i class="bi bi-trash3-fill"></i></button>
+                  <button title="Agregar documento" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#agregarDocumentoProyectoArea"
                   (click)="abrirModalAgregarDocumento(proyecto.idProyectoArea,'PROYECTO')"
                       ><i class="bi bi-folder-plus"></i>
                     </button>
                   <button title="Ver documento" class="btn btn-outline-primary me-1 mb-1"
                   (click)="obtenerDocumento(proyecto.idProyectoArea,'PROYECTO')">            
                     <i class="bi bi-file-earmark-check"></i></button>
-                  <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerActividadEstrategica(proyecto.idProyectoArea,proyecto)">
+                  <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerProyectoArea(proyecto.idProyectoArea,proyecto)">
                     <i class="bi bi-node-plus-fill"></i>
                   </button>
-                  <button title="Ver observación" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(proyecto.idProyectoArea,'PROYECTO')">
+                  <button title="Ver observación" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(proyecto.idProyectoArea,'PROYECTO_AREA')">
                     <i class="bi bi-eye-fill"></i>
                   </button>
                 </td>
@@ -438,6 +438,32 @@
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
               <button type="button" class="btn btn-success" (click)="subirDocumento($event,idActividadEstrategicaSeleccionado,'actividadEstrategica')" data-bs-dismiss="modal">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="agregarDocumentoProyectoArea" tabindex="-1" aria-labelledby="modalAgregar" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalAgregar">Agregar entrega</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3 d-flex">
+              <label>Adjuntar documento</label>
+              <div class="input-group" title="Click para cargar el archivo">
+                  <label class="input-group-text" for="formFileMultiple">Cargar Archivo</label>
+                  <input type="file" class="form-control campo-carga" id="formFileMultiple" accept=".pdf, .doc, .docx, .odt, .xls, .xlsx, .ppt, .pptx, .zip" style="display:none;" (change)="documento($event,idProyectoSeleccionado)">
+                  <span id="nombreArchivoSeleccionado" class="ml-2">{{ nombreArchivoSeleccionado }}</span>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-success" (click)="subirDocumento($event,idProyectoSeleccionado,'proyectoArea')" data-bs-dismiss="modal">Guardar</button>
             </div>
           </form>
         </div>
@@ -527,6 +553,53 @@
       </div>
     </div>
   </div>
+  <div class="modal fade" id="modalModificarProyecto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modificar Proyecto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="formProyecto" (ngSubmit)="modificarProyecto()">
+            <div class="mb-3">
+              <label class="form-label" for="nombre">Nombre</label>
+              <textarea type="text" id="nombre" class="form-control form-control-lg" [value]="nombreProyecto" formControlName="nombre"></textarea>
+          </div>
+            <div class="mb-3">
+              <label for="presupuesto" class="form-label">Presupuesto</label>
+              <input type="number" class="form-control" id="presupuesto" formControlName="presupuesto" [ngModel]="presupuestoProyecto">
+            </div>
+            <div class="mb-3">
+              <label for="fechaInicial" class="form-label">Fecha Inicial</label>
+              <input type="date" class="form-control" id="fechaInicial" formControlName="fechaInicial" [ngModel]="fechaInicialProyecto">
+            </div>
+            <div class="mb-3">
+              <label for="fechaFinal" class="form-label">Fecha Final</label>
+              <input type="date" class="form-control" id="fechaFinal" formControlName="fechaFinal" [ngModel]="fechaFinalProyecto">
+            </div>
+            <div class="mb-3">
+              <label for="modalidad" class="form-label">Modalidad</label>
+              <select class="form-select" id="modalidad" formControlName="modalidad" [ngModel]="modalidadProyecto">
+                <option *ngFor="let modalidad of modalidadEnumList" [value]="convertirModalidad(modalidad)">
+                  {{ modalidad }}</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="planeacionSprint" class="form-label">Planeación</label>
+              <select class="form-select" id="planeacionSprint" formControlName="planeacionSprint" [value]="planeacionProyecto">
+                <option *ngFor="let planeacion of planeacionEnumList" [value]="planeacion" >{{ planeacion }}</option>
+              </select>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="modal fade" id="modalVerObservacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
@@ -564,7 +637,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form [formGroup]="tipoFormulario === 'ACTIVIDAD_ESTRATEGICA' || 'ACTIVIDAD_GESTION' || 'TAREA' ? formObservacion : formObservacion" 
+          <form [formGroup]="tipoFormulario === 'ACTIVIDAD_ESTRATEGICA' || 'ACTIVIDAD_GESTION' || 'TAREA' || 'PROYECTO_AREA'? formObservacion : formObservacion" 
           (ngSubmit)="crearObservacion()">
             <div class="form-floating">
               <input type="date" id="fecha" [class.is-invalid]="fechaVacio" class="form-control mb-2" formControlName="fecha">
@@ -581,7 +654,7 @@
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
               <button type="submit" class="btn btn-success" [attr.data-bs-dismiss]="(tipoFormulario === 'ACTIVIDAD_ESTRATEGICA' && formObservacion.valid) || 
               (tipoFormulario === 'ACTIVIDAD_GESTION' && formObservacion.valid) ||
-              (tipoFormulario === 'TAREA' && formObservacion.valid) ? 'modal' : null">Guardar</button>
+              (tipoFormulario === 'TAREA' && formObservacion.valid) || (tipoFormulario === 'PROYECTO_AREA' && formObservacion.valid) ? 'modal' : null">Guardar</button>
             </div>
           </form>
         </div>

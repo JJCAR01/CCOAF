@@ -29,6 +29,8 @@ import { CrearProyectoComponent } from './actividad/crear.proyecto/crear.proyect
 import { LoginGuard} from './guards/login.guard';
 import { CrearGestionComponent } from './gestion/crear.gestion/crear.gestion.component';
 import { CrearProyectoareaComponent } from './gestion/crear.proyectoarea/crear.proyectoarea.component';
+import { ListarSprintproyectoareaComponent } from './sprintproyectoarea/listar.sprintproyectoarea/listar.sprintproyectoarea.component';
+import { CrearSprintproyectoareaComponent } from './sprintproyectoarea/crear.sprintproyectoarea/crear.sprintproyectoarea.component';
 
 
 
@@ -52,8 +54,6 @@ const routes: Routes = [
     { path: "modificarDirecciones", component: ModificarDireccionesComponent, outlet:"OutletAdmin"},
     { path: "listarProyecto", component: ProyectoListarComponent, outlet:"OutletAdmin"},
     { path: "listarProyectosPendiente", component: ProyectoPendienteListarComponent, outlet:"OutletAdmin"},
-    { path: "listarActividadesEstrategicas", component: ActividadestrategicaListarComponent, outlet:"OutletAdmin"},
-    { path: "listarActividadesEstrategicasPendiente", component: ActividadEstrategicaPendienteListarComponent, outlet:"OutletAdmin"},
     { path: "crearPat", component: PatCrearComponent, outlet:"OutletAdmin"},
     { path: "listarPat", component: PatListarComponent, outlet:"OutletAdmin"},   
     { path: "listarTipoGE/:idPat", component: TipogeListarComponent, outlet:"OutletAdmin" },
@@ -67,6 +67,8 @@ const routes: Routes = [
     { path: "crearProyecto", component: CrearProyectoComponent, outlet:"OutletAdmin"},
     { path: "crearActividadGestion", component: CrearGestionComponent, outlet:"OutletAdmin"},
     { path: "crearProyectoArea", component: CrearProyectoareaComponent, outlet:"OutletAdmin"},
+    { path: "crearSprintProyectoArea", component: CrearSprintproyectoareaComponent, outlet:"OutletAdmin"},
+    { path: "listarSprintProyectoArea/:idProyectoArea/pat/:patNombre", component: ListarSprintproyectoareaComponent, outlet:"OutletAdmin"},
   ]},
 
   { path: '**', redirectTo: 'login' },
