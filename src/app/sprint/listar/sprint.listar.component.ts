@@ -1,6 +1,6 @@
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
-import { Component,Injectable,OnInit } from '@angular/core';
+import { Component,OnInit } from '@angular/core';
 import { SprintService } from '../services/sprint.service';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import { ActividadService } from 'src/app/actividad/services/actividad.service';
@@ -12,7 +12,6 @@ import { TareaService } from "src/app/tarea/services/tarea.service";
 import { EEstado } from "src/enums/eestado";
 import { initializeApp } from 'firebase/app';
 import { environment } from "src/environments/environment.development";
-import { ObservacionService } from "src/app/observacion/services/observacion.service";
 import { EPeriodicidad } from "src/enums/eperiodicidad";
 
 @Component({
@@ -71,8 +70,6 @@ export class SprintListarComponent implements OnInit {
     private usuarioService :UsuarioService,
     private formBuilder: FormBuilder,
     private tareaService: TareaService,
-    private observacionService: ObservacionService,
-
   ) { 
     this.formSprint = this.formBuilder.group({
       descripcion: ['', Validators.required],
@@ -83,7 +80,7 @@ export class SprintListarComponent implements OnInit {
       estado: ['', Validators.required],
     });
     this.formModificarPorcentaje = this.formBuilder.group({
-      porcentaje: ['', Validators.required],
+      porcentajeReal: ['', Validators.required],
     });
     this.formObservacion = this.formBuilder.group({
       id: ['', Validators.required],
@@ -503,9 +500,9 @@ export class SprintListarComponent implements OnInit {
         confirmButtonColor: '#0E823F',
       });
     } else if (this.formModificarPorcentaje.valid) {
-      const porcentaje = this.formModificarPorcentaje.get('porcentaje')?.value;
+      const porcentajeReal = this.formModificarPorcentaje.get('porcentajeReal')?.value;
       const tareaModificar = {
-        porcentaje: porcentaje,
+        porcentajeReal: porcentajeReal,
       };
       Swal.fire({
         title: "¿Deseas modificarlo?",

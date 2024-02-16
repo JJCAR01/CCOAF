@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import Swal from 'sweetalert2';
 import { TipoGEService } from '../services/tipoGE.service';
@@ -9,7 +9,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TareaService } from 'src/app/tarea/services/tarea.service';
 import { EEstado } from 'src/enums/eestado';
 import { EPeriodicidad } from 'src/enums/eperiodicidad';
-import { ObservacionService } from 'src/app/observacion/services/observacion.service';
 import { initializeApp } from 'firebase/app';
 import { environment } from 'src/environments/environment.development';
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
@@ -140,7 +139,7 @@ export class TipogeListarComponent implements OnInit {
       nombre: ['', Validators.required],
     });
     this.formAgregarResultado = this.formBuilder.group({
-      resultado: ['', Validators.required],
+      entregable: ['', Validators.required],
     });
     this.formTarea = this.formBuilder.group({
       nombre: ['', Validators.required],
@@ -575,9 +574,9 @@ export class TipogeListarComponent implements OnInit {
   }
   agregarResultado() {
     if (this.formAgregarResultado.valid) {
-      const resultado = this.formAgregarResultado.get('resultado')?.value;
+      const entregable = this.formAgregarResultado.get('entregable')?.value;
       const actividad = {
-        resultado: resultado,
+        entregable: entregable,
       };
       this.gestionService.modificarResultadoActividadEstrategica(actividad, this.idActividadEstrategicaSeleccionado,this.auth.obtenerHeader()).subscribe(
               () => {

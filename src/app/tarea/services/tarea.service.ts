@@ -27,6 +27,9 @@ export class TareaService {
   listarTareaPorSprint(idASE:number,headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/tareas/sprint/${idASE}`,{headers});
   }
+  listarTareaPorSprintProyectoArea(idASE:number,headers?: HttpHeaders){
+    return this.http.get(`${environment.apiUrl}/ccoa/tareas/sprintproyectoarea/${idASE}`,{headers});
+  }
   listarTareaPorActvidadGestionActividadEstrategica(idASE:number,headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/tareas/actividad/${idASE}`,{headers});
   }

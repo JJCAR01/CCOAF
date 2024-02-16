@@ -82,7 +82,7 @@ export class ListarSprintproyectoareaComponent implements OnInit  {
       estado: ['', Validators.required],
     });
     this.formModificarPorcentaje = this.formBuilder.group({
-      porcentaje: ['', Validators.required],
+      porcentajeReal: ['', Validators.required],
     });
     this.formObservacion = this.formBuilder.group({
       id: ['', Validators.required],
@@ -183,7 +183,6 @@ export class ListarSprintproyectoareaComponent implements OnInit  {
         const sprint = {
           rutaArchivo: downloadURL, // Asegúrate de que el nombre de la propiedad coincida con lo que espera tu backend
         };
-        console.log(this.idSprintSeleccionado)
         debugger
         this.sprintService.guardarDocumentoSprintProyectoArea(sprint, this.idSprintSeleccionado, this.auth.obtenerHeaderDocumento()).subscribe(
             (data: any) => {
@@ -360,7 +359,7 @@ export class ListarSprintproyectoareaComponent implements OnInit  {
   cargarTareas(idASE:any, tipoASE:any) {
     if(tipoASE === 'SPRINT_PROYECTO_AREA'){
     this.tareaService
-      .listarTareaPorSprint(idASE,this.auth.obtenerHeader()) 
+      .listarTareaPorSprintProyectoArea(idASE,this.auth.obtenerHeader()) 
       .toPromise()
       .then(
         (data: any) => {
@@ -501,9 +500,9 @@ export class ListarSprintproyectoareaComponent implements OnInit  {
         confirmButtonColor: '#0E823F',
       });
     } else if (this.formModificarPorcentaje.valid) {
-      const porcentaje = this.formModificarPorcentaje.get('porcentaje')?.value;
+      const porcentajeReal = this.formModificarPorcentaje.get('porcentajeReal')?.value;
       const tareaModificar = {
-        porcentaje: porcentaje,
+        porcentajeReal: porcentajeReal,
       };
       Swal.fire({
         title: "¿Deseas modificarlo?",
@@ -619,7 +618,7 @@ export class ListarSprintproyectoareaComponent implements OnInit  {
       estado: this.estadoTarea,
     });
     this.formModificarPorcentaje.patchValue({
-      porcentaje: this.estadoTarea,
+      porcentajeReal: this.estadoTarea,
     });
 
     this.formObservacion.patchValue({

@@ -82,7 +82,7 @@
           <button title="Agregar proyecto" type="button"
                   class="btn btn-outline-success" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['crearProyectoArea'] } }]"
                   [queryParams]="{  idPat,  nombrePat  }">
-            Crear proyecto
+            Crear proyecto del área
           </button>
         </div>
       </div>
@@ -121,7 +121,9 @@
               <th class="column-avance">% Avance esperado</th>
               <th class="column-avance">% Cumplimiento</th>
               <th class="column-meta">Meta (KPI)</th>
-              <th class="column-resultado">Resultado</th>
+              <th class="column-meta">R Meta (KPI)</th>
+              <th class="column-meta">% Meta (KPI)</th>
+              <th class="column-resultado">Entregable</th>
               <th class="column-responsable">Responsable</th>
               <th class="column-acciones">Acciones</th>
             </tr>
@@ -141,12 +143,11 @@
                 <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" [ngClass]="colorPorcentaje(actividad.porcentajeReal)">{{ actividad.porcentajeEsperado | number : '1.2-2' }} %</td>
                 <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" [ngClass]="colorPorcentaje(actividad.porcentajeReal)">{{ actividad.porcentajeCumplimiento | number : '1.2-2' }} %</td>
                 <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" >{{ actividad.meta }} </td>
-                <td data-bs-toggle="modal" data-bs-target="#modalAgregarResultado" (click)="obtenerActividadEstrategica(actividad.idActividadEstrategica,actividad)">{{ actividad.resultado }}</td>
+                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" >{{ actividad.resultadoMeta }} </td>
+                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" >{{ actividad.promedioMeta }} </td>
+                <td data-bs-toggle="modal" data-bs-target="#modalAgregarResultado" (click)="obtenerActividadEstrategica(actividad.idActividadEstrategica,actividad)">{{ actividad.entregable }}</td>
                 <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)"> {{ obtenerNombreUsuario(actividad.idUsuario) }}</td>
                 <td >
-                  <button title="Ver" class="btn btn-outline-primary me-1 mb-1" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarActividad', actividad.idActividadEstrategica ,'pat', nombrePat] } }]">
-                    <i class="bi bi-eye-fill"></i>
-                  </button>
                     <button title="Modificar" type="button" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalModificar" (click)="obtenerActividadEstrategica(actividad.idActividadEstrategica,actividad)">
                       <i class="bi bi-pen-fill"></i>
                     </button>
@@ -365,8 +366,6 @@
                 <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprintProyectoArea', proyecto.idProyectoArea , 'pat', nombrePat] } }]">
                       {{ proyecto.totalSprint }}</td>
                 <td>
-                  <button title="Ver" class="btn btn-outline-primary me-1 mb-1" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprintProyectoArea', proyecto.idProyectoArea, 'pat', nombrePat] } }]"
-                    ><i class="bi bi-eye-fill"></i></button>
                   <button title="Modificar" type="button" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalModificarProyecto" (click)="obtenerProyectoArea(proyecto.idProyectoArea,proyecto)">
                       <i class="bi bi-pen-fill"></i>
                   </button>
@@ -662,17 +661,17 @@
     </div>
   </div>
   <div class="modal fade" id="modalAgregarResultado" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Registrar resultado</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Entregable</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <form [formGroup]="formAgregarResultado" (ngSubmit)="agregarResultado()">
             <div class="form-floating mb-2">
-              <input type="text" id="resultado" class="form-control form-control-lg" formControlName="resultado" placeholder="resultado">
-              <label for="resultado" class="form-label">Resultado<span class="required-field">*</span></label> 
+              <input type="text" id="entregable" class="form-control form-control-lg" formControlName="entregable" placeholder="entregable">
+              <label for="entregable" class="form-label">Entregable<span class="required-field">*</span></label> 
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -805,7 +804,7 @@
                   <option value="" disabled selected>Seleccione la periodicidad:*</option>
                   <option *ngFor="let periodicidad of periodiciadEnumLista" [value]="periodicidad"  >{{ periodicidad | formatEnum}}</option>
               </select>
-              <label for="periodicidad" placeholder="usuario">Responsable:<span class="required-field">*</span></label>
+              <label for="periodicidad" placeholder="periodicidad">Periodicidad<span class="required-field">*</span></label>
               <small *ngIf="periodicidadVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
             </div> 
             <div class="form-floating mb-2">

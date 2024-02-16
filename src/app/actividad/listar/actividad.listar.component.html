@@ -110,8 +110,6 @@
                 <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]">
                       {{ proyecto.totalSprint }}</td>
                 <td>
-                  <button title="Ver" class="btn btn-outline-primary me-1 mb-1" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]"
-                    ><i class="bi bi-eye-fill"></i></button>
                   <button title="Modificar" type="button" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalModificarProyecto" (click)="obtenerProyecto(proyecto.idProyecto,proyecto)">
                       <i class="bi bi-pen-fill"></i>
                   </button>
@@ -142,7 +140,7 @@
         <div *ngFor="let gestion of gestiones">
           <div class="card mb-2">
             <div class="card-header" role="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapse-' + gestion.idActividadGestionEstrategica" (click)="cargarTareas(gestion.idActividadGestionEstrategica,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')">
-              <h5 class="mb-0" >{{ gestion.nombre }}</h5>
+              <h5 class="nombre-gestion" >{{ gestion.nombre }}</h5>
               <div class="card-body">
                 <div class="row justify-content-center" title="{{gestion.nombre}}">
                   <div class="col-md-1">
@@ -567,7 +565,7 @@
                   <option value="" disabled selected>Seleccione la periodicidad:*</option>
                   <option *ngFor="let periodicidad of periodiciadEnumLista" [value]="periodicidad"  >{{ periodicidad | formatEnum}}</option>
               </select>
-              <label for="periodicidad" placeholder="usuario">Responsable:<span class="required-field">*</span></label>
+              <label for="periodicidad" placeholder="periodicidad">Periodicidad:<span class="required-field">*</span></label>
               <small *ngIf="periodicidadVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
             </div> 
             <div class="form-floating mb-2">

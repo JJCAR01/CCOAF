@@ -59,7 +59,7 @@
       <div *ngFor="let sprint of sprints ; let i = index">
         <div class="card mb-2">
           <div class="card-header" role="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapse-' + sprint.idSprintProyectoArea" (click)="cargarTareas(sprint.idSprintProyectoArea,'SPRINT_PROYECTO_AREA')">
-            <h5 class="mb-0" >{{ sprint.descripcion }}</h5>
+            <h5 class="nombre-gestion" >{{ sprint.descripcion }}</h5>
             <div class="card-body" title="{{sprint.descripcion}}">
               <div class="row justify-content-center">
                 <div class="col-md-1">
@@ -315,8 +315,8 @@
         <div class="modal-body">
           <form [formGroup]="formModificarPorcentaje" (ngSubmit)="modificarPorcentaje()">
             <div class="form-floating mb-2">
-              <input type="number" id="porcentaje" class="form-control form-control-lg" formControlName="porcentaje" placeholder="Porcentaje (%)">
-              <label for="porcentaje" class="form-label" >Porcentaje (%)<span class="required-field">*</span></label> 
+              <input type="number" id="porcentajeReal" class="form-control form-control-lg" formControlName="porcentajeReal" placeholder="Porcentaje (%)">
+              <label for="porcentajeReal" class="form-label" >Porcentaje (%)<span class="required-field">*</span></label> 
             </div>
             <span class="text-center" >Recuerda que lo valores que puedes digitar van de 0 a 100</span>
             <div class="modal-footer">
@@ -403,7 +403,7 @@
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
               <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Guardar</button>
             </div>
-          </form>cio
+          </form>
         </div>
       </div>
     </div>
@@ -427,7 +427,7 @@
                   <option value="" disabled selected>Seleccione la periodicidad:*</option>
                   <option *ngFor="let periodicidad of periodiciadEnumLista" [value]="periodicidad"  >{{ periodicidad | formatEnum}}</option>
               </select>
-              <label for="periodicidad" placeholder="usuario">Responsable:<span class="required-field">*</span></label>
+              <label for="periodicidad" placeholder="periodicidad">Periodicidad:<span class="required-field">*</span></label>
               <small *ngIf="periodicidadVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
             </div> 
             <div class="form-floating mb-2">

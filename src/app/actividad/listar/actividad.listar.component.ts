@@ -15,6 +15,7 @@ import { ObservacionService } from 'src/app/observacion/services/observacion.ser
 import { initializeApp } from 'firebase/app';
 import { environment } from 'src/environments/environment.development';
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
+import { Usuario } from 'src/app/modelo/usuario';
 
 @Component({
   selector: 'app-listar',
@@ -37,14 +38,14 @@ export class ActividadListarComponent implements OnInit{
   gestiones: any[] = [];
   proyectos: any[] = [];
   actividades: any[] = [];
-  usuarios:any[] =[];
+  usuarios:Usuario[] =[];
   tareas:any[] =[];
   observaciones:any[] =[];
   patNombre:any;
   actividadNombre:any;
   usuarioProyecto:any;
   usuarioGestion:any;
-  idActividadEstrategica:any;
+  idActividadEstrategica:number | 0 = 0;
   porcentajeEstrategica:any;
   usuarioEstrategica:any;
   patEstrategica:number | 0 =0;
@@ -59,10 +60,10 @@ export class ActividadListarComponent implements OnInit{
   fechaFinalProyecto:any;
   modalidadProyecto:any;
   planeacionProyecto:any;
-  idTareaSeleccionado:any;
+  idTareaSeleccionado:number | 0 = 0;
   nombreTarea:any;
   estadoTarea:any;
-  idTareaTipo:any;
+  idTareaTipo:number | 0 = 0;
   periodicidadTarea:any;
   porcentajeTarea:any;
   form:FormGroup;
@@ -791,7 +792,7 @@ private obtenerFechaActual(): string {
     this.nombreTarea = tarea.nombre;
     this.idTareaTipo = tarea.idASE;
     this.estadoTarea = tarea.estado;
-    this.porcentajeTarea = tarea.porcentaje;
+    this.porcentajeTarea = tarea.porcentajeReal;
     this.periodicidadTarea = tarea.periodicidad;
 
     this.formModificarEstadoTarea.patchValue({

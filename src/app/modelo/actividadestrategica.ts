@@ -10,7 +10,9 @@ export interface ActividadEstrategica {
     porcentajeEsperado :number;
     porcentajeCumplimiento: number;
     meta: number;
-    resultado: string;
+    resultadoMeta: number;
+    promedioMeta: number;
+    entregable: string;
     idUsuario: number;
     idPat: number;
 }
