@@ -63,6 +63,9 @@ export class PatListarComponent implements OnInit{
           fechaAnual: ['', Validators.required],
           proceso: ['', Validators.required],
           direccion: ['', Validators.required],
+          porcentajeReal: ['', Validators.required],
+          porcentajeEsperado: ['', Validators.required],
+          porcentajeCumplimiento : ['', Validators.required],
           idUsuario: ['', Validators.required],
         });
         this.formObservacion = this.formBuilder.group({
@@ -278,12 +281,18 @@ export class PatListarComponent implements OnInit{
         const fechaAnual = this.form.get('fechaAnual')?.value;
         const proceso = this.form.get('proceso')?.value;
         const direccion = this.form.get('direccion')?.value;
+        const porcentajeReal = this.form.get('porcentajeReal')?.value;
+        const porcentajeEsperado = this.form.get('porcentajeEsperado')?.value;
+        const porcentajeCumplimiento = this.form.get('porcentajeCumplimiento')?.value;
         const idUsuario = this.form.get('idUsuario')?.value;
         const pat = {
           nombre: nombre,
           fechaAnual: fechaAnual,
           proceso: proceso,
           direccion:direccion,
+          porcentajeReal:porcentajeReal,
+          porcentajeEsperado:porcentajeEsperado,
+          porcentajeCumplimiento:porcentajeCumplimiento,
           idUsuario: idUsuario
         }
         Swal.fire({
@@ -383,17 +392,18 @@ export class PatListarComponent implements OnInit{
     obtenerPat(idPat: number,pat:any) {
 
       this.idPatSeleccionado = idPat;
-      this.nombrePatSeleccionado = pat.nombre;
-      this.fechaAnualSeleccionada = pat.fechaAnual;
       this.procesoSeleccionado = pat.proceso.nombre;
       this.direccionSeleccionada = pat.direccion.nombre;
       this.idUsuarioSeleccionado = pat.idUsuario
 
       this.form.patchValue({
-        nombre: this.nombrePatSeleccionado,
-        fechaAnual: this.fechaAnualSeleccionada,
-        proceso: this.procesoSeleccionado,
-        direccion: this.direccionSeleccionada,
+        nombre: pat.nombre,
+        fechaAnual:  pat.fechaAnual,
+        proceso: pat.proceso.nombre,
+        direccion: pat.direccion.nombre,
+        porcentajeReal: pat.porcentajeReal,
+        porcentajeEsperado: pat.porcentajeEsperado,
+        porcentajeCumplimiento: pat.porcentajeCumplimiento,
         idUsuario: this.idUsuarioSeleccionado
       });
       this.formObservacion.patchValue({

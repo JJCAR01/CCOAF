@@ -2,6 +2,7 @@
 export const environment = {
     production:false,
     apiUrl:'http://localhost:8081',
+    //apiUrl:'https://pat.ccoa.org.co:8081',
     firebase : {
       apiKey: "AIzaSyBHvGS6l1AwONimxRrZ7oDa3iODU8zkbPg",
       authDomain: "pat-ccoa.firebaseapp.com",

@@ -103,7 +103,7 @@ import { NgxCaptchaModule } from 'ngx-captcha';
     CookieService,
     { provide: 'CookieService', useClass: CookieService },
     LoginGuard,
-    { provide: FIREBASE_OPTIONS, useValue: environment.firebase }
+    { provide: FIREBASE_OPTIONS, useValue: environment.firebase },
   ],
   bootstrap: [AppComponent]
 })

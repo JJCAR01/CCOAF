@@ -556,7 +556,6 @@ export class SprintListarComponent implements OnInit {
           this.tareaService.modificarTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
               (response) => {
                 this.swalSatisfactorio('modificado','tarea')
-                  this.cargarSprints(this.idProyecto);
                   this.cargarTareas(this.idTareaTipo,'SPRINT');
                   this.formModificarTarea.reset();               
               },
@@ -592,17 +591,15 @@ export class SprintListarComponent implements OnInit {
   obtenerSprint(idSprint: number,sprint:any) {
     this.tipoFormulario = 'SPRINT';
     this.idSprintSeleccionado = idSprint;
-    this.nombreSprint = sprint.descripcion;
-    this.fechaInicialSprint = sprint.fechaInicial
-    this.fechaFinalSprint = sprint.fechaFinal
     
     this.formSprint.patchValue({
-      descripcion : this.nombreSprint,
-      fechaInicial : this.fechaInicialSprint,
-      fechaFinal : this.fechaFinalSprint
+      descripcion : sprint.descripcion,
+      fechaInicial : sprint.fechaInicial,
+      fechaFinal : sprint.fechaFinal
     });
     this.formObservacion.patchValue({
-      id: this.idSprintSeleccionado,
+      id: idSprint,
+      fecha:  this.obtenerFechaActual(),
     });
   }
   obtenerTarea(idTarea: number,tarea:any) {
@@ -610,19 +607,18 @@ export class SprintListarComponent implements OnInit {
     this.idTareaSeleccionado = idTarea;
     this.nombreTarea = tarea.nombre;
     this.idTareaTipo = tarea.idASE;
-    this.estadoTarea = tarea.estado;
-    this.porcentajeTarea = tarea.porcentaje;
     this.periodicidadTarea = tarea.periodicidad;
 
     this.formModificarEstadoTarea.patchValue({
-      estado: this.estadoTarea,
+      estado: tarea.estado,
     });
     this.formModificarPorcentaje.patchValue({
-      porcentaje: this.estadoTarea,
+      porcentajeReal: tarea.porcentajeReal,
     });
 
     this.formObservacion.patchValue({
-      id: this.idTareaSeleccionado,
+      id: idTarea,
+      fecha:  this.obtenerFechaActual(),
     });
   }
   obtenerTareaAModificar(idTarea: number,tarea:any) {
@@ -671,12 +667,6 @@ export class SprintListarComponent implements OnInit {
       confirmButtonColor: '#0E823F',
     }
     );
-    this.formSprint.reset();
-    this.formModificarEstadoTarea.reset();
-    this.formModificarPorcentaje.reset();
-    this.formObservacion.reset();
-    this.formTarea.reset();
-    this.formModificarTarea.reset();
   }
   swalError(error: any) {
     Swal.fire(

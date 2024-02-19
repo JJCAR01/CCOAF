@@ -87,7 +87,7 @@ export class PatCrearComponent implements OnInit{
           (response) => {
             Swal.fire({
               title:"Creado!!!",
-              text:'El pat se ha creado!!', 
+              text:'El PAT se ha creado!!', 
               icon:"success",
               showCancelButton: true,
               cancelButtonText: "Cancelar",

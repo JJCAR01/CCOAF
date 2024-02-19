@@ -285,7 +285,7 @@
           <form [formGroup]="tipoFormulario === 'SPRINT' || 'TAREA' ? formObservacion : formObservacion" 
           (ngSubmit)="crearObservacion()">
             <div class="form-floating">
-              <input type="date" id="fecha" [class.is-invalid]="fechaVacio" class="form-control mb-2" formControlName="fecha">
+              <input type="date" id="fecha" [class.is-invalid]="fechaVacio" class="form-control mb-2" formControlName="fecha" readonly>
               <label for="fecha"  class="form-label">Fecha</label>
               <small *ngIf="fechaVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
             </div>

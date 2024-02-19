@@ -37,6 +37,7 @@ export class TipogeListarComponent implements OnInit {
   modalidadEnumList = Object.values(EModalidad);
   planeacionEnumList = Object.values(EPlaneacion);
   archivoSeleccionado: File | null = null;
+  documentoObtenidoActividad: any [] = [];
   documentoObtenido:any;
   usuarioPat:number | 0 = 0;
   porcentajeRealPat:number | 0 = 0;
@@ -80,6 +81,7 @@ export class TipogeListarComponent implements OnInit {
   estadoTarea: string | undefined = '';
   porcentajeTarea: number | 0 = 0;
   periodicidadTarea: string | undefined = '';
+  descripcionTarea: string | undefined = '';
   estadoEnumList: string[] = [];
   periodiciadEnumLista: string[] = [];
   gestiones: ActividadGestion[] = [];
@@ -96,7 +98,8 @@ export class TipogeListarComponent implements OnInit {
   formModificarTarea:FormGroup
   formTarea:FormGroup;
   formObservacion:FormGroup;
-  formAgregarResultado:FormGroup;
+  formAgregarEntregable:FormGroup;
+  formAgregarResultadoMeta:FormGroup;
   formProyecto:FormGroup;
 
   constructor(
@@ -138,16 +141,20 @@ export class TipogeListarComponent implements OnInit {
       fecha: [this.obtenerFechaActual(), Validators.required],
       nombre: ['', Validators.required],
     });
-    this.formAgregarResultado = this.formBuilder.group({
+    this.formAgregarEntregable = this.formBuilder.group({
       entregable: ['', Validators.required],
     });
-    this.formTarea = this.formBuilder.group({
+    this.formAgregarResultadoMeta = this.formBuilder.group({
+      meta: ['', Validators.required],
+      resultadoMeta: ['', Validators.required],
+    });
+    this.formModificarTarea = this.formBuilder.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
       periodicidad: ['', Validators.required],
       idUsuario: ['', Validators.required],
     });
-    this.formModificarTarea = this.formBuilder.group({
+    this.formTarea = this.formBuilder.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
       periodicidad: ['', Validators.required],
@@ -398,8 +405,8 @@ export class TipogeListarComponent implements OnInit {
           this.gestionService.modificarActividadEstrategica(actividadEstrategica, this.idActividadEstrategicaSeleccionado, this.auth.obtenerHeader())
           .subscribe(
             () => {
-                this.swalSatisfactorio('modificado','actividad estratégica')
-                this.cargarActividadesEstrategicas(this.idPat)
+                this.swalSatisfactorio('modificado','actividad estratégica');
+                this.cargarActividadesEstrategicas(this.idPat);
             },
             (error) => {this.swalError(error);}
             );
@@ -572,17 +579,35 @@ export class TipogeListarComponent implements OnInit {
       return this.formObservacion.markAllAsTouched();
     }    
   }
-  agregarResultado() {
-    if (this.formAgregarResultado.valid) {
-      const entregable = this.formAgregarResultado.get('entregable')?.value;
+  agregarEntregable() {
+    if (this.formAgregarEntregable.valid) {
+      const entregable = this.formAgregarEntregable.get('entregable')?.value;
       const actividad = {
         entregable: entregable,
       };
-      this.gestionService.modificarResultadoActividadEstrategica(actividad, this.idActividadEstrategicaSeleccionado,this.auth.obtenerHeader()).subscribe(
+      this.gestionService.modificarEntregableActividadEstrategica(actividad, this.idActividadEstrategicaSeleccionado,this.auth.obtenerHeader()).subscribe(
               () => {
-                  this.swalSatisfactorio('Agregado!','El resultado de la actividad estratégica')
+                  this.swalSatisfactorio('Agregado!','El entregable de la actividad estratégica')
                   this.cargarActividadesEstrategicas(this.idPat);
-                  this.formAgregarResultado.reset();           
+                  this.formAgregarEntregable.reset();           
+              },
+              (error) => {this.swalError(error);}
+            );
+    }
+  }
+  agregarResultadoMeta() {
+    if (this.formAgregarResultadoMeta.valid) {
+      const resultadoMeta = this.formAgregarResultadoMeta.get('resultadoMeta')?.value;
+      const meta = this.formAgregarResultadoMeta.get('meta')?.value;
+      const actividad = {
+        meta: meta,
+        resultadoMeta: resultadoMeta,
+      };
+      this.gestionService.modificarResultadoMetaActividadEstrategica(actividad, this.idActividadEstrategicaSeleccionado,this.auth.obtenerHeader()).subscribe(
+              () => {
+                  this.swalSatisfactorio('Agregado!','resultado de la meta')
+                  this.cargarActividadesEstrategicas(this.idPat);
+                  this.formAgregarEntregable.reset();           
               },
               (error) => {this.swalError(error);}
             );
@@ -684,7 +709,6 @@ export class TipogeListarComponent implements OnInit {
           this.tareaService.modificarTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
               () => {
                 this.swalSatisfactorio('modificado','tarea')
-                  this.cargarGestiones(this.idPat)
                   this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION')
                   this.formModificarEstadoTarea.reset()              
               },
@@ -861,23 +885,7 @@ export class TipogeListarComponent implements OnInit {
     } else if (tipo === 'ACTIVIDAD_ESTRATEGICA') {
       this.gestionService.obtenerDocumentoActividadEstrategica(id, this.auth.obtenerHeaderDocumento()).subscribe(
         (data: any) => {
-          this.documentoObtenido = data;
-    
-          // Verificar si this.documentoObtenido.rutaArchivo existe
-          if (this.documentoObtenido.rutaDocumento) {
-            // Extraer el nombre del archivo de la URL
-            const nombreArchivo = this.extraerNombreArchivo(this.documentoObtenido.rutaDocumento);
-  
-            // Crear un enlace HTML
-            const enlaceHTML = `<a href="${this.documentoObtenido.rutaDocumento}" target="_blank">${nombreArchivo}</a>`;
-  
-            Swal.fire({
-              title: 'Documento correspondiente a la actividad',
-              html: `Para previsualizar darle click al enlace: ${enlaceHTML}`,
-              confirmButtonColor: '#0E823F',
-              icon:'success'
-            });
-          }
+          this.documentoObtenidoActividad = data;
         },
         (error: any) => {
           Swal.fire({
@@ -946,40 +954,35 @@ export class TipogeListarComponent implements OnInit {
   obtenerActividadGestion(idActividadGestion: number,actividadGestion:any) {
     this.tipoFormulario = 'ACTIVIDAD_GESTION';
     this.idActividadGestionSeleccionado = idActividadGestion;
-    this.nombreActividadGestion = actividadGestion.nombre;
-    this.idUsuarioSeleccionado = actividadGestion.idUsuario
-    this.fechaInicialGestion = actividadGestion.fechaInicial
-    this.fechaFinalGestion = actividadGestion.fechaFinal
-
 
     this.formGestion.patchValue({
-      nombre: this.nombreActividadGestion,
-      fechaIncial: this.fechaInicialGestion,
-      fechaFinal: this.fechaFinalGestion,
-      idUsuario: this.idUsuarioSeleccionado,
+      nombre: actividadGestion.nombre,
+      fechaInicial: actividadGestion.fechaInicial,
+      fechaFinal: actividadGestion.fechaFinal,
+      idUsuario: actividadGestion.idUsuario,
     });
     this.formObservacion.patchValue({
-      id: this.idActividadGestionSeleccionado,
+      id: idActividadGestion,
+      fecha: this.obtenerFechaActual(),
     });
   }
   obtenerTarea(idTarea: number,tarea:any) {
     this.idTareaSeleccionado = idTarea;
     this.nombreTarea = tarea.nombre;
     this.idTareaTipo = tarea.idASE;
-    this.estadoTarea = tarea.estado;
-    this.porcentajeTarea = tarea.porcentajeReal;
     this.periodicidadTarea = tarea.periodicidad;
     this.tipoFormulario = 'TAREA';
 
     this.formModificarEstadoTarea.patchValue({
-      estado: this.estadoTarea,
+      estado: tarea.estado,
     });
     this.formModificarPorcentaje.patchValue({
-      porcentajeReal: this.porcentajeTarea,
+      porcentajeReal: tarea.porcentajeReal,
     });
 
     this.formObservacion.patchValue({
-      id: this.idTareaSeleccionado,
+      id: idTarea,
+      fecha: this.obtenerFechaActual(),
     });
   }
   obtenerTareaAModificar(idTarea: number,tarea:any) {
@@ -997,47 +1000,41 @@ export class TipogeListarComponent implements OnInit {
   obtenerActividadEstrategica(idActividadEstrategica: number,actividadEstrategica:any) {
     this.tipoFormulario = 'ACTIVIDAD_ESTRATEGICA'; 
     this.idActividadEstrategicaSeleccionado = idActividadEstrategica;
-    this.nombreActividadEstrategica = actividadEstrategica.nombre;
-    this.idUsuarioSeleccionado = actividadEstrategica.idUsuario;
-    this.fechaInicialEstrategica = actividadEstrategica.fechaInicial;
-    this.fechaFinalEstrategica = actividadEstrategica.fechaFinal;  
-    this.metaEstrategica = actividadEstrategica.meta;
 
     this.formEstrategica.patchValue({
-      nombre: this.nombreActividadGestion,
-      fechaInicial: this.fechaInicialGestion,
-      fechaFinal: this.fechaFinalGestion,
-      meta: this.metaEstrategica,
-      idUsuario: this.idUsuarioSeleccionado,
+      nombre: actividadEstrategica.nombre,
+      fechaInicial: actividadEstrategica.fechaInicial,
+      fechaFinal: actividadEstrategica.fechaFinal,
+      meta: actividadEstrategica.meta,
+      idUsuario: actividadEstrategica.idUsuario,
     });
     this.formObservacion.patchValue({
-      id: this.idActividadEstrategicaSeleccionado,
+      id: idActividadEstrategica,
+            fecha: this.obtenerFechaActual(),
     });
-    this.formObservacion.patchValue({
-      resultado: this.resultadoActividad,
+    this.formAgregarEntregable.patchValue({
+      entregable: actividadEstrategica.entregable,
+    });
+    this.formAgregarResultadoMeta.patchValue({
+      meta: actividadEstrategica.meta,
+      resultadoMeta: actividadEstrategica.resultadoMeta,
     });
   }
   obtenerProyectoArea(idProyectoArea: number,proyectoArea:any) {
     this.tipoFormulario = 'PROYECTO_AREA'; 
     this.idProyectoSeleccionado = idProyectoArea;
-    this.nombreProyecto = proyectoArea.nombre;
-    this.usuarioProyecto = proyectoArea.idUsuario;
-    this.presupuestoProyecto = proyectoArea.presupuesto
-    this.fechaInicialProyecto = proyectoArea.fechaInicial
-    this.fechaFinalProyecto = proyectoArea.fechaFinal
-    this.modalidadProyecto = proyectoArea.modalidad
-    this.planeacionProyecto = proyectoArea.planeacionSprint
 
     this.formProyecto.patchValue({
-      nombre: this.nombreProyecto,
-      presupuesto: this.presupuestoProyecto,
-      fechaInicial: this.fechaInicialProyecto,
-      fechaFinal: this.fechaFinalProyecto,
-      modalidad: this.modalidadProyecto,
-      planeacionSprint:this.planeacionProyecto
+      nombre: proyectoArea.nombre,
+      presupuesto: proyectoArea.presupuesto,
+      fechaInicial: proyectoArea.fechaInicial,
+      fechaFinal: proyectoArea.fechaFinal,
+      modalidad: proyectoArea.modalidad,
+      planeacionSprint: proyectoArea.planeacionSprint
     });
     this.formObservacion.patchValue({
-      id: this.idProyectoSeleccionado,
+      id: idProyectoArea,
+      fecha: this.obtenerFechaActual(),
     });
   }
   obtenerNombreUsuario(idUsuario: number) {
@@ -1068,19 +1065,13 @@ export class TipogeListarComponent implements OnInit {
   }
 
   swalSatisfactorio(metodo: string, tipo:string) {
-    Swal.fire({
-      title: `Se ha ${metodo}.`,
-      text: `El ${tipo} se ha ${metodo}!!`,
-      icon:'success',
-      confirmButtonColor: '#0E823F',
-    }
+      Swal.fire({
+        title: `Se ha ${metodo}.`,
+        text: `El ${tipo} se ha ${metodo}!!`,
+        icon:'success',
+        confirmButtonColor: '#0E823F',
+      }
     );
-    this.formEstrategica.reset();
-    this.formGestion.reset();
-    this.formModificarEstadoTarea.reset();
-    this.formModificarPorcentaje.reset();
-    this.formTarea.reset();
-    this.formModificarTarea.reset();
   }
   swalError(error: any) {
     Swal.fire(

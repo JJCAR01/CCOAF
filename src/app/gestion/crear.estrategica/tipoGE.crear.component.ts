@@ -29,6 +29,7 @@ export class TipoGECrearComponent implements OnInit {
       fechaInicial: ['', Validators.required],
       fechaFinal: ['', Validators.required],
       meta: ['', Validators.required],
+      resultadoMeta: [0, Validators.required],
       idUsuario: ['', Validators.required],
     });
   }
@@ -54,6 +55,7 @@ export class TipoGECrearComponent implements OnInit {
       const fechaInicial = this.form.get('fechaInicial')?.value;
       const fechaFinal = this.form.get('fechaFinal')?.value;
       const meta = this.form.get('meta')?.value;
+      const resultadoMeta = this.form.get('resultadoMeta')?.value;
       const idUsuario = this.form.get('idUsuario')?.value;
       const idPat = this.idPat
 
@@ -61,6 +63,7 @@ export class TipoGECrearComponent implements OnInit {
           nombre: nombre,
           fechaInicial: fechaInicial,
           fechaFinal: fechaFinal,
+          resultadoMeta:resultadoMeta,
           meta:meta,
           idPat:idPat, 
           idUsuario: idUsuario,

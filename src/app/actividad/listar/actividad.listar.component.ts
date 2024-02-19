@@ -44,7 +44,7 @@ export class ActividadListarComponent implements OnInit{
   patNombre:any;
   actividadNombre:any;
   usuarioProyecto:any;
-  usuarioGestion:any;
+  idUsuarioSeleccionado: any | 0 = 0;
   idActividadEstrategica:number | 0 = 0;
   porcentajeEstrategica:any;
   usuarioEstrategica:any;
@@ -83,12 +83,12 @@ export class ActividadListarComponent implements OnInit{
     private usuarioService :UsuarioService,
     private formBuilder: FormBuilder,
     private tareaService: TareaService,
-    private observacionService: ObservacionService,
   ) {
     this.form = this.formBuilder.group({
       nombre:['',Validators.required],
       fechaInicial: ['', Validators.required],
       fechaFinal: ['', Validators.required],
+      idUsuario: ['', Validators.required],
     });
     this.formProyecto = this.formBuilder.group({
       nombre:['',Validators.required],
@@ -240,7 +240,7 @@ private obtenerFechaActual(): string {
       const nombre = this.form.get('nombre')?.value;
       const fechaInicial = this.form.get('fechaInicial')?.value;
       const fechaFinal = this.form.get('fechaFinal')?.value;
-      const idUsuario = this.usuarioGestion;
+      const idUsuario = this.form.get('idUsuario')?.value;
       const idActividadEstrategica = this.idActividadEstrategica
       
       const actividadGestion = {
@@ -541,7 +541,6 @@ private obtenerFechaActual(): string {
           this.tareaService.modificarTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
               (response) => {
                 this.swalSatisfactorio('modificado','tarea')
-                  this.cargarGestiones(this.idActividadEstrategica);
                   this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA');
                   this.formTarea.reset();             
               },
@@ -772,18 +771,16 @@ private obtenerFechaActual(): string {
   obtenerActividadGestionEstrategica(idActividadGestionEstrategica: number,gestion:any) {
     this.tipoFormulario = 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA';
     this.idActividadGestionEstrategicaSeleccionado = idActividadGestionEstrategica;
-    this.nombreActividadGestion = gestion.nombre;
-    this.usuarioGestion = gestion.idUsuario,
-    this.fechaInicialGestion = gestion.fechaInicial,
-    this.fechaFinalGestion = gestion.fechaFinal,
 
     this.form.patchValue({
-      nombre: this.nombreActividadGestion,
-      fechaIncial: this.fechaInicialGestion,
-      fechaFinal: this.fechaFinalGestion,
+      nombre: gestion.nombre,
+      fechaInicial: gestion.fechaInicial,
+      fechaFinal: gestion.fechaFinal,
+      idUsuario: gestion.idUsuario
     });
     this.formObservacion.patchValue({
-      id: this.idActividadGestionEstrategicaSeleccionado,
+      id: idActividadGestionEstrategica,
+      fecha:  this.obtenerFechaActual(),
     });
   }
   obtenerTarea(idTarea: number,tarea:any) {
@@ -791,19 +788,18 @@ private obtenerFechaActual(): string {
     this.idTareaSeleccionado = idTarea;
     this.nombreTarea = tarea.nombre;
     this.idTareaTipo = tarea.idASE;
-    this.estadoTarea = tarea.estado;
-    this.porcentajeTarea = tarea.porcentajeReal;
     this.periodicidadTarea = tarea.periodicidad;
 
     this.formModificarEstadoTarea.patchValue({
-      estado: this.estadoTarea,
+      estado: tarea.estado,
     });
     this.formModificarPorcentaje.patchValue({
-      porcentaje: this.estadoTarea,
+      porcentaje: tarea.porcentajeReal,
     });
 
     this.formObservacion.patchValue({
-      id: this.idTareaSeleccionado,
+      id: idTarea,
+      fecha:  this.obtenerFechaActual(),
     });
   }
   obtenerTareaAModificar(idTarea: number,tarea:any) {
@@ -822,24 +818,19 @@ private obtenerFechaActual(): string {
   obtenerProyecto(idProyecto: number,proyecto:any) {
     this.tipoFormulario = 'PROYECTO';
     this.idProyectoSeleccionado = idProyecto;
-    this.nombreProyecto = proyecto.nombre;
     this.usuarioProyecto = proyecto.idUsuario;
-    this.presupuestoProyecto = proyecto.presupuesto
-    this.fechaInicialProyecto = proyecto.fechaInicial
-    this.fechaFinalProyecto = proyecto.fechaFinal
-    this.modalidadProyecto = proyecto.modalidad
-    this.planeacionProyecto = proyecto.planeacionSprint
 
     this.formProyecto.patchValue({
-      nombre: this.nombreProyecto,
-      presupuesto: this.presupuestoProyecto,
-      fechaInicial: this.fechaInicialProyecto,
-      fechaFinal: this.fechaFinalProyecto,
-      modalidad: this.modalidadProyecto,
-      planeacionSprint:this.planeacionProyecto
+      nombre: proyecto.nombre,
+      presupuesto: proyecto.presupuesto,
+      fechaInicial: proyecto.fechaInicial,
+      fechaFinal: proyecto.fechaFinal,
+      modalidad: proyecto.modalidad,
+      planeacionSprint: proyecto.planeacionSprint
     });
     this.formObservacion.patchValue({
-      id: this.idProyectoSeleccionado,
+      id: idProyecto,
+      fecha:  this.obtenerFechaActual(),
     });
   }
 
@@ -881,13 +872,6 @@ private obtenerFechaActual(): string {
       confirmButtonColor: '#0E823F',
     }
     );
-    this.form.reset();
-    this.formProyecto.reset();
-    this.formModificarEstadoTarea.reset();
-    this.formModificarPorcentaje.reset();
-    this.formObservacion.reset();
-    this.formTarea.reset();
-    this.formModificarTarea.reset();
   }
   swalError(error: any) {
     Swal.fire(

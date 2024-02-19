@@ -71,8 +71,11 @@ export class TipoGEService {
   modificarActividadEstrategica<T>(actividadEstrategica : any,idActividadEstrategica:number,headers?:HttpHeaders):Observable<T>{
     return this.http.put<T>(`${environment.apiUrl}/ccoa/estrategicas/${idActividadEstrategica}`,actividadEstrategica,{headers});
   }
-  modificarResultadoActividadEstrategica<T>(actividadEstrategica : any,idActividadEstrategica:number,headers?:HttpHeaders):Observable<T>{
-    return this.http.put<T>(`${environment.apiUrl}/ccoa/estrategicas/resultado/${idActividadEstrategica}`,actividadEstrategica,{headers});
+  modificarEntregableActividadEstrategica<T>(actividadEstrategica : any,idActividadEstrategica:number,headers?:HttpHeaders):Observable<T>{
+    return this.http.put<T>(`${environment.apiUrl}/ccoa/estrategicas/entregable/${idActividadEstrategica}`,actividadEstrategica,{headers});
+  }
+  modificarResultadoMetaActividadEstrategica<T>(actividadEstrategica : any,idActividadEstrategica:number,headers?:HttpHeaders):Observable<T>{
+    return this.http.put<T>(`${environment.apiUrl}/ccoa/estrategicas/meta/${idActividadEstrategica}`,actividadEstrategica,{headers});
   }
   eliminarActividadEstrategica<T>(idActividadEstrategica:number,headers?:HttpHeaders):Observable<T>{
     return this.http.delete<T>(`${environment.apiUrl}/ccoa/estrategicas/${idActividadEstrategica}`,{headers});

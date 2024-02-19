@@ -27,21 +27,24 @@ h3 {
   text-align: right; /* Alinea el texto al centro */
 }
 .actividades {
-  text-align: center; /* Centrar horizontalmente el contenido */
-  align-items: center; /* Centrar verticalmente el contenido */
+  text-align: left; /* Centrar horizontalmente el contenido */
+  align-items: left; /* Centrar verticalmente el contenido */
 }
 .actividadesyproyectos {
-  text-align: right; /* Centrar horizontalmente el contenido */
-  align-items: right; /* Centrar verticalmente el contenido */
+  text-align: left; /* Centrar horizontalmente el contenido */
+  align-items: left; /* Centrar verticalmente el contenido */
+}
+.actividades .responsable-info {
+  padding-left: 100px; /* Ajusta el espacio a la izquierda */
+}
+.actividadesyproyectos .responsable-info {
+  padding-left: 85px; /* Ajusta el espacio a la izquierda */
 }
 .row {
   display: flex; /* Hacer que los elementos dentro de .row se muestren en línea */
   align-items: center; /* Alinear verticalmente los elementos dentro de .row */
 }
 
-.responsable-info {
-  align-items: center; /* Alinear verticalmente los elementos dentro de .responsable-info */
-}
 .responsable-info h2,
 .responsable-info p {
   display: inline-block;
@@ -51,7 +54,7 @@ h3 {
 
 .responsable-info  h1{
   display: flex; /* Hacer que los elementos dentro de .responsable-info se muestren en línea */
-  align-items: center; /* Alinear verticalmente los elementos dentro de .responsable-info */
+  align-items: normal; /* Alinear verticalmente los elementos dentro de .responsable-info */
 }
 
 .responsable-info h2 {
@@ -151,7 +154,7 @@ button {
   width: 5%;
 }
 .column-meta{
-  width: 2%;
+  width: auto;
 }
 .column-resultado{
   width: 15%;

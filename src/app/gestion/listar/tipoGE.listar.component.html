@@ -42,14 +42,14 @@
           </div>
           <div class="responsable-info">
             <h2 title="Porcentaje Esperado">Porcentaje Esperado:</h2>
-            <p> {{ porcentajeEsperadoActividadesEstrategica | number : '1.2-2'  }}</p>
+            <p> {{ porcentajeEsperadoActividadesEstrategica | number : '1.2-2'  }} %</p>
           </div>
           <div class="responsable-info">
             <h2 title="Porcentaje Cumplimiento">Porcentaje Cumplimiento:</h2>
-            <p> {{ porcentajeCumplimientoActividadesEstrategica | number : '1.2-2'  }}</p>
+            <p> {{ porcentajeCumplimientoActividadesEstrategica | number : '1.2-2'  }} %</p>
           </div>
         </div>
-        <div class="col-md-4 actividades">
+        <div class="col-md-4 actividadesyproyectos">
           <div >
             <h3 class="titulo-actividades"> Actividades y proyectos del área</h3>
           </div>
@@ -59,11 +59,11 @@
             </div>
             <div class="responsable-info">
               <h2 title="Porcentaje Esperado">Porcentaje Esperado:</h2>
-              <p> {{ porcentajeEsperadoActividadesYProyectos | number : '1.2-2' }}</p>
+              <p> {{ porcentajeEsperadoActividadesYProyectos | number : '1.2-2' }} %</p>
             </div>
             <div class="responsable-info">
               <h2 title="Porcentaje Cumplimiento"> Porcentaje Cumplimiento:</h2>
-              <p> {{ porcentajeCumplimientoActividadesYProyectos | number : '1.2-2' }}</p>
+              <p> {{ porcentajeCumplimientoActividadesYProyectos | number : '1.2-2' }} %</p>
             </div>
         </div>
       </div>
@@ -143,9 +143,9 @@
                 <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" [ngClass]="colorPorcentaje(actividad.porcentajeReal)">{{ actividad.porcentajeEsperado | number : '1.2-2' }} %</td>
                 <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" [ngClass]="colorPorcentaje(actividad.porcentajeReal)">{{ actividad.porcentajeCumplimiento | number : '1.2-2' }} %</td>
                 <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" >{{ actividad.meta }} </td>
-                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" >{{ actividad.resultadoMeta }} </td>
-                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" >{{ actividad.promedioMeta }} </td>
-                <td data-bs-toggle="modal" data-bs-target="#modalAgregarResultado" (click)="obtenerActividadEstrategica(actividad.idActividadEstrategica,actividad)">{{ actividad.entregable }}</td>
+                <td data-bs-toggle="modal" data-bs-target="#modalAgregarResultadoMeta" (click)="obtenerActividadEstrategica(actividad.idActividadEstrategica,actividad)">{{ actividad.resultadoMeta }} </td>
+                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" [ngClass]="colorPorcentaje(actividad.promedioMeta)">{{ actividad.promedioMeta | number : '1.2-2' }} %</td>
+                <td data-bs-toggle="modal" data-bs-target="#modalAgregarEntregable" (click)="obtenerActividadEstrategica(actividad.idActividadEstrategica,actividad)">{{ actividad.entregable }}</td>
                 <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)"> {{ obtenerNombreUsuario(actividad.idUsuario) }}</td>
                 <td >
                     <button title="Modificar" type="button" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalModificar" (click)="obtenerActividadEstrategica(actividad.idActividadEstrategica,actividad)">
@@ -158,7 +158,7 @@
                   (click)="abrirModalAgregarDocumento(actividad.idActividadEstrategica,'ACTIVIDAD_ESTRATEGICA')"
                       ><i class="bi bi-folder-plus"></i>
                     </button>
-                  <button title="Ver documento" class="btn btn-outline-primary me-1 mb-1"
+                  <button title="Ver documento" class="btn btn-outline-primary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalVerDocumentos" 
                   (click)="obtenerDocumento(actividad.idActividadEstrategica,'ACTIVIDAD_ESTRATEGICA')">            
                     <i class="bi bi-file-earmark-check"></i></button>
                   <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerActividadEstrategica(actividad.idActividadEstrategica,actividad)">
@@ -268,7 +268,8 @@
                       <th class="column-descripcion">Descripción</th>
                       <th class="column-responsableTarea">Responsable</th>
                       <th class="column-accionesTarea">Acciones </th>
-                      <th class="column-crear"><button title="Crear" class="btn btn-success me-1" data-bs-toggle="modal" data-bs-target="#modalCreartarea" (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)"
+                      <th class="column-crear"><button title="Crear" class="btn btn-success me-1" data-bs-toggle="modal" data-bs-target="#modalCreartarea" 
+                        (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)"
                         ><i class="bi bi-plus-lg"></i></button></th>
                     </tr>
                   </thead>
@@ -447,7 +448,7 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="modalAgregar">Agregar entrega</h5>
+          <h5 class="modal-title" id="modalAgregar">Agregar entrega proyecto</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -581,13 +582,13 @@
               <label for="modalidad" class="form-label">Modalidad</label>
               <select class="form-select" id="modalidad" formControlName="modalidad" [ngModel]="modalidadProyecto">
                 <option *ngFor="let modalidad of modalidadEnumList" [value]="convertirModalidad(modalidad)">
-                  {{ modalidad }}</option>
+                  {{ modalidad | formatEnum }}</option>
               </select>
             </div>
             <div class="mb-3">
               <label for="planeacionSprint" class="form-label">Planeación</label>
               <select class="form-select" id="planeacionSprint" formControlName="planeacionSprint" [value]="planeacionProyecto">
-                <option *ngFor="let planeacion of planeacionEnumList" [value]="planeacion" >{{ planeacion }}</option>
+                <option *ngFor="let planeacion of planeacionEnumList" [value]="planeacion" >{{ planeacion | formatEnum }}</option>
               </select>
             </div>
             <div class="modal-footer">
@@ -628,18 +629,53 @@
       </div>
     </div>
   </div>
+  <div class="modal fade" id="modalVerDocumentos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Documentos adjuntos</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-bordered table-hover">
+            <thead class="table-color">
+              <tr>
+                <th>Tipo de archivo</th>
+                <th>Nombre</th>
+                <th>Fecha de carga</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let documento of documentoObtenidoActividad">
+                <tr>
+                  <td><i class="fa fa-file-text-o"></i></td> <!-- Icono de archivo -->
+                  <td><a [href]="documento.rutaDocumento" target="_blank">{{ extraerNombreArchivo(documento.rutaDocumento) }}</a></td> <!-- Nombre del archivo -->
+                  <td>{{ documento.fechaCarga }}</td> <!-- Fecha de carga del documento -->
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="modal fade" id="modalAgregarObservacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Agregar observación</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Avances y Logros</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <form [formGroup]="tipoFormulario === 'ACTIVIDAD_ESTRATEGICA' || 'ACTIVIDAD_GESTION' || 'TAREA' || 'PROYECTO_AREA'? formObservacion : formObservacion" 
           (ngSubmit)="crearObservacion()">
+          <ul>Registre el comentario de avance, en caso de estar incumpliendo, por favor justifique el retraso.</ul>
+          
             <div class="form-floating">
-              <input type="date" id="fecha" [class.is-invalid]="fechaVacio" class="form-control mb-2" formControlName="fecha">
+              <input type="date" id="fecha" [class.is-invalid]="fechaVacio" class="form-control mb-2" formControlName="fecha" readonly>
               <label for="fecha"  class="form-label">Fecha</label>
               <small *ngIf="fechaVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
             </div>
@@ -660,7 +696,7 @@
       </div>
     </div>
   </div>
-  <div class="modal fade" id="modalAgregarResultado" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="modalAgregarEntregable" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
@@ -668,10 +704,32 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form [formGroup]="formAgregarResultado" (ngSubmit)="agregarResultado()">
+          <form [formGroup]="formAgregarEntregable" (ngSubmit)="agregarEntregable()">
             <div class="form-floating mb-2">
               <input type="text" id="entregable" class="form-control form-control-lg" formControlName="entregable" placeholder="entregable">
               <label for="entregable" class="form-label">Entregable<span class="required-field">*</span></label> 
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="modalAgregarResultadoMeta" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Registre el resultado de la Meta</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="formAgregarResultadoMeta" (ngSubmit)="agregarResultadoMeta()">
+            <div class="form-floating mb-2">
+              <input type="number" id="resultadoMeta" class="form-control form-control-lg" formControlName="resultadoMeta" placeholder="resultadoMeta">
+              <label for="resultadoMeta" class="form-label">Resultado meta (KPI)<span class="required-field">*</span></label> 
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -713,25 +771,25 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form [formGroup]="formTarea" (ngSubmit)="modificarTarea()">
+          <form [formGroup]="formModificarTarea" (ngSubmit)="modificarTarea()">
             <div class="mb-3">
               <label for="nombre" class="form-label">Nombre</label>
-              <input type="text" class="form-control" id="nombre" formControlName="nombre">
+              <input type="text" class="form-control" id="nombre" formControlName="nombre" [ngModel]="nombreTarea">
             </div>
             <div class="mb-3">
               <label for="periodicidad" placeholder="periodicidad">Periodicidad:</label>
-              <select class="form-select" id="periodicidad" formControlName="periodicidad">
+              <select class="form-select" id="periodicidad" formControlName="periodicidad" [ngModel]="periodicidadTarea">
                   <option value="" disabled selected> Seleccione la periodicidad<span class="required-field">*</span></option>
                   <option *ngFor="let periodicidad of periodiciadEnumLista" [value]="periodicidad">{{ periodicidad | formatEnum }}</option>
               </select>
           </div>
             <div class="mb-3">
               <label for="descripcion" class="form-label">Descripcion</label>
-              <input type="text" class="form-control" id="descripcion" formControlName="descripcion" >
+              <input type="text" class="form-control" id="descripcion" formControlName="descripcion" [ngModel]="descripcionTarea" >
             </div>
             <div class="mb-3">
               <label for="idUsuario" placeholder="usuario">Responsable:</label>
-              <select class="form-select" id="idUsuario" formControlName="idUsuario">
+              <select class="form-select" id="idUsuario" formControlName="idUsuario" [ngModel]="idUsuarioSeleccionado">
                   <option value="" disabled selected> Seleccione el usuario responsable<span class="required-field">*</span></option>
                   <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario">{{ usuario.nombre + ' ' + usuario.apellidos | formatEnum }}</option>
               </select>
@@ -795,7 +853,7 @@
         <div class="modal-body">
           <form [formGroup]="formTarea" (ngSubmit)="crearTarea()">
             <div class="form-floating mb-2">
-              <input type="text" id="nombre" [class.is-invalid]="nombreVacio" class="form-control" formControlName="nombre" placeholder="Nombre">
+              <input type="text" id="nombre" [class.is-invalid]="nombreVacio" class="form-control" formControlName="nombre" placeholder="nombre">
               <label class="form-label" for="nombre">Nombre<span class="required-field">*</span></label>
               <small *ngIf="nombreVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
             </div>
@@ -817,7 +875,7 @@
                   <option value="" disabled selected> Seleccione el usuario responsable<span class="required-field">*</span></option>
                   <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario">{{ usuario.nombre + ' ' + usuario.apellidos | formatEnum }}</option>
               </select>
-              <label for="idUsuario" placeholder="usuario">Responsable:<span class="required-field">*</span></label>
+              <label for="idUsuario" placeholder="idUsuario">Responsable:<span class="required-field">*</span></label>
               <small *ngIf="idUsuarioVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
           </div>
             <div class="modal-footer">
