@@ -35,7 +35,7 @@ export class ListarSprintproyectoareaComponent implements OnInit  {
   tareas:any[] =[];
   usuarios:any[] =[];
   observaciones:any[] =[];
-  documentoObtenido:any;
+  documentoObtenido: any [] = [];
   patNombre:any;
   nombreSprint:any;
   fechaInicialSprint:any;
@@ -181,7 +181,8 @@ export class ListarSprintproyectoareaComponent implements OnInit  {
 
         // Crear un objeto sprint que incluya la URL de descarga
         const sprint = {
-          rutaArchivo: downloadURL, // Asegúrate de que el nombre de la propiedad coincida con lo que espera tu backend
+          fecha:this.obtenerFechaActual(),
+          rutaDocumento: downloadURL, // Asegúrate de que el nombre de la propiedad coincida con lo que espera tu backend
         };
         debugger
         this.sprintService.guardarDocumentoSprintProyectoArea(sprint, this.idSprintSeleccionado, this.auth.obtenerHeaderDocumento()).subscribe(
@@ -192,6 +193,7 @@ export class ListarSprintproyectoareaComponent implements OnInit  {
                 icon:'success',
                 confirmButtonColor: '#0E823F',
               })
+              this.nombreArchivoSeleccionado = ''; 
             },
             (error) => {
               Swal.fire({
@@ -216,26 +218,7 @@ export class ListarSprintproyectoareaComponent implements OnInit  {
     this.sprintService.obtenerDocumento(idSprint, this.auth.obtenerHeaderDocumento()).subscribe(
       (data: any) => {
         this.documentoObtenido = data;
-  
-        // Verificar si this.documentoObtenido.rutaArchivo existe
-        if (this.documentoObtenido.rutaArchivo) {
-          // Extraer el nombre del archivo de la URL
-          const nombreArchivo = this.extraerNombreArchivo(this.documentoObtenido.rutaArchivo);
-
-          // Crear un enlace HTML
-          const enlaceHTML = `<a href="${this.documentoObtenido.rutaArchivo}" target="_blank">${nombreArchivo}</a>`;
-
-          Swal.fire({
-            title: ' Documento cargado al sprint',
-            html: `Para previsualizar darle click al enlace: ${enlaceHTML}`,
-            confirmButtonColor: '#0E823F',
-            icon:'success'
-          });
-        } else {
-          // Manejar el caso en el que la propiedad rutaArchivo no existe
-          console.error('La respuesta del servidor no tiene la propiedad rutaArchivo.');
-        }
-      },
+       },
       (error: any) => {
         Swal.fire({
           title: 'Este sprint no tiene documentos adjuntos',
@@ -648,6 +631,21 @@ export class ListarSprintproyectoareaComponent implements OnInit  {
       return 'porcentaje-cien';
     }
   }
+  colorPorcentajeDependiendoFechaInicial(porcentaje: number, fechaInicial: Date): string {
+    const fechaActual = new Date();
+    const fechaInicioActividad = new Date(fechaInicial);
+    if (fechaInicioActividad  > fechaActual) {
+      return 'porcentaje-negro'; // Define las clases CSS para cuando la fecha es posterior a la fecha actual.
+    } else {
+      if (porcentaje < 30) {
+        return 'porcentaje-bajo'; // Define las clases CSS para porcentajes bajos en tu archivo de estilos.
+      } else if (porcentaje >= 30 && porcentaje < 100) {
+        return 'porcentaje-medio'; // Define las clases CSS para porcentajes normales en tu archivo de estilos.
+      } else {
+        return 'porcentaje-cien';
+      }
+    }
+  }
   colorDias(diasRestantes: number): string {
     if (diasRestantes < 10) {
       return 'porcentaje-bajo'; // Define las clases CSS para porcentajes bajos en tu archivo de estilos.
@@ -667,12 +665,6 @@ export class ListarSprintproyectoareaComponent implements OnInit  {
       confirmButtonColor: '#0E823F',
     }
     );
-    this.formSprint.reset();
-    this.formModificarEstadoTarea.reset();
-    this.formModificarPorcentaje.reset();
-    this.formObservacion.reset();
-    this.formTarea.reset();
-    this.formModificarTarea.reset();
   }
   swalError(error: any) {
     Swal.fire(

@@ -72,15 +72,15 @@
                   <h6>Fecha Final</h6>
                   {{ sprint.fechaFinal }}
                 </div>
-                <div class="col-md-1" [ngClass]="colorPorcentaje(sprint.porcentajeReal)">
+                <div class="col-md-1" >
                   <h6>&nbsp;&nbsp;% Avance&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; real</h6>
                   {{ sprint.porcentajeReal | number : '1.2-2' }} %
                 </div>
-                <div class="col-md-1" [ngClass]="colorPorcentaje(sprint.porcentajeEsperado)">
+                <div class="col-md-1" >
                   <h6>% Avance esperado</h6>
                   {{ sprint.porcentajeEsperado | number : '1.2-2' }} %
                 </div>
-                <div class="col-md-1" [ngClass]="colorPorcentaje(sprint.porcentajeCumplimiento)">
+                <div class="col-md-1" [ngClass]="colorPorcentajeDependiendoFechaInicial(sprint.porcentajeCumplimiento,sprint.fechaInicial)">
                   <h6>&nbsp;%&nbsp;&nbsp; Cumplimiento</h6>
                   {{ sprint.porcentajeCumplimiento | number : '1.2-2' }} %
                 </div>
@@ -93,7 +93,7 @@
                   (click)="abrirModalAgregarDocumento(sprint.idSprintProyectoArea)"
                       ><i class="bi bi-folder-plus"></i>
                     </button>
-                  <button title="Ver documento" class="btn btn-outline-primary me-1"
+                  <button title="Ver documento" class="btn btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#modalVerDocumentos" 
                   (click)="obtenerDocumento(sprint.idSprintProyectoArea)">            
                     <i class="bi bi-file-earmark-check"></i></button>
                     <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerSprint(sprint.idSprintProyectoArea,sprint)">
@@ -270,6 +270,37 @@
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
             </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="modalVerDocumentos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Documentos adjuntos</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-bordered table-hover">
+            <thead class="table-color">
+              <tr>
+                <th>Fecha de carga</th>
+                <th>Nombre</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let documento of documentoObtenido">
+                <tr>
+                  <td>{{ documento.fecha }}</td> <!-- Fecha de carga del documento -->
+                  <td class="nombre-documento"><a [href]="documento.rutaDocumento" target="_blank">{{ extraerNombreArchivo(documento.rutaDocumento) }}</a></td> <!-- Nombre del archivo -->
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
         </div>
       </div>
     </div>

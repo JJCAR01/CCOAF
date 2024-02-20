@@ -1,12 +1,12 @@
 .row {
-    margin-top: 10dvh;
+    margin-top: 5dvh;
     justify-content: center;
 }
 .card {
     border: 1px solid #838282; /* Establece un borde sólido */
     border-radius: 30px; /* Agrega esquinas redondeadas */
     padding: 30px; /* Agrega espacio interior para el contenido */
-    box-shadow: 0 4px 8px rgba(192, 181, 181, 0.2); /* Agrega una sombra */
+    box-shadow: 0 4px 8px rgba(218, 107, 107, 0.2); /* Agrega una sombra */
     background-color: #fff; /* Establece un fondo blanco */
 }
 
@@ -35,3 +35,8 @@
   .required-field {
     color: red
   }
+
+  .input-group-append span {
+    font-size: 1.55rem; /* ajusta el tamaño según lo necesites */
+    /* otros estilos que desees aplicar */
+}

@@ -1,3 +1,7 @@
+import { EPeriodicidadMeta } from "src/enums/eperiodicidadmeta";
+import { EUnidad } from "src/enums/eunidad";
+
+
 export interface ActividadEstrategica {
     idActividadEstrategica : number;
     nombre : string;
@@ -9,7 +13,10 @@ export interface ActividadEstrategica {
     porcentajeReal : number;
     porcentajeEsperado :number;
     porcentajeCumplimiento: number;
+    porcentajePat: number;
+    unidad: EUnidad;
     meta: number;
+    periodicidadMeta: EPeriodicidadMeta;
     resultadoMeta: number;
     promedioMeta: number;
     entregable: string;

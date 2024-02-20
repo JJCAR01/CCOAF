@@ -90,7 +90,7 @@
                 <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]">
                     {{ proyecto.presupuesto | currency : 'COP' :'symbol-narrow' : '1.0-0' }}</td>
                 <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]">
-                      {{ verModalidad(proyecto.modalidad)  | formatEnum  }}</td>
+                      {{ proyecto.modalidad  | formatEnum  }}</td>
                 <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]">
                       {{ proyecto.valorEjecutado | currency : '$ ' : 'symbol' : '1.0-0' }}</td>
                 <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]">
@@ -100,11 +100,11 @@
                 <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]">
                       {{ proyecto.duracion }}</td>
                 <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]" 
-                      [ngClass]="colorPorcentaje(proyecto.porcentajeReal)">{{ proyecto.porcentajeReal  | number : '1.2-2'  }} %</td>
+                      >{{ proyecto.porcentajeReal  | number : '1.2-2'  }} %</td>
                 <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]" 
-                      [ngClass]="colorPorcentaje(proyecto.porcentajeEsperado)">{{ proyecto.porcentajeEsperado | number : '1.2-2'  }} %</td> 
+                      >{{ proyecto.porcentajeEsperado | number : '1.2-2'  }} %</td> 
                 <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]" 
-                      [ngClass]="colorPorcentaje(proyecto.porcentajeCumplimiento)">{{ proyecto.porcentajeCumplimiento | number : '1.2-2'  }} %</td>     
+                      [ngClass]="colorPorcentajeDependiendoFechaInicial(proyecto.porcentajeCumplimiento,proyecto.fechaInicial)">{{ proyecto.porcentajeCumplimiento | number : '1.2-2'  }} %</td>     
                 <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]">
                       {{ proyecto.planeacionSprint | formatEnum }}</td>
                 <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]">
@@ -118,7 +118,7 @@
                   (click)="abrirModalAgregarDocumento(proyecto.idProyecto,'PROYECTO')"
                       ><i class="bi bi-folder-plus"></i>
                     </button>
-                  <button title="Ver documento" class="btn btn-outline-primary me-1 mb-1"
+                  <button title="Ver documento"  class="btn btn-outline-primary me-1 " data-bs-toggle="modal" data-bs-target="#modalVerDocumentos" 
                   (click)="obtenerDocumento(proyecto.idProyecto,'PROYECTO')">            
                     <i class="bi bi-file-earmark-check"></i></button>
                   <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerProyecto(proyecto.idProyecto,proyecto)">
@@ -163,15 +163,15 @@
                     </span>
                     <span *ngIf="gestion.porcentajeReal === 100">Finalizado</span>
                   </div>
-                  <div class="col-md-1" [ngClass]="colorPorcentaje(gestion.porcentajeReal)">
+                  <div class="col-md-1" >
                     <h6>&nbsp;&nbsp;% Avance&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; real</h6>
                     {{ gestion.porcentajeReal | number : '1.2-2' }} %
                   </div>
-                  <div class="col-md-1" [ngClass]="colorPorcentaje(gestion.porcentajeEsperado)">
+                  <div class="col-md-1" >
                     <h6>% Avance esperado</h6>
                     {{ gestion.porcentajeEsperado | number : '1.2-2' }} %
                   </div>
-                  <div class="col-md-1" [ngClass]="colorPorcentaje(gestion.porcentajeCumplimiento)">
+                  <div class="col-md-1" [ngClass]="colorPorcentajeDependiendoFechaInicial(gestion.porcentajeCumplimiento,gestion.fechaInicial)">
                     <h6>&nbsp;%&nbsp;&nbsp; Cumplimiento</h6>
                     {{ gestion.porcentajeCumplimiento | number : '1.2-2' }} %
                   </div>
@@ -188,7 +188,7 @@
                   (click)="abrirModalAgregarDocumento(gestion.idActividadGestionEstrategica,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')"
                       ><i class="bi bi-folder-plus"></i>
                     </button>
-                  <button title="Ver documento" class="btn btn-outline-primary me-1"
+                  <button title="Ver documento"  class="btn btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#modalVerDocumentos" 
                   (click)="obtenerDocumento(gestion.idActividadGestionEstrategica,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')">            
                     <i class="bi bi-file-earmark-check"></i></button>
                   <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerActividadGestionEstrategica(gestion.idActividadGestionEstrategica ,gestion)">
@@ -365,7 +365,7 @@
             <div class="mb-3">
               <label for="modalidad" class="form-label">Modalidad</label>
               <select class="form-select" id="modalidad" formControlName="modalidad" [ngModel]="modalidadProyecto">
-                <option *ngFor="let modalidad of modalidadEnumList" [value]="convertirModalidad(modalidad)">
+                <option *ngFor="let modalidad of modalidadEnumList" [value]=" (modalidad)">
                   {{ modalidad  | formatEnum  }}</option>
               </select>
             </div>
@@ -447,6 +447,37 @@
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
             </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="modalVerDocumentos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Documentos adjuntos</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-bordered table-hover">
+            <thead class="table-color">
+              <tr>
+                <th>Fecha de carga</th>
+                <th>Nombre</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let documento of documentoObtenido">
+                <tr>
+                  <td>{{ documento.fecha }}</td> <!-- Fecha de carga del documento -->
+                  <td class="nombre-documento"><a [href]="documento.rutaDocumento" target="_blank">{{ extraerNombreArchivo(documento.rutaDocumento) }}</a></td> <!-- Nombre del archivo -->
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
         </div>
       </div>
     </div>

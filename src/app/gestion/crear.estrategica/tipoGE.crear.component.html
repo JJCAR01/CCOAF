@@ -27,16 +27,57 @@
                                 <label class="form-label" for="fechaInicial">Fecha Inicial<span class="required-field">*</span></label>
                                 <small *ngIf="fechaInicialVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
                             </div>
-                            <div class="form-floating mb-2">
+                            <div class="form-floating mb-1">
                                 <input type="date" id="fechaFinal" [class.is-invalid]="fechaFinalVacio" class="form-control form-control-lg" formControlName="fechaFinal" placeholder="Fecha Final" >
                                 <label class="form-label" for="fechaFinal">Fecha Final<span class="required-field">*</span></label>
                                 <small *ngIf="fechaFinalVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
                             </div>
-                            <div class="form-floating mb-2">
-                                <input type="number" id="meta" [class.is-invalid]="metaVacio" class="form-control form-control-lg" formControlName="meta" placeholder="meta" >
-                                <label class="form-label" for="meta">Meta<span class="required-field">*</span></label>
-                                <small *ngIf="metaVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
+                            
+                            <div class="row mb-1">
+                                <div class="col-md-5">
+                                    <div class="d-md-flex justify-content-start align-items-center py-2" [class.is-invalid]="unidadVacio">
+                                        <label class="mb-0 me-4">Unidad<span class="required-field">*</span>:</label>
+                                        <div class="form-check form-check-inline mb-0 me-2">
+                                            <input class="form-check-input" type="radio" name="unidad" id="porcentaje" value="PORCENTAJE" formControlName="unidad" />
+                                            <label class="form-check-label" for="porcentaje">Porcentaje</label>
+                                        </div>
+                                        <div class="form-check form-check-inline me-2">
+                                            <input class="form-check-input" type="radio" name="unidad" id="pesos" value="PESOS" formControlName="unidad" />
+                                            <label class="form-check-label" for="pesos">Pesos</label>
+                                        </div>
+                                        <div class="form-check form-check-inline me-2">
+                                            <input class="form-check-input" type="radio" name="unidad" id="numerico" value="NUMERICO" formControlName="unidad" />
+                                            <label class="form-check-label" for="numerico">Numerico</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <small *ngIf="unidadVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
+                                <div class="col-md-7">
+                                    <div class="mb-2">
+                                        <div class="input-group">
+                                            <label class="input-group-text" for="meta">Meta<span class="required-field">*</span></label>
+                                            <input type="number" id="meta" [class.is-invalid]="metaVacio" class="form-control form-control-lg" formControlName="meta" placeholder=" ">
+                                            <small *ngIf="metaVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
+                                            <div class="input-group-append" [ngSwitch]="form.get('unidad')?.value">
+                                                <span *ngSwitchCase="'PORCENTAJE'" class="input-group-text input-group-text-lg">%</span>
+                                                <span *ngSwitchCase="'PESOS'" class="input-group-text input-group-text-lg">$</span>
+                                                <!-- Para NUMERICO no necesitas mostrar ningún símbolo adicional -->
+                                            </div>
+                                        </div>
+                                    </div>                                    
+                                </div>
+                                
+                                
+                                
                             </div>
+                            <div class="form-floating mb-2">
+                                <select class="form-select" id="periodicidadMeta" [class.is-invalid]="periodicidadVacio" formControlName="periodicidadMeta" >
+                                    <option value="" disabled selected>Seleccione la periodicidad:*</option>
+                                    <option *ngFor="let periodicidadMeta of periodiciadEnumLista" [value]="periodicidadMeta"  >{{ periodicidadMeta | formatEnum}}</option>
+                                </select>
+                                <label for="periodicidadMeta" placeholder="periodicidadMeta">Periodicidad<span class="required-field">*</span></label>
+                                <small *ngIf="periodicidadVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
+                              </div>
                             <div class="form-floating mb-3">
                                 <select class="form-select" id="idUsuario" [class.is-invalid]="idUsuarioVacio" formControlName="idUsuario"  >
                                     <option value="" disabled selected> Seleccione el usuario responsable<span class="required-field">*</span></option>

@@ -121,6 +121,9 @@ button {
 .custom-eye {
   width: auto;
 }
+.porcentaje-negro {
+  color: black; // Define el color rojo para porcentajes bajos.
+}
 .porcentaje-bajo {
   color: red; // Define el color rojo para porcentajes bajos.
 }
@@ -154,7 +157,7 @@ button {
   width: 5%;
 }
 .column-meta{
-  width: auto;
+  width: 4.8%;
 }
 .column-resultado{
   width: 15%;
@@ -321,6 +324,11 @@ th{
 .nombre-gestion{
   text-align: left;
 
+}
+
+/*---------- Modal listado de archivo -------------*/
+.nombre-documento {
+  text-align: left; /* Alinea el texto a la izquierda */
 }
 
 

@@ -11,7 +11,6 @@ import { TareaService } from 'src/app/tarea/services/tarea.service';
 import { EModalidad } from 'src/enums/emodalidad';
 import { EPlaneacion } from 'src/enums/eplaneacion';
 import { EPeriodicidad } from 'src/enums/eperiodicidad';
-import { ObservacionService } from 'src/app/observacion/services/observacion.service';
 import { initializeApp } from 'firebase/app';
 import { environment } from 'src/environments/environment.development';
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
@@ -30,7 +29,7 @@ export class ActividadListarComponent implements OnInit{
   extencionesPermitidas = /\.(doc|docx|xls|xlsx|ppt|pptx|zip|pdf)$/i;
   nombreArchivoSeleccionado: string = '';
   archivoSeleccionado: File | null = null;
-  documentoObtenido:any;
+  documentoObtenido: any [] = [];
   modalidadEnumList: string[] = [];
   planeacionEnumList = Object.values(EPlaneacion);
   estadoEnumList: string[] = [];
@@ -376,6 +375,7 @@ private obtenerFechaActual(): string {
         idASE: this.idActividadGestionEstrategicaSeleccionado,
         idUsuario: idUsuario,
       };
+      console.log(tarea)
       this.tareaService
         .crearTarea(tarea,this.auth.obtenerHeader())
         .subscribe(
@@ -631,6 +631,7 @@ private obtenerFechaActual(): string {
         const downloadURL = await getDownloadURL(storageRef);
         // Crear un objeto sprint que incluya la URL de descarga
         const documento = {
+          fecha:this.obtenerFechaActual(),
           rutaDocumento: downloadURL, // Asegúrate de que el nombre de la propiedad coincida con lo que espera tu backend
         };
         if(tipo === 'actividadGestionEstrategica'){
@@ -642,6 +643,7 @@ private obtenerFechaActual(): string {
                 icon:'success',
                 confirmButtonColor: '#0E823F',
               })
+              this.nombreArchivoSeleccionado = ''; 
             },
             (error) => {
               Swal.fire({
@@ -661,6 +663,7 @@ private obtenerFechaActual(): string {
                 icon:'success',
                 confirmButtonColor: '#0E823F',
               })
+              this.nombreArchivoSeleccionado = ''; 
             },
             (error) => {
               Swal.fire({
@@ -688,22 +691,6 @@ private obtenerFechaActual(): string {
       this.actividadService.obtenerDocumento(id, this.auth.obtenerHeaderDocumento()).subscribe(
         (data: any) => {
           this.documentoObtenido = data;
-    
-          // Verificar si this.documentoObtenido.rutaArchivo existe
-          if (this.documentoObtenido.rutaDocumento) {
-            // Extraer el nombre del archivo de la URL
-            const nombreArchivo = this.extraerNombreArchivo(this.documentoObtenido.rutaDocumento);
-  
-            // Crear un enlace HTML
-            const enlaceHTML = `<a href="${this.documentoObtenido.rutaDocumento}" target="_blank">${nombreArchivo}</a>`;
-  
-            Swal.fire({
-              title: 'Documento correspondiente a la actividad',
-              html: `Para previsualizar darle click al enlace: ${enlaceHTML}`,
-              confirmButtonColor: '#0E823F',
-              icon:'success'
-            });
-          }
         },
         (error: any) => {
           Swal.fire({
@@ -714,26 +701,10 @@ private obtenerFechaActual(): string {
           });
         }
       );
-    } else {
+    } else if(tipo === 'PROYECTO'){
       this.actividadService.obtenerDocumentoProyecto(id, this.auth.obtenerHeaderDocumento()).subscribe(
         (data: any) => {
           this.documentoObtenido = data;
-    
-          // Verificar si this.documentoObtenido.rutaArchivo existe
-          if (this.documentoObtenido.rutaDocumento) {
-            // Extraer el nombre del archivo de la URL
-            const nombreArchivo = this.extraerNombreArchivo(this.documentoObtenido.rutaDocumento);
-  
-            // Crear un enlace HTML
-            const enlaceHTML = `<a href="${this.documentoObtenido.rutaDocumento}" target="_blank">${nombreArchivo}</a>`;
-  
-            Swal.fire({
-              title: 'Documento correspondiente a la actividad',
-              html: `Para previsualizar darle click al enlace: ${enlaceHTML}`,
-              confirmButtonColor: '#0E823F',
-              icon:'success'
-            });
-          }
         },
         (error: any) => {
           Swal.fire({
@@ -847,6 +818,21 @@ private obtenerFechaActual(): string {
       return 'porcentaje-cien';
     }
   }
+  colorPorcentajeDependiendoFechaInicial(porcentaje: number, fechaInicial: Date): string {
+    const fechaActual = new Date();
+    const fechaInicioActividad = new Date(fechaInicial);
+    if (fechaInicioActividad  > fechaActual) {
+      return 'porcentaje-negro'; // Define las clases CSS para cuando la fecha es posterior a la fecha actual.
+    } else {
+      if (porcentaje < 30) {
+        return 'porcentaje-bajo'; // Define las clases CSS para porcentajes bajos en tu archivo de estilos.
+      } else if (porcentaje >= 30 && porcentaje < 100) {
+        return 'porcentaje-medio'; // Define las clases CSS para porcentajes normales en tu archivo de estilos.
+      } else {
+        return 'porcentaje-cien';
+      }
+    }
+  }
   colorDias(diasRestantes: number): string {
     if (diasRestantes < 10) {
       return 'porcentaje-bajo'; // Define las clases CSS para porcentajes bajos en tu archivo de estilos.
@@ -857,13 +843,7 @@ private obtenerFechaActual(): string {
   isEstado(tareaEstado:any, estado:any) {
     return tareaEstado === estado;
   }
-  convertirModalidad(valor: string): string {
-    return valor.toUpperCase().replace(/ /g, '_');;
-  }
 
-  verModalidad(valor: string): string {
-    return valor.toUpperCase().replace(/_/g, ' ');;
-  }
   swalSatisfactorio(metodo: string, tipo:string) {
     Swal.fire({
       title: `Se ha ${metodo}.`,

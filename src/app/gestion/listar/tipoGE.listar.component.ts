@@ -37,8 +37,7 @@ export class TipogeListarComponent implements OnInit {
   modalidadEnumList = Object.values(EModalidad);
   planeacionEnumList = Object.values(EPlaneacion);
   archivoSeleccionado: File | null = null;
-  documentoObtenidoActividad: any [] = [];
-  documentoObtenido:any;
+  documentoObtenido: any [] = [];
   usuarioPat:number | 0 = 0;
   porcentajeRealPat:number | 0 = 0;
   porcentajeRealActividadesEstrategica:number | 0 = 0;
@@ -761,7 +760,7 @@ export class TipogeListarComponent implements OnInit {
       this.idActividadEstrategicaSeleccionado = idRecibido;
     } else if (tipo === 'ACTIVIDAD_GESTION'){
       this.idActividadGestionSeleccionado = idRecibido;
-    } else {
+    } else if (tipo === 'PROYECTO_AREA'){
       this.idProyectoSeleccionado = idRecibido;
     }
   }
@@ -779,6 +778,7 @@ export class TipogeListarComponent implements OnInit {
         const downloadURL = await getDownloadURL(storageRef);
         // Crear un objeto sprint que incluya la URL de descarga
         const documento = {
+          fecha: this.obtenerFechaActual(),
           rutaDocumento: downloadURL, // Asegúrate de que el nombre de la propiedad coincida con lo que espera tu backend
         };
         if(tipo === 'actividadGestion'){
@@ -789,7 +789,8 @@ export class TipogeListarComponent implements OnInit {
                 text:'El archivo se cargó correctamente',
                 icon:'success',
                 confirmButtonColor: '#0E823F',
-              })
+              })   
+              this.nombreArchivoSeleccionado = '';           
             },
             (error) => {
               Swal.fire({
@@ -809,6 +810,7 @@ export class TipogeListarComponent implements OnInit {
                 icon:'success',
                 confirmButtonColor: '#0E823F',
               })
+              this.nombreArchivoSeleccionado = '';   
             },
             (error) => {
               Swal.fire({
@@ -828,6 +830,7 @@ export class TipogeListarComponent implements OnInit {
                 icon:'success',
                 confirmButtonColor: '#0E823F',
               })
+              this.nombreArchivoSeleccionado = '';   
             },
             (error) => {
               Swal.fire({
@@ -856,22 +859,6 @@ export class TipogeListarComponent implements OnInit {
       this.gestionService.obtenerDocumento(id, this.auth.obtenerHeaderDocumento()).subscribe(
         (data: any) => {
           this.documentoObtenido = data;
-    
-          // Verificar si this.documentoObtenido.rutaArchivo existe
-          if (this.documentoObtenido.rutaDocumento) {
-            // Extraer el nombre del archivo de la URL
-            const nombreArchivo = this.extraerNombreArchivo(this.documentoObtenido.rutaDocumento);
-  
-            // Crear un enlace HTML
-            const enlaceHTML = `<a href="${this.documentoObtenido.rutaDocumento}" target="_blank">${nombreArchivo}</a>`;
-  
-            Swal.fire({
-              title: 'Documento correspondiente a la actividad',
-              html: `Para previsualizar darle click al enlace: ${enlaceHTML}`,
-              confirmButtonColor: '#0E823F',
-              icon:'success'
-            });
-          }
         },
         (error: any) => {
           Swal.fire({
@@ -885,7 +872,7 @@ export class TipogeListarComponent implements OnInit {
     } else if (tipo === 'ACTIVIDAD_ESTRATEGICA') {
       this.gestionService.obtenerDocumentoActividadEstrategica(id, this.auth.obtenerHeaderDocumento()).subscribe(
         (data: any) => {
-          this.documentoObtenidoActividad = data;
+          this.documentoObtenido = data;
         },
         (error: any) => {
           Swal.fire({
@@ -896,26 +883,10 @@ export class TipogeListarComponent implements OnInit {
           });
         }
       );
-    } else {
+    } else if (tipo === 'PROYECTO_AREA') {
       this.gestionService.obtenerDocumentoProyectoArea(id, this.auth.obtenerHeaderDocumento()).subscribe(
         (data: any) => {
           this.documentoObtenido = data;
-    
-          // Verificar si this.documentoObtenido.rutaArchivo existe
-          if (this.documentoObtenido.rutaDocumento) {
-            // Extraer el nombre del archivo de la URL
-            const nombreArchivo = this.extraerNombreArchivo(this.documentoObtenido.rutaDocumento);
-  
-            // Crear un enlace HTML
-            const enlaceHTML = `<a href="${this.documentoObtenido.rutaDocumento}" target="_blank">${nombreArchivo}</a>`;
-  
-            Swal.fire({
-              title: 'Documento correspondiente a la actividad',
-              html: `Para previsualizar darle click al enlace: ${enlaceHTML}`,
-              confirmButtonColor: '#0E823F',
-              icon:'success'
-            });
-          }
         },
         (error: any) => {
           Swal.fire({
@@ -1010,7 +981,7 @@ export class TipogeListarComponent implements OnInit {
     });
     this.formObservacion.patchValue({
       id: idActividadEstrategica,
-            fecha: this.obtenerFechaActual(),
+      fecha: this.obtenerFechaActual(),
     });
     this.formAgregarEntregable.patchValue({
       entregable: actividadEstrategica.entregable,
@@ -1042,12 +1013,29 @@ export class TipogeListarComponent implements OnInit {
     return usuario ? usuario.nombre + " " + usuario.apellidos : '';
   }
   colorPorcentaje(porcentaje: number): string {
-    if (porcentaje < 30) {
+    if (porcentaje < 30 ) {
       return 'porcentaje-bajo'; // Define las clases CSS para porcentajes bajos en tu archivo de estilos.
     } else if (porcentaje >= 30 && porcentaje < 100){
       return 'porcentaje-medio'; // Define las clases CSS para porcentajes normales en tu archivo de estilos.
-    } else {
+    } else if (porcentaje >= 100 ){
       return 'porcentaje-cien';
+    } else{
+      return '';
+    }
+  }
+  colorPorcentajeDependiendoFechaInicial(porcentaje: number, fechaInicial: Date): string {
+    const fechaActual = new Date();
+    const fechaInicioActividad = new Date(fechaInicial);
+    if (fechaInicioActividad  > fechaActual) {
+      return 'porcentaje-negro'; // Define las clases CSS para cuando la fecha es posterior a la fecha actual.
+    } else {
+      if (porcentaje < 30) {
+        return 'porcentaje-bajo'; // Define las clases CSS para porcentajes bajos en tu archivo de estilos.
+      } else if (porcentaje >= 30 && porcentaje < 100) {
+        return 'porcentaje-medio'; // Define las clases CSS para porcentajes normales en tu archivo de estilos.
+      } else {
+        return 'porcentaje-cien';
+      }
     }
   }
   colorDias(diasRestantes: number): string {
@@ -1057,11 +1045,18 @@ export class TipogeListarComponent implements OnInit {
       return 'porcentaje-normal';
     }
   }
+  signoParaMeta(unidad: string, meta: number): string {
+    if (unidad === 'PORCENTAJE') {
+      return meta.toFixed(2) + ' %'; // Formatea el número a dos decimales y agrega el símbolo de porcentaje
+    } else if (unidad === 'PESOS') {
+      return '$' + meta.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    } else {
+      return meta.toString(); // Si la unidad no es PORCENTAJE ni PESOS, simplemente devuelve el número como una cadena
+    }
+}
+
   isEstado(tareaEstado:any, estado:any) {
     return tareaEstado === estado;
-  }
-  convertirModalidad(valor: string): string {
-    return valor.toUpperCase().replace(/ /g, '_');;
   }
 
   swalSatisfactorio(metodo: string, tipo:string) {
@@ -1077,7 +1072,7 @@ export class TipogeListarComponent implements OnInit {
     Swal.fire(
       {
         title:"Error!!!",
-        text:error.error.mensajeHumano, 
+        text:error.error.mensajeTecnico, 
         icon:"error",
         confirmButtonColor: '#0E823F',
       }
