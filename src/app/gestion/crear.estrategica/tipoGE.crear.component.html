@@ -33,10 +33,10 @@
                                 <small *ngIf="fechaFinalVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
                             </div>
                             
-                            <div class="row mb-1">
-                                <div class="col-md-5">
+
+                                <div class="col-md-12">
                                     <div class="d-md-flex justify-content-start align-items-center py-2" [class.is-invalid]="unidadVacio">
-                                        <label class="mb-0 me-4">Unidad<span class="required-field">*</span>:</label>
+                                        <label class="mb-0 me-4">Unidad de medida<span class="required-field">*</span>:</label>
                                         <div class="form-check form-check-inline mb-0 me-2">
                                             <input class="form-check-input" type="radio" name="unidad" id="porcentaje" value="PORCENTAJE" formControlName="unidad" />
                                             <label class="form-check-label" for="porcentaje">Porcentaje</label>
@@ -52,7 +52,7 @@
                                     </div>
                                 </div>
                                 <small *ngIf="unidadVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
-                                <div class="col-md-7">
+                                <div class="col-md-12">
                                     <div class="mb-2">
                                         <div class="input-group">
                                             <label class="input-group-text" for="meta">Meta<span class="required-field">*</span></label>
@@ -68,8 +68,6 @@
                                 </div>
                                 
                                 
-                                
-                            </div>
                             <div class="form-floating mb-2">
                                 <select class="form-select" id="periodicidadMeta" [class.is-invalid]="periodicidadVacio" formControlName="periodicidadMeta" >
                                     <option value="" disabled selected>Seleccione la periodicidad:*</option>
@@ -77,7 +75,7 @@
                                 </select>
                                 <label for="periodicidadMeta" placeholder="periodicidadMeta">Periodicidad<span class="required-field">*</span></label>
                                 <small *ngIf="periodicidadVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
-                              </div>
+                            </div>
                             <div class="form-floating mb-3">
                                 <select class="form-select" id="idUsuario" [class.is-invalid]="idUsuarioVacio" formControlName="idUsuario"  >
                                     <option value="" disabled selected> Seleccione el usuario responsable<span class="required-field">*</span></option>

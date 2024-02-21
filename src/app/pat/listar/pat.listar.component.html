@@ -69,15 +69,15 @@
     <table class="table table-hover">
       <thead class="table table-color">
         <tr>
-          <th class="column-programa">Programa</th> 
-          <th class="column-fecha">Año</th>
-          <th class="column-direccion">Dirección</th>
-          <th class="column-proceso">Proceso</th>
-          <th>% Avance real</th>
-          <th>&nbsp;&nbsp;%&nbsp;&nbsp;   Avance esperado</th>
-          <th>% Cumplimiento</th>
-          <th class="column-usuario">Responsable</th>
-          <th class="column-acciones">Acciones</th> 
+          <th class="column-programa" title="Programa correspondiente al PAT">Programa - PAT</th> 
+          <th class="column-fecha" title="Año en que se ejecuta el programa">Año</th>
+          <th class="column-direccion" title="Dirección relacionada al programa">Dirección</th>
+          <th class="column-pat" title="Promedio actual del porcentaje real de las actividades estratégicas - PAT, gestiones del área y proyectos del área">&nbsp;% &nbsp;Avance real</th>
+          <th class="column-pat" title="Difrencia entre fecha inicial y la fecha actual, dividido la duración del programa">&nbsp;&nbsp;%&nbsp;&nbsp;   Avance esperado</th>
+          <th class="column-pat" title="Division entre la % Avance real y % Avance esperado">% Cumplimiento</th>
+          <th class="column-pat" title="Promedio del total de actividades estratégicas - PAT internas sobre la suma del % PAT de ellas">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PAT</th>
+          <th class="column-usuario" title="Colaborador responsable del programa">Responsable</th>
+          <th class="column-acciones" title="Acciones">Acciones</th> 
         </tr>
       </thead>
       <tbody>
@@ -86,22 +86,22 @@
             <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]" >{{ pat.nombre }}</td>
             <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]">{{ pat.fechaAnual }}</td>
             <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]">{{ pat.direccion.nombre}}</td>
-            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]">{{ pat.proceso.nombre}}</td>
-            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]" [ngClass]="colorPorcentaje(pat.porcentaje)">{{ pat.porcentajeReal | number : '1.2-2' }} %</td>
-            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]" [ngClass]="colorPorcentaje(pat.porcentaje)">{{ pat.porcentajeEsperado | number : '1.2-2' }} %</td>
-            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]" [ngClass]="colorPorcentaje(pat.porcentaje)">{{ pat.porcentajeCumplimiento | number : '1.2-2' }} %</td>
+            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]" >{{ pat.porcentajeReal | number : '1.2-2' }} %</td>
+            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]" >{{ pat.porcentajeEsperado | number : '1.2-2' }} %</td>
+            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]" [ngClass]="colorPorcentaje(pat.porcentajeCumplimiento)">{{ pat.porcentajeCumplimiento | number : '1.2-2' }} %</td>
+            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]" [ngClass]="colorPorcentaje(pat.porcentajePat)">{{ pat.porcentajePat | number : '1.2-2' }} %</td>
             <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]">{{ obtenerNombreUsuario(pat.idUsuario) }} </td>
             <td>
-              <button title="Editar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarPat" (click)="obtenerPat(pat.idPat,pat)">
+              <button title="Editar" type="button" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalModificarPat" (click)="obtenerPat(pat.idPat,pat)">
                   <i class="bi bi-pen-fill"></i>
               </button>                  
-              <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarPat(pat.idPat)">
+              <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" (click)="eliminarPat(pat.idPat)">
                 <i class="bi bi-trash3-fill"></i>
               </button>
-              <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerPat(pat.idPat,pat)">
+              <button title="Agregar Observación" class="btn btn-outline-success me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerPat(pat.idPat,pat)">
                 <i class="bi bi-node-plus-fill"></i>
               </button>
-              <button title="Ver observación" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(pat.idPat)">
+              <button title="Ver observación" class="btn btn-outline-dark mb-1" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(pat.idPat)">
                 <i class="bi bi-eye-fill"></i>
               </button>
             </td>

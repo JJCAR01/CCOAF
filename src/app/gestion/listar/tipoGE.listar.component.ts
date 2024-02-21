@@ -20,6 +20,7 @@ import { Tarea } from 'src/app/modelo/tarea';
 import { ProyectoArea } from 'src/app/modelo/proyectoarea';
 import { EModalidad } from 'src/enums/emodalidad';
 import { EPlaneacion } from 'src/enums/eplaneacion';
+import { EPeriodicidadMeta } from 'src/enums/eperiodicidadmeta';
 
 @Component({
   selector: 'app-root:not(p)',
@@ -43,6 +44,7 @@ export class TipogeListarComponent implements OnInit {
   porcentajeRealActividadesEstrategica:number | 0 = 0;
   porcentajeEsperadoActividadesEstrategica:number | 0 = 0;
   porcentajeCumplimientoActividadesEstrategica:number | 0 = 0;
+  porcentajePATActividadesEstrategica:number | 0 = 0;
   porcentajeRealActividadesGestion:number | 0 = 0;
   porcentajeEsperadoActividadesGestion:number | 0 = 0;
   porcentajeCumplimientoActividadesGestion:number | 0 = 0;
@@ -82,7 +84,8 @@ export class TipogeListarComponent implements OnInit {
   periodicidadTarea: string | undefined = '';
   descripcionTarea: string | undefined = '';
   estadoEnumList: string[] = [];
-  periodiciadEnumLista: string[] = [];
+  periodiciadLista: string[] = [];
+  periodiciadMetaLista: string[] = [];
   gestiones: ActividadGestion[] = [];
   proyectosarea: ProyectoArea[] = [];
   actividades: ActividadEstrategica[] = [];
@@ -112,6 +115,8 @@ export class TipogeListarComponent implements OnInit {
       nombre: ['', Validators.required],
       fechaInicial: ['', Validators.required],
       fechaFinal: ['', Validators.required],
+      unidad: ['', Validators.required],
+      periodicidadMeta: ['', Validators.required],
       meta: ['', Validators.required],
       idUsuario:['',Validators.required]
     });
@@ -184,7 +189,8 @@ export class TipogeListarComponent implements OnInit {
     this.crearTarea();
 
     this.estadoEnumList = Object.values(EEstado);
-    this.periodiciadEnumLista = Object.values(EPeriodicidad);
+    this.periodiciadLista = Object.values(EPeriodicidad);
+    this.periodiciadMetaLista = Object.values(EPeriodicidadMeta);
     this.porcentajeRealActividadesYProyectos += (this.porcentajeRealActividadesGestion + this.porcentajeRealProyectosArea) / 2;
     this.porcentajeEsperadoActividadesYProyectos += (this.porcentajeEsperadoActividadesGestion + this.porcentajeEsperadoProyectosArea) / 2;
     this.porcentajeCumplimientoActividadesYProyectos += (this.porcentajeCumplimientoActividadesGestion + this.porcentajeCumplimientoProyectosArea) / 2;
@@ -208,6 +214,16 @@ export class TipogeListarComponent implements OnInit {
           this.porcentajeRealActividadesEstrategica += this.actividades.reduce((total, actividad) => total + actividad.porcentajeReal, 0) / this.actividades.length;
           this.porcentajeEsperadoActividadesEstrategica += this.actividades.reduce((total, actividad) => total + actividad.porcentajeEsperado, 0) / this.actividades.length ;
           this.porcentajeCumplimientoActividadesEstrategica += this.actividades.reduce((total, actividad) => total + actividad.porcentajeCumplimiento, 0) / this.actividades.length;        
+          // Primero, obten la fecha actual
+          const fechaActual = new Date();
+
+          // Luego, filtra las actividades basándote en si la fecha inicial es menor a la fecha actual
+          const actividadesFiltradas = this.actividades.filter(actividad => new Date(actividad.fechaInicial) < fechaActual);
+
+          // Calcula el promedio solo para las actividades filtradas
+          if (actividadesFiltradas.length > 0) {
+              this.porcentajePATActividadesEstrategica += actividadesFiltradas.reduce((total, actividad) => total + actividad.porcentajeCumplimiento, 0) / actividadesFiltradas.length;
+          }
         }
       ); 
   }
@@ -378,6 +394,8 @@ export class TipogeListarComponent implements OnInit {
       const fechaInicial = this.formEstrategica.get('fechaInicial')?.value;
       const fechaFinal = this.formEstrategica.get('fechaFinal')?.value;
       const meta = this.formEstrategica.get('meta')?.value;
+      const unidad = this.formEstrategica.get('unidad')?.value;
+      const periodicidadMeta = this.formEstrategica.get('periodicidadMeta')?.value;
       const idUsuario = this.formEstrategica.get('idUsuario')?.value;
       const idPat = this.idPat
       const actividadEstrategica = {
@@ -385,6 +403,8 @@ export class TipogeListarComponent implements OnInit {
         fechaInicial: fechaInicial,
         fechaFinal: fechaFinal,
         meta:meta,
+        periodicidadMeta:periodicidadMeta,
+        unidad:unidad,
         idUsuario :idUsuario,
         idPat : idPat
       };
@@ -977,6 +997,8 @@ export class TipogeListarComponent implements OnInit {
       fechaInicial: actividadEstrategica.fechaInicial,
       fechaFinal: actividadEstrategica.fechaFinal,
       meta: actividadEstrategica.meta,
+      periodicidadMeta : actividadEstrategica.periodicidadMeta,
+      unidad: actividadEstrategica.unidad,
       idUsuario: actividadEstrategica.idUsuario,
     });
     this.formObservacion.patchValue({
@@ -1047,7 +1069,7 @@ export class TipogeListarComponent implements OnInit {
   }
   signoParaMeta(unidad: string, meta: number): string {
     if (unidad === 'PORCENTAJE') {
-      return meta.toFixed(2) + ' %'; // Formatea el número a dos decimales y agrega el símbolo de porcentaje
+      return meta + '%'; // Formatea el número a dos decimales y agrega el símbolo de porcentaje
     } else if (unidad === 'PESOS') {
       return '$' + meta.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     } else {

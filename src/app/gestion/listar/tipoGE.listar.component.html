@@ -41,12 +41,16 @@
             <p [ngClass]="colorPorcentaje(porcentajeRealPat)">{{ porcentajeRealActividadesEstrategica | number : '1.2-2' }} %</p>
           </div>
           <div class="responsable-info">
-            <h2 title="Porcentaje Esperado">Porcentaje Esperado:</h2>
+            <h2 title="Porcentaje Esperado">Porcentaje Esperado: </h2>
             <p> {{ porcentajeEsperadoActividadesEstrategica | number : '1.2-2'  }} %</p>
           </div>
           <div class="responsable-info">
-            <h2 title="Porcentaje Cumplimiento">Porcentaje Cumplimiento:</h2>
+            <h2 title="Porcentaje Cumplimiento">Porcentaje Cumplimiento: </h2>
             <p> {{ porcentajeCumplimientoActividadesEstrategica | number : '1.2-2'  }} %</p>
+          </div>
+          <div class="responsable-info">
+            <h2 title="Porcentaje Cumplimiento"> Porcentaje PAT: </h2>
+            <p [ngClass]="colorPorcentaje(porcentajePATActividadesEstrategica)"> {{  porcentajePATActividadesEstrategica | number : '1.2-2' }} %</p>
           </div>
         </div>
         <div class="col-md-4 actividadesyproyectos">
@@ -54,15 +58,15 @@
             <h3 class="titulo-actividades"> Actividades y proyectos del área</h3>
           </div>
             <div class="responsable-info">
-              <h2 title="Porcentaje Real">Porcentaje real:</h2>
+              <h2 title="Porcentaje Real">Porcentaje real: </h2>
               <p [ngClass]="colorPorcentaje(porcentajeRealPat)">{{ porcentajeRealActividadesYProyectos | number : '1.2-2' }} %</p>
             </div>
             <div class="responsable-info">
-              <h2 title="Porcentaje Esperado">Porcentaje Esperado:</h2>
+              <h2 title="Porcentaje Esperado">Porcentaje Esperado: </h2>
               <p> {{ porcentajeEsperadoActividadesYProyectos | number : '1.2-2' }} %</p>
             </div>
             <div class="responsable-info">
-              <h2 title="Porcentaje Cumplimiento"> Porcentaje Cumplimiento:</h2>
+              <h2 title="Porcentaje Cumplimiento"> Porcentaje Cumplimiento: </h2>
               <p> {{ porcentajeCumplimientoActividadesYProyectos | number : '1.2-2' }} %</p>
             </div>
         </div>
@@ -112,21 +116,21 @@
         <table class="table table-bordered table-hover">
           <thead class="table table-color">
             <tr>
-              <th class="column-nombre">Nombre</th>
-              <th class="column-fecha">Fecha Inicial</th>
-              <th class="column-fecha">&nbsp; Fecha &nbsp; Final</th>
-              <th class="column-duracion">Duracion (Días)</th>
-              <th class="column-dias">Dias Restantes</th>
-              <th class="column-avance">% Avance real</th>
-              <th class="column-avance">% Avance esperado</th>
-              <th class="column-avance">% Cumplimiento</th>
-              <th class="column-meta">Meta (KPI)</th>
-              <th class="column-meta">R Meta (KPI)</th>
-              <th class="column-meta">% Meta (KPI)</th>
-              <th class="column-resultado">Entregable</th>
-              <th class="column-meta">% PAT</th>
-              <th class="column-responsable">Responsable</th>
-              <th class="column-acciones">Acciones</th>
+              <th class="column-nombre" title="Nombre de la actividad estratégica">Nombre</th>
+              <th class="column-fecha" title="Fecha inicial de la actividad estratégica">Fecha Inicial</th>
+              <th class="column-fecha" title="Fecha final de la actividad estratégica">&nbsp; Fecha &nbsp; Final</th>
+              <th class="column-duracion" title="Diferencia de días entre la fecha inicial y fecha final">Duración (Días)</th>
+              <th class="column-dias" title="Diferencia de días desde la fecha actual a la fecha final">Dias Restantes</th>
+              <th class="column-avance" title="Promedio actual del porcentaje real de los proyectos y actividades internas">% Avance real</th>
+              <th class="column-avance" title="Difrencia entre fecha inicial y la fecha actual, dividido la duración (Días)">% Avance esperado</th>
+              <th class="column-avance" title="Division entre la % Avance real y % Avance esperado">% Cumplimiento</th>
+              <th class="column-meta" title="Meta ponderada al inicio de la actividad estratégica">Meta (KPI)</th>
+              <th class="column-meta" title="Valor digitado a medida que se va avanzando en la Meta (KPI)">Resultado Meta (KPI)</th>
+              <th class="column-meta" title="División entre Resultado Meta (KPI) y Meta (KPI)">&nbsp;% &nbsp; Meta (KPI)</th>
+              <th class="column-resultado" title="Entregable digitado por el usuario">Entregable</th>
+              <th class="column-meta" title="La suma de: % Cumplimiento multiplicado por 40% y % Meta (KPI) multiplicado por 60%">% PAT</th>
+              <th class="column-responsable" title="Colaborador responsable de la actividad estratégica">Responsable</th>
+              <th class="column-acciones" title="Acciones">Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -147,7 +151,7 @@
                 <td data-bs-toggle="modal" data-bs-target="#modalAgregarResultadoMeta" (click)="obtenerActividadEstrategica(actividad.idActividadEstrategica,actividad)">{{ signoParaMeta(actividad.unidad,actividad.resultadoMeta) }} </td>
                 <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" [ngClass]="colorPorcentajeDependiendoFechaInicial(actividad.promedioMeta, actividad.fechaInicial)">{{ actividad.promedioMeta | number : '1.2-2' }} %</td>
                 <td data-bs-toggle="modal" data-bs-target="#modalAgregarEntregable" (click)="obtenerActividadEstrategica(actividad.idActividadEstrategica,actividad)">{{ actividad.entregable }}</td>
-                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" >{{ actividad.porcentajePat | number : '1.2-2' }} %</td>
+                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" [ngClass]="colorPorcentaje(actividad.porcentajePat)">{{ actividad.porcentajePat | number : '1.2-2' }} %</td>
                 <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)"> {{ obtenerNombreUsuario(actividad.idUsuario) }}</td>
                 <td >
                     <button title="Modificar" type="button" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalModificar" (click)="obtenerActividadEstrategica(actividad.idActividadEstrategica,actividad)">
@@ -494,10 +498,43 @@
               <input type="date" class="form-control" id="fechaFinal" formControlName="fechaFinal" [ngModel]="fechaFinalEstrategica">
               <label for="fechaFinal" class="form-label">Fecha Final</label>
             </div>
-            <div class="form-floating mb-2">
-              <input type="number" class="form-control" id="meta" formControlName="meta" [ngModel]="metaEstrategica">
-              <label for="meta" class="form-label">Meta</label>
-            </div>
+            <div class="col-md-12">
+              <div class="d-md-flex justify-content-start align-items-center py-2">
+                  <label class="mb-0 me-4">Unidad de medida:</label>
+                  <div class="form-check form-check-inline mb-0 me-2">
+                      <input class="form-check-input" type="radio" name="unidad" id="porcentaje" value="PORCENTAJE" formControlName="unidad" />
+                      <label class="form-check-label" for="porcentaje">Porcentaje</label>
+                  </div>
+                  <div class="form-check form-check-inline me-2">
+                      <input class="form-check-input" type="radio" name="unidad" id="pesos" value="PESOS" formControlName="unidad" />
+                      <label class="form-check-label" for="pesos">Pesos</label>
+                  </div>
+                  <div class="form-check form-check-inline me-2">
+                      <input class="form-check-input" type="radio" name="unidad" id="numerico" value="NUMERICO" formControlName="unidad" />
+                      <label class="form-check-label" for="numerico">Numerico</label>
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-12">
+              <div class="mb-2">
+                  <div class="input-group">
+                      <label class="input-group-text" for="meta">Meta</label>
+                      <input type="number" id="meta"  class="form-control form-control-lg" formControlName="meta" placeholder=" ">
+                      <div class="input-group-append" [ngSwitch]="formEstrategica.get('unidad')?.value">
+                          <span *ngSwitchCase="'PORCENTAJE'" class="input-group-text input-group-text-lg">%</span>
+                          <span *ngSwitchCase="'PESOS'" class="input-group-text input-group-text-lg">$</span>
+                          <!-- Para NUMERICO no necesitas mostrar ningún símbolo adicional -->
+                      </div>
+                  </div>
+              </div>                                    
+          </div>
+          <div class="form-floating mb-2">
+            <select class="form-select" id="periodicidadMeta" formControlName="periodicidadMeta" >
+                <option value="" disabled selected>Seleccione la periodicidad:*</option>
+                <option *ngFor="let periodicidadMeta of periodiciadMetaLista" [value]="periodicidadMeta"  >{{ periodicidadMeta | formatEnum}}</option>
+            </select>
+            <label for="periodicidadMeta" placeholder="periodicidadMeta">Periodicidad</label>
+        </div>
             <div class="form-floating mb-3">
               <select class="form-select" id="idUsuario" formControlName="idUsuario" [(value)]="idUsuarioSeleccionado">
                 <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario">
@@ -780,7 +817,7 @@
               <label for="periodicidad" placeholder="periodicidad">Periodicidad:</label>
               <select class="form-select" id="periodicidad" formControlName="periodicidad" [ngModel]="periodicidadTarea">
                   <option value="" disabled selected> Seleccione la periodicidad<span class="required-field">*</span></option>
-                  <option *ngFor="let periodicidad of periodiciadEnumLista" [value]="periodicidad">{{ periodicidad | formatEnum }}</option>
+                  <option *ngFor="let periodicidad of periodiciadLista" [value]="periodicidad">{{ periodicidad | formatEnum }}</option>
               </select>
           </div>
             <div class="mb-3">
@@ -860,7 +897,7 @@
             <div class="form-floating mb-2">
               <select class="form-select" id="periodicidad" [class.is-invalid]="periodicidadVacio" formControlName="periodicidad" >
                   <option value="" disabled selected>Seleccione la periodicidad:*</option>
-                  <option *ngFor="let periodicidad of periodiciadEnumLista" [value]="periodicidad"  >{{ periodicidad | formatEnum}}</option>
+                  <option *ngFor="let periodicidad of periodiciadLista" [value]="periodicidad"  >{{ periodicidad | formatEnum}}</option>
               </select>
               <label for="periodicidad" placeholder="periodicidad">Periodicidad<span class="required-field">*</span></label>
               <small *ngIf="periodicidadVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
