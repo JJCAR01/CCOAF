@@ -21,6 +21,7 @@ import { ProyectoArea } from 'src/app/modelo/proyectoarea';
 import { EModalidad } from 'src/enums/emodalidad';
 import { EPlaneacion } from 'src/enums/eplaneacion';
 import { EPeriodicidadMeta } from 'src/enums/eperiodicidadmeta';
+import { MENSAJE_TITULO } from 'src/app/mensaje/mensajetitulo';
 
 @Component({
   selector: 'app-root:not(p)',
@@ -31,6 +32,25 @@ import { EPeriodicidadMeta } from 'src/enums/eperiodicidadmeta';
 export class TipogeListarComponent implements OnInit {
   title = 'listarTipoGE';
   ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
+  DURACION=  MENSAJE_TITULO.DURACION;
+  NOMBRE_ACTIVDIDAD_ESTRATEGICA = MENSAJE_TITULO.NOMBRE_ACTIVIDAD_ESTRATEGICA;
+  NOMBRE_GESTION_AREA = MENSAJE_TITULO.NOMBRE_GESTION_AREA;
+  NOMBRE_PROYECTO_AREA = MENSAJE_TITULO.NOMBRE_PROYECTO_AREA;
+  NOMBRE_TAREA = MENSAJE_TITULO.NOMBRE_TAREA_DE_GESTION_AREA;
+  FECHA_INICIAL_ACTIVIDAD_ESTRATEGICA = MENSAJE_TITULO.FECHA_INICIAL_ACTIVIDAD_ESTRATEGICA;
+  FECHA_INICIAL_GESTION_AREA = MENSAJE_TITULO.FECHA_INICIAL_GESTION_AREA;
+  FECHA_INICIAL_PROYECTO_AREA = MENSAJE_TITULO.FECHA_INICIAL_PROYECTO_AREA;
+  FECHA_FINAL_ACTIVIDAD_ESTRATEGICA = MENSAJE_TITULO.FECHA_FINAL_ACTIVIDAD_ESTRATEGICA;
+  FECHA_FINAL_GESTION_AREA = MENSAJE_TITULO.FECHA_FINAL_GESTION_AREA;
+  FECHA_FINAL_PROYECTO_AREA = MENSAJE_TITULO.FECHA_FINAL_PROYECTO_AREA;
+  AVANCE_REAL_ACTIVIDAD_ESTRATEGICA = MENSAJE_TITULO.AVANCE_REAL_ACTIVIDAD_ESTRATEGICA;
+  AVANCE_REAL_GESTION_AREA = MENSAJE_TITULO.AVANCE_REAL;
+  AVANCE_REAL_PROYECTO_AREA = MENSAJE_TITULO.AVANCE_REAL_PROYECTO_AREA;
+  DIAS_RESTANTES=  MENSAJE_TITULO.DIAS_RESTANTES;
+  AVANCE_ESPERADO=  MENSAJE_TITULO.AVANCE_ESPERADO;
+  CUMPLIMIENTO=  MENSAJE_TITULO.CUMPLIMIENTO;
+  ACCIONES =  MENSAJE_TITULO.ACCIONES;
+
   tipoFormulario: 'ACTIVIDAD_ESTRATEGICA' | 'ACTIVIDAD_GESTION' | 'TAREA' | 'PROYECTO_AREA' = 'ACTIVIDAD_ESTRATEGICA'; // Por defecto, muestra el formulario para actividad estratégica
   pesoDeArchivo = 300 * 1024 * 1024; // 300 MB
   extencionesPermitidas = /\.(doc|docx|xls|xlsx|ppt|pptx|zip|pdf)$/i;
@@ -222,8 +242,8 @@ export class TipogeListarComponent implements OnInit {
 
           // Calcula el promedio solo para las actividades filtradas
           if (actividadesFiltradas.length > 0) {
-              this.porcentajePATActividadesEstrategica += actividadesFiltradas.reduce((total, actividad) => total + actividad.porcentajeCumplimiento, 0) / actividadesFiltradas.length;
-          }
+              this.porcentajePATActividadesEstrategica += actividadesFiltradas.reduce((total, actividad) => total + actividad.porcentajePat, 0) / actividadesFiltradas.length;
+            }
         }
       ); 
   }
@@ -692,7 +712,6 @@ export class TipogeListarComponent implements OnInit {
               () => {
                   this.swalSatisfactorio('modificado','porcentaje de la actividad')
                   this.cargarGestiones(this.idPat)
-                  this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION')
                   this.formModificarPorcentaje.reset()              
               },
               (error) => {this.swalError(error);}

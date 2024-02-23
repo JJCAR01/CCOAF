@@ -5,6 +5,8 @@ import Swal from 'sweetalert2';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProcesoService } from 'src/app/proceso/services/proceso.service';
 import { DireccionService } from 'src/app/direccion/services/direccion.service';
+import { PatService } from 'src/app/pat/services/pat.service';
+import { Pat } from 'src/app/modelo/pat';
 
 @Component({
   selector: 'app-root',
@@ -15,37 +17,37 @@ export class ModificarDireccionesComponent implements OnInit {
   usuarios: any[] = [];
   busqueda: any;
   direcciones:any;
-  procesos:any;
+  pats:Pat[] = [];
   direccionesLista:any;
   procesosLista:any;
   deshabilitar: boolean = true;
   idUsuario:number = 0;
   nombreUsuarioSeleccionado:string = '';
   direccionesUsuarioSeleccionado:any;
-  procesosUsuarioSeleccionado:any;
+  patsUsuarioSeleccionado:any;
   listaDeDireccionesSeleccionadas: string[] = [];
-  listaDeProcesosSeleccionadas: string[] = [];
+  listaDePatsSeleccionadas: string[] = [];
   formDireccion:FormGroup;
-  formProceso:FormGroup;
+  formPat:FormGroup;
 
 
   constructor(private usuarioService: UsuarioService, 
     private auth:AuthService,private formBuilder: FormBuilder,
     private direccionService:DireccionService,
-    private procesosService:ProcesoService
+    private patService:PatService
     ) {
       this.formDireccion = this.formBuilder.group({
         direcciones: ['', Validators.required],
       });
-      this.formProceso = this.formBuilder.group({
-        procesos: ['', Validators.required],
+      this.formPat = this.formBuilder.group({
+        pats: ['', Validators.required],
       });
      } 
 
   ngOnInit(): void {
     this.cargarUsuarios();
     this.cargarDirecciones();
-    this.cargarProcesos();
+    this.cargarPats();
   }
 
   cargarUsuarios() {
@@ -65,13 +67,14 @@ export class ModificarDireccionesComponent implements OnInit {
         this.direcciones = data;
     });
   }
-  
-  cargarProcesos() {
-    this.procesosService.listar(this.auth.obtenerHeader()).subscribe(
+
+  cargarPats() {
+    this.patService.listarPat(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
-        this.procesos = data;
+        this.pats = data;
     });
   }
+  
 
   modificarDireccionDeUsuario() {
     if (this.formDireccion.valid && this.idUsuario) {
@@ -141,12 +144,11 @@ export class ModificarDireccionesComponent implements OnInit {
     } 
   }
 
-  modificarProcesoDeUsuario() {
-    if (this.formProceso.valid && this.idUsuario) {
-      const procesos =this.listaDeProcesosSeleccionadas;
-      
+  modificarPatDeUsuario() {
+    if (this.formPat.valid && this.idUsuario) {
+      const pats =this.listaDePatsSeleccionadas;
       const usuarioModificarProcesos = {
-        procesos: procesos,
+        pats: pats,
       }
 
       Swal.fire({
@@ -162,10 +164,10 @@ export class ModificarDireccionesComponent implements OnInit {
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
           if (this.idUsuario != null) {
-              this.usuarioService.modificarProceso(usuarioModificarProcesos, this.idUsuario, this.auth.obtenerHeader()).subscribe(
+              this.usuarioService.modificarPat(usuarioModificarProcesos, this.idUsuario, this.auth.obtenerHeader()).subscribe(
               (response) => {
                 this.swalSatisfactorio('modificado','proceso del usuario')
-                    this.formProceso.reset()
+                    this.formPat.reset()
                     this.cargarUsuarios()
               },
               (error) => {this.swalError(error);}
@@ -178,11 +180,11 @@ export class ModificarDireccionesComponent implements OnInit {
 
 
   eliminarProcesoUsuario() {
-    if (this.formProceso.valid && this.idUsuario) {
-      const procesos =this.listaDeProcesosSeleccionadas;
+    if (this.formPat.valid && this.idUsuario) {
+      const pats =this.listaDePatsSeleccionadas;
       
       const procesosAEliminar = {
-        procesos: procesos,
+        pats: pats,
       }
 
       Swal.fire({
@@ -198,10 +200,10 @@ export class ModificarDireccionesComponent implements OnInit {
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
           if (this.idUsuario != null) {
-              this.usuarioService.eliminarProceso(procesosAEliminar, this.idUsuario, this.auth.obtenerHeader()).subscribe(
+              this.usuarioService.eliminarPat(procesosAEliminar, this.idUsuario, this.auth.obtenerHeader()).subscribe(
               (response) => {
                 this.swalSatisfactorio('eliminado','proceso del usuario')
-                    this.formProceso.reset()
+                    this.formPat.reset()
                     this.cargarUsuarios()
               },
               (error) => {this.swalError(error);}
@@ -220,30 +222,31 @@ export class ModificarDireccionesComponent implements OnInit {
     }
   }
 
-  seleccionarProceso() {
-    const procesoSeleccionada = this.formProceso.get('procesos')?.value;
-    if (!this.procesos.includes(procesoSeleccionada)) {
-      this.listaDeProcesosSeleccionadas.push(procesoSeleccionada);
+  seleccionarPat() {
+    const procesoSeleccionada = this.formPat.get('pats')?.value;
+    if (!this.pats.includes(procesoSeleccionada)) {
+      this.listaDePatsSeleccionadas.push(procesoSeleccionada);
     }
   }
 
   obtengoUsuario(idUsuario: number,usuario:any) {
 
     this.listaDeDireccionesSeleccionadas = [];
-    this.listaDeProcesosSeleccionadas = [];
+    this.listaDePatsSeleccionadas = [];
 
-    if (usuario && usuario.nombre && usuario.apellidos && usuario.direcciones && usuario.procesos) {
+
+    if (usuario && usuario.nombre && usuario.apellidos && usuario.direcciones && usuario.pats) {
+
       this.idUsuario = idUsuario;
       this.nombreUsuarioSeleccionado = usuario.nombre + ' ' + usuario.apellidos;
       this.direccionesUsuarioSeleccionado = usuario.direcciones;
-      this.procesosUsuarioSeleccionado = usuario.procesos;
-
+      this.patsUsuarioSeleccionado = usuario.pats;
       this.formDireccion.patchValue({
         direcciones: this.direccionesUsuarioSeleccionado,
       });
 
-      this.formProceso.patchValue({
-        procesos: this.procesosUsuarioSeleccionado,
+      this.formPat.patchValue({
+        pats: this.patsUsuarioSeleccionado,
       });
     } 
   }
@@ -257,7 +260,7 @@ export class ModificarDireccionesComponent implements OnInit {
     }
     );
     this.formDireccion.reset();
-    this.formProceso.reset();
+    this.formPat.reset();
 
   }
   swalError(error: any) {

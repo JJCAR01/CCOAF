@@ -31,7 +31,6 @@ export class PatCrearComponent implements OnInit{
       nombre: ['', Validators.required],
       fechaAnual: [this.obtenerAActual(), Validators.required],
       direccion: ['', Validators.required],
-      proceso: ['', Validators.required],
       fechaInicial: ['', Validators.required],
       fechaFinal: ['', Validators.required],
       idUsuario: ['', Validators.required], 
@@ -40,8 +39,7 @@ export class PatCrearComponent implements OnInit{
 
   ngOnInit(): void {
     this.cargarUsuarios();
-    this.cargarDirecciones()
-    this.cargarProcesos()
+    this.cargarDirecciones();
   }
 
   cargarUsuarios() {
@@ -51,12 +49,6 @@ export class PatCrearComponent implements OnInit{
     });
   }
 
-  cargarProcesos() {
-    this.procesoService.listar(this.auth.obtenerHeader()).subscribe(
-      (data: any) => {
-        this.procesos = data;
-    })
-  }
   cargarDirecciones() {
     this.direccionService.listar(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
@@ -68,7 +60,6 @@ export class PatCrearComponent implements OnInit{
     if(this.form.valid){
       const nombre = this.form.get('nombre')?.value;
       const fechaAnual = this.form.get('fechaAnual')?.value;
-      const proceso = this.form.get('proceso')?.value;
       const direccion = this.form.get('direccion')?.value;
       const fechaInicial = this.form.get('fechaInicial')?.value;
       const fechaFinal = this.form.get('fechaFinal')?.value;
@@ -76,7 +67,6 @@ export class PatCrearComponent implements OnInit{
       const pat = {
         nombre: nombre,
         fechaAnual: fechaAnual,
-        proceso: proceso,
         direccion:direccion,
         fechaInicial:fechaInicial,
         fechaFinal:fechaFinal,
@@ -116,10 +106,6 @@ export class PatCrearComponent implements OnInit{
   }
 
   
-  obtenerProceso(idProceso: number) {
-    const proceso = this.procesos.find((u:any) => u.idProceso === idProceso);
-    return proceso ? proceso.nombre : '';
-  }
   obtenerDireccion(idDireccion: number) {
     const direccion = this.direcciones.find((u:any) => u.idDireccion === idDireccion);
     return direccion ? direccion.nombre : '';
@@ -133,9 +119,6 @@ export class PatCrearComponent implements OnInit{
   }
   get direccionVacio(){
     return this.form.get('direccion')?.invalid && this.form.get('direccion')?.touched;
-  }
-  get procesoVacio(){
-    return this.form.get('proceso')?.invalid && this.form.get('proceso')?.touched;
   }
   get fechaInicialVacio(){
     return this.form.get('fechaInicial')?.invalid && this.form.get('fechaInicial')?.touched;

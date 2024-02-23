@@ -103,10 +103,10 @@ export class PanelAdminComponent implements OnInit {
       if (confirmacion.isConfirmed) {
         this.router.navigate(["/login"]);
             Swal.fire({title:"Exitoso!!!", icon: "success",confirmButtonColor: '#0E823F',}).then(() => {
-              const auth = getAuth();
-              signOut(auth);
               this.cookie.deleteAll();
               this.loggedIn = false;
+              const auth = getAuth();
+              signOut(auth);
           },
         );
       }

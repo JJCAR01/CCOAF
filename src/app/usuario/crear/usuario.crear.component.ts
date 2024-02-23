@@ -40,7 +40,6 @@ export class UsuarioCrearComponent implements OnInit {
       idCargo: ['', Validators.required],
       nombreRol: ['', Validators.required],
       direcciones: ['', Validators.required],
-      procesos:['',Validators.required]
     }, 
     {
       validators : matchpassword
@@ -50,7 +49,6 @@ export class UsuarioCrearComponent implements OnInit {
   ngOnInit(): void {
     this.cargarCargos();
     this.cargarDirecciones();
-    this.cargarProcesos();
   }
 
   agregarDirecciones() {
@@ -58,14 +56,6 @@ export class UsuarioCrearComponent implements OnInit {
     // Verificar si la dirección ya existe en la lista antes de agregarla
     if (!this.listaDeDireccionesSeleccionadas.includes(direccionSeleccionada)) {
       this.listaDeDireccionesSeleccionadas.push(direccionSeleccionada);
-    }
-  }
-
-  agregarProcesos() {
-    const procesoSeleccionado = this.form.get('procesos')?.value;  
-    // Verificar si el proceso ya existe en la lista antes de agregarlo
-    if (!this.listaDeProcesosSeleccionadas.includes(procesoSeleccionado)) {
-      this.listaDeProcesosSeleccionadas.push(procesoSeleccionado);
     }
   }
   
@@ -86,16 +76,6 @@ export class UsuarioCrearComponent implements OnInit {
       }
     );
   }
-  cargarProcesos() {
-    this.procesoService.listar(this.auth.obtenerHeader()).subscribe(
-      (data: any) => {
-        this.procesos = data;
-    },
-      (error) => {
-        console.log(error);
-      }
-    );
-  }
 
   crearUsuario() {
     if (this.form.valid) {
@@ -106,7 +86,6 @@ export class UsuarioCrearComponent implements OnInit {
         password: this.form.get('password')?.value,
         idCargo: this.form.get('idCargo')?.value,
         direcciones: this.listaDeDireccionesSeleccionadas,
-        procesos: this.listaDeProcesosSeleccionadas,
         roles: [
           {
             nombreRol: this.form.get('nombreRol')?.value
@@ -126,7 +105,6 @@ export class UsuarioCrearComponent implements OnInit {
           );
             this.form.reset();
             this.listaDeDireccionesSeleccionadas = [];
-            this.listaDeProcesosSeleccionadas = [];
         },
         (error) => {
           Swal.fire(
@@ -170,10 +148,6 @@ export class UsuarioCrearComponent implements OnInit {
   get direccionesVacio(){
     return this.form.get('direcciones')?.invalid && this.form.get('direcciones')?.touched;
   }
-  get procesosVacio(){
-    return this.form.get('procesos')?.invalid && this.form.get('procesos')?.touched;
-  }
-
 }
 
 const matchpassword :ValidatorFn = (control:AbstractControl):ValidationErrors|null =>{

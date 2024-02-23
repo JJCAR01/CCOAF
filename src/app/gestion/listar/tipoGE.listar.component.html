@@ -116,21 +116,21 @@
         <table class="table table-bordered table-hover">
           <thead class="table table-color">
             <tr>
-              <th class="column-nombre" title="Nombre de la actividad estratégica">Nombre</th>
-              <th class="column-fecha" title="Fecha inicial de la actividad estratégica">Fecha Inicial</th>
-              <th class="column-fecha" title="Fecha final de la actividad estratégica">&nbsp; Fecha &nbsp; Final</th>
-              <th class="column-duracion" title="Diferencia de días entre la fecha inicial y fecha final">Duración (Días)</th>
-              <th class="column-dias" title="Diferencia de días desde la fecha actual a la fecha final">Dias Restantes</th>
-              <th class="column-avance" title="Promedio actual del porcentaje real de los proyectos y actividades internas">% Avance real</th>
-              <th class="column-avance" title="Difrencia entre fecha inicial y la fecha actual, dividido la duración (Días)">% Avance esperado</th>
-              <th class="column-avance" title="Division entre la % Avance real y % Avance esperado">% Cumplimiento</th>
+              <th class="column-nombre" title="{{ NOMBRE_ACTIVDIDAD_ESTRATEGICA }}">Nombre</th>
+              <th class="column-fecha" title="{{ FECHA_INICIAL_ACTIVIDAD_ESTRATEGICA }}">Fecha Inicial</th>
+              <th class="column-fecha" title="{{ FECHA_FINAL_ACTIVIDAD_ESTRATEGICA }}">&nbsp; Fecha &nbsp; Final</th>
+              <th class="column-duracion" title="{{ DURACION }}">Duración (Días)</th>
+              <th class="column-dias" title="{{ DIAS_RESTANTES }}">Dias Restantes</th>
+              <th class="column-avance" title="{{ AVANCE_REAL_ACTIVIDAD_ESTRATEGICA }}">% Avance real</th>
+              <th class="column-avance" title="{{ AVANCE_ESPERADO }}">% Avance esperado</th>
+              <th class="column-avance" title="{{ CUMPLIMIENTO }}">% Cumplimiento</th>
               <th class="column-meta" title="Meta ponderada al inicio de la actividad estratégica">Meta (KPI)</th>
               <th class="column-meta" title="Valor digitado a medida que se va avanzando en la Meta (KPI)">Resultado Meta (KPI)</th>
               <th class="column-meta" title="División entre Resultado Meta (KPI) y Meta (KPI)">&nbsp;% &nbsp; Meta (KPI)</th>
               <th class="column-resultado" title="Entregable digitado por el usuario">Entregable</th>
               <th class="column-meta" title="La suma de: % Cumplimiento multiplicado por 40% y % Meta (KPI) multiplicado por 60%">% PAT</th>
               <th class="column-responsable" title="Colaborador responsable de la actividad estratégica">Responsable</th>
-              <th class="column-acciones" title="Acciones">Acciones</th>
+              <th class="column-acciones" title="{{ ACCIONES }}">Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -186,22 +186,22 @@
         <div *ngFor="let gestion of gestiones">
           <div class="card mb-2">
             <div class="card-header" role="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapse-' + gestion.idActividadGestion" (click)="cargarTareas(gestion.idActividadGestion,'ACTIVIDAD_GESTION')">
-              <h5 class="nombre-gestion">{{ gestion.nombre }}</h5>
-              <div class="card-body">
-                <div class="row justify-content-center" title="{{gestion.nombre}}">
+              <h5 class="nombre-gestion" title="{{gestion.nombre}}">{{ gestion.nombre }}</h5>
+              <div class="card-body" title="{{gestion.nombre}}">
+                <div class="row justify-content-center" >
                   <div class="col-md-1">
-                    <h6>Fecha Inicial</h6>
+                    <h6 title="{{ FECHA_INICIAL_GESTION_AREA }}">Fecha Inicial</h6>
                     {{ gestion.fechaInicial }}
                   </div>
-                  <div class="col-md-1">
-                    <h6>Fecha Final</h6>
+                  <div class="col-md-1" title="{{ FECHA_FINAL_GESTION_AREA }}">
+                    <h6 title="Fecha final de la gestión del área">Fecha Final</h6>
                     {{ gestion.fechaFinal }}
                   </div>
                   <div class="col-md-1">
-                    <h6>Duración</h6>
+                    <h6 title="{{ DURACION }}">Duración</h6>
                     {{ gestion.duracion }}    
                   </div>
-                  <div class="col-md-1" [ngClass]="colorPorcentaje(gestion.porcentajeReal)">
+                  <div class="col-md-1" [ngClass]="colorPorcentaje(gestion.porcentajeReal)" title="{{ DIAS_RESTANTES }}">
                     <span *ngIf="gestion.porcentajeReal !== 100" [ngClass]="colorDias(gestion.diasRestantes)">
                       <h6>Dias restantes</h6>
                       {{ gestion.diasRestantes }}
@@ -209,15 +209,16 @@
                     </span>
                     <span *ngIf="gestion.porcentajeReal === 100">Finalizado</span>
                   </div>
-                  <div class="col-md-1" >
+                  <div class="col-md-1" title="{{ AVANCE_REAL_GESTION_AREA }}">
                     <h6>&nbsp;&nbsp;% Avance&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; real</h6>
                     {{ gestion.porcentajeReal | number : '1.2-2' }} %
                   </div>
-                  <div class="col-md-1" >
+                  <div class="col-md-1" title="{{ AVANCE_ESPERADO }}">
                     <h6>% Avance esperado</h6>
                     {{ gestion.porcentajeEsperado | number : '1.2-2' }} %
                   </div>
-                  <div class="col-md-1" [ngClass]="colorPorcentajeDependiendoFechaInicial(gestion.porcentajeCumplimiento,gestion.fechaInicial)">
+                  <div class="col-md-1" title="{{ CUMPLIMIENTO }}"
+                  [ngClass]="colorPorcentajeDependiendoFechaInicial(gestion.porcentajeCumplimiento,gestion.fechaInicial)">
                     <h6>&nbsp;%&nbsp;&nbsp; Cumplimiento</h6>
                     {{ gestion.porcentajeCumplimiento | number : '1.2-2' }} %
                   </div>
@@ -225,7 +226,7 @@
                     <h6>Usuario</h6>
                     {{ obtenerNombreUsuario(gestion.idUsuario) }}
                   </div>
-                  <div class="col-md-3">
+                  <div class="col-md-3" title="{{ ACCIONES }}">
                     <button title="Modificar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarGestion" (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)">
                       <i class="bi bi-pen-fill"></i>
                     </button>
@@ -273,7 +274,7 @@
                       <th class="column-porcentaje">Porcentaje</th>
                       <th class="column-descripcion">Descripción</th>
                       <th class="column-responsableTarea">Responsable</th>
-                      <th class="column-accionesTarea">Acciones </th>
+                      <th class="column-accionesTarea" title="{{ ACCIONES }}">Acciones </th>
                       <th class="column-crear"><button title="Crear" class="btn btn-success me-1" data-bs-toggle="modal" data-bs-target="#modalCreartarea" 
                         (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)"
                         ><i class="bi bi-plus-lg"></i></button></th>
@@ -330,19 +331,19 @@
         <table class="table table-bordered table-hover">
           <thead class="table table-color">
             <tr>
-              <th class="column-nombre">Nombre</th>
+              <th class="column-nombre" title="{{ NOMBRE_PROYECTO_AREA }}">Nombre</th>
               <th class="column-presupuesto">Presupuesto</th>
               <th class="column-modalidad">Modalidad</th>
               <th class="column-presupuesto">Valor Ejecutado</th>
-              <th class="column-fecha">Fecha inicial</th>
-              <th class="column-fecha">&nbsp; Fecha &nbsp; Final</th>
-              <th class="column-duracion">Duracion (Días)</th>
-              <th class="column-avance">% Avance real</th>
-              <th class="column-avance">% Avance esperado</th>
-              <th class="column-avance">% Cumplimiento</th>
+              <th class="column-fecha" title="{{ FECHA_INICIAL_PROYECTO_AREA }}">Fecha inicial</th>
+              <th class="column-fecha" title="{{ FECHA_FINAL_PROYECTO_AREA }}">&nbsp; Fecha &nbsp; Final</th>
+              <th class="column-duracion" title="{{ DURACION }}">Duracion (Días)</th>
+              <th class="column-avance" title="{{ AVANCE_REAL_PROYECTO_AREA }}">% Avance real</th>
+              <th class="column-avance" title="{{ AVANCE_ESPERADO }}">% Avance esperado</th>
+              <th class="column-avance" title="{{ CUMPLIMIENTO }}">% Cumplimiento</th>
               <th class="column-planeacion">Planeación Sprint</th>
               <th class="column-totalsprint">Total sprint</th>
-              <th class="column-acciones">Acciones</th>
+              <th class="column-acciones" title="{{ ACCIONES }}">Acciones</th>
             </tr>
           </thead>
           <tbody>

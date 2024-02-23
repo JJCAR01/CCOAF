@@ -68,6 +68,10 @@
                           <label class="form-check-label" for="admin">Administrador</label>
                         </div>
                         <div class="form-check form-check-inlin me-2">
+                          <input class="form-check-input" type="radio" name="nombreRol" id="director" value="DIRECTOR" formControlName="nombreRol" />
+                          <label class="form-check-label" for="director">Director</label>
+                        </div>
+                        <div class="form-check form-check-inlin me-2">
                           <input class="form-check-input" type="radio" name="nombreRol" id="operador" value="OPERADOR" formControlName="nombreRol" />
                           <label class="form-check-label" for="operador">Operador</label>
                         </div>
@@ -97,22 +101,7 @@
                   <div class="direcciones-lista">
                       <h6 *ngFor="let direccionSeleccionada of listaDeDireccionesSeleccionadas">{{ direccionSeleccionada}}</h6>
                   </div>
-                  
-                  <div class="form-floating mb-4">
-                    <div class="input">
-                      <select class="form-select me-4" id="procesos" [class.is-invalid]="procesosVacio" formControlName="procesos">
-                        <option value="" disabled selected>Seleccione el proceso<span class="required-field">*</span></option>
-                        <option *ngFor="let proceso of procesos" [value]="proceso.nombre">{{ proceso.nombre }}</option>          
-                      </select>
-                      <small *ngIf="procesosVacio" class="text-danger">Este campo es obligatorio, seleccione y agregue*</small>
-                      <button (click)="agregarProcesos()" class="btn btn-outline-success btn-input" type="button">Agregar proceso</button>
-                    </div> 
-                  </div>
-                  <div class="direcciones-lista">
-                      <h6 *ngFor="let lista of listaDeProcesosSeleccionadas">{{ lista }}</h6>
-                  </div>
-
-                  
+                                      
                   <div class="d-flex justify-content-center">
                     <button type="button" class="btn btn-secondary btn-block me-2"
                       [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarUsuario'] } }]"

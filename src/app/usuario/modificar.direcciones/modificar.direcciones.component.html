@@ -23,7 +23,7 @@
                 <tr>
                 <th class="column-nombre">Nombre </th>
                 <th class="column-direccion">Direcciones</th>
-                <th class="column-proceso">Procesos</th>
+                <th class="column-proceso">Programas - PAT</th>
                 <th class="column-procesos">Modificar Direcciones</th>
                 <th class="column-procesos">Modificar Procesos</th>
                 </tr>
@@ -37,8 +37,8 @@
                     </li>
                     </td>                    
                     <td>
-                      <li *ngFor="let direccion of usuario.procesos">
-                        {{ direccion.nombre }}
+                      <li *ngFor="let pat of usuario.pats">
+                        {{ pat.nombre }}
                     </li>
                     </td>    
                     <td>
@@ -149,22 +149,22 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <form [formGroup]="formProceso">
+              <form [formGroup]="formPat">
                 <h3>Usuario:</h3>
                 <h6 class="mb-2">{{nombreUsuarioSeleccionado}}</h6>
-                <h3>Procesos actuales:</h3>
-                <h6 *ngFor="let procesos of procesosUsuarioSeleccionado">{{ procesos.nombre }} </h6>
+                <h3>Pats actuales:</h3>
+                <h6 *ngFor="let pats of patsUsuarioSeleccionado">{{ pats.nombre }} </h6>
                 <div class="form-floating mb-2">
                   <div class="input">
-                    <select class="form-select" id="procesos" formControlName="procesos">
-                      <option value="" disabled selected>Seleccione las direccion a eliminar<span class="required-field">*</span></option>
-                      <option *ngFor="let proceso of procesosUsuarioSeleccionado" [value]="proceso.nombre">{{ proceso.nombre }}</option>
+                    <select class="form-select" id="pats" formControlName="pats">
+                      <option value="" disabled selected>Seleccione el pat a eliminar<span class="required-field">*</span></option>
+                      <option *ngFor="let pat of patsUsuarioSeleccionado" [value]="pat.nombre">{{ pat.nombre }}</option>
                     </select>
-                    <button (click)="seleccionarProceso()" class="btn btn-secondary btn-input">Proceso a eliminar</button>
+                    <button (click)="seleccionarPat()" class="btn btn-secondary btn-input">Pat a eliminar</button>
                   </div>
                 </div>
                 <div class="direcciones-lista">
-                  <h6 *ngFor="let procesoSeleccionada of listaDeProcesosSeleccionadas">{{ procesoSeleccionada}}</h6>
+                  <h6 *ngFor="let patSeleccionado of listaDePatsSeleccionadas">{{ patSeleccionado}}</h6>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -180,30 +180,30 @@
         <div class="modal-dialog modal-dialog-scrollable modal-lg">
           <div class="modal-content">
             <div class="modal-header">
-              <h2 class="modal-title" id="exampleModalLabel">Agregar proceso</h2>
+              <h2 class="modal-title" id="exampleModalLabel">Agregar pat</h2>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <form [formGroup]="formProceso">
+              <form [formGroup]="formPat">
                 <h3>Usuario:</h3>
                 <h6 class="mb-2">{{nombreUsuarioSeleccionado}}</h6>
                 <h3>Procesos actuales:</h3>
-                <h6 *ngFor="let procesos of procesosUsuarioSeleccionado">{{ procesos.nombre }} </h6>
+                <h6 *ngFor="let pats of patsUsuarioSeleccionado">{{ pats.nombre }} </h6>
                 <div class="form-floating mb-2">
                   <div class="input">
-                    <select class="form-select" id="procesos" formControlName="procesos">
-                      <option value="" disabled selected>Seleccione los procesos<span class="required-field">*</span></option>
-                      <option *ngFor="let proceso of procesos" [value]="proceso.nombre">{{ proceso.nombre }}</option>
+                    <select class="form-select" id="pats" formControlName="pats">
+                      <option value="" disabled selected>Seleccione los pats<span class="required-field">*</span></option>
+                      <option *ngFor="let pat of pats" [value]="pat.nombre">{{ pat.nombre }}</option>
                     </select>
-                    <button (click)="seleccionarProceso()" class="btn btn-secondary btn-input">Agregar proceso</button>
+                    <button (click)="seleccionarPat()" class="btn btn-secondary btn-input">Agregar pat</button>
                   </div>
                 </div>
                 <div class="direcciones-lista">
-                  <h6 *ngFor="let procesoSeleccionada of listaDeProcesosSeleccionadas">{{ procesoSeleccionada}}</h6>
+                  <h6 *ngFor="let patSeleccionado of listaDePatsSeleccionadas">{{ patSeleccionado}}</h6>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                  <button type="submit" class="btn btn-success" data-bs-dismiss="modal" (click)="modificarProcesoDeUsuario()">Guardar</button>
+                  <button type="submit" class="btn btn-success" data-bs-dismiss="modal" (click)="modificarPatDeUsuario()">Guardar</button>
                 </div>
               </form>
             </div>

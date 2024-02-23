@@ -56,12 +56,11 @@ export class PatListarComponent implements OnInit{
       private patService: PatService,private auth:AuthService,
       private usuarioService:UsuarioService, private formBuilder: FormBuilder,
       private tipoService:TipoGEService, private actividadService:ActividadService,
-      private procesoService:ProcesoService, private direccionService:DireccionService) 
+      private direccionService:DireccionService) 
       {
         this.form = this.formBuilder.group({
           nombre:['', Validators.required],
           fechaAnual: ['', Validators.required],
-          proceso: ['', Validators.required],
           direccion: ['', Validators.required],
           porcentajeReal: ['', Validators.required],
           porcentajeEsperado: ['', Validators.required],
@@ -78,7 +77,6 @@ export class PatListarComponent implements OnInit{
     ngOnInit() {
       this.cargarPats();
       this.cargarUsuario();
-      this.cargarProcesos();
       this.cargarDirecciones();
     }
     cargarUsuario() {
@@ -87,13 +85,6 @@ export class PatListarComponent implements OnInit{
           this.usuarios = data;
         }
       );
-    }
-    cargarProcesos() {
-      this.procesoService.listar(this.auth.obtenerHeader()).subscribe(
-        (data: any) => {
-          this.procesos = data;
-        }
-      )
     }
     cargarDirecciones() {
       this.direccionService.listar(this.auth.obtenerHeader()).subscribe(
@@ -121,28 +112,34 @@ export class PatListarComponent implements OnInit{
           const payloadBytes = new Uint8Array(atob(payloadBase64).split('').map(char => char.charCodeAt(0)));
           const decodedPayload = JSON.parse(new TextDecoder().decode(payloadBytes));
 
-          // Convertir las cadenas de direcciones y procesos a arrays
-          const direccionesArray = decodedPayload.direccion.split(',').map((direccion: string) => direccion.trim());
-          const procesosArray = decodedPayload.proceso.split(',').map((proceso: string) => proceso.trim());
-
-    
+          // Convertir las cadenas de direcciones y pats a arrays
+          //const direccionesArray = decodedPayload.direccion.split(',').map((direccion: string) => direccion.trim());
+          const idUsuarioLogueado = decodedPayload.idUser;
+          const listaDePatsUsuario = decodedPayload.pats.split(',').map((pat: string) => pat.trim());
+          const listaDeDireccionesUsuario = decodedPayload.direcciones.split(',').map((direccion: string) => direccion.trim());
+          const tipoUsuario = decodedPayload.type;
           // Verificar si son todas las direcciones y todos los procesos
-          const sonTodasLasDirecciones = direccionesArray.includes('TODAS LAS DIRECCIONES');
-          const sonTodosLosProcesos = procesosArray.includes('TODOS LOS PROCESOS');
+          //const sonTodasLasDirecciones = direccionesArray.includes('TODAS LAS DIRECCIONES');
           
 
           // Filtrar los datos según las direcciones y procesos del payload
           const patsFiltrados = data.filter((d: any) => {
-            if (sonTodasLasDirecciones && sonTodosLosProcesos) {
-              return true;
-            } else if (sonTodasLasDirecciones && procesosArray.includes(d.proceso)) {
-              return true;
-            } else if (direccionesArray.includes(d.direccion.nombre) && procesosArray.includes(d.proceso.nombre)) {
-              return true;
+            console.log(tipoUsuario)
+            if( d.fechaAnual === this.obtenerAnual()){
+              if (tipoUsuario === 'ADMIN') {
+                return true;
+              }  else if (d.idUsuario === idUsuarioLogueado){
+                return true;
+              } else if (listaDePatsUsuario.includes(d.nombre)) {
+                return true;
+              } else if (tipoUsuario === 'DIRECTOR' && listaDeDireccionesUsuario.includes(d.direccion.nombre)) {
+                return true;
+              }  else {
+                return false;
+              }
             } else {
-              return false;
+              return false
             }
-
           });
     
           // Actualizar la cantidad de pats
@@ -279,7 +276,6 @@ export class PatListarComponent implements OnInit{
       if (this.form.valid && this.idPatSeleccionado) {
         const nombre = this.form.get('nombre')?.value;
         const fechaAnual = this.form.get('fechaAnual')?.value;
-        const proceso = this.form.get('proceso')?.value;
         const direccion = this.form.get('direccion')?.value;
         const porcentajeReal = this.form.get('porcentajeReal')?.value;
         const porcentajeEsperado = this.form.get('porcentajeEsperado')?.value;
@@ -288,7 +284,6 @@ export class PatListarComponent implements OnInit{
         const pat = {
           nombre: nombre,
           fechaAnual: fechaAnual,
-          proceso: proceso,
           direccion:direccion,
           porcentajeReal:porcentajeReal,
           porcentajeEsperado:porcentajeEsperado,
@@ -390,21 +385,19 @@ export class PatListarComponent implements OnInit{
     }
 
     obtenerPat(idPat: number,pat:any) {
-
+      console.log(pat)
       this.idPatSeleccionado = idPat;
-      this.procesoSeleccionado = pat.proceso.nombre;
       this.direccionSeleccionada = pat.direccion.nombre;
       this.idUsuarioSeleccionado = pat.idUsuario
 
       this.form.patchValue({
         nombre: pat.nombre,
         fechaAnual:  pat.fechaAnual,
-        proceso: pat.proceso.nombre,
         direccion: pat.direccion.nombre,
         porcentajeReal: pat.porcentajeReal,
         porcentajeEsperado: pat.porcentajeEsperado,
         porcentajeCumplimiento: pat.porcentajeCumplimiento,
-        idUsuario: this.idUsuarioSeleccionado
+        idUsuario: pat.idUsuario
       });
       this.formObservacion.patchValue({
         idPat: this.idPatSeleccionado,
@@ -462,5 +455,10 @@ export class PatListarComponent implements OnInit{
       const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
       const day = ('0' + currentDate.getDate()).slice(-2);
       return `${year}-${month}-${day}`;
+    }
+    private obtenerAnual(): number {
+      const currentDate = new Date();
+      const year = currentDate.getFullYear();
+      return year;
     }
 }
