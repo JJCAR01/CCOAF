@@ -1,6 +1,7 @@
 import { Direccion } from "./direccion";
 
 export interface Pat {
+    idPat: number;
     nombre: string;
     fechaAnual: number;
     porcentajeReal: number;

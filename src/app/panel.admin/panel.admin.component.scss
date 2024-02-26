@@ -144,10 +144,16 @@
         width: 1.5rem;
         min-width: 1.5rem;
     }
+    .sidenav-link-text {
+        font-size: 78%;
+    }
 
     .sidenav .sidenav-nav-item .sidenav-nav-link {
         width: 90%; /* Haz que el enlace ocupe todo el ancho del sidenav */
         height: 1.8rem; /* Ajusta la altura según tus necesidades */
+    }
+    .bottom{
+        margin-top: 0%;
     }
 
     .logout-container {

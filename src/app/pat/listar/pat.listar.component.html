@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -57,8 +57,7 @@
   </div>
   <div class="custom-button">
     <span class="input-group-text buscador">Buscar:</span>
-    <input type="text" class="form-control me-1"  />
-        <!--[(ngModel)]="busqueda"-->
+    <input type="text" class="form-control me-1" [(ngModel)]="busqueda"/>
     <button title="Agregar"
       type="button" class="btn btn-success" [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['crearPat'] } }]">
       <i class="bi bi-plus-lg"></i>
@@ -69,15 +68,15 @@
     <table class="table table-hover">
       <thead class="table table-color">
         <tr>
-          <th class="column-programa" title="Programa correspondiente al PAT">Programa - PAT</th> 
-          <th class="column-fecha" title="Año en que se ejecuta el programa">Año</th>
-          <th class="column-direccion" title="Dirección relacionada al programa">Dirección</th>
-          <th class="column-pat" title="Promedio actual del porcentaje real de las actividades estratégicas - PAT, gestiones del área y proyectos del área">&nbsp;% &nbsp;Avance real</th>
-          <th class="column-pat" title="Difrencia entre fecha inicial y la fecha actual, dividido la duración del programa">&nbsp;&nbsp;%&nbsp;&nbsp;   Avance esperado</th>
-          <th class="column-pat" title="Division entre la % Avance real y % Avance esperado">% Cumplimiento</th>
-          <th class="column-pat" title="Promedio del total de actividades estratégicas - PAT internas sobre la suma del % PAT de ellas">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PAT</th>
-          <th class="column-usuario" title="Colaborador responsable del programa">Responsable</th>
-          <th class="column-acciones" title="Acciones">Acciones</th> 
+          <th class="column-programa" title="{{ NOMBRE_PAT }}">Programa - PAT</th> 
+          <th class="column-fecha" title="{{ FECHA_ANUAL }}">Año</th>
+          <th class="column-direccion" title="{{ DIRECCION }}">Dirección</th>
+          <th class="column-avance" title="{{ AVANCE_REAL_PAT }}">&nbsp;% &nbsp;Avance real</th>
+          <th class="column-avance" title="{{ AVANCE_ESPERADO }}">&nbsp;&nbsp;%&nbsp;&nbsp;   Avance esperado</th>
+          <th class="column-avance" title="{{ CUMPLIMIENTO }}">% Cumplimiento</th>
+          <th class="column-avance" title="{{ AVANCE_PAT }}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PAT</th>
+          <th class="column-usuario" title="{{ RESPONSABLE }}">Responsable</th>
+          <th class="column-acciones" title="{{ ACCIONES }}">Acciones</th> 
         </tr>
       </thead>
       <tbody>
@@ -86,22 +85,24 @@
             <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]" >{{ pat.nombre }}</td>
             <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]">{{ pat.fechaAnual }}</td>
             <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]">{{ pat.direccion.nombre}}</td>
-            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]" >{{ pat.porcentajeReal | number : '1.2-2' }} %</td>
-            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]" >{{ pat.porcentajeEsperado | number : '1.2-2' }} %</td>
-            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]" [ngClass]="colorPorcentaje(pat.porcentajeCumplimiento)">{{ pat.porcentajeCumplimiento | number : '1.2-2' }} %</td>
-            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]" [ngClass]="colorPorcentaje(pat.porcentajePat)">{{ pat.porcentajePat | number : '1.2-2' }} %</td>
+            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]" >{{ pat.porcentajeReal | comasPipe }} %</td>
+            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]" >{{ pat.porcentajeEsperado| comasPipe }} %</td>            
+            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]" [ngClass]="colorPorcentaje(pat.porcentajeCumplimiento)">{{ pat.porcentajeCumplimiento | comasPipe }} %</td>
+            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]" [ngClass]="colorPorcentaje(pat.porcentajePat)">{{ pat.porcentajePat | comasPipe }} %</td>
             <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]">{{ obtenerNombreUsuario(pat.idUsuario) }} </td>
             <td>
-              <button title="Editar" type="button" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalModificarPat" (click)="obtenerPat(pat.idPat,pat)">
-                  <i class="bi bi-pen-fill"></i>
+              <button title="Editar" type="button" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalModificarPat"
+               (click)="obtenerPat(pat.idPat,pat)" *ngIf="esAdmin">
+                <i class="bi bi-pen-fill"></i>
               </button>                  
-              <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" (click)="eliminarPat(pat.idPat)">
+              <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" 
+                (click)="eliminarPat(pat.idPat)" *ngIf="esAdmin">
                 <i class="bi bi-trash3-fill"></i>
               </button>
               <button title="Agregar Observación" class="btn btn-outline-success me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerPat(pat.idPat,pat)">
                 <i class="bi bi-node-plus-fill"></i>
               </button>
-              <button title="Ver observación" class="btn btn-outline-dark mb-1" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(pat.idPat)">
+              <button title="Ver observación" class="btn btn-outline-dark me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(pat.idPat)">
                 <i class="bi bi-eye-fill"></i>
               </button>
             </td>
@@ -194,13 +195,13 @@
             <div class="form-floating">
               <input type="date" id="fecha" [class.is-invalid]="fechaVacio" class="form-control mb-2" formControlName="fecha" readonly>
               <label for="fecha"  class="form-label">Fecha</label>
-              <small *ngIf="fechaVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
+              <small *ngIf="fechaVacio" class="text-danger">{{ CAMPO_OBLIGATORIO }}</small>
             </div>
             <div class="form-floating">
               <input type="text" id="nombre" [class.is-invalid]="nombreObservacionVacio" class="form-control form-control-lg" formControlName="nombre"
                placeholder="Nombre">
               <label class="form-label" for="nombre">Nombre<span class="required-field">*</span></label>
-              <small *ngIf="nombreObservacionVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
+              <small *ngIf="nombreObservacionVacio" class="text-danger">{{ CAMPO_OBLIGATORIO }}</small>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

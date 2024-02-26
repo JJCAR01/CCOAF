@@ -15,6 +15,7 @@ import { initializeApp } from 'firebase/app';
 import { environment } from 'src/environments/environment.development';
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 import { Usuario } from 'src/app/modelo/usuario';
+import { MENSAJE_TITULO } from 'src/app/mensaje/mensajetitulo';
 
 @Component({
   selector: 'app-listar',
@@ -23,7 +24,38 @@ import { Usuario } from 'src/app/modelo/usuario';
 })
 export class ActividadListarComponent implements OnInit{
   title = 'listarActividad';
-  ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
+  CAMPO_OBLIGATORIO = MENSAJE_TITULO.CAMPO_OBLIGATORIO;
+  NOMBRE_ACTIVDIDAD_GESTION = MENSAJE_TITULO.NOMBRE_ACTIVIDAD_GESTION;
+  NOMBRE_PROYECTO = MENSAJE_TITULO.NOMBRE_PROYECTO;
+  NOMBRE_TAREA = MENSAJE_TITULO.NOMBRE_TAREA_ACTVIDAD_GESTION;
+  FECHA_INICIAL_ACTIVIDAD_GESTION = MENSAJE_TITULO.FECHA_INICIAL_ACTIVIDAD_GESTION;
+  FECHA_INICIAL_PROYECTO = MENSAJE_TITULO.FECHA_INICIAL_PROYECTO;
+  FECHA_FINAL_ACTIVIDAD_GESTION = MENSAJE_TITULO.FECHA_FINAL_ACTIVIDAD_GESTION;
+  FECHA_FINAL_PROYECTO = MENSAJE_TITULO.FECHA_FINAL_PROYECTO;
+  DURACION=  MENSAJE_TITULO.DURACION;
+  DIAS_RESTANTES=  MENSAJE_TITULO.DIAS_RESTANTES;
+  AVANCE_REAL_ACTIVIDAD_GESTION = MENSAJE_TITULO.AVANCE_REAL_ACTIVIDAD_GESTION;
+  AVANCE_REAL_PROYECTO = MENSAJE_TITULO.AVANCE_REAL_PROYECTO;
+  AVANCE_REAL_TAREA = MENSAJE_TITULO.AVANCE_REAL_TAREA;
+  AVANCE_ESPERADO=  MENSAJE_TITULO.AVANCE_ESPERADO;
+  CUMPLIMIENTO=  MENSAJE_TITULO.CUMPLIMIENTO;
+  ACCIONES =  MENSAJE_TITULO.ACCIONES;
+  RESPONSABLE_ACTIVIDAD_GESTION= MENSAJE_TITULO.RESPONSABLE_ACTIVIDAD_GESTION;
+  RESPONSABLE_PROYECTO = MENSAJE_TITULO.RESPONSABLE_PROYECTO;
+  RESPONSABLE_TAREA = MENSAJE_TITULO.RESPONSABLE_TAREA;
+  PERIODICIDAD = MENSAJE_TITULO.PERIODICIDAD_TAREA;
+  ESTADO = MENSAJE_TITULO.ESTADO_TAREA;
+  DESCRIPCION = MENSAJE_TITULO.DESCRIPCION_TAREA;
+  PRESUPUESTO = MENSAJE_TITULO.PRESUPUESTO_PROYECTO;
+  MODALIDAD = MENSAJE_TITULO.MODALIDAD_PROYECTO;
+  VALOR_EJECUTADO = MENSAJE_TITULO.VALOR_EJECUTADO_PROYECTO;
+  PLANEACION = MENSAJE_TITULO.PLANEACION_PROYECTO;
+  TOTAL_SPRINT = MENSAJE_TITULO.TOTAL_SPRINT_PROYECTO;
+
+  esAdmin: boolean = false; 
+  esDirector: boolean = false; 
+  esOperador: boolean = false; // Agrega esta línea
+
   tipoFormulario: 'PROYECTO' | 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA' | 'TAREA' = 'PROYECTO';
   pesoDeArchivo = 300 * 1024 * 1024; // 300 MB
   extencionesPermitidas = /\.(doc|docx|xls|xlsx|ppt|pptx|zip|pdf)$/i;
@@ -123,6 +155,17 @@ export class ActividadListarComponent implements OnInit{
 }
 
 ngOnInit() {
+      // Usar Promise.all para esperar a que todas las promesas se resuelvan
+      Promise.all([
+        this.auth.esAdmin(),
+        this.auth.esDirector(),
+        this.auth.esOperador()
+      ]).then(([esAdmin, esDirector, esOperador]) => {
+        // Asignar los resultados a las propiedades correspondientes
+        this.esAdmin = esAdmin;
+        this.esDirector = esDirector;
+        this.esOperador = esOperador;
+      });
   this.modalidadEnumList= Object.values(EModalidad);
   this.route.params.subscribe(params => {
     this.patNombre = params['patNombre'];

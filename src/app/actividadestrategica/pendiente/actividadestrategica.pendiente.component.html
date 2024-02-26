@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,6 +20,7 @@
       <table class="table table-hover">
         <thead class="table-danger">
           <tr>
+            <th>Programa - PAT</th>
             <th class="column-nombre">Nombre</th>
             <th>Fecha Inicial</th>
             <th>Fecha Final</th>
@@ -31,8 +32,8 @@
         </thead>
         <tbody>
           <ng-container *ngFor="let actividad of actividadesEstrategicasPendientes">
-              <tr (click)="irADetalles(actividad)" 
-              title="{{actividad.nombre}}">
+              <tr (click)="irADetalles(actividad)" title="{{actividad.nombre}}">
+                <td>{{ obtenerNombrePat(actividad.idPat) }}</td>
                 <td>{{ actividad.nombre }}</td>
                 <td>{{ actividad.fechaInicial }}</td>
                 <td>{{ actividad.fechaFinal }}</td>
@@ -41,7 +42,7 @@
                 <span *ngIf="actividad.avance !== 100"[ngClass]="colorDias(actividad.diasRestantes)">{{ actividad.diasRestantes }}</span>
                   <span *ngIf="actividad.avance === 100">Finalizado</span>
                 </td>
-                <td [ngClass]="colorPorcentaje(actividad.avance)">{{ actividad.avance }} %</td>
+                <td [ngClass]="colorPorcentaje(actividad.avance)">{{ actividad.porcentajeReal }} %</td>
                 <td>{{ obtenerNombreUsuario(actividad.idUsuario).toLocaleUpperCase() }}</td>
               </tr>
             </ng-container>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -21,7 +21,7 @@
           </div>
           <div class="responsable-info">
             <h2 title="Porcentaje Actual" ><i class="bi bi-percent tamaño-iconos color-iconoPorcentaje"></i> Porcentaje de avance:</h2>
-            <p [ngClass]="colorPorcentaje(porcentajeRealPat)">{{ porcentajeRealPat | number : '1.2-2' }} %</p>
+            <p [ngClass]="colorPorcentaje(porcentajeRealPat)">{{ porcentajeRealPat | comasPipe  }} %</p>
           </div>
           <div class="responsable-info">
             <h2 title="Año"><i class="bi bi-calendar3 tamaño-iconos color-iconoFechaAnual"></i> Año:</h2>
@@ -38,19 +38,19 @@
           </div>
           <div class="responsable-info">
             <h2 title="Porcentaje Real">Porcentaje Real:</h2>
-            <p [ngClass]="colorPorcentaje(porcentajeRealPat)">{{ porcentajeRealActividadesEstrategica | number : '1.2-2' }} %</p>
+            <p [ngClass]="colorPorcentaje(porcentajeRealPat)">{{ porcentajeRealActividadesEstrategica | comasPipe }} %</p>
           </div>
           <div class="responsable-info">
             <h2 title="Porcentaje Esperado">Porcentaje Esperado: </h2>
-            <p> {{ porcentajeEsperadoActividadesEstrategica | number : '1.2-2'  }} %</p>
+            <p> {{ porcentajeEsperadoActividadesEstrategica | comasPipe }} %</p>
           </div>
           <div class="responsable-info">
             <h2 title="Porcentaje Cumplimiento">Porcentaje Cumplimiento: </h2>
-            <p> {{ porcentajeCumplimientoActividadesEstrategica | number : '1.2-2'  }} %</p>
+            <p> {{ porcentajeCumplimientoActividadesEstrategica | comasPipe }} %</p>
           </div>
           <div class="responsable-info">
             <h2 title="Porcentaje Cumplimiento"> Porcentaje PAT: </h2>
-            <p [ngClass]="colorPorcentaje(porcentajePATActividadesEstrategica)"> {{  porcentajePATActividadesEstrategica | number : '1.2-2' }} %</p>
+            <p [ngClass]="colorPorcentaje(porcentajePATActividadesEstrategica)"> {{  porcentajePATActividadesEstrategica | comasPipe }} %</p>
           </div>
         </div>
         <div class="col-md-4 actividadesyproyectos">
@@ -59,15 +59,15 @@
           </div>
             <div class="responsable-info">
               <h2 title="Porcentaje Real">Porcentaje real: </h2>
-              <p [ngClass]="colorPorcentaje(porcentajeRealPat)">{{ porcentajeRealActividadesYProyectos | number : '1.2-2' }} %</p>
+              <p [ngClass]="colorPorcentaje(porcentajeRealPat)">{{ porcentajeRealActividadesYProyectos | comasPipe }} %</p>
             </div>
             <div class="responsable-info">
               <h2 title="Porcentaje Esperado">Porcentaje Esperado: </h2>
-              <p> {{ porcentajeEsperadoActividadesYProyectos | number : '1.2-2' }} %</p>
+              <p> {{ porcentajeEsperadoActividadesYProyectos | comasPipe }} %</p>
             </div>
             <div class="responsable-info">
               <h2 title="Porcentaje Cumplimiento"> Porcentaje Cumplimiento: </h2>
-              <p> {{ porcentajeCumplimientoActividadesYProyectos | number : '1.2-2' }} %</p>
+              <p> {{ porcentajeCumplimientoActividadesYProyectos | comasPipe }} %</p>
             </div>
         </div>
       </div>
@@ -124,12 +124,12 @@
               <th class="column-avance" title="{{ AVANCE_REAL_ACTIVIDAD_ESTRATEGICA }}">% Avance real</th>
               <th class="column-avance" title="{{ AVANCE_ESPERADO }}">% Avance esperado</th>
               <th class="column-avance" title="{{ CUMPLIMIENTO }}">% Cumplimiento</th>
-              <th class="column-meta" title="Meta ponderada al inicio de la actividad estratégica">Meta (KPI)</th>
-              <th class="column-meta" title="Valor digitado a medida que se va avanzando en la Meta (KPI)">Resultado Meta (KPI)</th>
-              <th class="column-meta" title="División entre Resultado Meta (KPI) y Meta (KPI)">&nbsp;% &nbsp; Meta (KPI)</th>
-              <th class="column-resultado" title="Entregable digitado por el usuario">Entregable</th>
-              <th class="column-meta" title="La suma de: % Cumplimiento multiplicado por 40% y % Meta (KPI) multiplicado por 60%">% PAT</th>
-              <th class="column-responsable" title="Colaborador responsable de la actividad estratégica">Responsable</th>
+              <th class="column-meta" title="{{ META }}">Meta (KPI)</th>
+              <th class="column-meta" title="{{ RESULTADO_META }}">Resultado Meta (KPI)</th>
+              <th class="column-meta" title="{{ PORCENTAJE_META }}">&nbsp;% &nbsp; Meta (KPI)</th>
+              <th class="column-resultado" title="{{ ENTREGABLE }}">Entregable</th>
+              <th class="column-meta" title="{{ PORCENTAJE_PAT  }}">&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;&nbsp; PAT</th>
+              <th class="column-responsable" title="{{ RESPONSABLE_ACTIVIDAD_ESTRATEGICA }}">Responsable</th>
               <th class="column-acciones" title="{{ ACCIONES }}">Acciones</th>
             </tr>
           </thead>
@@ -144,33 +144,35 @@
                       <span *ngIf="actividad.porcentajeReal !== 100"[ngClass]="colorDias(actividad.diasRestantes)">{{ actividad.diasRestantes }}</span>
                       <span *ngIf="actividad.porcentajeReal === 100">Finalizado</span>
                 </td>
-                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" >{{ actividad.porcentajeReal | number : '1.2-2' }} %</td>
-                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" >{{ actividad.porcentajeEsperado | number : '1.2-2' }} %</td>
-                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" [ngClass]="colorPorcentajeDependiendoFechaInicial(actividad.porcentajeCumplimiento, actividad.fechaInicial)">{{ actividad.porcentajeCumplimiento | number : '1.2-2' }} %</td>
-                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat! )" >{{ signoParaMeta(actividad.unidad,actividad.meta) }} <hr> {{ actividad.periodicidadMeta | formatEnum }} </td>
+                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" >{{ actividad.porcentajeReal | comasPipe }} %</td>
+                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" >{{ actividad.porcentajeEsperado | comasPipe }} %</td>
+                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" [ngClass]="colorPorcentajeDependiendoFechaInicial(actividad.porcentajeCumplimiento, actividad.fechaInicial)">{{ actividad.porcentajeCumplimiento | comasPipe }} %</td>
+                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat! )" >{{ signoParaMeta(actividad.unidad, actividad.meta) }} <hr> {{ actividad.periodicidadMeta | formatEnum }} </td>
                 <td data-bs-toggle="modal" data-bs-target="#modalAgregarResultadoMeta" (click)="obtenerActividadEstrategica(actividad.idActividadEstrategica,actividad)">{{ signoParaMeta(actividad.unidad,actividad.resultadoMeta) }} </td>
-                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" [ngClass]="colorPorcentajeDependiendoFechaInicial(actividad.promedioMeta, actividad.fechaInicial)">{{ actividad.promedioMeta | number : '1.2-2' }} %</td>
+                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" [ngClass]="colorPorcentajeDependiendoFechaInicial(actividad.promedioMeta, actividad.fechaInicial)">{{ actividad.promedioMeta | comasPipe }} %</td>
                 <td data-bs-toggle="modal" data-bs-target="#modalAgregarEntregable" (click)="obtenerActividadEstrategica(actividad.idActividadEstrategica,actividad)">{{ actividad.entregable }}</td>
-                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" [ngClass]="colorPorcentaje(actividad.porcentajePat)">{{ actividad.porcentajePat | number : '1.2-2' }} %</td>
+                <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)" [ngClass]="colorPorcentaje(actividad.porcentajePat)">{{ actividad.porcentajePat | comasPipe }} %</td>
                 <td [routerLink]="siguienteRuta(actividad.idActividadEstrategica,nombrePat!)"> {{ obtenerNombreUsuario(actividad.idUsuario) }}</td>
                 <td >
-                    <button title="Modificar" type="button" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalModificar" (click)="obtenerActividadEstrategica(actividad.idActividadEstrategica,actividad)">
+                    <button title="Modificar" type="button" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalModificar" 
+                    (click)="obtenerActividadEstrategica(actividad.idActividadEstrategica,actividad)" *ngIf="esAdmin">
                       <i class="bi bi-pen-fill"></i>
                     </button>
-                  <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" (click)="eliminarActividadesEstrategica(actividad.idActividadEstrategica)">
+                  <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" (click)="eliminarActividadesEstrategica(actividad.idActividadEstrategica)" *ngIf="esAdmin">
                     <i class="bi bi-trash3-fill"></i>
                   </button>
                   <button title="Agregar documento" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#agregarDocumentoActividadEstrategica"
-                  (click)="abrirModalAgregarDocumento(actividad.idActividadEstrategica,'ACTIVIDAD_ESTRATEGICA')"
+                  (click)="abrirModalAgregarDocumento(actividad.idActividadEstrategica,'ACTIVIDAD_ESTRATEGICA')" *ngIf="esAdmin || esOperador"
                       ><i class="bi bi-folder-plus"></i>
                     </button>
-                  <button title="Ver documento" class="btn btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#modalVerDocumentos" 
+                  <button title="Ver documento" class="btn btn-outline-primary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalVerDocumentos" 
                   (click)="obtenerDocumento(actividad.idActividadEstrategica,'ACTIVIDAD_ESTRATEGICA')">            
                     <i class="bi bi-file-earmark-check"></i></button>
-                  <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerActividadEstrategica(actividad.idActividadEstrategica,actividad)">
+                  <button title="Agregar Observación" class="btn btn-outline-success me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" 
+                  (click)="obtenerActividadEstrategica(actividad.idActividadEstrategica,actividad)" *ngIf="esAdmin || esOperador">
                     <i class="bi bi-node-plus-fill"></i>
                   </button>
-                  <button title="Ver observación" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(actividad.idActividadEstrategica,'ACTIVIDAD_ESTRATEGICA')">
+                  <button title="Ver observación" class="btn btn-outline-dark me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(actividad.idActividadEstrategica,'ACTIVIDAD_ESTRATEGICA')">
                     <i class="bi bi-eye-fill"></i>
                   </button>
                 </td>
@@ -211,34 +213,38 @@
                   </div>
                   <div class="col-md-1" title="{{ AVANCE_REAL_GESTION_AREA }}">
                     <h6>&nbsp;&nbsp;% Avance&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; real</h6>
-                    {{ gestion.porcentajeReal | number : '1.2-2' }} %
+                    {{ gestion.porcentajeReal | comasPipe }} %
                   </div>
                   <div class="col-md-1" title="{{ AVANCE_ESPERADO }}">
                     <h6>% Avance esperado</h6>
-                    {{ gestion.porcentajeEsperado | number : '1.2-2' }} %
+                    {{ gestion.porcentajeEsperado | comasPipe }} %
                   </div>
                   <div class="col-md-1" title="{{ CUMPLIMIENTO }}"
                   [ngClass]="colorPorcentajeDependiendoFechaInicial(gestion.porcentajeCumplimiento,gestion.fechaInicial)">
                     <h6>&nbsp;%&nbsp;&nbsp; Cumplimiento</h6>
-                    {{ gestion.porcentajeCumplimiento | number : '1.2-2' }} %
+                    {{ gestion.porcentajeCumplimiento | comasPipe }} %
                   </div>
-                  <div class="col-md-2">
+                  <div class="col-md-2" title="{{ RESPONSABLE_GESTION_AREA }}">
                     <h6>Usuario</h6>
                     {{ obtenerNombreUsuario(gestion.idUsuario) }}
                   </div>
                   <div class="col-md-3" title="{{ ACCIONES }}">
-                    <button title="Modificar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarGestion" (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)">
+                    <button title="Modificar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarGestion" 
+                    (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)" *ngIf="esAdmin || esOperador">
                       <i class="bi bi-pen-fill"></i>
                     </button>
-                  <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarGestion(gestion.idActividadGestion)"><i class="bi bi-trash3-fill"></i></button>
+                  <button title="Eliminar" class="btn btn-outline-danger me-1" 
+                  (click)="eliminarGestion(gestion.idActividadGestion)" *ngIf="esAdmin || esOperador"><i class="bi bi-trash3-fill" 
+                  ></i></button>
                   <button title="Agregar documento" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#agregarDocumento"
-                  (click)="abrirModalAgregarDocumento(gestion.idActividadGestion,'ACTIVIDAD_GESTION')"
+                  (click)="abrirModalAgregarDocumento(gestion.idActividadGestion,'ACTIVIDAD_GESTION')" *ngIf="esAdmin || esOperador"
                       ><i class="bi bi-folder-plus"></i>
                     </button>
                   <button title="Ver documento" class="btn btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#modalVerDocumentos" 
                   (click)="obtenerDocumento(gestion.idActividadGestion,'ACTIVIDAD_GESTION')">            
                     <i class="bi bi-file-earmark-check"></i></button>
-                    <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)">
+                    <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" 
+                    (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)" *ngIf="esAdmin || esOperador">
                       <i class="bi bi-node-plus-fill"></i></button>
                     <button title="Ver observación" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(gestion.idActividadGestion,'ACTIVIDAD_GESTION')"><i class="bi bi-eye-fill"></i></button>
                 </div>   
@@ -250,10 +256,10 @@
                 <table class="table table-sm">
                   <thead class="table-active">
                     <tr>
-                      <th class="column-nombreTarea">Nombre</th>
-                      <th class="column-periodicidad">Periodicidad</th>
+                      <th class="column-nombreTarea" title="{{ NOMBRE_TAREA }}">Nombre</th>
+                      <th class="column-periodicidad" title="{{ PERIODICIDAD }}">Periodicidad</th>
                       <th>
-                        <div class="column-estado">
+                        <div class="column-estado" title="{{ ESTADO }}">
                           <span>Estado</span>
                           <div class="d-flex">
                             <div class="col">
@@ -271,9 +277,9 @@
                           </div>
                         </div>
                       </th>
-                      <th class="column-porcentaje">Porcentaje</th>
-                      <th class="column-descripcion">Descripción</th>
-                      <th class="column-responsableTarea">Responsable</th>
+                      <th class="column-porcentaje" title="{{ AVANCE_REAL_TAREA }}">Porcentaje</th>
+                      <th class="column-descripcion" title="{{ DESCRIPCION }}">Descripción</th>
+                      <th class="column-responsableTarea" title="{{ RESPONSABLE_TAREA }}">Responsable</th>
                       <th class="column-accionesTarea" title="{{ ACCIONES }}">Acciones </th>
                       <th class="column-crear"><button title="Crear" class="btn btn-success me-1" data-bs-toggle="modal" data-bs-target="#modalCreartarea" 
                         (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)"
@@ -308,11 +314,14 @@
                         <td>{{ tarea.descripcion }}</td>
                         <td>{{ obtenerNombreUsuario(tarea.idUsuario) }}</td>
                         <td>
-                          <button title="Modificar Tarea" class="btn btn-outline-secondary me-1"  data-bs-toggle="modal" data-bs-target="#modalModificarTarea"(click)="obtenerTareaAModificar(tarea.idTarea,tarea)"><i class="bi bi-pencil-square"></i></button>
-                          <button title="Modificar estado" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarEstado" (click)="obtenerTarea(tarea.idTarea,tarea)"
+                          <button title="Modificar Tarea" class="btn btn-outline-secondary me-1"  data-bs-toggle="modal" data-bs-target="#modalModificarTarea"
+                          (click)="obtenerTareaAModificar(tarea.idTarea,tarea)" *ngIf="esAdmin || esOperador"><i class="bi bi-pencil-square"></i></button>
+                          <button title="Modificar estado" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarEstado" 
+                          (click)="obtenerTarea(tarea.idTarea,tarea)" *ngIf="esAdmin || esOperador"
                           ><i class="bi bi-pen-fill"></i></button>
-                          <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarTarea(tarea.idTarea,gestion.idActividadGestion)" ><i class="bi bi-trash3-fill"></i></button>
-                          <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerTarea(tarea.idTarea,tarea)">
+                          <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarTarea(tarea.idTarea,gestion.idActividadGestion)" *ngIf="esAdmin || esOperador"><i class="bi bi-trash3-fill"></i></button>
+                          <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" 
+                          (click)="obtenerTarea(tarea.idTarea,tarea)" *ngIf="esAdmin || esOperador">
                             <i class="bi bi-node-plus-fill"></i></button>
                           <button title="Ver observación" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(tarea.idTarea,'TAREA')"><i class="bi bi-eye-fill"></i></button>
                         </td>
@@ -332,17 +341,17 @@
           <thead class="table table-color">
             <tr>
               <th class="column-nombre" title="{{ NOMBRE_PROYECTO_AREA }}">Nombre</th>
-              <th class="column-presupuesto">Presupuesto</th>
-              <th class="column-modalidad">Modalidad</th>
-              <th class="column-presupuesto">Valor Ejecutado</th>
+              <th class="column-presupuesto" title="{{ PRESUPUESTO }}">Presupuesto</th>
+              <th class="column-modalidad" title="{{ MODALIDAD }}">Modalidad</th>
+              <th class="column-presupuesto" title="{{ VALOR_EJECUTADO }}">Valor Ejecutado</th>
               <th class="column-fecha" title="{{ FECHA_INICIAL_PROYECTO_AREA }}">Fecha inicial</th>
               <th class="column-fecha" title="{{ FECHA_FINAL_PROYECTO_AREA }}">&nbsp; Fecha &nbsp; Final</th>
               <th class="column-duracion" title="{{ DURACION }}">Duracion (Días)</th>
               <th class="column-avance" title="{{ AVANCE_REAL_PROYECTO_AREA }}">% Avance real</th>
               <th class="column-avance" title="{{ AVANCE_ESPERADO }}">% Avance esperado</th>
               <th class="column-avance" title="{{ CUMPLIMIENTO }}">% Cumplimiento</th>
-              <th class="column-planeacion">Planeación Sprint</th>
-              <th class="column-totalsprint">Total sprint</th>
+              <th class="column-planeacion" title="{{ PLANEACION }}">Planeación Sprint</th>
+              <th class="column-totalsprint" title="{{ TOTAL_SPRINT }}">Total sprint</th>
               <th class="column-acciones" title="{{ ACCIONES }}">Acciones</th>
             </tr>
           </thead>
@@ -364,28 +373,32 @@
                 <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprintProyectoArea', proyecto.idProyectoArea, 'pat', nombrePat] } }]">
                       {{ proyecto.duracion }}</td>
                 <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprintProyectoArea', proyecto.idProyectoArea, 'pat', nombrePat] } }]" 
-                      >{{ proyecto.porcentajeReal  | number : '1.2-2'  }} %</td>
+                      >{{ proyecto.porcentajeReal  | comasPipe }} %</td>
                 <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprintProyectoArea', proyecto.idProyectoArea, 'pat', nombrePat] } }]" 
-                      >{{ proyecto.porcentajeEsperado | number : '1.2-2'  }} %</td> 
+                      >{{ proyecto.porcentajeEsperado | comasPipe }} %</td> 
                 <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprintProyectoArea', proyecto.idProyectoArea, 'pat', nombrePat] } }]" 
-                      [ngClass]="colorPorcentajeDependiendoFechaInicial(proyecto.porcentajeCumplimiento ,proyecto.fechaInicial)">{{ proyecto.porcentajeCumplimiento | number : '1.2-2'  }} %</td>     
+                      [ngClass]="colorPorcentajeDependiendoFechaInicial(proyecto.porcentajeCumplimiento ,proyecto.fechaInicial)">{{ proyecto.porcentajeCumplimiento | comasPipe }} %</td>     
                 <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprintProyectoArea', proyecto.idProyectoArea, 'pat', nombrePat] } }]">
                       {{ proyecto.planeacionSprint | formatEnum }}</td>
                 <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprintProyectoArea', proyecto.idProyectoArea , 'pat', nombrePat] } }]">
                       {{ proyecto.totalSprint }}</td>
                 <td>
-                  <button title="Modificar" type="button" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalModificarProyecto" (click)="obtenerProyectoArea(proyecto.idProyectoArea,proyecto)">
+                  <button title="Modificar" type="button" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalModificarProyecto" 
+                  (click)="obtenerProyectoArea(proyecto.idProyectoArea,proyecto)" *ngIf="esAdmin || esOperador">
                       <i class="bi bi-pen-fill"></i>
                   </button>
-                  <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" (click)="eliminarProyectoArea(proyecto.idProyectoArea)"><i class="bi bi-trash3-fill"></i></button>
+                  <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" 
+                  (click)="eliminarProyectoArea(proyecto.idProyectoArea)" *ngIf="esAdmin || esOperador"
+                  ><i class="bi bi-trash3-fill"></i></button>
                   <button title="Agregar documento" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#agregarDocumentoProyectoArea"
-                  (click)="abrirModalAgregarDocumento(proyecto.idProyectoArea,'PROYECTO_AREA')"
+                  (click)="abrirModalAgregarDocumento(proyecto.idProyectoArea,'PROYECTO_AREA')" *ngIf="esAdmin || esOperador"
                       ><i class="bi bi-folder-plus"></i>
                     </button>
                   <button title="Ver documento" class="btn btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#modalVerDocumentos" 
                   (click)="obtenerDocumento(proyecto.idProyectoArea,'PROYECTO_AREA')">            
                     <i class="bi bi-file-earmark-check"></i></button>
-                  <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerProyectoArea(proyecto.idProyectoArea,proyecto)">
+                  <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" 
+                  (click)="obtenerProyectoArea(proyecto.idProyectoArea,proyecto)" *ngIf="esAdmin || esOperador">
                     <i class="bi bi-node-plus-fill"></i>
                   </button>
                   <button title="Ver observación" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(proyecto.idProyectoArea,'PROYECTO_AREA')">
@@ -715,13 +728,13 @@
             <div class="form-floating">
               <input type="date" id="fecha" [class.is-invalid]="fechaVacio" class="form-control mb-2" formControlName="fecha" readonly>
               <label for="fecha"  class="form-label">Fecha</label>
-              <small *ngIf="fechaVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
+              <small *ngIf="fechaVacio" class="text-danger">{{ CAMPO_OBLIGATORIO }}</small>
             </div>
             <div class="form-floating">
               <input type="text" id="nombre" [class.is-invalid]="nombreObservacionVacio" class="form-control form-control-lg" formControlName="nombre"
                placeholder="Nombre">
               <label class="form-label" for="nombre">Nombre<span class="required-field">*</span></label>
-              <small *ngIf="nombreObservacionVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
+              <small *ngIf="nombreObservacionVacio" class="text-danger">{{ CAMPO_OBLIGATORIO }}</small>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -893,7 +906,7 @@
             <div class="form-floating mb-2">
               <input type="text" id="nombre" [class.is-invalid]="nombreVacio" class="form-control" formControlName="nombre" placeholder="nombre">
               <label class="form-label" for="nombre">Nombre<span class="required-field">*</span></label>
-              <small *ngIf="nombreVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
+              <small *ngIf="nombreVacio" class="text-danger">{{ CAMPO_OBLIGATORIO }}</small>
             </div>
             <div class="form-floating mb-2">
               <select class="form-select" id="periodicidad" [class.is-invalid]="periodicidadVacio" formControlName="periodicidad" >
@@ -901,12 +914,12 @@
                   <option *ngFor="let periodicidad of periodiciadLista" [value]="periodicidad"  >{{ periodicidad | formatEnum}}</option>
               </select>
               <label for="periodicidad" placeholder="periodicidad">Periodicidad<span class="required-field">*</span></label>
-              <small *ngIf="periodicidadVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
+              <small *ngIf="periodicidadVacio" class="text-danger">{{ CAMPO_OBLIGATORIO }}</small>
             </div> 
             <div class="form-floating mb-2">
               <input type="text" id="descripcion" [class.is-invalid]="descripcionVacio" class="form-control" formControlName="descripcion" placeholder="descripcion">
               <label for="descripcion" class="form-label">Descripcion<span class="required-field">*</span></label>
-              <small *ngIf="descripcionVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
+              <small *ngIf="descripcionVacio" class="text-danger">{{ CAMPO_OBLIGATORIO }}</small>
             </div>
             <div class="form-floating mb-2">
               <select class="form-select" id="idUsuario" formControlName="idUsuario">
@@ -914,7 +927,7 @@
                   <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario">{{ usuario.nombre + ' ' + usuario.apellidos | formatEnum }}</option>
               </select>
               <label for="idUsuario" placeholder="idUsuario">Responsable:<span class="required-field">*</span></label>
-              <small *ngIf="idUsuarioVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
+              <small *ngIf="idUsuarioVacio" class="text-danger">{{ CAMPO_OBLIGATORIO }}</small>
           </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

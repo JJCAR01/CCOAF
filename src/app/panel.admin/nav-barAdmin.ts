@@ -1,5 +1,3 @@
-
-
 export const navbarAdminData = [
     {
         routeLink: 'listarPat',
@@ -7,7 +5,7 @@ export const navbarAdminData = [
         label: 'Plan Anual de trabajo'
     },
     {
-        routeLink: 'dashboard',
+        //routeLink: 'dashboard',
         imageSource: 'assets/dashboard.png',
         label: 'Dashboard'
     },
@@ -30,6 +28,11 @@ export const navbarAdminData = [
         routeLink: 'listarProyectosPendiente',
         imageSource: 'assets/proyectoadvertencia.png',
         label: 'Proyectos pendientes'
+    },
+    {
+        routeLink: 'listarProyectosPendiente',
+        imageSource: 'assets/calendario.png',
+        label: 'Histórico'
     },
     {
             isSeparator: true

@@ -7,6 +7,7 @@ import { TipoGEService } from 'src/app/gestion/services/tipoGE.service';
 import { UsuarioService } from 'src/app/usuario/services/usuario.service';
 import { PatService } from 'src/app/pat/services/pat.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Pat } from 'src/app/modelo/pat';
 
 @Component({
   selector: 'app-actividadestrategica.listar',
@@ -19,6 +20,7 @@ export class ActividadEstrategicaPendienteListarComponent implements OnInit {
   patNombre:string|undefined;
   actividadesEstrategicasPendientes: any[] = [];
   usuarios:any[] = [];
+  pats : Pat[] = [];
 
   constructor(private tipoService: TipoGEService,
     private auth: AuthService,
@@ -30,21 +32,33 @@ export class ActividadEstrategicaPendienteListarComponent implements OnInit {
 
     ngOnInit(): void {
       this.cargarUsuario();
-    
+      this.cargarPats();
       this.patService.getPatsData().subscribe((patsData: any[]) => {
         if (patsData && patsData.length > 0) {
           // Obtener los IDs de los Pats
           const idsPats = patsData.map(pat => pat.idPat);
-    
-          // Iterar sobre los IDs de Pats y cargar las actividades estratégicas
+          // Lista acumulativa para almacenar todas las actividades estratégicas pendientes
+          const allActividadesPendientes: any[] = [];
+          // Iterar sobre los IDs de Pats y cargar las actividades estratégicas pendientes
           for (const idPat of idsPats) {
             this.tipoService.listarActividadEstrategicaPorIdPat(idPat, this.auth.obtenerHeader())
-              .subscribe((data: any) => {
-                this.actividadesEstrategicasPendientes = data.filter((pendiente: any) => pendiente.avance < 100);
-              });
+              .toPromise()
+              .then(
+                (data: any) => {
+                  // Filtrar las actividades estratégicas pendientes
+                  const actividadesPendientes = data.filter((pendiente: any) => pendiente.porcentajeReal < 100);
+                  // Agregar las actividades pendientes a la lista acumulativa
+                  allActividadesPendientes.push(...actividadesPendientes);
+                  // Si es la última iteración, asignar las actividades acumuladas a this.actividadesEstrategicasPendientes
+                  if (idPat === idsPats[idsPats.length - 1]) {
+                    this.actividadesEstrategicasPendientes = allActividadesPendientes;
+                  }
+                }
+              );
           }
         }
       });
+  
     }
     
 
@@ -55,9 +69,6 @@ export class ActividadEstrategicaPendienteListarComponent implements OnInit {
         const patNombre = data.nombre;
         // Navega a la página de detalles con el nombre asociado al idPat
         this.router.navigate(['/panel', { outlets: { 'OutletAdmin': ['listarActividad', actividad.idActividadEstrategica, 'pat', patNombre] } }]);
-      },
-      (error) => {
-        console.error('Error al obtener el nombre del PAT:', error);
       }
     );
   }
@@ -66,15 +77,21 @@ export class ActividadEstrategicaPendienteListarComponent implements OnInit {
     this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
         this.usuarios = data;
-    },
-      (error) => {
-        console.log(error);
-      }
-    );
+    })
+  }
+  cargarPats() {
+    this.patService.listarPat(this.auth.obtenerHeader()).subscribe(
+      (data: any) => {
+        this.pats = data;
+    })
   }
   obtenerNombreUsuario(idUsuario: number) {
     const usuario = this.usuarios.find((u) => u.idUsuario === idUsuario);
     return usuario ? usuario.nombre + " " + usuario.apellidos : '';
+  }
+  obtenerNombrePat(idPat: number) {
+    const pat = this.pats.find((u) => u.idPat === idPat);
+    return pat ? pat.nombre : '';
   }
 
   colorPorcentaje(porcentaje: number): string {

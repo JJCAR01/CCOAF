@@ -13,6 +13,7 @@ import { Proceso } from '../../modelo/proceso';
 import { Usuario } from 'src/app/modelo/usuario';
 import { ObservacionPat } from 'src/app/modelo/observacionpat';
 import { Pat } from 'src/app/modelo/pat';
+import { MENSAJE_TITULO } from 'src/app/mensaje/mensajetitulo';
 
 
 @Component({
@@ -22,7 +23,21 @@ import { Pat } from 'src/app/modelo/pat';
 })
 export class PatListarComponent implements OnInit{
   title = 'listarPat';
-  ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
+  CAMPO_OBLIGATORIO = MENSAJE_TITULO.CAMPO_OBLIGATORIO;
+  NOMBRE_PAT = MENSAJE_TITULO.NOMBRE_PROGRAMA;
+  FECHA_ANUAL = MENSAJE_TITULO.FECHA_ANUAL_PAT;
+  DIRECCION = MENSAJE_TITULO.DIRECCION;
+  AVANCE_REAL_PAT = MENSAJE_TITULO.AVANCE_REAL_PAT;
+  AVANCE_ESPERADO=  MENSAJE_TITULO.AVANCE_ESPERADO;
+  CUMPLIMIENTO=  MENSAJE_TITULO.CUMPLIMIENTO;
+  AVANCE_PAT = MENSAJE_TITULO.AVANCE_PAT;
+  ACCIONES =  MENSAJE_TITULO.ACCIONES;
+  RESPONSABLE = MENSAJE_TITULO.RESPONSABLE_PAT;
+
+  esAdmin: boolean = false; 
+  esDirector: boolean = false; 
+  esOperador: boolean = false; // Agrega esta línea
+
   idPatSeleccionado: number | 0 = 0;
   nombrePatSeleccionado: string | undefined;
   fechaAnualSeleccionada: number | 0 = 0;
@@ -75,9 +90,22 @@ export class PatListarComponent implements OnInit{
     }  
 
     ngOnInit() {
-      this.cargarPats();
-      this.cargarUsuario();
-      this.cargarDirecciones();
+      // Usar Promise.all para esperar a que todas las promesas se resuelvan
+      Promise.all([
+        this.auth.esAdmin(),
+        this.auth.esDirector(),
+        this.auth.esOperador()
+      ]).then(([esAdmin, esDirector, esOperador]) => {
+        // Asignar los resultados a las propiedades correspondientes
+        this.esAdmin = esAdmin;
+        this.esDirector = esDirector;
+        this.esOperador = esOperador;
+
+        // Una vez que se hayan obtenido los roles del usuario, cargar los datos
+        this.cargarPats();
+        this.cargarUsuario();
+        this.cargarDirecciones();
+      });
     }
     cargarUsuario() {
       this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
@@ -101,7 +129,7 @@ export class PatListarComponent implements OnInit{
       )
     } 
 
-    cargarPats() {
+    async cargarPats() {
       this.patService.listarPat(this.auth.obtenerHeader()).toPromise().then(
         (data: any) => {
           // Obtener el token
@@ -124,7 +152,6 @@ export class PatListarComponent implements OnInit{
 
           // Filtrar los datos según las direcciones y procesos del payload
           const patsFiltrados = data.filter((d: any) => {
-            console.log(tipoUsuario)
             if( d.fechaAnual === this.obtenerAnual()){
               if (tipoUsuario === 'ADMIN') {
                 return true;

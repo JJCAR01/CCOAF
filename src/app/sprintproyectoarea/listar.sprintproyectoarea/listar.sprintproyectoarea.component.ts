@@ -14,6 +14,7 @@ import { environment } from 'src/environments/environment.development';
 import Swal from 'sweetalert2';
 import { ServicesSprintProyectoAreaService } from '../services/services.sprintproyectoarea.service';
 import { TipoGEService } from 'src/app/gestion/services/tipoGE.service';
+import { MENSAJE_TITULO } from 'src/app/mensaje/mensajetitulo';
 
 @Component({
   selector: 'app-listar.sprintproyectoarea',
@@ -22,7 +23,25 @@ import { TipoGEService } from 'src/app/gestion/services/tipoGE.service';
 })
 export class ListarSprintproyectoareaComponent implements OnInit  {
   title = 'listarSprintProyectoArea';
-  ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
+  CAMPO_OBLIGATORIO = MENSAJE_TITULO.CAMPO_OBLIGATORIO;
+  NOMBRE_SPRINT = MENSAJE_TITULO.NOMBRE_SPRINT_PROYECTO_AREA;
+  NOMBRE_TAREA = MENSAJE_TITULO.NOMBRE_TAREA_SPRINT_PROYECTO_AREA;
+  FECHA_INICIAL_SPRINT = MENSAJE_TITULO.FECHA_INICIAL_SPRINT_PROYECTO_AREA;
+  FECHA_FINAL_SPRINT = MENSAJE_TITULO.FECHA_FINAL_SPRINT_PROYECTO_AREA;
+  AVANCE_REAL_SPRINT = MENSAJE_TITULO.AVANCE_REAL_SPRINT;
+  AVANCE_REAL_TAREA = MENSAJE_TITULO.AVANCE_REAL_TAREA;
+  AVANCE_ESPERADO=  MENSAJE_TITULO.AVANCE_ESPERADO;
+  CUMPLIMIENTO=  MENSAJE_TITULO.CUMPLIMIENTO;
+  ACCIONES =  MENSAJE_TITULO.ACCIONES;
+  RESPONSABLE_TAREA = MENSAJE_TITULO.RESPONSABLE_TAREA;
+  PERIODICIDAD = MENSAJE_TITULO.PERIODICIDAD_TAREA;
+  ESTADO = MENSAJE_TITULO.ESTADO_TAREA;
+  DESCRIPCION = MENSAJE_TITULO.DESCRIPCION_TAREA;
+
+  esAdmin: boolean = false; 
+  esDirector: boolean = false; 
+  esOperador: boolean = false; // Agrega esta línea
+
   tipoFormulario: 'SPRINT_PROYECTO_AREA' | 'TAREA' = 'SPRINT_PROYECTO_AREA';
   pesoDeArchivo = 300 * 1024 * 1024; // 300 MB
   extencionesPermitidas = /\.(doc|docx|xls|xlsx|ppt|pptx|zip|pdf)$/i;
@@ -103,6 +122,17 @@ export class ListarSprintproyectoareaComponent implements OnInit  {
     });
   }
   ngOnInit() {
+          // Usar Promise.all para esperar a que todas las promesas se resuelvan
+          Promise.all([
+            this.auth.esAdmin(),
+            this.auth.esDirector(),
+            this.auth.esOperador()
+          ]).then(([esAdmin, esDirector, esOperador]) => {
+            // Asignar los resultados a las propiedades correspondientes
+            this.esAdmin = esAdmin;
+            this.esDirector = esDirector;
+            this.esOperador = esOperador;
+          });
     // Obtén el valor de idPat de la URL
     this.route.params.subscribe(params => {
       this.patNombre = params['patNombre'];

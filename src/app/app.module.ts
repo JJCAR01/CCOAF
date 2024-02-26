@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule, Routes } from '@angular/router';
 
@@ -104,6 +104,7 @@ import { NgxCaptchaModule } from 'ngx-captcha';
     { provide: 'CookieService', useClass: CookieService },
     LoginGuard,
     { provide: FIREBASE_OPTIONS, useValue: environment.firebase },
+     { provide: LOCALE_ID, useValue: 'es' } 
   ],
   bootstrap: [AppComponent]
 })

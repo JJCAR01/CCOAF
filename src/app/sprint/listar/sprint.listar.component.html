@@ -23,7 +23,7 @@
       </div> 
         <div class="responsable-info">
           <h3 title="Porcentaje Actual" ><i class="bi bi-percent me-1 color-iconoPorcentaje"></i>Porcentaje actual:</h3>
-          <p [ngClass]="colorPorcentaje(proyectoPorcentaje)">{{ proyectoPorcentaje | number : '1.2-2' }} %</p>                                                               
+          <p [ngClass]="colorPorcentaje(proyectoPorcentaje)">{{ proyectoPorcentaje | comasPipe }} %</p>                                                               
         </div>
         <div class="responsable-info">
           <h3 title="Responsble"><i class="bi bi-person-circle me-1 color-iconoResponsable"></i>Responsable:</h3>
@@ -62,41 +62,44 @@
             <h5 class="nombre-gestion" >{{ sprint.descripcion }}</h5>
             <div class="card-body" title="{{sprint.descripcion}}">
               <div class="row justify-content-center">
-                <div class="col-md-1">
+                <div class="col-md-1" title="Numero de sprint">
                   <h6>N°</h6>{{ i + 1 }}</div>
-                <div class="col-md-1">
+                <div class="col-md-1" title="{{ FECHA_INICIAL_SPRINT }}">
                   <h6>Fecha Inicial</h6>
                   {{ sprint.fechaInicial }}
                 </div>
-                <div class="col-md-1">
+                <div class="col-md-1" title="{{ FECHA_FINAL_SPRINT }}">
                   <h6>Fecha Final</h6>
                   {{ sprint.fechaFinal }}
                 </div>
-                <div class="col-md-1" >
+                <div class="col-md-1" title="{{ AVANCE_REAL_SPRINT }}">
                   <h6>&nbsp;&nbsp;% Avance&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; real</h6>
-                  {{ sprint.porcentajeReal | number : '1.2-2' }} %
+                  {{ sprint.porcentajeReal | comasPipe }} %
                 </div>
-                <div class="col-md-1" >
+                <div class="col-md-1" title="{{ AVANCE_ESPERADO }}">
                   <h6>% Avance esperado</h6>
-                  {{ sprint.porcentajeEsperado | number : '1.2-2' }} %
+                  {{ sprint.porcentajeEsperado | comasPipe }} %
                 </div>
-                <div class="col-md-1" [ngClass]="colorPorcentajeDependiendoFechaInicial(sprint.porcentajeCumplimiento,sprint.fechaInicial)">
+                <div class="col-md-1" [ngClass]="colorPorcentajeDependiendoFechaInicial(sprint.porcentajeCumplimiento,sprint.fechaInicial)" title="{{ CUMPLIMIENTO }}">
                   <h6>&nbsp;%&nbsp;&nbsp; Cumplimiento</h6>
-                  {{ sprint.porcentajeCumplimiento | number : '1.2-2' }} %
+                  {{ sprint.porcentajeCumplimiento | comasPipe }} %
                 </div>
                 <div class="col-md-3">
-                  <button title="Modificar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modificarSprint" (click)="obtenerSprint(sprint.idSprint,sprint)">
+                  <button title="Modificar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modificarSprint" 
+                  (click)="obtenerSprint(sprint.idSprint,sprint)" *ngIf="esAdmin || esOperador">
                     <i class="bi bi-pen-fill"></i>
                   </button>
-                  <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarSprint(sprint.idSprint)"><i class="bi bi-trash3-fill"></i></button>
+                  <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarSprint(sprint.idSprint)" *ngIf="esAdmin || esOperador"
+                  ><i class="bi bi-trash3-fill"></i></button>
                   <button title="Agregar documento" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#agregarDocumento"
-                  (click)="abrirModalAgregarDocumento(sprint.idSprint)"
+                  (click)="abrirModalAgregarDocumento(sprint.idSprint)" *ngIf="esAdmin || esOperador"
                       ><i class="bi bi-folder-plus"></i>
                     </button>
                   <button title="Ver documento" class="btn btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#modalVerDocumentos" 
                   (click)="obtenerDocumento(sprint.idSprint)">            
                     <i class="bi bi-file-earmark-check"></i></button>
-                    <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerSprint(sprint.idSprint,sprint)">
+                    <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" 
+                    (click)="obtenerSprint(sprint.idSprint,sprint)" *ngIf="esAdmin || esOperador">
                       <i class="bi bi-node-plus-fill"></i></button>
                     <button title="Ver observación" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(sprint.idSprint,'SPRINT')">
                       <i class="bi bi-eye-fill"></i></button>
@@ -113,10 +116,10 @@
               <table class="table table-sm">
                 <thead class="table-active">
                   <tr>
-                    <th class="column-nombreTarea">Nombre</th>
-                    <th class="column-periodicidad">Periodicidad</th>
+                    <th class="column-nombreTarea" title="{{ NOMBRE_TAREA }}">Nombre</th>
+                    <th class="column-periodicidad" title="{{ PERIODICIDAD }}">Periodicidad</th>
                     <th>
-                      <div class="d-flex flex-column">
+                      <div class="d-flex flex-column" title="{{ ESTADO }}">
                         <span>Estado</span>
                         <div class="d-flex">
                           <div class="col">
@@ -134,10 +137,10 @@
                         </div>
                       </div>
                     </th>
-                    <th class="column-porcentaje">Porcentaje</th>
-                    <th class="column-descripcion">Descripción</th>
-                    <th class="column-responsableTarea">Responsable</th>
-                    <th class="column-accionesTarea">Acciones </th>
+                    <th class="column-porcentaje" title="{{ AVANCE_REAL_TAREA }}">Porcentaje</th>
+                    <th class="column-descripcion" title="{{ DESCRIPCION }}">Descripción</th>
+                    <th class="column-responsableTarea" title="{{ RESPONSABLE_TAREA }}">Responsable</th>
+                    <th class="column-accionesTarea" title="{{ ACCIONES }}">Acciones </th>
                       <th class="column-crear"><button title="Crear" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalCreartarea" (click)="obtenerSprint(sprint.idSprint,sprint)"
                         ><i class="bi bi-plus-lg"></i></button></th>
                   </tr>
@@ -170,11 +173,15 @@
                         <td>{{ tarea.descripcion }}</td>
                         <td>{{ obtenerNombreUsuario(tarea.idUsuario) }}</td>
                         <td>
-                          <button title="Modificar Tarea" class="btn btn-outline-secondary me-1"  data-bs-toggle="modal" data-bs-target="#modalModificarTarea"(click)="obtenerTareaAModificar(tarea.idTarea,tarea)"><i class="bi bi-pencil-square"></i></button>
-                          <button title="Modificar estado" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarEstado" (click)="obtenerTarea(tarea.idTarea,tarea)"
+                          <button title="Modificar Tarea" class="btn btn-outline-secondary me-1"  data-bs-toggle="modal" data-bs-target="#modalModificarTarea"
+                          (click)="obtenerTareaAModificar(tarea.idTarea,tarea)" *ngIf="esAdmin || esOperador"><i class="bi bi-pencil-square"></i></button>
+                          <button title="Modificar estado" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarEstado" 
+                          (click)="obtenerTarea(tarea.idTarea,tarea)" *ngIf="esAdmin || esOperador"
                           ><i class="bi bi-pen-fill"></i></button>
-                          <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarTarea(tarea.idTarea, sprint.idSprint)"><i class="bi bi-trash3-fill"></i></button>
-                          <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" (click)="obtenerTarea(tarea.idTarea,tarea)"><i class="bi bi-node-plus-fill"></i></button>
+                          <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarTarea(tarea.idTarea, sprint.idSprint)" *ngIf="esAdmin || esOperador"
+                          ><i class="bi bi-trash3-fill"></i></button>
+                          <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion"
+                           (click)="obtenerTarea(tarea.idTarea,tarea)" *ngIf="esAdmin || esOperador"><i class="bi bi-node-plus-fill"></i></button>
                           <button title="Ver observación" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(tarea.idTarea,'TAREA')"><i class="bi bi-eye-fill"></i></button>
                         </td>
                     </tr>
@@ -318,13 +325,13 @@
             <div class="form-floating">
               <input type="date" id="fecha" [class.is-invalid]="fechaVacio" class="form-control mb-2" formControlName="fecha" readonly>
               <label for="fecha"  class="form-label">Fecha</label>
-              <small *ngIf="fechaVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
+              <small *ngIf="fechaVacio" class="text-danger">{{ CAMPO_OBLIGATORIO }}</small>
             </div>
             <div class="form-floating">
               <input type="text" id="nombre" [class.is-invalid]="nombreObservacionVacio" class="form-control form-control-lg" formControlName="nombre"
                placeholder="Nombre">
               <label class="form-label" for="nombre">Nombre<span class="required-field">*</span></label>
-              <small *ngIf="nombreObservacionVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
+              <small *ngIf="nombreObservacionVacio" class="text-danger">{{ CAMPO_OBLIGATORIO }}</small>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -451,7 +458,7 @@
             <div class="form-floating mb-2">
               <input type="text" id="nombre" [class.is-invalid]="nombreVacio" class="form-control" formControlName="nombre" placeholder="Nombre">
               <label class="form-label" for="nombre">Nombre<span class="required-field">*</span></label>
-              <small *ngIf="nombreVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
+              <small *ngIf="nombreVacio" class="text-danger">{{ CAMPO_OBLIGATORIO }}</small>
             </div>
             <div class="form-floating mb-2">
               <select class="form-select" id="periodicidad" [class.is-invalid]="periodicidadVacio" formControlName="periodicidad" >
@@ -459,12 +466,12 @@
                   <option *ngFor="let periodicidad of periodiciadEnumLista" [value]="periodicidad"  >{{ periodicidad | formatEnum}}</option>
               </select>
               <label for="periodicidad" placeholder="periodicidad">Periodicidad:<span class="required-field">*</span></label>
-              <small *ngIf="periodicidadVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
+              <small *ngIf="periodicidadVacio" class="text-danger">{{ CAMPO_OBLIGATORIO }}</small>
             </div> 
             <div class="form-floating mb-2">
               <input type="text" id="descripcion" [class.is-invalid]="descripcionVacio" class="form-control" formControlName="descripcion" placeholder="descripcion">
               <label for="descripcion" class="form-label">Descripcion<span class="required-field">*</span></label>
-              <small *ngIf="descripcionVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
+              <small *ngIf="descripcionVacio" class="text-danger">{{ CAMPO_OBLIGATORIO }}</small>
             </div>
             <div class="form-floating mb-2">
               <select class="form-select" id="idUsuario" formControlName="idUsuario">
@@ -472,7 +479,7 @@
                   <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario">{{ usuario.nombre + ' ' + usuario.apellidos | formatEnum }}</option>
               </select>
               <label for="idUsuario" placeholder="usuario">Responsable:<span class="required-field">*</span></label>
-              <small *ngIf="idUsuarioVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
+              <small *ngIf="idUsuarioVacio" class="text-danger">{{ CAMPO_OBLIGATORIO }}</small>
           </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

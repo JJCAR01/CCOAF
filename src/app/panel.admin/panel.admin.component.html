@@ -1,6 +1,6 @@
-<div class="sidenav" [ngClass]="collapsed ? 'sidenav-collapsed' : ''">
+<div class="sidenav" (mouseenter)="toggleCollapse()" [ngClass]="collapsed ? 'sidenav-collapsed' : ''">
     <div class="logo-container">
-      <button class="logo" (mouseenter)="toggleCollapse()" title="Cámara de comercio del Oriente antioqueño">PAT</button>
+      <button class="logo" title="Cámara de comercio del Oriente antioqueño">PAT</button>
       <div class="logo-text" *ngIf="collapsed">
         <img src="./assets/logo_ccoa_blanco.png" width="120px" alt="logo" id="logo">
       </div>
