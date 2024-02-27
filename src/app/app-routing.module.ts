@@ -31,6 +31,7 @@ import { CrearGestionComponent } from './gestion/crear.gestion/crear.gestion.com
 import { CrearProyectoareaComponent } from './gestion/crear.proyectoarea/crear.proyectoarea.component';
 import { ListarSprintproyectoareaComponent } from './sprintproyectoarea/listar.sprintproyectoarea/listar.sprintproyectoarea.component';
 import { CrearSprintproyectoareaComponent } from './sprintproyectoarea/crear.sprintproyectoarea/crear.sprintproyectoarea.component';
+import { ListarHistoricoComponent } from './historico/listar.historico/listar.historico.component';
 
 
 
@@ -49,6 +50,7 @@ const routes: Routes = [
     { path: "listarProyecto", component: ProyectoListarComponent, outlet:"OutletAdmin"},
     { path: 'listarProyectoPendiente', component: ProyectoPendienteListarComponent, outlet:'OutletAdmin'},
     { path: "listarPat", component: PatListarComponent,outlet:"OutletAdmin"},
+    { path: "listarHistorico", component: ListarHistoricoComponent, outlet:"OutletAdmin"},
     { path: "listarActividadesEstrategicas", component: ActividadestrategicaListarComponent, outlet:"OutletAdmin"},
     { path: "listarActividadesEstrategicasPendiente", component: ActividadEstrategicaPendienteListarComponent, outlet:"OutletAdmin"},
     { path: "modificarDirecciones", component: ModificarDireccionesComponent, outlet:"OutletAdmin"},

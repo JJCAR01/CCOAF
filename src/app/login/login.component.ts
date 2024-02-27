@@ -1,4 +1,4 @@
-import { Component ,OnInit,Injectable } from '@angular/core';
+import { Component ,OnInit } from '@angular/core';
 import { LoginService } from './services/login.service';
 import jwt_decode from "jwt-decode";
 import Swal from 'sweetalert2';
@@ -8,10 +8,6 @@ import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router'; 
 import { GoogleService } from './google/auth.google.service';
 
-
-@Injectable({
-  providedIn:'root'
-})
 
 @Component({
   selector: 'app-root',
@@ -50,6 +46,7 @@ export class LoginComponent implements OnInit{
         const body = {
           googleToken: tokenResult  
         };  
+
           this.loginService.loginGoogle(body).toPromise()
           .then((resp ) => {
             if (resp) {    

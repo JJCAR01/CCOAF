@@ -14,7 +14,7 @@ import { environment } from 'src/environments/environment.development';
 import Swal from 'sweetalert2';
 import { ServicesSprintProyectoAreaService } from '../services/services.sprintproyectoarea.service';
 import { TipoGEService } from 'src/app/gestion/services/tipoGE.service';
-import { MENSAJE_TITULO } from 'src/app/mensaje/mensajetitulo';
+import { MENSAJE_TITULO } from 'src/app/utilitarios/mensaje/mensajetitulo';
 
 @Component({
   selector: 'app-listar.sprintproyectoarea',

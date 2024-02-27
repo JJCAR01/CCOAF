@@ -13,7 +13,7 @@ import { Proceso } from '../../modelo/proceso';
 import { Usuario } from 'src/app/modelo/usuario';
 import { ObservacionPat } from 'src/app/modelo/observacionpat';
 import { Pat } from 'src/app/modelo/pat';
-import { MENSAJE_TITULO } from 'src/app/mensaje/mensajetitulo';
+import { MENSAJE_TITULO } from 'src/app/utilitarios/mensaje/mensajetitulo';
 
 
 @Component({
@@ -129,7 +129,7 @@ export class PatListarComponent implements OnInit{
       )
     } 
 
-    async cargarPats() {
+    cargarPats() {
       this.patService.listarPat(this.auth.obtenerHeader()).toPromise().then(
         (data: any) => {
           // Obtener el token
@@ -412,7 +412,6 @@ export class PatListarComponent implements OnInit{
     }
 
     obtenerPat(idPat: number,pat:any) {
-      console.log(pat)
       this.idPatSeleccionado = idPat;
       this.direccionSeleccionada = pat.direccion.nombre;
       this.idUsuarioSeleccionado = pat.idUsuario

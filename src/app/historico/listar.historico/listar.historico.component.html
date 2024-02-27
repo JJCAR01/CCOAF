@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="listar.historico.component.scss">
+</head>
+<body>
+  <div class="row">
+    <div class="col-md-3">
+      <div class="custom-button">
+        <span class="input-group-text buscador">Buscar por nombre:</span>
+        <input type="text" class="form-control me-1" [(ngModel)]="busqueda"/>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="custom-button">
+        <span class="input-group-text buscador">Buscar por año:</span>
+        <input type="text" class="form-control me-1" [(ngModel)]="busquedaFechaAnual"/>
+      </div>
+    </div>
+  </div>
+  
+
+  <main class="main text-center smaller-main">
+    
+    <table class="table table-hover">
+      <thead class="table table-color">
+        <tr>
+          <th class="column-programa" title="{{ NOMBRE_PAT }}">Programa - PAT</th> 
+          <th class="column-fecha" title="{{ FECHA_ANUAL }}">Año</th>
+          <th class="column-direccion" title="{{ DIRECCION }}">Dirección</th>
+          <th class="column-avance" title="{{ AVANCE_REAL_PAT }}">&nbsp;&nbsp;% &nbsp;&nbsp;Avance real</th>
+          <th class="column-avance" title="{{ AVANCE_ESPERADO }}">&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;   Avance esperado</th>
+          <th class="column-avance" title="{{ CUMPLIMIENTO }}">&nbsp;%&nbsp; Cumplimiento</th>
+          <th class="column-avance" title="{{ AVANCE_PAT }}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PAT</th>
+          <th class="column-usuario" title="{{ RESPONSABLE }}">Responsable</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let pat of pats | buscar: busqueda | buscarFechaAnual :busquedaFechaAnual">
+          <tr title="{{pat.nombre}}" >
+            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]" >{{ pat.nombre }}</td>
+            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]">{{ pat.fechaAnual }}</td>
+            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]">{{ pat.direccion.nombre}}</td>
+            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]" >{{ pat.porcentajeReal | comasPipe }} %</td>
+            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]" >{{ pat.porcentajeEsperado| comasPipe }} %</td>            
+            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]" [ngClass]="colorPorcentaje(pat.porcentajeCumplimiento)">{{ pat.porcentajeCumplimiento | comasPipe }} %</td>
+            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]" [ngClass]="colorPorcentaje(pat.porcentajePat)">{{ pat.porcentajePat | comasPipe }} %</td>
+            <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]">{{ obtenerNombreUsuario(pat.idUsuario) }} </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </main>
+  
+
+  
+</body>
+</html>

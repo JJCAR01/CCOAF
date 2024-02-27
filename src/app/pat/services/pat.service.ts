@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment.development';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +15,13 @@ export class PatService {
     return this.http.post<T>(`${environment.apiUrl}/ccoa/pats`,pat,{headers});
   }
 
-  listarPat<T>(headers?: HttpHeaders):Observable<T>{
-    return this.http.get<T>(`${environment.apiUrl}/ccoa/pats`,{headers});
+  listarPat<T>(headers?: HttpHeaders): Observable<T> {
+    return this.http.get<T>(`${environment.apiUrl}/ccoa/pats`, { headers })
+      .pipe(
+        tap((pats: any) => {
+          this.setPatsData(pats); // Al recibir los datos, guardarlos en el BehaviorSubject
+        })
+      );
   }
   listarPatPorId<T>(idPat:number,headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/pats/${idPat}`,{headers});

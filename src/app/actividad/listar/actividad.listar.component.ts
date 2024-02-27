@@ -15,7 +15,7 @@ import { initializeApp } from 'firebase/app';
 import { environment } from 'src/environments/environment.development';
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 import { Usuario } from 'src/app/modelo/usuario';
-import { MENSAJE_TITULO } from 'src/app/mensaje/mensajetitulo';
+import { MENSAJE_TITULO } from 'src/app/utilitarios/mensaje/mensajetitulo';
 
 @Component({
   selector: 'app-listar',

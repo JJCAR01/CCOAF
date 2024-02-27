@@ -10,8 +10,6 @@ import { Pat } from 'src/app/modelo/pat';
 
 @Component({
   selector: 'app-actividadestrategica.listar',
-  standalone: true,
-  imports: [CommonModule],
   templateUrl: './actividadestrategica.listar.component.html',
   styleUrls: ['./actividadestrategica.listar.component.scss']
 })
@@ -29,8 +27,7 @@ export class ActividadestrategicaListarComponent implements OnInit{
     private router:Router){}
 
   ngOnInit(): void {
-    this.cargarUsuario();
-    this.cargarPats();
+    
     this.patService.getPatsData().subscribe((patsData: any[]) => {
       if (patsData && patsData.length > 0) {
         // Obtener los IDs de los Pats
@@ -54,6 +51,8 @@ export class ActividadestrategicaListarComponent implements OnInit{
         }
       }
     });
+    this.cargarUsuario();
+    this.cargarPats();
     
   }
   cargarUsuario() {

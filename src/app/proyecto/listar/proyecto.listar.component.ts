@@ -27,51 +27,7 @@ export class ProyectoListarComponent implements OnInit {
   }
 
   cargarProyectos() {
-    this.patService.getPatsData().subscribe((patsData: any[]) => {
-      if (patsData && patsData.length > 0) {
-        // Obtener los IDs de los Pats
-        const idsPats = patsData.map(pat => pat.idPat);
-        // Lista acumulativa para almacenar todas las actividades estratégicas
-        const allActividades: any[] = [];
-        // Iterar sobre los IDs de Pats y cargar las actividades estratégicas
-        for (const idPat of idsPats) {
-          this.tipoService.listarActividadEstrategicaPorIdPat(idPat, this.auth.obtenerHeader())
-            .toPromise()
-            .then(
-              (data: any) => {
-                // Concatenar las actividades estratégicas obtenidas a la lista acumulativa
-                allActividades.push(...data);
-                // Si es la última iteración, asignar las actividades acumuladas a this.actividadesEstrategicas
-                if (idPat === idsPats[idsPats.length - 1]) {
-                  this.actividadesEstrategicas = allActividades;
-  
-                  // Lista acumulativa para almacenar todos los proyectos
-                  const allProyectos: any[] = [];
-                  // Obtener los IDs de las actividades estratégicas
-                  const idsActividades = this.actividadesEstrategicas.map((actividad: any) => actividad.idActividadEstrategica);
-                  // Iterar sobre los IDs de las actividades estratégicas y cargar los proyectos correspondientes
-                  for (const idActividad of idsActividades) {
-                    this.actividadService.listarProyectoPorIdActividadEstrategica(idActividad, this.auth.obtenerHeader())
-                      .toPromise()
-                      .then(
-                        (proyectos: any ) => {
-                          // Agregar los proyectos obtenidos a la lista acumulativa
-                          allProyectos.push(...proyectos);
-                          // Asociar los proyectos a la actividad estratégica correspondiente
-                          if (idActividad === idsActividades[idsActividades.length - 1]) {
-                            this.proyectos = allProyectos;         
-                          }
-                        }
-                      );
-                  }
-                  // Asignar los proyectos acumulados a this.proyectos
-                  this.proyectos = allProyectos;
-                }
-              }
-            );
-        }
-      }
-    });    
+        
   }
   
   

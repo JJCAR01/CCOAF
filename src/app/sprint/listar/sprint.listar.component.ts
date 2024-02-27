@@ -13,7 +13,7 @@ import { EEstado } from "src/enums/eestado";
 import { initializeApp } from 'firebase/app';
 import { environment } from "src/environments/environment.development";
 import { EPeriodicidad } from "src/enums/eperiodicidad";
-import { MENSAJE_TITULO } from "src/app/mensaje/mensajetitulo";
+import { MENSAJE_TITULO } from "src/app/utilitarios/mensaje/mensajetitulo";
 
 @Component({
   selector: 'app-sprint',

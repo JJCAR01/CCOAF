@@ -21,7 +21,7 @@ import { ProyectoArea } from 'src/app/modelo/proyectoarea';
 import { EModalidad } from 'src/enums/emodalidad';
 import { EPlaneacion } from 'src/enums/eplaneacion';
 import { EPeriodicidadMeta } from 'src/enums/eperiodicidadmeta';
-import { MENSAJE_TITULO } from 'src/app/mensaje/mensajetitulo';
+import { MENSAJE_TITULO } from 'src/app/utilitarios/mensaje/mensajetitulo';
 
 @Component({
   selector: 'app-root:not(p)',

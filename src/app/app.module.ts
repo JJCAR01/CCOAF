@@ -20,6 +20,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import { BuscarPipe } from 'src/pipes/buscar.pipes';
 
+
 import { ActividadCrearComponent } from './actividad/crear.actividad/actividad.crear.component';
 import { ActividadListarComponent } from './actividad/listar/actividad.listar.component';
 import { SprintListarComponent } from './sprint/listar/sprint.listar.component';
@@ -54,6 +55,9 @@ import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { LoginGuard } from './guards/login.guard';
 import { CommonModule } from '@angular/common';
 import { NgxCaptchaModule } from 'ngx-captcha';
+import { ActividadestrategicaListarComponent } from './actividadestrategica/listar/actividadestrategica.listar.component';
+import { ListarHistoricoComponent } from './historico/listar.historico/listar.historico.component';
+import { BuscarFechaAnualPipe } from 'src/pipes/buscardireccion.pipes';
 
 
 @NgModule({
@@ -64,7 +68,8 @@ import { NgxCaptchaModule } from 'ngx-captcha';
     SprintListarComponent,SprintCrearComponent, ProyectoListarComponent, ProyectoPendienteListarComponent,
     ActividadEstrategicaPendienteListarComponent, ComasPipe, ModificarDireccionesComponent,DashboardComponent,
     DireccionCrearComponent,ProcesoCrearComponent,CrearProyectoComponent,CrearGestionComponent,CrearProyectoareaComponent,
-    ListarSprintproyectoareaComponent,CrearSprintproyectoareaComponent
+    ListarSprintproyectoareaComponent,CrearSprintproyectoareaComponent,ActividadestrategicaListarComponent,ListarHistoricoComponent,
+    BuscarFechaAnualPipe
   ],
   imports: [
     CommonModule,
@@ -104,7 +109,7 @@ import { NgxCaptchaModule } from 'ngx-captcha';
     { provide: 'CookieService', useClass: CookieService },
     LoginGuard,
     { provide: FIREBASE_OPTIONS, useValue: environment.firebase },
-     { provide: LOCALE_ID, useValue: 'es' } 
+
   ],
   bootstrap: [AppComponent]
 })

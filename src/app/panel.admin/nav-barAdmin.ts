@@ -5,7 +5,7 @@ export const navbarAdminData = [
         label: 'Plan Anual de trabajo'
     },
     {
-        //routeLink: 'dashboard',
+        routeLink: 'dashboard',
         imageSource: 'assets/dashboard.png',
         label: 'Dashboard'
     },
@@ -30,7 +30,7 @@ export const navbarAdminData = [
         label: 'Proyectos pendientes'
     },
     {
-        routeLink: 'listarProyectosPendiente',
+        routeLink: 'listarHistorico',
         imageSource: 'assets/calendario.png',
         label: 'Histórico'
     },

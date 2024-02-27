@@ -1,0 +1,172 @@
+.body{
+    font-family: "Roboto",serif;
+}
+
+.contenedor {
+    text-align: center;
+}
+h1 {
+    font-family: "Roboto", sans-serif;
+    color: #257236;
+    padding: 5px;
+    margin: 0;
+    text-align: left;
+}
+  
+  
+h2 {
+    font-family: "Roboto", initial;
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+/* Estilos para el elemento .smaller-main */
+.smaller-main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 10px;
+
+}
+.custom-button {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px; // Ajusta según sea necesario
+    margin-top: auto; /* Empuja el botón hacia la parte inferior del conteneddor */
+    width: auto; /* Los botones ocuparán todo el ancho de su contenedor */
+}
+
+.tabla-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+  
+.tabla {
+    text-align: left;
+    flex: 1;
+    padding: 10px;
+}
+  
+.porcentaje-bajo {
+    color: red; // Define el color rojo para porcentajes bajos.
+}
+  
+.porcentaje-medio {
+    color: orange; // Define el color verde (u otro color de tu elección) para porcentajes normales.
+}
+
+.porcentaje-cien {
+    color: green; // Define el color verde (u otro color de tu elección) para porcentajes normales.
+}
+.porcentaje-normal {
+    color: #504f4f;
+}
+th,td {
+    vertical-align: middle;
+    text-align: center; /* Centra el texto horizontalmente en las celdas del encabezado */
+}
+
+.plan-cuadro {
+    background-color: #81eba428;
+    height: 80px; // Ajusta la altura
+    width: 400px;
+    text-align: center; 
+    border-radius: 15px; 
+    margin: auto;
+}
+.plan-cuadro p {
+    margin-bottom: 0px; //Espacio entre p y h1
+    font-size: 35px; // Tamaño de letra
+}
+.cuadro-container {
+    display: flex;
+    justify-content: center;
+    gap: 5px; // Espacio entre los cuadros
+    margin-top: 5px; // Espacio entre la sección anterior y los cuadros
+}
+.cuadro {
+    background-color: rgba(224, 224, 224, 0.479);
+    padding: 2px; // Reduce el espacio interno
+    flex: 1;
+    width: auto; // Ajusta el ancho
+    height: 75px; // Ajusta la altura
+    margin-top: 1px;
+    text-align: center; 
+    border-radius: 20px;
+}
+.cuadro h2 {
+    margin-bottom: 1px; //Espacio entre p y h1
+    font-size: px; // Tamaño de letra
+}
+
+.subcuadro-container {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    gap: 5px; // Espacio entre los cuadros
+    margin-top: 2px; // Espacio entre la sección anterior y los cuadros
+    
+ }
+.subcuadro {
+    padding: 1px; // Reduce el espacio interno
+    flex: 1;
+    width: 10px; // Ajusta el ancho
+    height: 60px; // Ajusta la altura
+    border-radius: 20px;
+}
+
+.subcuadro p {
+    font-family: "Roboto", unset; //Tipo de letra
+    text-align: center;
+    font-size: 20px;
+}
+.finalizado {
+    background-color: #b6f3d183;
+}
+.abierto{
+    background-color: #fada81ab;
+}
+  
+p {
+    font-family: "Roboto", unset; //Tipo de letra
+    text-align: center;
+    font-size: 30px; // Tamaño de letra
+}
+
+#proceso {
+    display: block; // O ajusta según sea necesario
+  }
+
+.column-programa{
+    width: 20%;
+}
+.column-fecha{
+    width: 4%;
+}
+.column-direccion{
+    width: 15%;
+}
+.column-avance{
+    width: 4%;
+}
+.column-pat{
+    width: 5%;
+}
+.column-usuario{
+    width: 18%;
+}
+.column-acciones{
+    width: 10%;
+}
+
+.table-color th{
+    background-color: #bbbbbb;
+}
+td {
+    cursor: pointer;
+}
+th{
+    color: #161515c0;
+}
+  

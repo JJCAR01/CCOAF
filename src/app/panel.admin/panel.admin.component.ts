@@ -47,6 +47,7 @@ export class PanelAdminComponent implements OnInit {
   title = 'panel';
   loggedIn: boolean = true;
   isAdmin: boolean = false; // Agrega esta línea
+  nombreUsuario:string | null = '';
 
   constructor(private router: Router,
     private cookie: CookieService,
@@ -72,9 +73,10 @@ export class PanelAdminComponent implements OnInit {
 
       // Llamar al servicio para obtener el estado de isAdmin de manera asíncrona
       this.authService.esAdmin().then((isAdmin) => {
-        
         this.isAdmin = isAdmin;
-        
+      });
+      this.authService.obtenerNombreUsuario().then((user) => {
+        this.nombreUsuario = user;
       });
   }
 

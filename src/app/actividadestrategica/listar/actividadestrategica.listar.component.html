@@ -23,6 +23,8 @@
           <th>Duracion (Días)</th>
           <th>Dias Restantes</th>
           <th>% Avance real</th>
+          <th>% Avance esperado</th>
+          <th>% Cumplimiento</th>
           <th>Responsable</th>
         </tr>
       </thead>
@@ -38,7 +40,9 @@
             <span *ngIf="actividad.avance !== 100"[ngClass]="colorDias(actividad.diasRestantes)">{{ actividad.diasRestantes }}</span>
               <span *ngIf="actividad.avance === 100">Finalizado</span>
             </td>
-            <td [ngClass]="colorPorcentaje(actividad.avance)">{{ actividad.porcentajeReal }} %</td>
+            <td >{{ actividad.porcentajeReal | comasPipe}} %</td>
+            <td >{{ actividad.porcentajeEsperado | comasPipe}} %</td>
+            <td [ngClass]="colorPorcentaje(actividad.porcentajeCumplimiento)">{{ actividad.porcentajeCumplimiento | comasPipe}} %</td>
             <td>{{ obtenerNombreUsuario(actividad.idUsuario) }}</td>
           </tr>
         </ng-container>

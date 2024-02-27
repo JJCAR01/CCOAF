@@ -41,6 +41,23 @@ export class AuthService {
       'Content-Type': 'application/json',
     });
   }
+  async obtenerNombreUsuario(): Promise<string | null> {
+    const token = this.getToken();
+    if (token) {
+      try {
+        const decodedToken: any = jwtDecode(token);
+        if (decodedToken && decodedToken.sub) {
+          return decodedToken.sub;
+        } else {
+          return null; // No se encontró el nombre de usuario en el token
+        }
+      } catch (error) {
+        return null; // Error al decodificar el token
+      }
+    } else {
+      return null; // No hay token disponible
+    }
+  }
 
   esAdmin(): Promise<boolean> {
     return this.verificarRol('ADMIN');

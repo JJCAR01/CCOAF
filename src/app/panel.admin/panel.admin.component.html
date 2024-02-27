@@ -25,7 +25,8 @@
     </ul>
     <div class="logout-container bottom">
       <button (click)="logOut()" title="Cerrar sesión"><i class="bi bi-box-arrow-right"></i></button> 
-    </div>
+      <span class="username" [class.show]="!collapsed">{{ nombreUsuario }}</span>
+    </div>    
 </div>
 
 
