@@ -55,6 +55,7 @@ export class ActividadListarComponent implements OnInit{
   esAdmin: boolean = false; 
   esDirector: boolean = false; 
   esOperador: boolean = false; // Agrega esta línea
+  esConsultor: boolean = false;
 
   tipoFormulario: 'PROYECTO' | 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA' | 'TAREA' = 'PROYECTO';
   pesoDeArchivo = 300 * 1024 * 1024; // 300 MB
@@ -155,17 +156,19 @@ export class ActividadListarComponent implements OnInit{
 }
 
 ngOnInit() {
-      // Usar Promise.all para esperar a que todas las promesas se resuelvan
-      Promise.all([
-        this.auth.esAdmin(),
-        this.auth.esDirector(),
-        this.auth.esOperador()
-      ]).then(([esAdmin, esDirector, esOperador]) => {
-        // Asignar los resultados a las propiedades correspondientes
-        this.esAdmin = esAdmin;
-        this.esDirector = esDirector;
-        this.esOperador = esOperador;
-      });
+  // Usar Promise.all para esperar a que todas las promesas se resuelvan
+  Promise.all([
+    this.auth.esAdmin(),
+    this.auth.esDirector(),
+    this.auth.esOperador(),
+    this.auth.esConsultor()
+  ]).then(([esAdmin, esDirector, esOperador, esConsultor]) => {
+    // Asignar los resultados a las propiedades correspondientes
+    this.esAdmin = esAdmin;
+    this.esDirector = esDirector;
+    this.esOperador = esOperador;
+    this.esConsultor = esConsultor;
+  });
   this.modalidadEnumList= Object.values(EModalidad);
   this.route.params.subscribe(params => {
     this.patNombre = params['patNombre'];
@@ -635,6 +638,8 @@ private obtenerFechaActual(): string {
       this.idActividadGestionEstrategicaSeleccionado = idSeleccionado;
     } else if( tipo === 'PROYECTO'){
       this.idProyectoSeleccionado = idSeleccionado;
+    } else if( tipo === 'TAREA'){
+      this.idTareaSeleccionado = idSeleccionado;
     }
 
   }
@@ -716,8 +721,28 @@ private obtenerFechaActual(): string {
                 confirmButtonColor: '#0E823F',
               })
             }
+          );
+        } else if (tipo === 'tarea'){
+          this.tareaService.guardarDocumentoTarea(documento, this.idTareaSeleccionado, this.auth.obtenerHeaderDocumento()).subscribe(
+            (data: any) => {
+              Swal.fire({
+                title:'Archivo cargado!',
+                text:'El archivo se cargó correctamente',
+                icon:'success',
+                confirmButtonColor: '#0E823F',
+              })
+              this.nombreArchivoSeleccionado = ''; 
+            },
+            (error) => {
+              Swal.fire({
+                title:'Hubo un error!!!',
+                text:error.error.mensajeTecnico,
+                icon:'error',
+                confirmButtonColor: '#0E823F',
+              })
+            }
         );
-        }
+        } 
         
     } catch (error) {
       Swal.fire({
@@ -752,6 +777,20 @@ private obtenerFechaActual(): string {
         (error: any) => {
           Swal.fire({
             title: 'La actividad no tiene documentos adjuntos',
+            text: 'Cargue un documento para visualizarlo',
+            icon: 'info',
+            confirmButtonColor: '#0E823F',
+          });
+        }
+      );
+    } else if(tipo === 'TAREA'){
+      this.tareaService.obtenerDocumentoTarea(id, this.auth.obtenerHeaderDocumento()).subscribe(
+        (data: any) => {
+          this.documentoObtenido = data;
+        },
+        (error: any) => {
+          Swal.fire({
+            title: 'La tarea no tiene documentos adjuntos',
             text: 'Cargue un documento para visualizarlo',
             icon: 'info',
             confirmButtonColor: '#0E823F',
@@ -867,9 +906,9 @@ private obtenerFechaActual(): string {
     if (fechaInicioActividad  > fechaActual) {
       return 'porcentaje-negro'; // Define las clases CSS para cuando la fecha es posterior a la fecha actual.
     } else {
-      if (porcentaje < 30) {
+      if (porcentaje < 80 ) {
         return 'porcentaje-bajo'; // Define las clases CSS para porcentajes bajos en tu archivo de estilos.
-      } else if (porcentaje >= 30 && porcentaje < 100) {
+      } else if (porcentaje >= 80 && porcentaje < 100) {
         return 'porcentaje-medio'; // Define las clases CSS para porcentajes normales en tu archivo de estilos.
       } else {
         return 'porcentaje-cien';

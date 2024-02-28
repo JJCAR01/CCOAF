@@ -41,6 +41,7 @@ export class ListarSprintproyectoareaComponent implements OnInit  {
   esAdmin: boolean = false; 
   esDirector: boolean = false; 
   esOperador: boolean = false; // Agrega esta línea
+  esConsultor:boolean = false;
 
   tipoFormulario: 'SPRINT_PROYECTO_AREA' | 'TAREA' = 'SPRINT_PROYECTO_AREA';
   pesoDeArchivo = 300 * 1024 * 1024; // 300 MB
@@ -122,17 +123,19 @@ export class ListarSprintproyectoareaComponent implements OnInit  {
     });
   }
   ngOnInit() {
-          // Usar Promise.all para esperar a que todas las promesas se resuelvan
-          Promise.all([
-            this.auth.esAdmin(),
-            this.auth.esDirector(),
-            this.auth.esOperador()
-          ]).then(([esAdmin, esDirector, esOperador]) => {
-            // Asignar los resultados a las propiedades correspondientes
-            this.esAdmin = esAdmin;
-            this.esDirector = esDirector;
-            this.esOperador = esOperador;
-          });
+            // Usar Promise.all para esperar a que todas las promesas se resuelvan
+    Promise.all([
+      this.auth.esAdmin(),
+      this.auth.esDirector(),
+      this.auth.esOperador(),
+      this.auth.esConsultor()
+    ]).then(([esAdmin, esDirector, esOperador, esConsultor]) => {
+      // Asignar los resultados a las propiedades correspondientes
+      this.esAdmin = esAdmin;
+      this.esDirector = esDirector;
+      this.esOperador = esOperador;
+      this.esConsultor = esConsultor;
+    });
     // Obtén el valor de idPat de la URL
     this.route.params.subscribe(params => {
       this.patNombre = params['patNombre'];
@@ -667,9 +670,9 @@ export class ListarSprintproyectoareaComponent implements OnInit  {
     if (fechaInicioActividad  > fechaActual) {
       return 'porcentaje-negro'; // Define las clases CSS para cuando la fecha es posterior a la fecha actual.
     } else {
-      if (porcentaje < 30) {
+      if (porcentaje < 80 ) {
         return 'porcentaje-bajo'; // Define las clases CSS para porcentajes bajos en tu archivo de estilos.
-      } else if (porcentaje >= 30 && porcentaje < 100) {
+      } else if (porcentaje >= 80 && porcentaje < 100) {
         return 'porcentaje-medio'; // Define las clases CSS para porcentajes normales en tu archivo de estilos.
       } else {
         return 'porcentaje-cien';

@@ -2,6 +2,7 @@ export enum EPeriodicidadMeta {
     MENSUAL = 'MENSUAL',
     BIMESTRAL = 'BIMESTRAL',
     TRIMESTRAL = 'TRIMESTRAL',
+    CUATRIMESTRAL = 'CUATRIMESTRAL',
     SEMESTRAL = 'SEMESTRAL',
     ANUAL = 'ANUAL'
 }

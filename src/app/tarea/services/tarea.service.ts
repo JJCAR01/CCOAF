@@ -14,6 +14,13 @@ export class TareaService {
     return this.http.post(`${environment.apiUrl}/ccoa/tareas`,tarea,{headers});
   }
 
+  guardarDocumentoTarea(tarea : any,idTarea:number,headers?: HttpHeaders){
+    return this.http.put(`${environment.apiUrl}/ccoa/tareas/archivo/${idTarea}`, tarea,{headers});
+  }
+  obtenerDocumentoTarea(idTarea:number,headers?: HttpHeaders){
+    return this.http.get(`${environment.apiUrl}/ccoa/tareas/archivo/${idTarea}`,{headers});
+  }
+
   listarTarea(headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/tareas`,{headers});
   }

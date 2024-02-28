@@ -62,13 +62,14 @@ export class AuthService {
   esAdmin(): Promise<boolean> {
     return this.verificarRol('ADMIN');
   }
-
   esDirector(): Promise<boolean> {
     return this.verificarRol('DIRECTOR');
   }
-
   esOperador(): Promise<boolean> {
     return this.verificarRol('OPERADOR');
+  }
+  esConsultor(): Promise<boolean> {
+    return this.verificarRol('CONSULTOR');
   }
 
   private async verificarRol(rol: string): Promise<boolean> {

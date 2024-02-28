@@ -40,6 +40,7 @@ export class SprintListarComponent implements OnInit {
   esAdmin: boolean = false; 
   esDirector: boolean = false; 
   esOperador: boolean = false; // Agrega esta línea
+  esConsultor:boolean= false;
 
   tipoFormulario: 'SPRINT' | 'TAREA' = 'SPRINT';
   pesoDeArchivo = 300 * 1024 * 1024; // 300 MB
@@ -121,17 +122,19 @@ export class SprintListarComponent implements OnInit {
   }
 
   ngOnInit() {
-          // Usar Promise.all para esperar a que todas las promesas se resuelvan
-          Promise.all([
-            this.auth.esAdmin(),
-            this.auth.esDirector(),
-            this.auth.esOperador()
-          ]).then(([esAdmin, esDirector, esOperador]) => {
-            // Asignar los resultados a las propiedades correspondientes
-            this.esAdmin = esAdmin;
-            this.esDirector = esDirector;
-            this.esOperador = esOperador;
-          });
+            // Usar Promise.all para esperar a que todas las promesas se resuelvan
+    Promise.all([
+      this.auth.esAdmin(),
+      this.auth.esDirector(),
+      this.auth.esOperador(),
+      this.auth.esConsultor()
+    ]).then(([esAdmin, esDirector, esOperador, esConsultor]) => {
+      // Asignar los resultados a las propiedades correspondientes
+      this.esAdmin = esAdmin;
+      this.esDirector = esDirector;
+      this.esOperador = esOperador;
+      this.esConsultor = esConsultor;
+    });
     // Obtén el valor de idPat de la URL
     this.route.params.subscribe(params => {
       this.patNombre = params['patNombre'];
@@ -194,31 +197,49 @@ export class SprintListarComponent implements OnInit {
 
     return true;
   }
-  async subirDocumento(formulario: any) {
+  async subirDocumento(formulario: any,id:number,tipo:string) {
+
     if (!this.archivoSeleccionado) {
       // Puedes mostrar un mensaje de error o manejarlo de otra manera
       return;
     }
-
-    const app = initializeApp(environment.firebase);
-    const storage = getStorage(app);
-    const storageRef = ref(storage, `sprint/${this.idSprintSeleccionado}/${this.archivoSeleccionado.name}`);
-
       try {
+        const app = initializeApp(environment.firebase);
+        const storage = getStorage(app);
+        const storageRef = ref(storage, `${tipo}/${id}/${this.archivoSeleccionado.name}`);
         const snapshot = await uploadBytes(storageRef, this.archivoSeleccionado);
         const downloadURL = await getDownloadURL(storageRef);
-
         // Crear un objeto sprint que incluya la URL de descarga
-        const sprint = {
-          fecha: this.obtenerFechaActual(),
+        const documento = {
+          fecha:this.obtenerFechaActual(),
           rutaDocumento: downloadURL, // Asegúrate de que el nombre de la propiedad coincida con lo que espera tu backend
         };
-
-        this.sprintService.guardarDocumentoSprint(sprint, this.idSprintSeleccionado, this.auth.obtenerHeaderDocumento()).subscribe(
+        if(tipo === 'sprint'){
+          this.sprintService.guardarDocumentoSprint(documento, this.idSprintSeleccionado, this.auth.obtenerHeaderDocumento()).subscribe(
             (data: any) => {
               Swal.fire({
-                title:'Archivo subido!!!',
-                text:'El archivo se cargo correctamente',
+                title:'Archivo cargado!',
+                text:'El archivo se cargó correctamente',
+                icon:'success',
+                confirmButtonColor: '#0E823F',
+              })
+              this.nombreArchivoSeleccionado = ''; 
+            },
+            (error) => {
+              Swal.fire({
+                title:'Hubo un error!!!',
+                text:error.error.mensajeTecnico,
+                icon:'error',
+                confirmButtonColor: '#0E823F',
+              })
+            }
+          );
+        } else if (tipo === 'tarea'){
+          this.tareaService.guardarDocumentoTarea(documento, this.idTareaSeleccionado, this.auth.obtenerHeaderDocumento()).subscribe(
+            (data: any) => {
+              Swal.fire({
+                title:'Archivo cargado!',
+                text:'El archivo se cargó correctamente',
                 icon:'success',
                 confirmButtonColor: '#0E823F',
               })
@@ -233,7 +254,8 @@ export class SprintListarComponent implements OnInit {
               })
             }
         );
-
+        }
+        
     } catch (error) {
       Swal.fire({
         title:'Hubo un error!!!',
@@ -243,20 +265,37 @@ export class SprintListarComponent implements OnInit {
       })
     }
   }
-  obtenerDocumento(idSprint: number) {
-    this.sprintService.obtenerDocumento(idSprint, this.auth.obtenerHeaderDocumento()).subscribe(
-      (data: any) => {
-        this.documentoObtenido = data;
-      },
-      (error: any) => {
-        Swal.fire({
-          title: 'Este sprint no tiene documentos adjuntos',
-          text: 'Cargue un documento para visualizarlo',
-          icon: 'info',
-          confirmButtonColor: '#0E823F',
-        });
-      }
-    );
+  obtenerDocumento(id: number,tipo: string) {
+
+    if(tipo === 'SPRINT'){
+      this.sprintService.obtenerDocumento(id, this.auth.obtenerHeaderDocumento()).subscribe(
+        (data: any) => {
+          this.documentoObtenido = data;
+        },
+        (error: any) => {
+          Swal.fire({
+            title: 'El sprint no tiene documentos adjuntos',
+            text: 'Cargue un documento para visualizarlo',
+            icon: 'info',
+            confirmButtonColor: '#0E823F',
+          });
+        }
+      );
+    } else if(tipo === 'TAREA'){
+      this.tareaService.obtenerDocumentoTarea(id, this.auth.obtenerHeaderDocumento()).subscribe(
+        (data: any) => {
+          this.documentoObtenido = data;
+        },
+        (error: any) => {
+          Swal.fire({
+            title: 'La tarea no tiene documentos adjuntos',
+            text: 'Cargue un documento para visualizarlo',
+            icon: 'info',
+            confirmButtonColor: '#0E823F',
+          });
+        }
+      );
+    }
   }
   
   extraerNombreArchivo(rutaArchivo: string): string {
@@ -280,12 +319,14 @@ export class SprintListarComponent implements OnInit {
     }
   }
   
-  
+  abrirModalAgregarDocumento(idSeleccionado: number,tipo:string): void {
+    if(tipo === 'SPRINT'){
+      this.idSprintSeleccionado = idSeleccionado;
+    } else if( tipo === 'TAREA'){
+      this.idTareaSeleccionado = idSeleccionado;
+    }
 
-  abrirModalAgregarDocumento(idSprint: number): void {
-    this.idSprintSeleccionado = idSprint;
   }
-
   cargarUsuario() {
     this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
@@ -667,9 +708,9 @@ export class SprintListarComponent implements OnInit {
     if (fechaInicioActividad  > fechaActual) {
       return 'porcentaje-negro'; // Define las clases CSS para cuando la fecha es posterior a la fecha actual.
     } else {
-      if (porcentaje < 30) {
+      if (porcentaje < 80 ) {
         return 'porcentaje-bajo'; // Define las clases CSS para porcentajes bajos en tu archivo de estilos.
-      } else if (porcentaje >= 30 && porcentaje < 100) {
+      } else if (porcentaje >= 80 && porcentaje < 100) {
         return 'porcentaje-medio'; // Define las clases CSS para porcentajes normales en tu archivo de estilos.
       } else {
         return 'porcentaje-cien';

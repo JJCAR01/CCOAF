@@ -53,7 +53,7 @@ import { GoogleLoginProvider, SocialAuthServiceConfig } from '@abacritt/angularx
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { LoginGuard } from './guards/login.guard';
-import { CommonModule } from '@angular/common';
+import { CommonModule, HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { NgxCaptchaModule } from 'ngx-captcha';
 import { ActividadestrategicaListarComponent } from './actividadestrategica/listar/actividadestrategica.listar.component';
 import { ListarHistoricoComponent } from './historico/listar.historico/listar.historico.component';
@@ -109,6 +109,7 @@ import { BuscarFechaAnualPipe } from 'src/pipes/buscardireccion.pipes';
     { provide: 'CookieService', useClass: CookieService },
     LoginGuard,
     { provide: FIREBASE_OPTIONS, useValue: environment.firebase },
+    {provide: LocationStrategy, useClass: HashLocationStrategy}
 
   ],
   bootstrap: [AppComponent]

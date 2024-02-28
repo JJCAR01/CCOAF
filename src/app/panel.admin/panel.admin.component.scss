@@ -152,17 +152,27 @@
     width: 100%; /* Ajusta el ancho según tus necesidades */
 }
 
+.sidenav::-webkit-scrollbar {
+    width: 0;  /* Oculta el scrollbar en navegadores webkit (Chrome, Safari, etc.) */
+    height: 0;
+}
+
+.sidenav {
+    scrollbar-width: none;  /* Oculta el scrollbar en navegadores que admiten esta propiedad */
+    overflow-y: auto;  /* Agrega un scroll vertical al sidenav */
+}
+
 
   
   
-  @media (max-width: 1366px) {
+@media (max-width: 1500px) {
     .logo-text img {
         width: 80px; /* Ajusta el tamaño del logotipo dentro del contenedor según tus necesidades */
     }
 
 
     .sidenav .sidenav-nav-item .sidenav-nav-link .sidenav-link-image {  
-        width: 1.5rem;
+        width: 1.6rem;
         min-width: 1.3rem;       
     }
 
@@ -170,7 +180,7 @@
         margin: 0px 2; /* Ajusta el valor según el espacio deseado */
     }
     .sidenav-link-text {
-        font-size: 78%;
+        font-size: 70%;
     }
 
     .sidenav .sidenav-nav-item .sidenav-nav-link {
@@ -181,7 +191,6 @@
         margin: 2% 0%;
 
     }
-
 
     .logout-container {
         margin-top:10%; /* Ajusta el margen superior según tus necesidades */

@@ -31,6 +31,7 @@ h3 {
   align-items: left; /* Centrar verticalmente el contenido */
 }
 .actividadesyproyectos {
+  margin-top: 0%;
   text-align: left; /* Centrar horizontalmente el contenido */
   align-items: left; /* Centrar verticalmente el contenido */
 }
@@ -335,6 +336,37 @@ th{
 .input-group-append span {
   font-size: 1.55rem; /* ajusta el tamaño según lo necesites */
   /* otros estilos que desees aplicar */
+}
+
+
+@media screen and (max-width: 1366px) {
+  .column-responsableTarea {
+    width: 100px; /* Ajusta el ancho a tu preferencia */
+  }
+  .column-accionesTarea {
+    width: 100px; /* Ajusta el ancho a tu preferencia */
+  }
+  .column-descripcion {
+    width: 100px; /* Ajusta el ancho a tu preferencia */
+  }
+  .column-porcentaje {
+    width: 100px; /* Ajusta el ancho a tu preferencia */
+  }
+
+  th .en-backlog::before { content: "\F8E6"; } /* Icono de backlog */
+  th .en-proceso::before { content: "\f085"; } /* Icono de proceso */
+  th .terminado::before { content: "\f00c"; } /* Icono de terminado */
+  th .impedimento::before { content: "\f06a"; } /* Icono de impedimento */
+
+  /* Estilos para ocultar el texto en los títulos */
+  th .estado-text {
+    padding: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-indent: 100%;
+    display: inline-block;
+    width: 0;
+  }
 }
 
 

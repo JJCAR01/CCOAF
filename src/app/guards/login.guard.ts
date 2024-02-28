@@ -15,7 +15,7 @@ export class LoginGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): boolean | UrlTree {
     console.log('LoginGuard is running!');
-    const isAuthenticated = this.cookieService.get('jwt').length > 0;
+    const isAuthenticated = this.cookieService.get('jwt') !== null && this.cookieService.get('jwt') !== '';
     console.log('Is authenticated:', isAuthenticated);
     return isAuthenticated ? true : this.router.parseUrl('/login');
   }

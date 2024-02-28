@@ -92,7 +92,7 @@
             <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]">{{ obtenerNombreUsuario(pat.idUsuario) }} </td>
             <td>
               <button title="Editar" type="button" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalModificarPat"
-               (click)="obtenerPat(pat.idPat,pat)" *ngIf="esAdmin">
+               (click)="obtenerPat(pat.idPat,pat)" *ngIf="esAdmin || esDirector">
                 <i class="bi bi-pen-fill"></i>
               </button>                  
               <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" 

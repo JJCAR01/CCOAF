@@ -72,36 +72,36 @@
                   <h6>Fecha Final</h6>
                   {{ sprint.fechaFinal }}
                 </div>
-                <div class="col-md-1" title="{{ AVANCE_REAL_SPRINT }}">
-                  <h6>&nbsp;&nbsp;% Avance&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; real</h6>
+                <div class="col-md-2" title="{{ AVANCE_REAL_SPRINT }}">
+                  <h6>% Avance real</h6>
                   {{ sprint.porcentajeReal | comasPipe }} %
                 </div>
-                <div class="col-md-1" title="{{ AVANCE_ESPERADO }}">
+                <div class="col-md-2" title="{{ AVANCE_ESPERADO }}">
                   <h6>% Avance esperado</h6>
                   {{ sprint.porcentajeEsperado | comasPipe }} %
                 </div>
-                <div class="col-md-1" [ngClass]="colorPorcentajeDependiendoFechaInicial(sprint.porcentajeCumplimiento,sprint.fechaInicial)" title="{{ CUMPLIMIENTO }}">
-                  <h6>&nbsp;%&nbsp;&nbsp; Cumplimiento</h6>
+                <div class="col-md-2" [ngClass]="colorPorcentajeDependiendoFechaInicial(sprint.porcentajeCumplimiento,sprint.fechaInicial)" title="{{ CUMPLIMIENTO }}">
+                  <h6>% Cumplimiento</h6>
                   {{ sprint.porcentajeCumplimiento | comasPipe }} %
                 </div>
                 <div class="col-md-3">
-                  <button title="Modificar" type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modificarSprint" 
-                  (click)="obtenerSprint(sprint.idSprintProyectoArea,sprint)" *ngIf="esAdmin || esOperador">
+                  <button title="Modificar" type="button" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modificarSprint" 
+                  (click)="obtenerSprint(sprint.idSprintProyectoArea,sprint)" *ngIf="esAdmin || esOperador || esDirector">
                     <i class="bi bi-pen-fill"></i>
                   </button>
-                  <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarSprint(sprint.idSprintProyectoArea)" *ngIf="esAdmin || esOperador"
+                  <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" (click)="eliminarSprint(sprint.idSprintProyectoArea)" *ngIf="esAdmin || esDirector"
                   ><i class="bi bi-trash3-fill"></i></button>
-                  <button title="Agregar documento" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#agregarDocumento"
-                  (click)="abrirModalAgregarDocumento(sprint.idSprintProyectoArea)" *ngIf="esAdmin || esOperador"
+                  <button title="Agregar documento" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#agregarDocumento"
+                  (click)="abrirModalAgregarDocumento(sprint.idSprintProyectoArea)" *ngIf="esAdmin || esOperador || esDirector"
                       ><i class="bi bi-folder-plus"></i>
                     </button>
-                  <button title="Ver documento" class="btn btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#modalVerDocumentos" 
+                  <button title="Ver documento" class="btn btn-outline-primary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalVerDocumentos" 
                   (click)="obtenerDocumento(sprint.idSprintProyectoArea)">            
                     <i class="bi bi-file-earmark-check"></i></button>
-                    <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" 
-                    (click)="obtenerSprint(sprint.idSprintProyectoArea,sprint)" *ngIf="esAdmin || esOperador">
+                    <button title="Agregar Observación" class="btn btn-outline-success me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" 
+                    (click)="obtenerSprint(sprint.idSprintProyectoArea,sprint)" *ngIf="esAdmin || esOperador || esDirector">
                       <i class="bi bi-node-plus-fill"></i></button>
-                    <button title="Ver observación" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(sprint.idSprintProyectoArea,'SPRINT_PROYECTO_AREA')">
+                    <button title="Ver observación" class="btn btn-outline-dark me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(sprint.idSprintProyectoArea,'SPRINT_PROYECTO_AREA')">
                       <i class="bi bi-eye-fill"></i></button>
                 </div> 
             </div>
@@ -173,16 +173,16 @@
                         <td>{{ tarea.descripcion }}</td>
                         <td>{{ obtenerNombreUsuario(tarea.idUsuario) }}</td>
                         <td>
-                          <button title="Modificar Tarea" class="btn btn-outline-secondary me-1"  data-bs-toggle="modal" data-bs-target="#modalModificarTarea"
+                          <button title="Modificar Tarea" class="btn btn-outline-secondary me-1 mb-1"  data-bs-toggle="modal" data-bs-target="#modalModificarTarea"
                           (click)="obtenerTareaAModificar(tarea.idTarea,tarea)" *ngIf="esAdmin || esOperador"><i class="bi bi-pencil-square"></i></button>
-                          <button title="Modificar estado" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalModificarEstado" 
+                          <button title="Modificar estado" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalModificarEstado" 
                           (click)="obtenerTarea(tarea.idTarea,tarea)" *ngIf="esAdmin || esOperador"
                           ><i class="bi bi-pen-fill"></i></button>
-                          <button title="Eliminar" class="btn btn-outline-danger me-1" (click)="eliminarTarea(tarea.idTarea, sprint.idSprintProyectoArea)" *ngIf="esAdmin || esOperador"
+                          <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" (click)="eliminarTarea(tarea.idTarea, sprint.idSprintProyectoArea)" *ngIf="esAdmin || esOperador"
                           ><i class="bi bi-trash3-fill"></i></button>
-                          <button title="Agregar Observación" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" 
+                          <button title="Agregar Observación" class="btn btn-outline-success me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" 
                           (click)="obtenerTarea(tarea.idTarea,tarea)" *ngIf="esAdmin || esOperador"><i class="bi bi-node-plus-fill"></i></button>
-                          <button title="Ver observación" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(tarea.idTarea,'TAREA')"><i class="bi bi-eye-fill"></i></button>
+                          <button title="Ver observación" class="btn btn-outline-dark me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(tarea.idTarea,'TAREA')"><i class="bi bi-eye-fill"></i></button>
                         </td>
                     </tr>
                   </ng-container>

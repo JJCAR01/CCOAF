@@ -37,6 +37,7 @@ export class PatListarComponent implements OnInit{
   esAdmin: boolean = false; 
   esDirector: boolean = false; 
   esOperador: boolean = false; // Agrega esta línea
+  esConsultor: boolean = false;
 
   idPatSeleccionado: number | 0 = 0;
   nombrePatSeleccionado: string | undefined;
@@ -91,16 +92,17 @@ export class PatListarComponent implements OnInit{
 
     ngOnInit() {
       // Usar Promise.all para esperar a que todas las promesas se resuelvan
-      Promise.all([
-        this.auth.esAdmin(),
-        this.auth.esDirector(),
-        this.auth.esOperador()
-      ]).then(([esAdmin, esDirector, esOperador]) => {
-        // Asignar los resultados a las propiedades correspondientes
-        this.esAdmin = esAdmin;
-        this.esDirector = esDirector;
-        this.esOperador = esOperador;
-
+    Promise.all([
+      this.auth.esAdmin(),
+      this.auth.esDirector(),
+      this.auth.esOperador(),
+      this.auth.esConsultor()
+    ]).then(([esAdmin, esDirector, esOperador, esConsultor]) => {
+      // Asignar los resultados a las propiedades correspondientes
+      this.esAdmin = esAdmin;
+      this.esDirector = esDirector;
+      this.esOperador = esOperador;
+      this.esConsultor = esConsultor;
         // Una vez que se hayan obtenido los roles del usuario, cargar los datos
         this.cargarPats();
         this.cargarUsuario();
@@ -431,23 +433,14 @@ export class PatListarComponent implements OnInit{
     }
 
     colorPorcentaje(porcentaje: number): string {
-      if (porcentaje < 30) {
+      if (porcentaje < 80 ) {
         return 'porcentaje-bajo'; // Define las clases CSS para porcentajes bajos en tu archivo de estilos.
-      } else if (porcentaje >= 30 && porcentaje < 100){
+      } else if (porcentaje >= 80 && porcentaje < 100) {
         return 'porcentaje-medio'; // Define las clases CSS para porcentajes normales en tu archivo de estilos.
       } else {
         return 'porcentaje-cien';
       }
     }   
-    finalizado(porcentaje: number): string {
-      if (porcentaje == 100) {
-        return 'porcentaje-bajo'; // Define las clases CSS para porcentajes bajos en tu archivo de estilos.
-      } else if (porcentaje >= 30 && porcentaje < 100){
-        return 'porcentaje-medio'; // Define las clases CSS para porcentajes normales en tu archivo de estilos.
-      } else {
-        return 'porcentaje-cien';
-      }
-    }
     get nombreObservacionVacio(){
       return this.formObservacion.get('nombre')?.invalid && this.formObservacion.get('nombre')?.touched;
     }

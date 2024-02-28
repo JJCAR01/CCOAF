@@ -9,7 +9,7 @@
       <form [formGroup]="form">
         <div class="form-floating mb-3">
           
-          <select class="form-select" id="pat" formControlName="pat" (change)="onPatSelect()">
+          <select class="form-select" id="pat" formControlName="pat" >
             <option value="" disabled selected>Seleccione el pat a filtrar*</option>
             <option *ngFor="let pat of nombrePats" [value]="pat">{{ pat }}</option>
           </select>
@@ -19,23 +19,18 @@
       <div>
         <div class="row">
           <div class="col">
-            <h2 class="text-center mb-3">Planes anuales</h2>
+            <h2 class="text-center mb-3">% de avance del PAT</h2>
             <div class="chart-container">
               <canvas id="chartPrincipal"></canvas>
             </div>
           </div>
-          <div class="col-lg-2">
-            <h2 class="text-center mb-3">Porcentaje avance de plan anual de {{ patSeleccionado }}</h2>
-            <div class="chart-container">
-              <canvas id="chart1"></canvas>
-            </div>
-          </div>
           <div class="col">
-            <h2 class="text-center mb-3">Total de actividades de {{patSeleccionado}}</h2>
+            <h2 class="text-center mb-3">% de avance del programa</h2>
             <div class="chart-container">
-              <canvas id="chart2"></canvas>
+              <canvas id="chartProgramasRealEsperado"></canvas>
             </div>
           </div>
+          
         </div>
       </div>
     </main>
