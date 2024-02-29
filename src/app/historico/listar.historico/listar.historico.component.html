@@ -7,24 +7,33 @@
     <link rel="stylesheet" href="listar.historico.component.scss">
 </head>
 <body>
-  <div class="row">
-    <div class="col-md-3">
+  <div class="row align-items-center">
+    <div class="col-md-1">
       <div class="custom-button">
-        <span class="input-group-text buscador">Buscar por nombre:</span>
-        <input type="text" class="form-control me-1" [(ngModel)]="busqueda"/>
+        <h5>Búsqueda por:&nbsp;</h5>
       </div>
     </div>
     <div class="col-md-3">
-      <div class="custom-button">
-        <span class="input-group-text buscador">Buscar por año:</span>
-        <input type="text" class="form-control me-1" [(ngModel)]="busquedaFechaAnual"/>
+        <div class="custom-button d-flex align-items-center">
+            <span>Nombre:&nbsp;</span>
+            <input type="text" class="form-control me-1" [(ngModel)]="busqueda"/>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="custom-button d-flex align-items-center">
+            <span>Año:&nbsp;</span>
+            <input type="text" class="form-control me-1" [(ngModel)]="busquedaFechaAnual"/>
+        </div>
+    </div>
+    <div class="col-md-3">
+      <div class="custom-button d-flex align-items-center">
+          <span>Dirección:&nbsp;</span>
+          <input type="text" class="form-control me-1" [(ngModel)]="busquedaDireccion"/>
       </div>
     </div>
   </div>
-  
-
+ 
   <main class="main text-center smaller-main">
-    
     <table class="table table-hover">
       <thead class="table table-color">
         <tr>
@@ -39,7 +48,7 @@
         </tr>
       </thead>
       <tbody>
-        <ng-container *ngFor="let pat of pats | buscar: busqueda | buscarFechaAnual :busquedaFechaAnual">
+        <ng-container *ngFor="let pat of pats | buscar: busqueda | buscarFechaAnual :busquedaFechaAnual | buscarDireccion :busquedaDireccion">
           <tr title="{{pat.nombre}}" >
             <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]" >{{ pat.nombre }}</td>
             <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]">{{ pat.fechaAnual }}</td>

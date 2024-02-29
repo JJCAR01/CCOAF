@@ -316,12 +316,13 @@
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Agregar observación</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Avances y Logros</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <form [formGroup]="tipoFormulario === 'SPRINT_PROYECTO_AREA' || 'TAREA' ? formObservacion : formObservacion" 
           (ngSubmit)="crearObservacion()">
+          <ul>Registre el comentario de avance, en caso de estar incumpliendo, por favor justifique el retraso.</ul>
             <div class="form-floating">
               <input type="date" id="fecha" [class.is-invalid]="fechaVacio" class="form-control mb-2" formControlName="fecha" readonly>
               <label for="fecha"  class="form-label">Fecha</label>

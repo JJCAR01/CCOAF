@@ -1,9 +1,6 @@
 import { Component, OnInit} from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ActividadService } from 'src/app/actividad/services/actividad.service';
 import { AuthService } from 'src/app/login/auth/auth.service';
-import Swal from 'sweetalert2';
-import { UsuarioService } from 'src/app/usuario/services/usuario.service';
 import { PatService } from 'src/app/pat/services/pat.service';
 import { TipoGEService } from 'src/app/gestion/services/tipoGE.service';
 
@@ -18,10 +15,10 @@ export class ProyectoPendienteListarComponent implements OnInit {
   usuarios: any[] = [];
   proyectosPendientes: any[] = [];
   actividadesEstrategicas: any[] = [];
+  busqueda: any;
 
   constructor(private actividadService: ActividadService,
     private auth: AuthService,
-    private usuarioService :UsuarioService,
     private patService:PatService,
     private tipoService: TipoGEService,
     ){ }
@@ -29,53 +26,53 @@ export class ProyectoPendienteListarComponent implements OnInit {
   ngOnInit(): void {
     this.patService.getPatsData().subscribe((patsData: any[]) => {
       if (patsData && patsData.length > 0) {
-        // Obtener los IDs de los Pats
-        const idsPats = patsData.map(pat => pat.idPat);
-
-        // Iterar sobre los IDs de Pats y cargar las actividades estratégicas
-        for (const idPat of idsPats) {
-          this.tipoService.listarActividadEstrategicaPorIdPat(idPat, this.auth.obtenerHeader())
-            .toPromise()
-            .then(
-              (data: any) => {
-                // Concatenar las actividades estratégicas obtenidas para todos los Pats
-                this.actividadesEstrategicas = data;
-                const idActividadEstrategicas = this.actividadesEstrategicas.map((act:any) => act.idActividadEstrategica);
-
-                for (const idActividad of idActividadEstrategicas) {
-                this.actividadService
-                    .listarProyectoPorIdActividadEstrategica(idActividad,this.auth.obtenerHeader()) 
-                    .toPromise()
-                    .then(
-                      (data: any) => {
-                        this.proyectosPendientes = data.filter((pendiente: any) => pendiente.avance < 100);
-                      },
-                      (error) => {
-                        Swal.fire(error.error.mensajeTecnico,'', 'error');
+          // Obtener los IDs de los Pats
+          const idsPats = patsData.map(pat => pat.idPat);
+  
+          // Lista acumulativa para almacenar todas las actividades estratégicas
+          const allActividades: any[] = [];
+          const todosProyectosPendientes: any[] = []; // Lista para almacenar proyectos pendientes
+  
+          // Promesas de carga de proyectos
+          const promesasProyectos: Promise<any>[] = [];
+  
+          // Iterar sobre los IDs de Pats y cargar las actividades estratégicas
+          for (const idPat of idsPats) {
+              this.tipoService.listarActividadEstrategicaPorIdPat(idPat, this.auth.obtenerHeader())
+                  .toPromise()
+                  .then((data: any) => {
+                      // Concatenar las actividades estratégicas obtenidas a la lista acumulativa
+                      allActividades.push(...data);
+  
+                      // Obtener los IDs de las actividades estratégicas
+                      const idActividades = data.map((actividad: any) => actividad.idActividadEstrategica);
+  
+                      // Iterar sobre los IDs de actividades para obtener los proyectos
+                      for (const idActividad of idActividades) {
+                          const promesaProyecto = this.actividadService.listarProyectoPorIdActividadEstrategica(idActividad, this.auth.obtenerHeader())
+                              .toPromise()
+                              .then((proyectos: any) => {
+                                  // Filtrar los proyectos pendientes (con porcentaje real < 100)
+                                  const proyectosPendientesActividad = proyectos.filter((proyecto: any) => proyecto.porcentajeReal < 100);
+                                  // Agregar los proyectos pendientes a la lista acumulativa
+                                  todosProyectosPendientes.push(...proyectosPendientesActividad);
+                              });
+                          promesasProyectos.push(promesaProyecto);
                       }
-                    );
-                  }
-              },
-              (error) => {
-                Swal.fire(error.error.mensajeTecnico, '', 'error');
-              }
-            );
-        }
+                  });
+          }
+  
+          // Esperar a que todas las promesas de carga de proyectos se resuelvan
+          Promise.all(promesasProyectos).then(() => {
+              // Asignar los proyectos pendientes una vez que todas las promesas se han resuelto
+              this.proyectosPendientes = todosProyectosPendientes;
+          });
       }
-    })
+    });
+
   }
 
 
-  cargarUsuario() {
-    this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
-      (data: any) => {
-        this.usuarios = data;
-    },
-      (error) => {
-        console.log(error);
-      }
-    );
-  }
 
 
   colorPorcentaje(porcentaje: number): string {

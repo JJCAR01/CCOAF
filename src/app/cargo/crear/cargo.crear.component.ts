@@ -56,12 +56,10 @@ export class CargoCrearComponent {
               {
                 title:"Creado!!!",
                 text:'El cargo se ha creado.', 
-                icon:"success",
-                showCancelButton: true,
-                cancelButtonText: "Cancelar",
-                confirmButtonText: "Confirmar",
-                confirmButtonColor: '#0E823F',
-                reverseButtons: true, 
+                icon:'success',
+                position: "center",
+                showConfirmButton: false,
+                timer: 1500,
               }
             );
             this.form.reset();

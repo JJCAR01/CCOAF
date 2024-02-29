@@ -32,6 +32,7 @@ export class TipoGECrearComponent implements OnInit {
       fechaFinal: ['', Validators.required],
       unidad:['',Validators.required],
       meta: ['', Validators.required],
+      entregable: ['',Validators.required],
       periodicidadMeta: ['', Validators.required],
       resultadoMeta: [0, Validators.required],
       idUsuario: ['', Validators.required],
@@ -60,6 +61,7 @@ export class TipoGECrearComponent implements OnInit {
       const fechaFinal = this.form.get('fechaFinal')?.value;
       const unidad = this.form.get('unidad')?.value;
       const meta = this.form.get('meta')?.value;
+      const entregable = this.form.get('entregable')?.value;
       const periodicidadMeta = this.form.get('periodicidadMeta')?.value;
       const resultadoMeta = this.form.get('resultadoMeta')?.value;
       const idUsuario = this.form.get('idUsuario')?.value;
@@ -72,6 +74,7 @@ export class TipoGECrearComponent implements OnInit {
           resultadoMeta:resultadoMeta,
           unidad:unidad,
           meta:meta,
+          entregable:entregable,
           periodicidadMeta:periodicidadMeta,
           idPat:idPat, 
           idUsuario: idUsuario,
@@ -80,9 +83,11 @@ export class TipoGECrearComponent implements OnInit {
             (response) => {
               Swal.fire({
                 title:"Creado!!!",
-                text: 'La actividad estratégica se ha creada!!',
-                icon: "success",
-                confirmButtonColor: '#0E823F',
+                text: 'La actividad estratégica se ha creado!!',
+                icon:'success',
+                position: "center",
+                showConfirmButton: false,
+                timer: 1500
               });
               this.form.reset();
             },
@@ -113,6 +118,9 @@ export class TipoGECrearComponent implements OnInit {
   }
   get metaVacio(){
     return this.form.get('meta')?.invalid && this.form.get('meta')?.touched;
+  }
+  get entregableVacio(){
+    return this.form.get('entregable')?.invalid && this.form.get('entregable')?.touched;
   }
   get idUsuarioVacio(){
     return this.form.get('idUsuario')?.invalid && this.form.get('idUsuario')?.touched;

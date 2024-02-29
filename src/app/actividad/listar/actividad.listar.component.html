@@ -184,7 +184,7 @@
                   </div>
                   <div class="col-md-2">
                     <button title="Modificar" type="button" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalModificarGestion" 
-                    (click)="obtenerActividadGestionEstrategica(gestion.idActividadGestionEstrategica,gestion)" *ngIf="esAdmin || esOperador || esDirector">
+                    (click)="obtenerActividadGestionEstrategica(gestion.idActividadGestionEstrategica,gestion)" *ngIf="esAdmin || esDirector">
                       <i class="bi bi-pen-fill"></i>
                     </button>
                   <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" (click)="eliminarGestion(gestion.idActividadGestionEstrategica)" *ngIf="esAdmin || esDirector"
@@ -277,7 +277,7 @@
                           <button title="Modificar estado" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalModificarEstado" 
                           (click)="obtenerTarea(tarea.idTarea,tarea)" *ngIf="esAdmin || esOperador"
                           ><i class="bi bi-pen-fill"></i></button>
-                          <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" (click)="eliminarTarea(tarea.idTarea, gestion.idActividadGestionEstrategica)" *ngIf="esAdmin || esOperador"
+                          <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" (click)="eliminarTarea(tarea.idTarea, gestion.idActividadGestionEstrategica)" *ngIf="esAdmin || esDirector"
                           ><i class="bi bi-trash3-fill"></i></button>
                           <button title="Agregar documento" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#agregarDocumentoTarea"
                             (click)="abrirModalAgregarDocumento(tarea.idTarea,'TAREA')" *ngIf="esAdmin || esOperador || esDirector"
@@ -396,19 +396,19 @@
           </div>
             <div class="mb-3">
               <label for="presupuesto" class="form-label">Presupuesto</label>
-              <input type="number" class="form-control" id="presupuesto" formControlName="presupuesto" [ngModel]="presupuestoProyecto">
+              <input type="number" class="form-control" id="presupuesto" formControlName="presupuesto" >
             </div>
             <div class="mb-3">
               <label for="fechaInicial" class="form-label">Fecha Inicial</label>
-              <input type="date" class="form-control" id="fechaInicial" formControlName="fechaInicial" [ngModel]="fechaInicialProyecto">
+              <input type="date" class="form-control" id="fechaInicial" formControlName="fechaInicial" >
             </div>
             <div class="mb-3">
               <label for="fechaFinal" class="form-label">Fecha Final</label>
-              <input type="date" class="form-control" id="fechaFinal" formControlName="fechaFinal" [ngModel]="fechaFinalProyecto">
+              <input type="date" class="form-control" id="fechaFinal" formControlName="fechaFinal" >
             </div>
             <div class="mb-3">
               <label for="modalidad" class="form-label">Modalidad</label>
-              <select class="form-select" id="modalidad" formControlName="modalidad" [ngModel]="modalidadProyecto">
+              <select class="form-select" id="modalidad" formControlName="modalidad">
                 <option *ngFor="let modalidad of modalidadEnumList" [value]=" (modalidad)">
                   {{ modalidad  | formatEnum  }}</option>
               </select>
@@ -432,25 +432,25 @@
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Modificar Gestion del Area</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Modificar actividad de gestión</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <form [formGroup]="form" (ngSubmit)="modificarActividadGestion()">
             <div class="form-floating mb-2">
-              <input type="text" class="form-control" id="nombre" formControlName="nombre" [ngModel]="nombreActividadGestion" style="min-width: 100%;">
+              <input type="text" class="form-control" id="nombre" formControlName="nombre"  style="min-width: 100%;">
               <label for="nombre" class="form-label">Nombre</label>
             </div>
             <div class="form-floating mb-2">
-              <input type="date" class="form-control" id="fechaInicial" formControlName="fechaInicial" [ngModel]="fechaInicialGestion">
+              <input type="date" class="form-control" id="fechaInicial" formControlName="fechaInicial" >
               <label for="fechaInicial" class="form-label">Fecha Inicial</label>
             </div>
             <div class="form-floating mb-2">
-              <input type="date" class="form-control" id="fechaFinal" formControlName="fechaFinal" [ngModel]="fechaFinalGestion">
+              <input type="date" class="form-control" id="fechaFinal" formControlName="fechaFinal">
               <label for="fechaFinal" class="form-label">Fecha Final</label>
             </div>
             <div class="form-floating mb-3">
-              <select class="form-select" id="idUsuario" formControlName="idUsuario" [(value)]="idUsuarioSeleccionado">
+              <select class="form-select" id="idUsuario" formControlName="idUsuario">
                 <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario">
                   {{ usuario.nombre + ' ' + usuario.apellidos }}
                 </option>
@@ -677,12 +677,13 @@
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Agregar observación</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Avances y Logros</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <form [formGroup]="tipoFormulario === 'PROYECTO' || 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA' || 'TAREA' ? formObservacion : formObservacion" 
           (ngSubmit)="crearObservacion()">
+          <ul>Registre el comentario de avance, en caso de estar incumpliendo, por favor justifique el retraso.</ul>
             <div class="form-floating">
               <input type="date" id="fecha" [class.is-invalid]="fechaVacio" class="form-control mb-2" formControlName="fecha" readonly>
               <label for="fecha"  class="form-label">Fecha</label>

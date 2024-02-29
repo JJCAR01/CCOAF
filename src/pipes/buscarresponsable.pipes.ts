@@ -1,15 +1,15 @@
 import { Injectable, Pipe, PipeTransform } from "@angular/core";
 @Pipe({
-    name: "buscarDireccion"
+    name: "buscarResponsable"
 })
 @Injectable()
-export class BuscarDireccionPipe implements PipeTransform {
+export class BuscarResponsablePipe implements PipeTransform {
     transform(items: any, term: any): any {
         if (term === undefined) {
             return items;
         }
         return items.filter(function (item: any) {
-            return item.direccion.nombre.toLowerCase().includes(term.toLowerCase());
+            return item.idUsuario.toLowerCase().includes(term.toLowerCase());
         })
     }
 }

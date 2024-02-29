@@ -161,6 +161,7 @@ export class TipogeListarComponent implements OnInit {
       unidad: ['', Validators.required],
       periodicidadMeta: ['', Validators.required],
       meta: ['', Validators.required],
+      entregable:['', Validators.required],
       idUsuario:['',Validators.required]
     });
     this.formGestion = this.formBuilder.group({
@@ -451,6 +452,7 @@ export class TipogeListarComponent implements OnInit {
       const fechaInicial = this.formEstrategica.get('fechaInicial')?.value;
       const fechaFinal = this.formEstrategica.get('fechaFinal')?.value;
       const meta = this.formEstrategica.get('meta')?.value;
+      const entregable = this.formEstrategica.get('entregable')?.value;
       const unidad = this.formEstrategica.get('unidad')?.value;
       const periodicidadMeta = this.formEstrategica.get('periodicidadMeta')?.value;
       const idUsuario = this.formEstrategica.get('idUsuario')?.value;
@@ -460,6 +462,7 @@ export class TipogeListarComponent implements OnInit {
         fechaInicial: fechaInicial,
         fechaFinal: fechaFinal,
         meta:meta,
+        entregable:entregable,
         periodicidadMeta:periodicidadMeta,
         unidad:unidad,
         idUsuario :idUsuario,
@@ -654,22 +657,6 @@ export class TipogeListarComponent implements OnInit {
     } else {
       return this.formObservacion.markAllAsTouched();
     }    
-  }
-  agregarEntregable() {
-    if (this.formAgregarEntregable.valid) {
-      const entregable = this.formAgregarEntregable.get('entregable')?.value;
-      const actividad = {
-        entregable: entregable,
-      };
-      this.gestionService.modificarEntregableActividadEstrategica(actividad, this.idActividadEstrategicaSeleccionado,this.auth.obtenerHeader()).subscribe(
-              () => {
-                  this.swalSatisfactorio('Agregado!','El entregable de la actividad estratégica')
-                  this.cargarActividadesEstrategicas(this.idPat);
-                  this.formAgregarEntregable.reset();           
-              },
-              (error) => {this.swalError(error);}
-            );
-    }
   }
   agregarResultadoMeta() {
     if (this.formAgregarResultadoMeta.valid) {
@@ -1053,6 +1040,7 @@ export class TipogeListarComponent implements OnInit {
       fechaInicial: actividadEstrategica.fechaInicial,
       fechaFinal: actividadEstrategica.fechaFinal,
       meta: actividadEstrategica.meta,
+      entregable:actividadEstrategica.entregable,
       periodicidadMeta : actividadEstrategica.periodicidadMeta,
       unidad: actividadEstrategica.unidad,
       idUsuario: actividadEstrategica.idUsuario,
@@ -1142,7 +1130,9 @@ export class TipogeListarComponent implements OnInit {
         title: `Se ha ${metodo}.`,
         text: `El ${tipo} se ha ${metodo}!!`,
         icon:'success',
-        confirmButtonColor: '#0E823F',
+        position: "center",
+        showConfirmButton: false,
+        timer: 1000
       }
     );
   }

@@ -931,8 +931,10 @@ private obtenerFechaActual(): string {
       title: `Se ha ${metodo}.`,
       text: `El ${tipo} se ha ${metodo}!!`,
       icon:'success',
-      confirmButtonColor: '#0E823F',
-    }
+        position: "center",
+        showConfirmButton: false,
+        timer: 1000
+      }
     );
   }
   swalError(error: any) {

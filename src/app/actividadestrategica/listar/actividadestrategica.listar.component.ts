@@ -19,6 +19,9 @@ export class ActividadestrategicaListarComponent implements OnInit{
   nombrePat: string | null = '';
   usuarios:any[] =[];
   pats : Pat[] = [];
+  busqueda: any;
+  busquedaFechaAnual:any;
+  busquedaResponsable:any;
 
   constructor(private tipoService: TipoGEService,
     private auth: AuthService,
@@ -27,7 +30,7 @@ export class ActividadestrategicaListarComponent implements OnInit{
     private router:Router){}
 
   ngOnInit(): void {
-    
+    this.cargarUsuario();
     this.patService.getPatsData().subscribe((patsData: any[]) => {
       if (patsData && patsData.length > 0) {
         // Obtener los IDs de los Pats
@@ -50,10 +53,7 @@ export class ActividadestrategicaListarComponent implements OnInit{
             );
         }
       }
-    });
-    this.cargarUsuario();
-    this.cargarPats();
-    
+    });  
   }
   cargarUsuario() {
     this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
@@ -61,12 +61,12 @@ export class ActividadestrategicaListarComponent implements OnInit{
         this.usuarios = data;
     })
   }
-  cargarPats() {
+  /*cargarPats() {
     this.patService.listarPat(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
         this.pats = data;
     })
-  }
+  }*/
 
   irADetalles(actividad: any) {
     // Obtén el nombre del PAT antes de navegar
@@ -83,10 +83,10 @@ export class ActividadestrategicaListarComponent implements OnInit{
     const usuario = this.usuarios.find((u) => u.idUsuario === idUsuario);
     return usuario ? usuario.nombre + " " + usuario.apellidos : '';
   }
-  obtenerNombrePat(idPat: number) {
+  /*obtenerNombrePat(idPat: number) {
     const pat = this.pats.find((u) => u.idPat === idPat);
     return pat ? pat.nombre : '';
-  }
+  }*/
 
   colorPorcentaje(porcentaje: number): string {
     if (porcentaje < 30) {

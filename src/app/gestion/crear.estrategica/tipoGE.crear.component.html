@@ -66,6 +66,12 @@
                                         </div>
                                     </div>                                    
                                 </div>
+                            
+                            <div class="form-floating mb-2">
+                                <textarea type="text" id="entregable" [class.is-invalid]="entregableVacio" class="form-control form-control-lg" formControlName="entregable" placeholder="entregable" ></textarea>
+                                <label class="form-label" for="entregable">Entregable<span class="required-field">*</span></label>
+                                <small *ngIf="entregableVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
+                            </div>
                                 
                                 
                             <div class="form-floating mb-2">

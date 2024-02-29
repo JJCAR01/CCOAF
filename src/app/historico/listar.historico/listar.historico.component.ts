@@ -60,7 +60,7 @@ export class ListarHistoricoComponent {
   observaciones: ObservacionPat[] = [];
   busqueda: any;
   busquedaFechaAnual:any;
-
+  busquedaDireccion:any;
 
     constructor(
       private patService: PatService,private auth:AuthService,

@@ -501,15 +501,15 @@
         <div class="modal-body">
           <form [formGroup]="formEstrategica" (ngSubmit)="modificarActividadEstrategica()">
             <div class="form-floating mb-2">
-              <textarea type="text" class="form-control" id="nombre" formControlName="nombre" [ngModel]="nombreActividadEstrategica" ></textarea>
+              <textarea type="text" class="form-control" id="nombre" formControlName="nombre"></textarea>
               <label for="nombre" class="form-label">Nombre</label>
             </div>
             <div class="form-floating mb-2">
-              <input type="date" class="form-control" id="fechaInicial" formControlName="fechaInicial" [ngModel]="fechaInicialEstrategica">
+              <input type="date" class="form-control" id="fechaInicial" formControlName="fechaInicial">
               <label for="fechaInicial" class="form-label">Fecha Inicial</label>
             </div>  
             <div class="form-floating mb-2">
-              <input type="date" class="form-control" id="fechaFinal" formControlName="fechaFinal" [ngModel]="fechaFinalEstrategica">
+              <input type="date" class="form-control" id="fechaFinal" formControlName="fechaFinal" >
               <label for="fechaFinal" class="form-label">Fecha Final</label>
             </div>
             <div class="col-md-12">
@@ -541,6 +541,10 @@
                       </div>
                   </div>
               </div>                                    
+          </div>
+          <div class="form-floating mb-2">
+            <textarea type="text" class="form-control" id="entregable" formControlName="entregable"></textarea>
+            <label for="entregable" class="form-label">Entregable</label>
           </div>
           <div class="form-floating mb-2">
             <select class="form-select" id="periodicidadMeta" formControlName="periodicidadMeta" >
@@ -578,15 +582,15 @@
         <div class="modal-body">
           <form [formGroup]="formGestion" (ngSubmit)="modificarActividadGestion()">
             <div class="form-floating mb-2">
-              <input type="text" class="form-control" id="nombre" formControlName="nombre" [ngModel]="nombreActividadGestion" style="min-width: 100%;">
+              <input type="text" class="form-control" id="nombre" formControlName="nombre"  style="min-width: 100%;">
               <label for="nombre" class="form-label">Nombre</label>
             </div>
             <div class="form-floating mb-2">
-              <input type="date" class="form-control" id="fechaInicial" formControlName="fechaInicial" [ngModel]="fechaInicialGestion">
+              <input type="date" class="form-control" id="fechaInicial" formControlName="fechaInicial" >
               <label for="fechaInicial" class="form-label">Fecha Inicial</label>
             </div>
             <div class="form-floating mb-2">
-              <input type="date" class="form-control" id="fechaFinal" formControlName="fechaFinal" [ngModel]="fechaFinalGestion">
+              <input type="date" class="form-control" id="fechaFinal" formControlName="fechaFinal" >
               <label for="fechaFinal" class="form-label">Fecha Final</label>
             </div>
             <div class="form-floating mb-3">
@@ -621,19 +625,19 @@
           </div>
             <div class="mb-3">
               <label for="presupuesto" class="form-label">Presupuesto</label>
-              <input type="number" class="form-control" id="presupuesto" formControlName="presupuesto" [ngModel]="presupuestoProyecto">
+              <input type="number" class="form-control" id="presupuesto" formControlName="presupuesto" >
             </div>
             <div class="mb-3">
               <label for="fechaInicial" class="form-label">Fecha Inicial</label>
-              <input type="date" class="form-control" id="fechaInicial" formControlName="fechaInicial" [ngModel]="fechaInicialProyecto">
+              <input type="date" class="form-control" id="fechaInicial" formControlName="fechaInicial" >
             </div>
             <div class="mb-3">
               <label for="fechaFinal" class="form-label">Fecha Final</label>
-              <input type="date" class="form-control" id="fechaFinal" formControlName="fechaFinal" [ngModel]="fechaFinalProyecto">
+              <input type="date" class="form-control" id="fechaFinal" formControlName="fechaFinal" >
             </div>
             <div class="mb-3">
               <label for="modalidad" class="form-label">Modalidad</label>
-              <select class="form-select" id="modalidad" formControlName="modalidad" [ngModel]="modalidadProyecto">
+              <select class="form-select" id="modalidad" formControlName="modalidad" >
                 <option *ngFor="let modalidad of modalidadEnumList" [value]="(modalidad)">
                   {{ modalidad | formatEnum }}</option>
               </select>
@@ -747,29 +751,7 @@
       </div>
     </div>
   </div>
-  <div class="modal fade" id="modalAgregarEntregable" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Entregable</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form [formGroup]="formAgregarEntregable" (ngSubmit)="agregarEntregable()">
-            <div class="form-floating mb-2">
-              <input type="text" id="entregable" class="form-control form-control-lg" formControlName="entregable" placeholder="entregable">
-              <label for="entregable" class="form-label">Entregable<span class="required-field">*</span></label> 
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Guardar</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="modal fade" id="modalAgregarResultadoMeta" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal fade" id="modalAgregarResultadoMeta" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
@@ -825,22 +807,22 @@
           <form [formGroup]="formModificarTarea" (ngSubmit)="modificarTarea()">
             <div class="mb-3">
               <label for="nombre" class="form-label">Nombre</label>
-              <input type="text" class="form-control" id="nombre" formControlName="nombre" [ngModel]="nombreTarea">
+              <input type="text" class="form-control" id="nombre" formControlName="nombre" >
             </div>
             <div class="mb-3">
               <label for="periodicidad" placeholder="periodicidad">Periodicidad:</label>
-              <select class="form-select" id="periodicidad" formControlName="periodicidad" [ngModel]="periodicidadTarea">
+              <select class="form-select" id="periodicidad" formControlName="periodicidad" >
                   <option value="" disabled selected> Seleccione la periodicidad<span class="required-field">*</span></option>
                   <option *ngFor="let periodicidad of periodiciadLista" [value]="periodicidad">{{ periodicidad | formatEnum }}</option>
               </select>
           </div>
             <div class="mb-3">
               <label for="descripcion" class="form-label">Descripcion</label>
-              <input type="text" class="form-control" id="descripcion" formControlName="descripcion" [ngModel]="descripcionTarea" >
+              <input type="text" class="form-control" id="descripcion" formControlName="descripcion" >
             </div>
             <div class="mb-3">
               <label for="idUsuario" placeholder="usuario">Responsable:</label>
-              <select class="form-select" id="idUsuario" formControlName="idUsuario" [ngModel]="idUsuarioSeleccionado">
+              <select class="form-select" id="idUsuario" formControlName="idUsuario">
                   <option value="" disabled selected> Seleccione el usuario responsable<span class="required-field">*</span></option>
                   <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario">{{ usuario.nombre + ' ' + usuario.apellidos | formatEnum }}</option>
               </select>

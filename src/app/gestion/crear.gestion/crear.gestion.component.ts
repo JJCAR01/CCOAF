@@ -68,8 +68,11 @@ export class CrearGestionComponent {
               Swal.fire({
                 title:"Creado!!!", 
                 text:'La gestión del área se ha creado!!',
-                icon: "success",
-                confirmButtonColor: '#0E823F',});
+                icon:'success',
+                position: "center",
+                showConfirmButton: false,
+                timer: 1500
+            });
               this.form.reset();
             },
             (error) => {

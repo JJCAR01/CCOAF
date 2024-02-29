@@ -21,6 +21,7 @@ export class ActividadEstrategicaPendienteListarComponent implements OnInit {
   actividadesEstrategicasPendientes: any[] = [];
   usuarios:any[] = [];
   pats : Pat[] = [];
+  busqueda: any;
 
   constructor(private tipoService: TipoGEService,
     private auth: AuthService,
@@ -32,7 +33,6 @@ export class ActividadEstrategicaPendienteListarComponent implements OnInit {
 
     ngOnInit(): void {
       this.cargarUsuario();
-      this.cargarPats();
       this.patService.getPatsData().subscribe((patsData: any[]) => {
         if (patsData && patsData.length > 0) {
           // Obtener los IDs de los Pats
@@ -79,19 +79,9 @@ export class ActividadEstrategicaPendienteListarComponent implements OnInit {
         this.usuarios = data;
     })
   }
-  cargarPats() {
-    this.patService.listarPat(this.auth.obtenerHeader()).subscribe(
-      (data: any) => {
-        this.pats = data;
-    })
-  }
   obtenerNombreUsuario(idUsuario: number) {
     const usuario = this.usuarios.find((u) => u.idUsuario === idUsuario);
     return usuario ? usuario.nombre + " " + usuario.apellidos : '';
-  }
-  obtenerNombrePat(idPat: number) {
-    const pat = this.pats.find((u) => u.idPat === idPat);
-    return pat ? pat.nombre : '';
   }
 
   colorPorcentaje(porcentaje: number): string {

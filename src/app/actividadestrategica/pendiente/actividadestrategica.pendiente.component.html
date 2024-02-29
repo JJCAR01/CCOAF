@@ -9,9 +9,22 @@
 <body>
   <div class="row-with-button">
     <div>
-      <h1 class="mb-2">Actividades estratégicas pendientes</h1>
+      <h1 class="mb-2">Actividades Estratégicas - PAT pendientes</h1>
     </div>
-  </div>  
+  </div>
+  <div class="row align-items-center">
+    <div class="col-md-1">
+      <div class="custom-button">
+        <h5>Busqueda por:&nbsp;</h5>
+      </div>
+    </div>
+    <div class="col-md-3">
+        <div class="custom-button d-flex align-items-center">
+            <span>Nombre:&nbsp;</span>
+            <input type="text" class="form-control me-1" [(ngModel)]="busqueda"/>
+        </div>
+    </div>
+  </div> 
   <main class="main text-center smaller-main">
     <div *ngIf="actividadesEstrategicasPendientes.length === 0; else actividadListNotEmpty">
       <p>No hay actividades estratégicas pendientes.</p>
@@ -20,7 +33,6 @@
       <table class="table table-hover">
         <thead class="table-danger">
           <tr>
-            <th>Programa - PAT</th>
             <th class="column-nombre">Nombre</th>
             <th>Fecha Inicial</th>
             <th>Fecha Final</th>
@@ -35,7 +47,6 @@
         <tbody>
           <ng-container *ngFor="let actividad of actividadesEstrategicasPendientes">
               <tr (click)="irADetalles(actividad)" title="{{actividad.nombre}}">
-                <td>{{ obtenerNombrePat(actividad.idPat) }}</td>
                 <td>{{ actividad.nombre }}</td>
                 <td>{{ actividad.fechaInicial }}</td>
                 <td>{{ actividad.fechaFinal }}</td>

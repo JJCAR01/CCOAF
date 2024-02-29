@@ -9,14 +9,27 @@
 <body>
   <div class="row-with-button">
     <div>
-      <h1 class="mb-2">Actividades Estratégicas</h1>
+      <h1 class="mb-2">Actividades Estratégicas - PAT</h1>
     </div>
-  </div>  
+  </div>
+  <div class="row align-items-center">
+    <div class="col-md-1">
+      <div class="custom-button">
+        <h5>Busqueda por:&nbsp;</h5>
+      </div>
+    </div>
+    <div class="col-md-3">
+        <div class="custom-button d-flex align-items-center">
+            <span>Nombre:&nbsp;</span>
+            <input type="text" class="form-control" [(ngModel)]="busqueda"/>
+        </div>
+    </div>
+  </div>
+
   <main class="main text-center smaller-main">
-    <table class="table table-bordered table-hover">
+    <table class="table table-hover">
       <thead class="table table-color">
         <tr>
-          <th>Programa - PAT</th>
           <th class="column-nombre">Nombre</th>
           <th>Fecha Inicial</th>
           <th>Fecha Final</th>
@@ -29,9 +42,8 @@
         </tr>
       </thead>
       <tbody>
-        <ng-container *ngFor="let actividad of actividadesEstrategicas">
+        <ng-container *ngFor="let actividad of actividadesEstrategicas  | buscar: busqueda">
           <tr (click)="irADetalles(actividad)" title="{{actividad.nombre}}">
-            <td>{{ obtenerNombrePat(actividad.idPat) }}</td>
             <td>{{ actividad.nombre }}</td>
             <td>{{ actividad.fechaInicial }}</td>
             <td>{{ actividad.fechaFinal }}</td>

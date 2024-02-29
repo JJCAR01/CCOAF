@@ -79,8 +79,11 @@ export class CrearProyectoareaComponent {
               Swal.fire({
                 title:"Creado!!!", 
                 text:'El proyecto del área se ha creado!!',
-                icon: "success",
-                confirmButtonColor: '#0E823F',});
+                icon:'success',
+                position: "center",
+                showConfirmButton: false,
+                timer: 1500
+              });
               this.form.reset();
             },
             (error) => {

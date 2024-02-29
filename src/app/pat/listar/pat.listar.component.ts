@@ -92,19 +92,66 @@ export class PatListarComponent implements OnInit{
 
     ngOnInit() {
       // Usar Promise.all para esperar a que todas las promesas se resuelvan
-    Promise.all([
-      this.auth.esAdmin(),
-      this.auth.esDirector(),
-      this.auth.esOperador(),
-      this.auth.esConsultor()
-    ]).then(([esAdmin, esDirector, esOperador, esConsultor]) => {
-      // Asignar los resultados a las propiedades correspondientes
-      this.esAdmin = esAdmin;
-      this.esDirector = esDirector;
-      this.esOperador = esOperador;
-      this.esConsultor = esConsultor;
-        // Una vez que se hayan obtenido los roles del usuario, cargar los datos
-        this.cargarPats();
+      Promise.all([
+        this.auth.esAdmin(),
+        this.auth.esDirector(),
+        this.auth.esOperador(),
+        this.auth.esConsultor()
+      ]).then(([esAdmin, esDirector, esOperador, esConsultor]) => {
+        // Asignar los resultados a las propiedades correspondientes
+        this.esAdmin = esAdmin;
+        this.esDirector = esDirector;
+        this.esOperador = esOperador;
+        this.esConsultor = esConsultor;
+    this.patService.listarPat(this.auth.obtenerHeader()).toPromise().then(
+        (data: any) => {
+          // Obtener el token
+          const token: any = this.auth.getToken();
+    
+          // Decodificar el payload del token
+          const payloadBase64 = token.split('.')[1];
+          const payloadBytes = new Uint8Array(atob(payloadBase64).split('').map(char => char.charCodeAt(0)));
+          const decodedPayload = JSON.parse(new TextDecoder().decode(payloadBytes));
+
+          // Convertir las cadenas de direcciones y pats a arrays
+          //const direccionesArray = decodedPayload.direccion.split(',').map((direccion: string) => direccion.trim());
+          const idUsuarioLogueado = decodedPayload.idUser;
+          const listaDePatsUsuario = decodedPayload.pats.split(',').map((pat: string) => pat.trim());
+          const listaDeDireccionesUsuario = decodedPayload.direcciones.split(',').map((direccion: string) => direccion.trim());
+          const tipoUsuario = decodedPayload.type;
+          // Verificar si son todas las direcciones y todos los procesos
+          //const sonTodasLasDirecciones = direccionesArray.includes('TODAS LAS DIRECCIONES');
+          
+
+          // Filtrar los datos según las direcciones y procesos del payload
+          const patsFiltrados = data.filter((d: any) => {
+            if (d.fechaAnual === this.obtenerAnual()) {
+              if (tipoUsuario === 'ADMIN') {
+                return true;
+              } else if (tipoUsuario === 'DIRECTOR' && listaDeDireccionesUsuario.includes(d.direccion.nombre)) {
+                return true;
+              } else if (d.idUsuario === idUsuarioLogueado || listaDePatsUsuario.includes(d.nombre)) {
+                return true;
+              } else {
+                return false;
+              }
+            } else {
+              return false;
+            }
+          });
+          // Actualizar la cantidad de pats
+          this.cantidadPats = patsFiltrados.length;
+
+          // Cargar las actividades estratégicas relacionadas con los planes anuales
+          this.cargarActividadesEstrategica(patsFiltrados);
+          this.cargarPatsActividadGestion(patsFiltrados);
+          this.patService.setPatsData(patsFiltrados);
+          this.pats = patsFiltrados;
+        },
+        (error) => {
+          this.swalError(error);
+        }
+      );
         this.cargarUsuario();
         this.cargarDirecciones();
       });
@@ -132,58 +179,7 @@ export class PatListarComponent implements OnInit{
     } 
 
     cargarPats() {
-      this.patService.listarPat(this.auth.obtenerHeader()).toPromise().then(
-        (data: any) => {
-          // Obtener el token
-          const token: any = this.auth.getToken();
-    
-          // Decodificar el payload del token
-          const payloadBase64 = token.split('.')[1];
-          const payloadBytes = new Uint8Array(atob(payloadBase64).split('').map(char => char.charCodeAt(0)));
-          const decodedPayload = JSON.parse(new TextDecoder().decode(payloadBytes));
-
-          // Convertir las cadenas de direcciones y pats a arrays
-          //const direccionesArray = decodedPayload.direccion.split(',').map((direccion: string) => direccion.trim());
-          const idUsuarioLogueado = decodedPayload.idUser;
-          const listaDePatsUsuario = decodedPayload.pats.split(',').map((pat: string) => pat.trim());
-          const listaDeDireccionesUsuario = decodedPayload.direcciones.split(',').map((direccion: string) => direccion.trim());
-          const tipoUsuario = decodedPayload.type;
-          // Verificar si son todas las direcciones y todos los procesos
-          //const sonTodasLasDirecciones = direccionesArray.includes('TODAS LAS DIRECCIONES');
-          
-
-          // Filtrar los datos según las direcciones y procesos del payload
-          const patsFiltrados = data.filter((d: any) => {
-            if( d.fechaAnual === this.obtenerAnual()){
-              if (tipoUsuario === 'ADMIN') {
-                return true;
-              }  else if (d.idUsuario === idUsuarioLogueado){
-                return true;
-              } else if (listaDePatsUsuario.includes(d.nombre)) {
-                return true;
-              } else if (tipoUsuario === 'DIRECTOR' && listaDeDireccionesUsuario.includes(d.direccion.nombre)) {
-                return true;
-              }  else {
-                return false;
-              }
-            } else {
-              return false
-            }
-          });
-    
-          // Actualizar la cantidad de pats
-          this.cantidadPats = patsFiltrados.length;
-
-          // Cargar las actividades estratégicas relacionadas con los planes anuales
-          this.cargarActividadesEstrategica(patsFiltrados);
-          this.cargarPatsActividadGestion(patsFiltrados);
-          this.patService.setPatsData(patsFiltrados);
-          this.pats = patsFiltrados;
-        },
-        (error) => {
-          this.swalError(error);
-        }
-      );
+      
     }
     cargarPatsActividadGestion(pats: any[]) {
       // Obtener los IDs de los planes anuales
@@ -453,10 +449,11 @@ export class PatListarComponent implements OnInit{
         title: `Se ha ${metodo}.`,
         text: `El ${tipo} se ha ${metodo}!!`,
         icon:'success',
-        confirmButtonColor: '#0E823F',
+        position: "center",
+        showConfirmButton: false,
+        timer: 1000
       }
       );
-      this.form.reset();
     }
     swalError(error: any) {
       Swal.fire(
