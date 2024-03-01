@@ -16,7 +16,6 @@ import { Pat } from 'src/app/modelo/pat';
 export class ActividadestrategicaListarComponent implements OnInit{
   title = 'listarActividadesEstrategicas';
   actividadesEstrategicas: any[] = [];
-  nombrePat: string | null = '';
   usuarios:any[] =[];
   pats : Pat[] = [];
   busqueda: any;

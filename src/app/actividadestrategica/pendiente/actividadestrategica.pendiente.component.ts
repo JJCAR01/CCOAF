@@ -17,7 +17,6 @@ import { Pat } from 'src/app/modelo/pat';
 export class ActividadEstrategicaPendienteListarComponent implements OnInit {
   title = 'listarActividadEstrategicaPendiente';
   proyectos: any[] = [];
-  patNombre:string|undefined;
   actividadesEstrategicasPendientes: any[] = [];
   usuarios:any[] = [];
   pats : Pat[] = [];

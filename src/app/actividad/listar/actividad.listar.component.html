@@ -91,7 +91,7 @@
                     {{ proyecto.presupuesto | currency : 'COP' :'symbol-narrow' : '1.0-0' }}</td>
                 <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]">
                       {{ proyecto.modalidad  | formatEnum  }}</td>
-                <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]">
+                <td data-bs-toggle="modal" data-bs-target="#modalModificarValorEjecutado" (click)="obtenerProyecto(proyecto.idProyecto,proyecto)">
                       {{ proyecto.valorEjecutado | currency : '$ ' : 'symbol' : '1.0-0' }}</td>
                 <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarSprint', proyecto.idProyecto, 'pat', patNombre] } }]">
                       {{ proyecto.fechaInicial }}</td>
@@ -415,9 +415,17 @@
             </div>
             <div class="mb-3">
               <label for="planeacionSprint" class="form-label">Planeación</label>
-              <select class="form-select" id="planeacionSprint" formControlName="planeacionSprint" [value]="planeacionProyecto">
+              <select class="form-select" id="planeacionSprint" formControlName="planeacionSprint">
                 <option *ngFor="let planeacion of planeacionEnumList" [value]="planeacion" >{{ planeacion  | formatEnum }}</option>
               </select>
+            </div>
+            <div class="form-floating mb-3">
+              <select class="form-select" id="idUsuario" formControlName="idUsuario" >
+                <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario">
+                  {{ usuario.nombre + ' ' + usuario.apellidos }}
+                </option>
+              </select>
+              <label for="idUsuario" class="form-label">Responsable</label>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -549,6 +557,28 @@
       </div>
     </div>
   </div>
+  <div class="modal fade" id="modalModificarValorEjecutado" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Registrar valor ejecutado</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="formModificarValorEjecutado" (ngSubmit)="modificarValorEjecutado()">
+            <div class="form-floating mb-2">
+              <input type="number" id="valorEjecutado" class="form-control form-control-lg" formControlName="valorEjecutado" placeholder="valorEjecutado">
+              <label for="valorEjecutado" class="form-label" >Valor ejecutado<span class="required-field">*</span></label> 
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="modal fade" id="modalModificarTarea" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered  modal-lg">
       <div class="modal-content">
@@ -577,7 +607,7 @@
               <label for="idUsuario" placeholder="usuario">Responsable:</label>
               <select class="form-select" id="idUsuario" formControlName="idUsuario">
                   <option value="" disabled selected> Seleccione el usuario responsable<span class="required-field">*</span></option>
-                  <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario">{{ usuario.nombre + ' ' + usuario.apellidos | formatEnum }}</option>
+                  <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario">{{ usuario.nombre + ' ' + usuario.apellidos }}</option>
               </select>
           </div>
             <div class="modal-footer">
@@ -659,7 +689,7 @@
             <div class="form-floating mb-2">
               <select class="form-select" id="idUsuario" formControlName="idUsuario">
                   <option value="" disabled selected> Seleccione el usuario responsable<span class="required-field">*</span></option>
-                  <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario">{{ usuario.nombre + ' ' + usuario.apellidos | formatEnum }}</option>
+                  <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario">{{ usuario.nombre + ' ' + usuario.apellidos }}</option>
               </select>
               <label for="idUsuario" placeholder="usuario">Responsable:<span class="required-field">*</span></label>
               <small *ngIf="idUsuarioVacio" class="text-danger">{{ CAMPO_OBLIGATORIO }}</small>

@@ -102,22 +102,8 @@ export class TipogeListarComponent implements OnInit {
   idPat:number | 0 = 0;
   idUsuarioSeleccionado: any | 0 = 0;
   idActividadGestionSeleccionado: number | 0 = 0;
-  nombreActividadGestion: string | undefined = '';
-  fechaInicialGestion:Date | undefined;
-  fechaFinalGestion:Date | undefined;
   idActividadEstrategicaSeleccionado: number | 0 = 0;
-  nombreActividadEstrategica: string | undefined = '';
-  fechaInicialEstrategica: Date | undefined;
-  fechaFinalEstrategica: Date | undefined;
-  metaEstrategica: number | 0=0;
-  resultadoActividad: string | undefined = '';
   idProyectoSeleccionado: number | 0 = 0;
-  nombreProyecto: string | undefined = '';
-  usuarioProyecto: number | 0=0;
-  presupuestoProyecto: number | 0=0;
-  fechaInicialProyecto: Date | undefined;
-  fechaFinalProyecto: Date | undefined;
-  modalidadProyecto = EModalidad;
   planeacionProyecto = EPlaneacion;
   idTareaSeleccionado: number | 0 = 0;
   idTareaTipo: number | 0 = 0;
@@ -146,6 +132,7 @@ export class TipogeListarComponent implements OnInit {
   formAgregarEntregable:FormGroup;
   formAgregarResultadoMeta:FormGroup;
   formProyecto:FormGroup;
+  formModificarValorEjecutado:FormGroup;
 
   constructor(
     private gestionService: TipoGEService,private auth: AuthService,
@@ -177,12 +164,16 @@ export class TipogeListarComponent implements OnInit {
       fechaFinal: ['', Validators.required],
       modalidad: ['', Validators.required],
       planeacionSprint:['', Validators.required],
+      idUsuario:['', Validators.required],
     });
     this.formModificarEstadoTarea = this.formBuilder.group({
       estado: ['', Validators.required],
     });
     this.formModificarPorcentaje = this.formBuilder.group({
       porcentajeReal: ['', Validators.required],
+    });
+    this.formModificarValorEjecutado = this.formBuilder.group({
+      valorEjecutado: ['', Validators.required],
     });
     this.formObservacion = this.formBuilder.group({
       id: ['', Validators.required],
@@ -502,8 +493,8 @@ export class TipogeListarComponent implements OnInit {
       const fechaFinal = this.formProyecto.get('fechaFinal')?.value;
       const modalidad = this.formProyecto.get('modalidad')?.value;
       const planeacionSprint = this.formProyecto.get('planeacionSprint')?.value;
+      const idUsuario = this.formProyecto.get('idUsuario')?.value;
       const idPat = this.idPat;
-      const idUsuario = this.usuarioProyecto
 
       const proyecto = {
         nombre:nombre,
@@ -540,6 +531,36 @@ export class TipogeListarComponent implements OnInit {
       })
     }
   }
+  modificarValorEjecutado() {
+    if (this.formModificarValorEjecutado.valid) {
+     const valorEjecutado = this.formModificarValorEjecutado.get('valorEjecutado')?.value;
+     const proyectoValorEjecutado = {
+       valorEjecutado: valorEjecutado,
+     };
+     console.log(proyectoValorEjecutado)
+     Swal.fire({
+       title: "¿Deseas modificarlo?",
+       icon: "question",
+       showCancelButton: true,
+       cancelButtonText: "Cancelar",
+       confirmButtonText: "Confirmar",
+       confirmButtonColor: '#0E823F',
+       reverseButtons: true, 
+     })
+     .then((confirmacion) => {
+       if (confirmacion.isConfirmed) {
+         this.gestionService.modificarValorEjecutado(proyectoValorEjecutado, this.idProyectoSeleccionado,this.auth.obtenerHeader()).subscribe(
+             (response) => {
+               this.swalSatisfactorio('modificado','valor ejecutado')
+                 this.cargarProyectosArea(this.idPat);
+                 this.formModificarValorEjecutado.reset();              
+             },
+             (error) => {this.swalError(error);}
+           );
+       } 
+     });
+   }
+ }
 
   cargarTareas(idASE:any, tipoASE:any) {
     if(tipoASE === 'ACTIVIDAD_GESTION'){
@@ -1067,7 +1088,11 @@ export class TipogeListarComponent implements OnInit {
       fechaInicial: proyectoArea.fechaInicial,
       fechaFinal: proyectoArea.fechaFinal,
       modalidad: proyectoArea.modalidad,
-      planeacionSprint: proyectoArea.planeacionSprint
+      planeacionSprint: proyectoArea.planeacionSprint,
+      idUsuario:proyectoArea.idUsuario
+    });
+    this.formModificarValorEjecutado.patchValue({
+      valorEjecutado:  proyectoArea.valorEjecutado,
     });
     this.formObservacion.patchValue({
       id: idProyectoArea,

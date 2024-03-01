@@ -15,7 +15,7 @@ export class CargoListarComponent {
   title = 'listarCargo';
     cargos: any[] = [];
     areas: any[] = [];
-    idCargoSeleccionado:number| undefined;
+    idCargoSeleccionado:number = 0;
     nombreCargoSeleccionado:any;
     areaSeleccionada:any;
     form:FormGroup;

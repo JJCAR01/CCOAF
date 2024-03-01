@@ -13,7 +13,7 @@ import { DireccionService } from 'src/app/direccion/services/direccion.service';
 export class AreaListarComponent implements OnInit {
   title = 'listarArea';
   areas: any[] = [];
-  idAreaSeleccionada:number|undefined;
+  idAreaSeleccionada:number = 0;
   nombreAreaSeleccionada:any;
   direccionSeleccionada:any;
   form:FormGroup

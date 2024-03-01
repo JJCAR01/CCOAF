@@ -18,7 +18,7 @@ export class ActividadCrearComponent implements OnInit{
   usuarios: any[] = [];
   form: FormGroup;
   actividadNombre:any;
-  idActividadEstrategica:any;
+  idActividadEstrategica:number = 0;
 
   constructor(private formBuilder: FormBuilder, private auth: AuthService,
     private actividadService:ActividadService, private usuarioService:UsuarioService,

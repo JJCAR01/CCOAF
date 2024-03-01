@@ -113,6 +113,9 @@ export class TipoGEService {
   modificarProyectoArea<T>(ProyectoArea : any,idProyectoArea:number,headers?:HttpHeaders):Observable<T>{
     return this.http.put<T>(`${environment.apiUrl}/ccoa/proyectosarea/${idProyectoArea}`,ProyectoArea,{headers});
   }
+  modificarValorEjecutado(ProyectoArea : any,idProyectoArea:number,headers?: HttpHeaders){
+    return this.http.put(`${environment.apiUrl}/ccoa/proyectosarea/valor-ejecutado/${idProyectoArea}`,ProyectoArea,{headers});
+  }
   eliminarProyectoArea<T>(idProyectoArea:number,headers?:HttpHeaders):Observable<T>{
     return this.http.delete<T>(`${environment.apiUrl}/ccoa/proyectosarea/${idProyectoArea}`,{headers});
   }

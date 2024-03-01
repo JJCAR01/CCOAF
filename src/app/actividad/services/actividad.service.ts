@@ -69,6 +69,9 @@ export class ActividadService {
   modificarProyecto(proyecto : any,idProyecto:number,headers?: HttpHeaders){
     return this.http.put(`${environment.apiUrl}/ccoa/proyectos/${idProyecto}`,proyecto,{headers});
   }
+  modificarValorEjecutado(proyecto : any,idProyecto:number,headers?: HttpHeaders){
+    return this.http.put(`${environment.apiUrl}/ccoa/proyectos/valor-ejecutado/${idProyecto}`,proyecto,{headers});
+  }
   eliminarProyecto(idProyecto:number,headers?: HttpHeaders){
     return this.http.delete(`${environment.apiUrl}/ccoa/proyectos/${idProyecto}`,{headers});
   }

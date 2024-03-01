@@ -76,28 +76,18 @@ export class ActividadListarComponent implements OnInit{
   patNombre:any;
   actividadNombre:any;
   usuarioProyecto:any;
-  idUsuarioSeleccionado: any | 0 = 0;
   idActividadEstrategica:number | 0 = 0;
   porcentajeEstrategica:any;
   usuarioEstrategica:any;
   patEstrategica:number | 0 =0;
   idActividadGestionEstrategicaSeleccionado:number | 0 = 0;
-  nombreActividadGestion:any;
-  fechaInicialGestion:any;
-  fechaFinalGestion:any;
   idProyectoSeleccionado:number | 0 = 0;
   nombreProyecto:any;
-  presupuestoProyecto:any;
-  fechaInicialProyecto:any;
-  fechaFinalProyecto:any;
-  modalidadProyecto:any;
-  planeacionProyecto:any;
   idTareaSeleccionado:number | 0 = 0;
   nombreTarea:any;
   estadoTarea:any;
   idTareaTipo:number | 0 = 0;
   periodicidadTarea:any;
-  porcentajeTarea:any;
   form:FormGroup;
   formProyecto:FormGroup;
   formModificarEstadoTarea:FormGroup;
@@ -105,6 +95,7 @@ export class ActividadListarComponent implements OnInit{
   formTarea:FormGroup;
   formModificarTarea:FormGroup;
   formObservacion:FormGroup;
+  formModificarValorEjecutado:FormGroup;
   busqueda: any;
 
   constructor(
@@ -129,12 +120,16 @@ export class ActividadListarComponent implements OnInit{
       fechaFinal: ['', Validators.required],
       modalidad: ['', Validators.required],
       planeacionSprint:['', Validators.required],
+      idUsuario:['', Validators.required],
     });
     this.formModificarEstadoTarea = this.formBuilder.group({
       estado: ['', Validators.required],
     });
     this.formModificarPorcentaje = this.formBuilder.group({
       porcentajeReal: ['', Validators.required],
+    });
+    this.formModificarValorEjecutado = this.formBuilder.group({
+      valorEjecutado: ['', Validators.required],
     });
     this.formObservacion = this.formBuilder.group({
       id: ['', Validators.required],
@@ -229,6 +224,37 @@ private obtenerFechaActual(): string {
           this.proyectos = data;
         }
       );
+  }
+
+  modificarValorEjecutado() {
+     if (this.formModificarValorEjecutado.valid) {
+      const valorEjecutado = this.formModificarValorEjecutado.get('valorEjecutado')?.value;
+      const proyectoValorEjecutado = {
+        valorEjecutado: valorEjecutado,
+      };
+      console.log(proyectoValorEjecutado)
+      Swal.fire({
+        title: "¿Deseas modificarlo?",
+        icon: "question",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: '#0E823F',
+        reverseButtons: true, 
+      })
+      .then((confirmacion) => {
+        if (confirmacion.isConfirmed) {
+          this.actividadService.modificarValorEjecutado(proyectoValorEjecutado, this.idProyectoSeleccionado,this.auth.obtenerHeader()).subscribe(
+              (response) => {
+                this.swalSatisfactorio('modificado','valor ejecutado')
+                  this.cargarProyectos(this.idActividadEstrategica);
+                  this.formModificarValorEjecutado.reset();              
+              },
+              (error) => {this.swalError(error);}
+            );
+        } 
+      });
+    }
   }
 
   eliminarGestion(idActividadGestionActividadEstrategica: number) {
@@ -327,8 +353,8 @@ private obtenerFechaActual(): string {
       const fechaFinal = this.formProyecto.get('fechaFinal')?.value;
       const modalidad = this.formProyecto.get('modalidad')?.value;
       const planeacionSprint = this.formProyecto.get('planeacionSprint')?.value;
+      const idUsuario = this.formProyecto.get('idUsuario')?.value;
       const idActividadEstrategica = this.idActividadEstrategica;
-      const idUsuario = this.usuarioProyecto
 
       const proyecto = {
         nombre:nombre,
@@ -879,7 +905,12 @@ private obtenerFechaActual(): string {
       fechaInicial: proyecto.fechaInicial,
       fechaFinal: proyecto.fechaFinal,
       modalidad: proyecto.modalidad,
-      planeacionSprint: proyecto.planeacionSprint
+      planeacionSprint: proyecto.planeacionSprint,
+      idUsuario: proyecto.idUsuario
+    });
+
+    this.formModificarValorEjecutado.patchValue({
+      valorEjecutado:  proyecto.valorEjecutado,
     });
     this.formObservacion.patchValue({
       id: idProyecto,

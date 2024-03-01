@@ -17,7 +17,7 @@ export class CrearProyectoComponent {
   usuarios: any[] = [];
   form: FormGroup;
   actividadNombre:any;
-  idActividadEstrategica:any;
+  idActividadEstrategica:number = 0;
   modalidadEnums = Object.values(EModalidad);
 
 
