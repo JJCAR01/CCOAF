@@ -31,6 +31,7 @@
                 <th >Correo</th>
                 <th >Cargo</th>
                 <th class="column-direccion">Direcciones</th>
+                <th>Rol</th>
                 <th >Acciones</th>
                 </tr>
             </thead>
@@ -43,7 +44,8 @@
                         <li *ngFor="let direccion of usuario.direcciones">
                             {{ direccion.nombre }}
                         </li>
-                    </td>                                
+                    </td>
+                    <td>usuarios</td>                                
                     <td>
                         <button title="Editar información de usuario"  type="button" class="btn btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modificarUsuario" 
                         (click)="obtengoUsuario(usuario.idUsuario,usuario)">

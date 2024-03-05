@@ -235,6 +235,7 @@ export class PatListarComponent implements OnInit{
           this.cargarPatsProyectos(this.actividadesFiltradas);
           const numeroDeListas = this.actividadesFiltradas.length;
           this.cantidadEstrategicas = numeroDeListas;
+          this.patService.setActividadesEstrategicas(this.cantidadEstrategicas);
           
         },
         (error) => {

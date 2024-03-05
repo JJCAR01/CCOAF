@@ -18,6 +18,7 @@ export class ActividadestrategicaListarComponent implements OnInit{
   actividadesEstrategicas: any[] = [];
   usuarios:any[] =[];
   pats : Pat[] = [];
+  totalActividadesEstrategicas : number = 0;
   busqueda: any;
   busquedaFechaAnual:any;
   busquedaResponsable:any;
@@ -53,6 +54,11 @@ export class ActividadestrategicaListarComponent implements OnInit{
         }
       }
     });  
+    this.patService.getActividadesEstrategicas().subscribe(actividad => {
+      this.totalActividadesEstrategicas = actividad;
+    });
+    
+    
   }
   cargarUsuario() {
     this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
@@ -60,13 +66,7 @@ export class ActividadestrategicaListarComponent implements OnInit{
         this.usuarios = data;
     })
   }
-  /*cargarPats() {
-    this.patService.listarPat(this.auth.obtenerHeader()).subscribe(
-      (data: any) => {
-        this.pats = data;
-    })
-  }*/
-
+ 
   irADetalles(actividad: any) {
     // Obtén el nombre del PAT antes de navegar
     this.patService.listarPatPorId(actividad.idPat, this.auth.obtenerHeader()).subscribe(

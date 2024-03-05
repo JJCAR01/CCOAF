@@ -1,13 +1,15 @@
 .body{
   font-family: "Roboto";
 }
+.logo{
+  width: 10%;
+}
 
 h1 {
-    font-family: "Roboto", unset;
+    font-family: "Roboto", initial;
     color: #000000;
-    font-size: xx-large;
-    margin: 0;
-    text-align: left;
+    font-size: x-large;
+
 }
 
 
@@ -45,24 +47,16 @@ h3 {
   display: flex; /* Hacer que los elementos dentro de .row se muestren en línea */
   align-items: center; /* Alinear verticalmente los elementos dentro de .row */
 }
-
 .responsable-info h2,
 .responsable-info p {
   display: inline-block;
   vertical-align: top; /* Alinear verticalmente la parte superior de los elementos */  
   margin: 0%; /* Eliminar márgenes para evitar espacios no deseados */
 }
-
-.responsable-info  h1{
-  display: flex; /* Hacer que los elementos dentro de .responsable-info se muestren en línea */
-  align-items: normal; /* Alinear verticalmente los elementos dentro de .responsable-info */
-}
-
 .responsable-info h2 {
-  margin-top: 5px;
+  margin-top: 10px;
   margin: 2px;
 }
-
 
 /* Estilos para el elemento .smaller-main */
 .smaller-main {

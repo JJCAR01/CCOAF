@@ -6,6 +6,7 @@ import { ActividadService } from '../actividad/services/actividad.service';
 import { TipoGEService } from '../gestion/services/tipoGE.service';
 import { Chart, registerables } from 'chart.js/auto';
 import { AnyObject } from 'chart.js/dist/types/basic';
+import { Pat } from '../modelo/pat';
 
 Chart.register(...registerables);
 
@@ -25,8 +26,14 @@ export class DashboardComponent implements OnInit {
   idActividadEstrategica:[] = [];
   nombrePats: any[] = [];
   porcentajePats: any[] = [];
-  porcentajeRealPrograma: number[] = [];
-  porcentajeEsperadoPrograma: number[] = [];
+  porcentajeRealEstrategica: number[] = [];
+  porcentajeEsperadoEstrategica: number[] = [];
+  nombreActividadEstrategicas: any[] = [];
+  porcentajeRealActividadEstrategica: number[] = [];
+  porcentajeEsperadoActividadEstrategica: number[] = [];
+  porcentajeKpi: number[] = [];
+  sumadorPromediadorPorcentajePat: number = 0;
+  promedioPorcentajePat: number = 0;
   label: any[] = [];
   avanceProyectos: any[] = [];
   sumaTotalActividadesGestion: any[] = [];
@@ -36,11 +43,15 @@ export class DashboardComponent implements OnInit {
   selectedPat: string = '';
   nombreActividades: string[] = ['Actividades de Gestión', 'Actividades estratégicas','Proyectos'];
   patSeleccionado :string = ''
+  idPatsConActividadesEstrategicas : number [] =[];
+  contadorPatsConActividades = 0;
+  pats: Pat [] = [];
   form:FormGroup;
-    chartPorcentajePat:Chart | any;
+  chartPorcentajePat:Chart | any;
   chartProgramasRealYEsperado:Chart | any;
-  chart1: Chart | any;
-  chart2: Chart | any;
+  chartActividadesEstrategicasRealYEsperado:Chart | any;
+  chartPorcentajeKpi: Chart | any;
+  chartAcelerador: Chart | any;
 
   constructor(
     private patService: PatService,
@@ -56,50 +67,223 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.obtenerTodos();
+    this.inicializarGraficoPrincipal();
+    this.cargarPats();
+  }
+
+  cargarPats() {
+    this.patService.getPatsData().subscribe(
+      (pats: Pat[]) => {
+        this.pats = pats;
+      }
+    );
+  }
+  
+  obtenerTodos(){
     this.patService.getPatsData().subscribe((patsData: any[]) => {
       if (patsData && Array.isArray(patsData)) {
-        this.idsPats = patsData.map((pat: any) => pat.idPat);
+          this.idsPats = patsData.map((pat: any) => pat.idPat);
 
-        // Iterar sobre los IDs de Pats y cargar las actividades estratégicas
-        for (const idPat of this.idsPats) {
-          this.patService.listarPatPorId(idPat, this.auth.obtenerHeader()).subscribe((result: any) => {
-            this.datoPat.push(result);
-            if (this.datoPat != null) {
-              this.nombrePats = [];
-              this.porcentajePats = [];
-              this.porcentajeRealPrograma = [];
-              this.porcentajeEsperadoPrograma = [];
-              for (let i = 0; i < this.datoPat.length; i++) {
-                this.nombrePats.push(this.datoPat[i].nombre);
-                this.porcentajePats.push(this.datoPat[i].porcentajePat);
-                this.porcentajeRealPrograma.push(this.datoPat[i].porcentajeReal);
-                this.porcentajeEsperadoPrograma.push(this.datoPat[i].porcentajeEsperado);
-              }
-            }
-            // Actualizar chartPrincipal con los datos iniciales
-            this.chartPorcentajePat.data.labels = this.nombrePats;
-            this.chartPorcentajePat.data.datasets[0].data = this.porcentajePats;
-            this.chartPorcentajePat.update();
-        
-            // Actualizar chartProgramasRealEsperado con los nuevos datos
-            this.chartProgramasRealYEsperado.data.labels = this.nombrePats;
-            this.chartProgramasRealYEsperado.data.datasets[0].data = this.porcentajeRealPrograma;
-            this.chartProgramasRealYEsperado.data.datasets[1].data = this.porcentajeEsperadoPrograma; // <- Aquí actualizas los datos esperados
-            this.chartProgramasRealYEsperado.update();
-          });
+          // Inicializar arreglos fuera del bucle
+          this.nombrePats = [];
+          this.porcentajeRealEstrategica = [];
+          this.porcentajeEsperadoEstrategica = [];
+          this.porcentajePats = [];
+          this.nombreActividadEstrategicas = [];
+          this.porcentajeRealActividadEstrategica = [];
+          this.porcentajeEsperadoActividadEstrategica = [];
+
+
+          // Iterar sobre los IDs de Pats y cargar las actividades estratégicas
+          for (const idPat of this.idsPats) {
+              this.tipoService.listarActividadEstrategicaPorIdPat(idPat, this.auth.obtenerHeader())
+                  .toPromise()
+                  .then((actividadesEstrategicas: any) => {
+                      if (actividadesEstrategicas && actividadesEstrategicas.length > 0) {
+                        const porcentajesRealEstrategicaPat = actividadesEstrategicas.map((actividad: any) => actividad.porcentajeReal);
+                        const totalPorcentajeRealPat = porcentajesRealEstrategicaPat.reduce((total: number, porcentaje: number) => total + porcentaje, 0);
+
+                        const porcentajesEsperadoEstrategicaPat = actividadesEstrategicas.map((actividad: any) => actividad.porcentajeEsperado);
+                        const totalPorcentajeEsperadoPat = porcentajesEsperadoEstrategicaPat.reduce((total: number, porcentaje: number) => total + porcentaje, 0);
+
+                        const porcentajesPat = actividadesEstrategicas.map((actividad: any) => actividad.porcentajePat);
+                        const totalPorcentajesPat = porcentajesPat.reduce((total: number, porcentaje: number) => total + porcentaje, 0);
+
+                        const promedioPorcentajeRealPat = totalPorcentajeRealPat / porcentajesPat.length;
+                        const promedioPorcentajeEsperadoPat = totalPorcentajeEsperadoPat / porcentajesPat.length;
+                        const promedioPorcentajePat = totalPorcentajesPat / porcentajesPat.length;
+  
+                        // Obtener el nombre del PAT
+                        const nombrePat = patsData.find(pat => pat.idPat === idPat)?.nombre;
+
+                        // Agregar los datos del PAT correspondientes a esta iteración
+                        this.nombrePats.push(nombrePat);
+                        this.porcentajeRealEstrategica.push(promedioPorcentajeRealPat);
+                        this.porcentajeEsperadoEstrategica.push(promedioPorcentajeEsperadoPat);
+                        this.porcentajePats.push(promedioPorcentajePat);
+                        this.sumadorPromediadorPorcentajePat += promedioPorcentajePat;
+                        this.contadorPatsConActividades++;
+    
+                        // Agregar los datos de actividades estratégicas
+                        for (const actividad of actividadesEstrategicas) {
+                          this.nombreActividadEstrategicas.push(actividad.nombre);
+                          this.porcentajeRealActividadEstrategica.push(actividad.porcentajeReal);
+                          this.porcentajeEsperadoActividadEstrategica.push(actividad.porcentajeEsperado);
+                          this.porcentajeKpi.push(actividad.promedioMeta);
+                          }
+
+                        // Agregar el PAT a this.pats solo si tiene actividades estratégicas
+                        if (!this.idPatsConActividadesEstrategicas.includes(idPat)) {
+                          this.idPatsConActividadesEstrategicas.push(idPat);
+                        }   
+                                                        
+                      }
+                        
+                      
+
+                      // Actualizar gráficos con los datos de esta iteración
+                      this.actualizarGraficos();
+                  });
+                  
+          } 
         }
-        this.inicializarGraficoPrincipal();
-        
-      }
-      
     });
+  }
+
+  obtenerPat(){
+    const idPat = this.form.get('pat')?.value;
+    if(idPat === 'todos') {
+      this.obtenerTodos();
+    } else {
+      // Limpiar arreglos de datos antes de agregar nuevos datos
+      this.nombrePats = [];
+      this.porcentajeRealEstrategica = [];
+      this.porcentajeEsperadoEstrategica = [];
+      this.porcentajePats = [];
+      this.nombreActividadEstrategicas = [];
+      this.porcentajeRealActividadEstrategica = [];
+      this.porcentajeEsperadoActividadEstrategica = [];
+      this.porcentajeKpi = [];
+      
+      const pat = this.pats.find((pat) => pat.idPat === parseInt(idPat));
+      this.nombrePats.push(pat?.nombre);
+
+      this.tipoService.listarActividadEstrategicaPorIdPat(idPat, this.auth.obtenerHeader())
+        .toPromise()
+          .then((actividadesEstrategicas: any) => {
+            if (actividadesEstrategicas && actividadesEstrategicas.length > 0) {
+              const porcentajesPat = actividadesEstrategicas.map((actividad: any) => actividad.porcentajePat);
+              const totalPorcentajePat = porcentajesPat.reduce((total: number, porcentaje: number) => total + porcentaje, 0);
+
+              const porcentajesRealEstrategicaPat = actividadesEstrategicas.map((actividad: any) => actividad.porcentajeReal);
+              const totalPorcentajeRealPat = porcentajesRealEstrategicaPat.reduce((total: number, porcentaje: number) => total + porcentaje, 0);
+
+              const porcentajesEsperadoEstrategicaPat = actividadesEstrategicas.map((actividad: any) => actividad.porcentajeEsperado);
+              const totalPorcentajeEsperadoPat = porcentajesEsperadoEstrategicaPat.reduce((total: number, porcentaje: number) => total + porcentaje, 0);
+
+              const promedioPorcentajeRealPat = totalPorcentajeRealPat / porcentajesRealEstrategicaPat.length;
+              const promedioPorcentajeEsperadoPat = totalPorcentajeEsperadoPat / porcentajesEsperadoEstrategicaPat.length;
+              const promedioPat = totalPorcentajePat / porcentajesPat.length;
+              // Agregar los datos del PAT correspondientes a esta iteración
+
+              this.porcentajeRealEstrategica.push(promedioPorcentajeRealPat);
+              this.porcentajeEsperadoEstrategica.push(promedioPorcentajeEsperadoPat);
+              this.porcentajePats.push(promedioPat);
+      
+              // Agregar los datos de actividades estratégicas
+              for (const actividad of actividadesEstrategicas) {
+                this.nombreActividadEstrategicas.push(actividad.nombre);
+                this.porcentajeRealActividadEstrategica.push(actividad.porcentajeReal);
+                this.porcentajeEsperadoActividadEstrategica.push(actividad.porcentajeEsperado);
+                this.porcentajeKpi.push(actividad.promedioMeta);
+              }                                                  
+        }
+        this.actualizarGraficos();                   
+        });
+      }
+    
+  }
+  obtenerNombrePat(idPat: number) {
+    const pat = this.pats.find((pat) => pat.idPat === idPat);
+    return pat ? pat.nombre : '';
+  }
+
+ 
+  actualizarGraficos() {
+    this.chartPorcentajePat.data.labels = this.nombrePats;
+    this.chartPorcentajePat.data.datasets[0].data = this.porcentajePats;
+    this.chartPorcentajePat.update();
+
+    this.chartProgramasRealYEsperado.data.labels = this.nombrePats;
+    this.chartProgramasRealYEsperado.data.datasets[0].data = this.porcentajeRealEstrategica;
+    this.chartProgramasRealYEsperado.data.datasets[1].data = this.porcentajeEsperadoEstrategica;
+    this.chartProgramasRealYEsperado.update();
+
+    this.chartActividadesEstrategicasRealYEsperado.data.labels = this.nombreActividadEstrategicas;
+    this.chartActividadesEstrategicasRealYEsperado.data.datasets[0].data = this.porcentajeRealActividadEstrategica;
+    this.chartActividadesEstrategicasRealYEsperado.data.datasets[1].data = this.porcentajeEsperadoActividadEstrategica;
+    this.chartActividadesEstrategicasRealYEsperado.update();
+
+    this.chartPorcentajeKpi.data.labels = this.nombreActividadEstrategicas;
+    this.chartPorcentajeKpi.data.datasets[0].data = this.porcentajeKpi;
+    this.chartPorcentajeKpi.update();
+
+    this.promedioPorcentajePat = this.sumadorPromediadorPorcentajePat / this.contadorPatsConActividades;
+    this.chartAcelerador.data.datasets[0].data = [this.promedioPorcentajePat, 100 - this.promedioPorcentajePat];
+    this.chartAcelerador.update();
   }
 
 
 
-
   inicializarGraficoPrincipal(): void {
+    // Crear el gráfico con datos iniciales
+    this.chartAcelerador = new Chart('chartAcelerador', {
+      type: 'doughnut',
+      data: {
+          labels: ['Porcentaje PAT','Restante'],
+          datasets: [{
+              data: [this.promedioPorcentajePat, 100 - this.promedioPorcentajePat],
+              backgroundColor: ['rgb(178,218,250)', 'rgb(215, 219, 221)'],
+              circumference: 180,
+              rotation:270,
+            }]
+      },
+      options: {
+        aspectRatio: 1.5,
+          scales: {
+              y: {
+                  ticks: {
+                    display: false,
+                  },
+                  grid: {
+                    display: false,
+                  }
+              }
+          },
+          plugins: {
+            legend:{
+              display:false,
+            },
+            tooltip: {
+              callbacks: {
+                label: function (context) {
+                  let label = context.dataset.label || '';
+                  if (label) {
+                    label += ': ';
+                  }
+                  if (context.parsed !== null) {
+                    label += context.parsed.toFixed(2) + '%';
+                  }
+                  return label;
+                }
+              }
+            },
 
+          }
+      }
+    }),
     this.chartPorcentajePat = new Chart('chartPrincipal', {
       type: 'bar',
       data: {
@@ -113,6 +297,8 @@ export class DashboardComponent implements OnInit {
       options: {
         scales: {
           y: {
+            min: 0,
+            max: 100,
             beginAtZero: true,
             ticks: {
               callback: function (value) {
@@ -145,20 +331,27 @@ export class DashboardComponent implements OnInit {
       data: {
         datasets: [{
           label: 'Porcentaje real programa',
-          data: this.porcentajeRealPrograma,
+          data: this.porcentajeRealEstrategica,
           backgroundColor: 'rgb(178,218,250)', // Color para el primer dataset
-          order: 2
+          order: 1
         }, {
           label: 'Porcentaje esperado programa',
-          data: this.porcentajeEsperadoPrograma,
+          data: this.porcentajeEsperadoEstrategica,
           backgroundColor: 'rgb(176,242,194)', // Color para el segundo dataset
-          order: 1
+          order: 2
         }],
         labels: this.nombrePats,
       },
       options: {
         scales: {
+          x: {
+            grid: {
+              offset: true
+            }
+          },
           y: {
+            min: 0,
+            max: 100,
             beginAtZero: true,
             ticks: {
               callback: function (value) {
@@ -185,8 +378,121 @@ export class DashboardComponent implements OnInit {
         }
       }
     });
+
+    this.chartActividadesEstrategicasRealYEsperado = new Chart('chartActividadesEstrategicasRealYEsperado', {
+      type: 'bar',
+      data: {
+        datasets: [{
+          label: 'Porcentaje real actividad estratégica',
+          data: this.porcentajeRealEstrategica,
+          backgroundColor: 'rgb(178,218,250)', // Color para el primer dataset
+          order: 1
+        }, {
+          label: 'Porcentaje esperado actividad estratégica',
+          data: this.porcentajeEsperadoEstrategica,
+          backgroundColor: 'rgb(176,242,194)', // Color para el segundo dataset
+          order: 2
+        }],
+        labels: this.nombrePats,
+      },
+      options: {
+        scales: {
+          x: {
+            ticks: {
+              autoSkip: false, // Desactiva el salto automático
+              maxRotation: 90, // Rotación máxima
+              minRotation: 0, // Rotación mínima
+              padding: 10, // Añade un relleno adicional para las etiquetas
+              callback: function(value,index) {
+                return index + 1; // Devuelve el valor sin formato
+              }
+            }
+          },
+          y: {
+            min: 0,
+            max: 100,
+            beginAtZero: true,
+            ticks: {
+              callback: function (value) {
+                return value + '%'; // Añade '%' al valor numérico
+              }
+            }
+          }
+        },
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function (context) {
+                let label = context.dataset.label || '';
+                if (label) {
+                  label += ': ';
+                }
+                if (context.parsed.y !== null) {
+                  label += context.parsed.y.toFixed(2) + '%';
+                }
+                return label;
+              }
+            }
+          }
+        }
+      }
+    });
+
+    this.chartPorcentajeKpi = new Chart('chartPorcentajeKpi', {
+      type: 'bar',
+      data: {
+        labels: this.nombreActividadEstrategicas,
+        datasets: [{
+          label: 'Porcentaje meta KPI',
+          data: this.porcentajeKpi ,
+          backgroundColor: ['rgb(178,218,250)'],
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            min: 0,
+            max: 100,
+            beginAtZero: true,
+            ticks: {
+              callback: function (value) {
+                return value + '%'; // Añade '%' al valor numérico
+              }
+            }
+          },
+          x: {
+            ticks: {
+              autoSkip: false, // Desactiva el salto automático
+              maxRotation: 90, // Rotación máxima
+              minRotation: 0, // Rotación mínima
+              padding: 10, // Añade un relleno adicional para las etiquetas
+              callback: function(value,index) {
+                return index + 1; // Devuelve el valor sin formato
+              }
+            }
+          }
+        },
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function (context) {
+                let label = context.dataset.label || '';
+                if (label) {
+                  label += ': ';
+                }
+                if (context.parsed.y !== null) {
+                  label += context.parsed.y.toFixed(2) + '%';
+                }
+                return label;
+              }
+            }
+          }
+        }
+      }
+    });
     
   }
+  
 
  
 }

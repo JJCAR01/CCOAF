@@ -2,35 +2,56 @@
 <body>
     <div class="row-with-button">
       <div>
-        <h1 class="mb-2">Dashboard</h1>
+        <h1 class="mb-2">Dashboard PAT - Actividades estratégicas</h1>
       </div>
     </div>  
     <main class="main smaller-main">
       <form [formGroup]="form">
         <div class="form-floating mb-3">
-          
-          <select class="form-select" id="pat" formControlName="pat" >
-            <option value="" disabled selected>Seleccione el pat a filtrar*</option>
-            <option *ngFor="let pat of nombrePats" [value]="pat">{{ pat }}</option>
+          <select class="form-select" id="pat" formControlName="pat" (change)="obtenerPat()">
+            <option value="" disabled selected>Seleccione el PAT a filtrar*</option>
+            <option *ngFor="let pat of idPatsConActividadesEstrategicas" [value]="pat">{{ obtenerNombrePat(pat) }}</option>
+            <option value="todos">Todos</option>
           </select>
-          <label for="pat" class="form-label">Pat</label>
+          <label for="pat" class="form-label">Programa - PAT</label>
         </div>
       </form>
       <div>
         <div class="row">
           <div class="col">
-            <h2 class="text-center mb-3">% de avance del PAT</h2>
+              <h2 class="text-center">% general de PAT</h2>
+              <div class="chart-acelerador">
+                <canvas id="chartAcelerador"></canvas>
+              </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <h2 class="text-center">% de avance del PAT</h2>
             <div class="chart-container">
               <canvas id="chartPrincipal"></canvas>
             </div>
           </div>
           <div class="col">
-            <h2 class="text-center mb-3">% de avance del programa</h2>
+            <h2 class="text-center">% de avance del programa</h2>
             <div class="chart-container">
               <canvas id="chartProgramasRealEsperado"></canvas>
             </div>
           </div>
-          
+        </div>
+        <div class="row">
+          <div class="col">
+            <h2 class="text-center">% de avance actividades estratégicas</h2>
+            <div class="chart-container">
+              <canvas id="chartActividadesEstrategicasRealYEsperado"></canvas>
+            </div>
+          </div>
+          <div class="col" >
+            <h2 class="text-center">% de avance meta KPI</h2>
+            <div class="chart-container">
+              <canvas id="chartPorcentajeKpi"></canvas>
+            </div>
+          </div>
         </div>
       </div>
     </main>

@@ -8,6 +8,7 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 })
 export class PatService {
   private patsDataSubject: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
+  private actividadEstrategicas: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   constructor(private http: HttpClient) {
   }
 
@@ -53,4 +54,13 @@ export class PatService {
   setPatsData(pats: any[]): void {
     this.patsDataSubject.next(pats);
   }
+
+  getActividadesEstrategicas(): Observable<number> {
+    return this.actividadEstrategicas.asObservable() as Observable<number>;
+  }
+
+  setActividadesEstrategicas(actividades: number): void {
+    this.actividadEstrategicas.next(actividades);
+  }
+
 }
