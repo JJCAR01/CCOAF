@@ -18,6 +18,7 @@ export class ActividadEstrategicaPendienteListarComponent implements OnInit {
   title = 'listarActividadEstrategicaPendiente';
   proyectos: any[] = [];
   actividadesEstrategicasPendientes: any[] = [];
+  totalActividadesEstrategicasPendintes: number =0;
   usuarios:any[] = [];
   pats : Pat[] = [];
   busqueda: any;
@@ -32,7 +33,7 @@ export class ActividadEstrategicaPendienteListarComponent implements OnInit {
 
     ngOnInit(): void {
       this.cargarUsuario();
-      this.patService.getPatsData().subscribe((patsData: any[]) => {
+      this.patService.getPatsAsociados().subscribe((patsData: any[]) => {
         if (patsData && patsData.length > 0) {
           // Obtener los IDs de los Pats
           const idsPats = patsData.map(pat => pat.idPat);
@@ -57,7 +58,9 @@ export class ActividadEstrategicaPendienteListarComponent implements OnInit {
           }
         }
       });
-  
+      this.patService.getActividadesEstrategicas().subscribe(actividad => {
+        this.totalActividadesEstrategicasPendintes = actividad;
+      });
     }
     
 

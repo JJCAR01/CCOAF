@@ -173,7 +173,7 @@ export class PatListarComponent implements OnInit{
           // Cargar las actividades estratégicas relacionadas con los planes anuales
           this.cargarActividadesEstrategica(patsFiltrados);
           this.cargarPatsActividadGestion(patsFiltrados);
-          this.patService.setPatsData(patsFiltrados);
+          this.patService.setPatsAsociados(patsFiltrados);
           this.pats = patsFiltrados;
         },
         (error) => {
@@ -193,7 +193,7 @@ export class PatListarComponent implements OnInit{
           );
     
           actividadesFiltradas.forEach((actividad: any) => {
-            const terminadas = actividad.avance;
+            const terminadas = actividad.porcentajeReal;
     
             if (terminadas === 100) {
               this.sumadorActividadGestionTerminados += 1;
@@ -222,7 +222,7 @@ export class PatListarComponent implements OnInit{
           );
     
           this.actividadesFiltradas.forEach((actividad: any) => {
-            const terminadas = actividad.avance;
+            const terminadas = actividad.porcentajeReal;
             
             if (terminadas === 100) {
               this.sumadorActividadEstrategicasTerminados += 1;
@@ -237,11 +237,9 @@ export class PatListarComponent implements OnInit{
           this.cantidadEstrategicas = numeroDeListas;
           this.patService.setActividadesEstrategicas(this.cantidadEstrategicas);
           
-        },
-        (error) => {
-          this.swalError(error);
         }
       );
+      this.patService.setActividadesEstrategicasPendientes(this.sumadorActividadEstrategicasAbiertos);
     }
     cargarActividadGestionActividadesEstrategica(actividadesEstrategicas: any[]) {
       // Obtener los IDs de las actividades estratégicas
@@ -254,7 +252,7 @@ export class PatListarComponent implements OnInit{
           );
     
           this.actividadesGestionFiltradas.forEach((actividad: any) => {
-            const terminadas = actividad.avance;
+            const terminadas = actividad.porcentajeReal;
     
             if (terminadas === 100) {
               this.sumadorActividadGestionTerminados += 1;
@@ -282,7 +280,7 @@ export class PatListarComponent implements OnInit{
             idsProyectos.includes(proyecto.idActividadEstrategica)
           );
           this.proyectosFiltrados.forEach((proyecto:any) => {
-            const terminadas = proyecto.avance;
+            const terminadas = proyecto.porcentajeReal;
             if (terminadas === 100) {
               this.sumadorProyectosTerminados += 1;
             } else {
@@ -291,11 +289,14 @@ export class PatListarComponent implements OnInit{
           });
           const numeroDeListas = this.proyectosFiltrados.length;
           this.cantidadProyectos = numeroDeListas;
+          this.patService.setProyectos(this.cantidadProyectos);
+          this.patService.setProyectosPendientes(this.sumadorProyectosAbiertos);
         },
         (error) => {
           this.swalError(error);
         }
       );
+
     }
 
     modificarPat() {

@@ -67,14 +67,13 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.obtenerTodos();
     this.inicializarGraficoPrincipal();
     this.cargarPats();
   }
 
   cargarPats() {
-    this.patService.getPatsData().subscribe(
+    this.patService.getPatsAsociados().subscribe(
       (pats: Pat[]) => {
         this.pats = pats;
       }
@@ -82,7 +81,7 @@ export class DashboardComponent implements OnInit {
   }
   
   obtenerTodos(){
-    this.patService.getPatsData().subscribe((patsData: any[]) => {
+    this.patService.getPatsAsociados().subscribe((patsData: any[]) => {
       if (patsData && Array.isArray(patsData)) {
           this.idsPats = patsData.map((pat: any) => pat.idPat);
 
@@ -140,9 +139,6 @@ export class DashboardComponent implements OnInit {
                         }   
                                                         
                       }
-                        
-                      
-
                       // Actualizar gráficos con los datos de esta iteración
                       this.actualizarGraficos();
                   });
@@ -252,16 +248,6 @@ export class DashboardComponent implements OnInit {
       },
       options: {
         aspectRatio: 1.5,
-          scales: {
-              y: {
-                  ticks: {
-                    display: false,
-                  },
-                  grid: {
-                    display: false,
-                  }
-              }
-          },
           plugins: {
             legend:{
               display:false,
@@ -279,8 +265,7 @@ export class DashboardComponent implements OnInit {
                   return label;
                 }
               }
-            },
-
+            }
           }
       }
     }),

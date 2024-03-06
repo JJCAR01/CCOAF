@@ -8,8 +8,13 @@
 </head>
 <body>
   <div class="row-with-button">
-    <div>
-      <h1 class="mb-2">Proyectos pendientes</h1>
+    <div class="row">
+      <div class="mb-2">
+        <h1 >Proyectos</h1>
+      </div>
+      <div class="row">
+        <h3>Total: {{ totalProyectosPendientes }} </h3>           
+      </div>
     </div>
   </div>
   <div class="row align-items-center">
@@ -24,50 +29,63 @@
             <input type="text" class="form-control me-1" [(ngModel)]="busqueda"/>
         </div>
     </div>
-  </div>   
-  <main class="main text-center smaller-main">
-    <div *ngIf="proyectosPendientes.length === 0; else proyectoListNotEmpty">
-      <p>No hay proyectos pendientes.</p>
+  </div>
+  <ul class="nav nav-tabs header" id="myTab" role="tablist">
+    <li class="nav-item me-1" title="Proyectos actividades estratégicas" >
+      <a class="nav-link active" id="proyectosestrategicas-tab" data-bs-toggle="tab" href="#proyectosestrategicas" role="tab" aria-controls="proyectosestrategicas"
+       aria-selected="true">Proyectos actividades Estratégicas - PAT</a>
+    </li>    
+    <li class="nav-item me-1" title="Proyectos del área">
+      <a class="nav-link" id="proyecto-tab" data-bs-toggle="tab" href="#proyecto" role="tab" aria-controls="proyecto" aria-selected="false">Proyectos del área</a>
+    </li>
+  </ul>
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="proyectosestrategicas" role="tabpanel" aria-labelledby="proyectosestrategicas-tab">     
+      <main class="main text-center smaller-main">
+        <div *ngIf="proyectosPendientes.length === 0; else proyectoListNotEmpty">
+          <p>No hay proyectos pendientes.</p>
+        </div>
+        <ng-template #proyectoListNotEmpty>
+          <table class="table table-hover">
+            <thead class="table-danger ">
+              <tr>
+                <th class="column-nombre">Nombre</th>
+                <th class="column-presupuesto">Presupuesto</th>
+                <th class="column-modalidad">Modalidad</th>
+                <th class="column-presupuesto">Valor Ejecutado</th>
+                <th class="column-fecha">Fecha inicial</th>
+                <th class="column-fecha">Fecha final</th>
+                <th >Duracion (Días)</th>
+                <th class="column-avance">% avance real</th>
+                <th class="column-avance">% avance esperado</th>
+                <th class="column-avance">% cumplimiento</th>
+                <th class="column-totalp">Planeación Sprint</th>
+                <th >Total sprint</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let proyecto of proyectosPendientes">
+                <tr title="{{proyecto.nombre}}">
+                  <td>{{ proyecto.nombre }}</td>
+                  <td>{{ proyecto.presupuesto | currency : '$ ' : 'symbol' : '1.0-0' }}</td>
+                  <td>{{ proyecto.modalidad| formatEnum  }}</td>
+                  <td>{{ proyecto.valorEjecutado | currency : '$ ' : 'symbol' : '1.0-0' }}</td>
+                  <td>{{ proyecto.fechaInicial }}</td>
+                  <td>{{ proyecto.fechaFinal }}</td>
+                  <td>{{ proyecto.duracion }}</td>
+                  <td >{{ proyecto.porcentajeReal | comasPipe  }} %</td>
+                  <td >{{ proyecto.porcentajeEsperado| comasPipe  }} %</td>
+                  <td [ngClass]="colorPorcentaje(proyecto.porcentajeCumplimiento)">{{ proyecto.porcentajeCumplimiento | comasPipe }} %</td>
+                  <td>{{ proyecto.planeacionSprint | formatEnum  }}</td>
+                  <td>{{ proyecto.totalSprint }}</td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </ng-template>
+      </main>
     </div>
-    <ng-template #proyectoListNotEmpty>
-      <table class="table table-hover">
-        <thead class="table-danger">
-          <tr>
-            <th class="column-nombre">Nombre</th>
-            <th class="column-presupuesto">Presupuesto</th>
-            <th class="column-modalidad">Modalidad</th>
-            <th class="column-presupuesto">Valor Ejecutado</th>
-            <th class="column-fecha">Fecha inicial</th>
-            <th class="column-fecha">Fecha final</th>
-            <th >Duracion (Días)</th>
-            <th class="column-avance">% avance real</th>
-            <th class="column-avance">% avance esperado</th>
-            <th class="column-avance">% cumplimiento</th>
-            <th class="column-totalp">Planeación Sprint</th>
-            <th >Total sprint</th>
-          </tr>
-        </thead>
-        <tbody>
-          <ng-container *ngFor="let proyecto of proyectosPendientes">
-            <tr title="{{proyecto.nombre}}">
-              <td>{{ proyecto.nombre }}</td>
-              <td>{{ proyecto.presupuesto | currency : '$ ' : 'symbol' : '1.0-0' }}</td>
-              <td>{{ proyecto.modalidad| formatEnum  }}</td>
-              <td>{{ proyecto.valorEjecutado | currency : '$ ' : 'symbol' : '1.0-0' }}</td>
-              <td>{{ proyecto.fechaInicial }}</td>
-              <td>{{ proyecto.fechaFinal }}</td>
-              <td>{{ proyecto.duracion }}</td>
-              <td >{{ proyecto.porcentajeReal | comasPipe  }} %</td>
-              <td >{{ proyecto.porcentajeEsperado| comasPipe  }} %</td>
-              <td [ngClass]="colorPorcentaje(proyecto.porcentajeCumplimiento)">{{ proyecto.porcentajeCumplimiento | comasPipe }} %</td>
-              <td>{{ proyecto.planeacionSprint | formatEnum  }}</td>
-              <td>{{ proyecto.totalSprint }}</td>
-            </tr>
-          </ng-container>
-        </tbody>
-      </table>
-    </ng-template>
-  </main>
+  </div>
 
   
 </body>

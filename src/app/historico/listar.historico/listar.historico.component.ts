@@ -147,7 +147,7 @@ export class ListarHistoricoComponent {
           // Actualizar la cantidad de pats
           this.cantidadPats = patsFiltrados.length;
 
-          this.patService.setPatsData(patsFiltrados);
+          this.patService.setPatsAsociados(patsFiltrados);
           this.pats = patsFiltrados;
         }
       );

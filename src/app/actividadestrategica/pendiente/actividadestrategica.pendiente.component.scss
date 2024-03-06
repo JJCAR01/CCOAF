@@ -5,16 +5,17 @@
 h1 {
   font-family: "Roboto", sans-serif;
   color: #a54747;
-  padding: 5px;
   margin: 0;
   text-align: left;
 }
 
-
 h2 {
-  font-family: "Roboto", initial;
-  font-size: 15px;
-  margin-bottom: 10px;
+  font-size:x-large;
+
+}
+h3{
+  font-size: large;
+  color: #a54747;
 }
 h5 {
   font-family: "Roboto", unset;
@@ -65,5 +66,7 @@ th,td {
 .table-color th{
   background-color: #bbbbbb;
 }
-
+th{
+  color: #161515c0;
+}
 

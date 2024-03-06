@@ -11,7 +11,7 @@ import { TipoGEService } from 'src/app/gestion/services/tipoGE.service';
 })
 export class ProyectoPendienteListarComponent implements OnInit {
   title = 'listarProyectosPendiente';
-  proyectos: any[] = [];
+  totalProyectosPendientes:number=0;
   usuarios: any[] = [];
   proyectosPendientes: any[] = [];
   actividadesEstrategicas: any[] = [];
@@ -24,7 +24,7 @@ export class ProyectoPendienteListarComponent implements OnInit {
     ){ }
 
   ngOnInit(): void {
-    this.patService.getPatsData().subscribe((patsData: any[]) => {
+    this.patService.getPatsAsociados().subscribe((patsData: any[]) => {
       if (patsData && patsData.length > 0) {
           // Obtener los IDs de los Pats
           const idsPats = patsData.map(pat => pat.idPat);
@@ -68,6 +68,9 @@ export class ProyectoPendienteListarComponent implements OnInit {
               this.proyectosPendientes = todosProyectosPendientes;
           });
       }
+    });
+    this.patService.getProyectosPendientes().subscribe(actividad => {
+      this.totalProyectosPendientes = actividad;
     });
 
   }

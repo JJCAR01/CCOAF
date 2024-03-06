@@ -9,6 +9,11 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 export class PatService {
   private patsDataSubject: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
   private actividadEstrategicas: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  private actividadEstrategicasPendientes: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  private proyectos: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  private proyectosPendientes: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  private proyectosArea: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  private proyectosPendientesArea: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   constructor(private http: HttpClient) {
   }
 
@@ -20,7 +25,7 @@ export class PatService {
     return this.http.get<T>(`${environment.apiUrl}/ccoa/pats`, { headers })
       .pipe(
         tap((pats: any) => {
-          this.setPatsData(pats); // Al recibir los datos, guardarlos en el BehaviorSubject
+          this.setPatsAsociados(pats); // Al recibir los datos, guardarlos en el BehaviorSubject
         })
       );
   }
@@ -47,11 +52,11 @@ export class PatService {
     return this.http.get<any[]>(`${environment.apiUrl}/ccoa/pat/observaciones/pats/${idPat}`, { headers });
   }
 
-  getPatsData(): Observable<any[]> {
+  getPatsAsociados(): Observable<any[]> {
     return this.patsDataSubject.asObservable();
   }
 
-  setPatsData(pats: any[]): void {
+  setPatsAsociados(pats: any[]): void {
     this.patsDataSubject.next(pats);
   }
 
@@ -61,6 +66,42 @@ export class PatService {
 
   setActividadesEstrategicas(actividades: number): void {
     this.actividadEstrategicas.next(actividades);
+  }
+
+  getActividadesEstrategicasPendientes(): Observable<number> {
+    return this.actividadEstrategicasPendientes.asObservable() as Observable<number>;
+  }
+
+  setActividadesEstrategicasPendientes(actividades: number): void {
+    this.actividadEstrategicasPendientes.next(actividades);
+  }
+  getProyectos(): Observable<number> {
+    return this.proyectos.asObservable() as Observable<number>;
+  }
+
+  setProyectos(actividades: number): void {
+    this.proyectos.next(actividades);
+  }
+  getProyectosPendientes(): Observable<number> {
+    return this.proyectosPendientes.asObservable() as Observable<number>;
+  }
+
+  setProyectosPendientes(actividades: number): void {
+    this.proyectosPendientes.next(actividades);
+  }
+  getProyectosArea(): Observable<number> {
+    return this.proyectosArea.asObservable() as Observable<number>;
+  }
+
+  setProyectosArea(actividades: number): void {
+    this.proyectosArea.next(actividades);
+  }
+  getProyectosPendientesArea(): Observable<number> {
+    return this.proyectosPendientesArea.asObservable() as Observable<number>;
+  }
+
+  setProyectosPendientesArea(actividades: number): void {
+    this.proyectosPendientesArea.next(actividades);
   }
 
 }

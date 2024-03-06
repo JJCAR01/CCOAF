@@ -31,7 +31,7 @@ export class ActividadestrategicaListarComponent implements OnInit{
 
   ngOnInit(): void {
     this.cargarUsuario();
-    this.patService.getPatsData().subscribe((patsData: any[]) => {
+    this.patService.getPatsAsociados().subscribe((patsData: any[]) => {
       if (patsData && patsData.length > 0) {
         // Obtener los IDs de los Pats
         const idsPats = patsData.map(pat => pat.idPat);

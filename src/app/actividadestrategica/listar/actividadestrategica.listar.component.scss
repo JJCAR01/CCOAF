@@ -5,16 +5,10 @@
 h1 {
     font-size:xx-large;
     margin-top: 1dvh ;
-}
-  
-  
-h2 {
-  font-size:x-large;
-
-}
-h3 {
+}  
+h3{
   font-size: large;
-  margin-left: 0%;
+  color: #257236;
 }
 h5 {
     font-family: "Roboto", unset;
@@ -39,23 +33,6 @@ h5 {
   width: auto; /* Los botones ocuparán todo el ancho de su contenedor */
 }
 
-.subcuadro-container {
-  text-align: center;
-  display: flex;
-  justify-content: center; 
-
-}
-.subcuadro {
-  margin-left: 10%;
-  flex: 1;
-  width: 10px; // Ajusta el ancho
-  height: 60px; // Ajusta la altura
-  border-radius: 20px;
-}
-
-.abierto {
-  background-color: #fada81ab;
-}
 
 .table-color th{
     background-color: #bbbbbb;
@@ -84,6 +61,8 @@ h5 {
   .table-color th{
     background-color: #bbbbbb;
 }
-  
+th{
+  color: #161515c0;
+}
   
   
