@@ -6,6 +6,7 @@ import { UsuarioService } from 'src/app/usuario/services/usuario.service';
 import { ActividadService } from '../services/actividad.service';
 import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
+import { Usuario } from 'src/app/modelo/usuario';
 @Component({
   selector: 'app-root',
   templateUrl: './crear.proyecto.component.html',
@@ -14,12 +15,11 @@ import Swal from 'sweetalert2';
 export class CrearProyectoComponent {
   ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
   title = 'crearProyecto';
-  usuarios: any[] = [];
-  form: FormGroup;
+  usuarios: Usuario[] = [];
   actividadNombre:any;
   idActividadEstrategica:number = 0;
   modalidadEnums = Object.values(EModalidad);
-
+  form: FormGroup;
 
   constructor(private formBuilder: FormBuilder, private auth: AuthService,
     private actividadService:ActividadService, private usuarioService:UsuarioService,
@@ -48,7 +48,7 @@ export class CrearProyectoComponent {
   cargarUsuarios() {
     this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
-        this.usuarios = data;
+        this.usuarios = data.sort((a:any, b:any) => a.nombre.localeCompare(b.nombre));
     });
   }
 

@@ -68,27 +68,26 @@
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h2 class="modal-title" id="exampleModalLabel">Modificar usuario</h2>
+            <h2 class="modal-title" id="exampleModalLabel">Modificar</h2>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <form [formGroup]="form">
               <h3>Usuario:</h3>
-              <h6 class="mb-2">{{nombreUsuario}}</h6>
                     <div class="form-floating mb-2">
-                      <input type="text" class="form-control" id="nombre" formControlName="nombre" [value]="nombreSeleccionado">
+                      <input type="text" class="form-control" id="nombre" formControlName="nombre">
                       <label for="nombre" class="form-label">Nombre</label>
                     </div>
                     <div class="form-floating mb-2">
-                      <input id="apellido" class="form-control form-control-lg" formControlName="apellido" placeholder="apellido" [(value)]="apellidoSeleccionado">
+                      <input id="apellido" class="form-control form-control-lg" formControlName="apellido" placeholder="apellido">
                       <label class="form-label" for="apellido">Apellido</label>
                     </div>
                     <div class="form-floating mb-2">
-                      <input id="correo" class="form-control form-control-lg" formControlName="correo" placeholder="correo" [(value)]="correoSeleccionado">
+                      <input id="correo" class="form-control form-control-lg" formControlName="correo" placeholder="correo">
                       <label class="form-label" for="correo">Correo</label>
                     </div>
                     <div class="form-floating mb-2">  
-                      <select class="form-select" id="idCargo" formControlName="idCargo" [(value)]="idCargoUsuario">
+                      <select class="form-select" id="idCargo" formControlName="idCargo" >
                         <option *ngFor="let cargo of cargos" [value]="cargo.idCargo"> {{ cargo.nombre }}
                         </option>
                       </select>

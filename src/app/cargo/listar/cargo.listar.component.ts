@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { CargoService } from '../services/cargo.service';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import Swal from 'sweetalert2';
-import { AreaListarComponent } from 'src/app/area/listar/area.listar.component';
 import { AreaService } from 'src/app/area/services/area.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Area } from 'src/app/modelo/area';
+import { Cargo } from 'src/app/modelo/cargo';
 
 @Component({
   selector: 'app-root:not(c)',
@@ -13,11 +14,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class CargoListarComponent {
   title = 'listarCargo';
-    cargos: any[] = [];
-    areas: any[] = [];
+    cargos: Cargo[] = [];
+    areas: Area[] = [];
+
     idCargoSeleccionado:number = 0;
-    nombreCargoSeleccionado:any;
-    areaSeleccionada:any;
+
     form:FormGroup;
     busqueda: any;
   
@@ -39,22 +40,14 @@ export class CargoListarComponent {
       this.areaService.listar(this.auth.obtenerHeader()).subscribe(
         (data: any) => {
           this.areas = data;
-      },
-        (error) => {
-          console.log(error);
-        }
-      );
+      });
     }
 
     cargarCargos() {
       this.cargoService.listar(this.auth.obtenerHeader()).toPromise().then(
         (data: any) => {
           this.cargos = data;
-        },
-        (error) => {
-          Swal.fire('Error',error.error.mensajeTecnico,"error");
-        }
-      );
+      });
     }
     eliminarCargo(idCargo: number) {
       const cargoAEliminar = this.cargos.find(cargo => cargo.idCargo === idCargo);
@@ -117,12 +110,10 @@ export class CargoListarComponent {
   }
   cargoSeleccionado(idCargo: number,cargo:any) {
     this.idCargoSeleccionado = idCargo;
-    this.nombreCargoSeleccionado = cargo.nombre;
-    this.areaSeleccionada = cargo.idArea
 
     this.form.patchValue({
-      nombre: this.nombreCargoSeleccionado,
-      idArea:this.areaSeleccionada
+      nombre: cargo.nombre,
+      idArea: cargo.idArea
     });
   }
 

@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, ReactiveFormsModule,FormGroup,Validators } from '@angular/forms';
+import { FormBuilder, FormGroup,Validators } from '@angular/forms';
 import { CargoService } from '../services/cargo.service';  
-import { CookieService } from 'ngx-cookie-service';
 import { AreaService } from 'src/app/area/services/area.service';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import Swal from 'sweetalert2';
+import { Area } from 'src/app/modelo/area';
 
 
 @Component({
@@ -16,7 +16,7 @@ import Swal from 'sweetalert2';
 export class CargoCrearComponent {
   title = 'crearCargo';
   ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
-  areas: any[] = [];
+  areas: Area[] = [];
   form:FormGroup;
   
   constructor(private cargoService: CargoService,private formBuilder: FormBuilder,

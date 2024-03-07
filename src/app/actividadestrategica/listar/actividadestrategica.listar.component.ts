@@ -1,12 +1,11 @@
 import { Component, OnInit} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import Swal from 'sweetalert2';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import { TipoGEService } from 'src/app/gestion/services/tipoGE.service';
 import { UsuarioService } from 'src/app/usuario/services/usuario.service';
 import { PatService } from 'src/app/pat/services/pat.service';
 import { Router } from '@angular/router';
 import { Pat } from 'src/app/modelo/pat';
+import { Usuario } from 'src/app/modelo/usuario';
 
 @Component({
   selector: 'app-actividadestrategica.listar',
@@ -16,12 +15,12 @@ import { Pat } from 'src/app/modelo/pat';
 export class ActividadestrategicaListarComponent implements OnInit{
   title = 'listarActividadesEstrategicas';
   actividadesEstrategicas: any[] = [];
-  usuarios:any[] =[];
+  actividadesEstrategicasPendientes: any[] = [];
+  usuarios:Usuario[] =[];
   pats : Pat[] = [];
   totalActividadesEstrategicas : number = 0;
+  totalActividadesEstrategicasPendintes: number =0;
   busqueda: any;
-  busquedaFechaAnual:any;
-  busquedaResponsable:any;
 
   constructor(private tipoService: TipoGEService,
     private auth: AuthService,
@@ -37,6 +36,7 @@ export class ActividadestrategicaListarComponent implements OnInit{
         const idsPats = patsData.map(pat => pat.idPat);
         // Lista acumulativa para almacenar todas las actividades estratégicas
         const allActividades: any[] = [];
+        const allActividadesPendientes: any[] = [];
         // Iterar sobre los IDs de Pats y cargar las actividades estratégicas
         for (const idPat of idsPats) {
           this.tipoService.listarActividadEstrategicaPorIdPat(idPat, this.auth.obtenerHeader())
@@ -49,11 +49,22 @@ export class ActividadestrategicaListarComponent implements OnInit{
                 if (idPat === idsPats[idsPats.length - 1]) {
                   this.actividadesEstrategicas = allActividades;
                 }
+                // Filtrar las actividades estratégicas pendientes
+                const actividadesPendientes = data.filter((pendiente: any) => pendiente.porcentajeReal < 100);
+                // Agregar las actividades pendientes a la lista acumulativa
+                allActividadesPendientes.push(...actividadesPendientes);
+                // Si es la última iteración, asignar las actividades acumuladas a this.actividadesEstrategicasPendientes
+                if (idPat === idsPats[idsPats.length - 1]) {
+                  this.actividadesEstrategicasPendientes = allActividadesPendientes;
+                }
               }
             );
         }
       }
     });  
+    this.patService.getActividadesEstrategicasPendientes().subscribe(actividad => {
+      this.totalActividadesEstrategicasPendintes = actividad;
+    });
     this.patService.getActividadesEstrategicas().subscribe(actividad => {
       this.totalActividadesEstrategicas = actividad;
     });
@@ -82,10 +93,6 @@ export class ActividadestrategicaListarComponent implements OnInit{
     const usuario = this.usuarios.find((u) => u.idUsuario === idUsuario);
     return usuario ? usuario.nombre + " " + usuario.apellidos : '';
   }
-  /*obtenerNombrePat(idPat: number) {
-    const pat = this.pats.find((u) => u.idPat === idPat);
-    return pat ? pat.nombre : '';
-  }*/
 
   colorPorcentaje(porcentaje: number): string {
     if (porcentaje < 30) {

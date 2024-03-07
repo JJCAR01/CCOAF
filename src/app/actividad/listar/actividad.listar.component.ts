@@ -76,17 +76,17 @@ export class ActividadListarComponent implements OnInit{
   patNombre:any;
   actividadNombre:any;
   usuarioProyecto:any;
-  idActividadEstrategica:number | 0 = 0;
+  idActividadEstrategica:number = 0;
   porcentajeEstrategica:any;
   usuarioEstrategica:any;
-  patEstrategica:number | 0 =0;
-  idActividadGestionEstrategicaSeleccionado:number | 0 = 0;
+  patEstrategica:number =0;
+  idActividadGestionEstrategicaSeleccionado:number = 0;
   idProyectoSeleccionado:number | 0 = 0;
   nombreProyecto:any;
   idTareaSeleccionado:number | 0 = 0;
   nombreTarea:any;
   estadoTarea:any;
-  idTareaTipo:number | 0 = 0;
+  idTareaTipo:number = 0;
   periodicidadTarea:any;
   form:FormGroup;
   formProyecto:FormGroup;
@@ -199,7 +199,7 @@ private obtenerFechaActual(): string {
   cargarUsuario() {
     this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
-        this.usuarios = data;
+        this.usuarios = data.sort((a:any, b:any) => a.nombre.localeCompare(b.nombre));
     });
   }
 

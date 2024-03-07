@@ -6,7 +6,6 @@ import { UsuarioService } from 'src/app/usuario/services/usuario.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TipoGEService } from 'src/app/gestion/services/tipoGE.service';
 import { ActividadService } from 'src/app/actividad/services/actividad.service';
-import { ProcesoService } from 'src/app/proceso/services/proceso.service';
 import { DireccionService } from 'src/app/direccion/services/direccion.service';
 import { Direccion } from '../../modelo/direccion';
 import { Proceso } from '../../modelo/proceso';
@@ -39,23 +38,20 @@ export class PatListarComponent implements OnInit{
   esOperador: boolean = false; // Agrega esta línea
   esConsultor: boolean = false;
 
-  idPatSeleccionado: number | 0 = 0;
-  nombrePatSeleccionado: string | undefined;
-  fechaAnualSeleccionada: number | 0 = 0;
-  procesoSeleccionado: any | undefined;
+  idPatSeleccionado: number = 0;
   direccionSeleccionada: any | undefined;
-  idUsuarioSeleccionado: any | 0 = 0;
-  cantidadPats: number | 0 = 0;
-  cantidadProyectos: number | 0 = 0;
-  cantidadGestiones: number | 0 = 0;
-  cantidadGestionesActividadEstrategica: number | 0 = 0;
-  cantidadEstrategicas: number | 0 = 0;
-  sumadorProyectosTerminados: number | 0 = 0;
-  sumadorProyectosAbiertos: number | 0 = 0;
-  sumadorActividadGestionTerminados: number | 0 = 0;
-  sumadorActividadGestionAbiertos: number | 0 = 0;
-  sumadorActividadEstrategicasTerminados: number | 0 = 0;
-  sumadorActividadEstrategicasAbiertos: number | 0 = 0;
+  idUsuarioSeleccionado: number = 0;
+  cantidadPats: number = 0;
+  cantidadProyectos: number  = 0;
+  cantidadGestiones: number  = 0;
+  cantidadGestionesActividadEstrategica: number  = 0;
+  cantidadEstrategicas: number  = 0;
+  sumadorProyectosTerminados: number  = 0;
+  sumadorProyectosAbiertos: number = 0;
+  sumadorActividadGestionTerminados: number = 0;
+  sumadorActividadGestionAbiertos: number  = 0;
+  sumadorActividadEstrategicasTerminados: number  = 0;
+  sumadorActividadEstrategicasAbiertos: number = 0;
   actividadesFiltradas: string[] = [];
   proyectosFiltrados: string[] = [];
   actividadesGestionFiltradas: string[] = [];
@@ -77,6 +73,8 @@ export class PatListarComponent implements OnInit{
         this.form = this.formBuilder.group({
           nombre:['', Validators.required],
           fechaAnual: ['', Validators.required],
+          fechaInicial: ['', Validators.required],
+          fechaFinal: ['', Validators.required],
           direccion: ['', Validators.required],
           porcentajeReal: ['', Validators.required],
           porcentajeEsperado: ['', Validators.required],
@@ -113,14 +111,14 @@ export class PatListarComponent implements OnInit{
     cargarUsuario() {
       this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
         (data: any) => {
-          this.usuarios = data;
+          this.usuarios = data.sort((a:any, b:any) => a.nombre.localeCompare(b.nombre));
         }
       );
     }
     cargarDirecciones() {
       this.direccionService.listar(this.auth.obtenerHeader()).subscribe(
-        (data: any) => {
-          this.direcciones = data;
+        (data: any) => {         
+          this.direcciones = data.sort((a:any, b:any) => a.nombre.localeCompare(b.nombre));
         }
       )
     }
@@ -175,6 +173,7 @@ export class PatListarComponent implements OnInit{
           this.cargarPatsActividadGestion(patsFiltrados);
           this.patService.setPatsAsociados(patsFiltrados);
           this.pats = patsFiltrados;
+          patsFiltrados.sort((a:any, b:any) => a.nombre.localeCompare(b.nombre));
         },
         (error) => {
           this.swalError(error);
@@ -236,10 +235,11 @@ export class PatListarComponent implements OnInit{
           const numeroDeListas = this.actividadesFiltradas.length;
           this.cantidadEstrategicas = numeroDeListas;
           this.patService.setActividadesEstrategicas(this.cantidadEstrategicas);
-          
+          this.patService.setActividadesEstrategicasPendientes(this.sumadorActividadEstrategicasAbiertos);
         }
+        
       );
-      this.patService.setActividadesEstrategicasPendientes(this.sumadorActividadEstrategicasAbiertos);
+
     }
     cargarActividadGestionActividadesEstrategica(actividadesEstrategicas: any[]) {
       // Obtener los IDs de las actividades estratégicas
@@ -303,6 +303,8 @@ export class PatListarComponent implements OnInit{
       if (this.form.valid && this.idPatSeleccionado) {
         const nombre = this.form.get('nombre')?.value;
         const fechaAnual = this.form.get('fechaAnual')?.value;
+        const fechaInicial = this.form.get('fechaInicial')?.value;
+        const fechaFinal = this.form.get('fechaFinal')?.value;
         const direccion = this.form.get('direccion')?.value;
         const porcentajeReal = this.form.get('porcentajeReal')?.value;
         const porcentajeEsperado = this.form.get('porcentajeEsperado')?.value;
@@ -311,6 +313,8 @@ export class PatListarComponent implements OnInit{
         const pat = {
           nombre: nombre,
           fechaAnual: fechaAnual,
+          fechaInicial:fechaInicial,
+          fechaFinal:fechaFinal,
           direccion:direccion,
           porcentajeReal:porcentajeReal,
           porcentajeEsperado:porcentajeEsperado,
@@ -419,6 +423,8 @@ export class PatListarComponent implements OnInit{
       this.form.patchValue({
         nombre: pat.nombre,
         fechaAnual:  pat.fechaAnual,
+        fechaInicial: pat.fechaInicial,
+        fechaFinal: pat.fechaFinal,
         direccion: pat.direccion.nombre,
         porcentajeReal: pat.porcentajeReal,
         porcentajeEsperado: pat.porcentajeEsperado,

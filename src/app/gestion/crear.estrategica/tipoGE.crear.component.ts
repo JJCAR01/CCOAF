@@ -20,7 +20,7 @@ export class TipoGECrearComponent implements OnInit {
   usuarios: Usuario[] = [];
   periodiciadEnumLista = Object.values(EPeriodicidadMeta);
   patNombre:string | undefined ;
-  idPat:number | 0=0;
+  idPat:number=0;
   form: FormGroup;
 
   constructor(private formBuilder: FormBuilder, private auth: AuthService,
@@ -50,7 +50,7 @@ export class TipoGECrearComponent implements OnInit {
   cargarUsuarios() {
     this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
-        this.usuarios = data;
+        this.usuarios = data.sort((a:any, b:any) => a.nombre.localeCompare(b.nombre));
     });
   }
 

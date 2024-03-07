@@ -12,6 +12,8 @@ import { TipoGEService } from 'src/app/gestion/services/tipoGE.service';
 export class ProyectoPendienteListarComponent implements OnInit {
   title = 'listarProyectosPendiente';
   totalProyectosPendientes:number=0;
+  totalProyectosAreaPendientes:number=0;
+  proyectosAreaPendientes:any[] = [];
   usuarios: any[] = [];
   proyectosPendientes: any[] = [];
   actividadesEstrategicas: any[] = [];
@@ -23,57 +25,61 @@ export class ProyectoPendienteListarComponent implements OnInit {
     private tipoService: TipoGEService,
     ){ }
 
-  ngOnInit(): void {
-    this.patService.getPatsAsociados().subscribe((patsData: any[]) => {
-      if (patsData && patsData.length > 0) {
-          // Obtener los IDs de los Pats
-          const idsPats = patsData.map(pat => pat.idPat);
+    ngOnInit(): void {
+      this.patService.getPatsAsociados().subscribe((patsData: any[]) => {
+          if (patsData && patsData.length > 0) {
+              const idsPats = patsData.map(pat => pat.idPat);
+              const allActividades: any[] = [];
+              const todosProyectosPendientes: any[] = [];
+              const todosProyectosAreaPendientes: any[] = [];
+              const promesasProyectos: Promise<any>[] = [];
   
-          // Lista acumulativa para almacenar todas las actividades estratégicas
-          const allActividades: any[] = [];
-          const todosProyectosPendientes: any[] = []; // Lista para almacenar proyectos pendientes
+              // Iterar sobre los IDs de Pats y cargar las actividades estratégicas
+              for (const idPat of idsPats) {
+                  this.tipoService.listarActividadEstrategicaPorIdPat(idPat, this.auth.obtenerHeader())
+                      .subscribe((data: any) => {
+                          allActividades.push(...data);
+                          const idActividades = data.map((actividad: any) => actividad.idActividadEstrategica);
   
-          // Promesas de carga de proyectos
-          const promesasProyectos: Promise<any>[] = [];
+                          for (const idActividad of idActividades) {
+                              const promesaProyecto = this.actividadService.listarProyectoPorIdActividadEstrategica(idActividad, this.auth.obtenerHeader())
+                                  .toPromise()
+                                  .then((proyectos: any) => {
+                                      const proyectosPendientesActividad = proyectos.filter((proyecto: any) => proyecto.porcentajeReal < 100);
+                                      todosProyectosPendientes.push(...proyectosPendientesActividad);
+                                  });
+                              promesasProyectos.push(promesaProyecto);
+                          }
+                      });
   
-          // Iterar sobre los IDs de Pats y cargar las actividades estratégicas
-          for (const idPat of idsPats) {
-              this.tipoService.listarActividadEstrategicaPorIdPat(idPat, this.auth.obtenerHeader())
-                  .toPromise()
-                  .then((data: any) => {
-                      // Concatenar las actividades estratégicas obtenidas a la lista acumulativa
-                      allActividades.push(...data);
+                  this.tipoService.listarProyectoAreaPorIdPat(idPat, this.auth.obtenerHeader())
+                      .toPromise()
+                      .then((dataProyectosArea: any) => {
+                          const proyectosPendientes = dataProyectosArea.filter((pendiente: any) => pendiente.porcentajeReal < 100);
+                          todosProyectosAreaPendientes.push(...proyectosPendientes);
+                          this.patService.setProyectosPendientesArea(this.proyectosAreaPendientes.length);
+                      });
+                      this.proyectosAreaPendientes = todosProyectosAreaPendientes;
+              }
   
-                      // Obtener los IDs de las actividades estratégicas
-                      const idActividades = data.map((actividad: any) => actividad.idActividadEstrategica);
-  
-                      // Iterar sobre los IDs de actividades para obtener los proyectos
-                      for (const idActividad of idActividades) {
-                          const promesaProyecto = this.actividadService.listarProyectoPorIdActividadEstrategica(idActividad, this.auth.obtenerHeader())
-                              .toPromise()
-                              .then((proyectos: any) => {
-                                  // Filtrar los proyectos pendientes (con porcentaje real < 100)
-                                  const proyectosPendientesActividad = proyectos.filter((proyecto: any) => proyecto.porcentajeReal < 100);
-                                  // Agregar los proyectos pendientes a la lista acumulativa
-                                  todosProyectosPendientes.push(...proyectosPendientesActividad);
-                              });
-                          promesasProyectos.push(promesaProyecto);
-                      }
-                  });
-          }
-  
-          // Esperar a que todas las promesas de carga de proyectos se resuelvan
-          Promise.all(promesasProyectos).then(() => {
-              // Asignar los proyectos pendientes una vez que todas las promesas se han resuelto
-              this.proyectosPendientes = todosProyectosPendientes;
-          });
-      }
-    });
-    this.patService.getProyectosPendientes().subscribe(actividad => {
-      this.totalProyectosPendientes = actividad;
-    });
+              Promise.all(promesasProyectos).then(() => {
+                  this.proyectosPendientes = todosProyectosPendientes;
 
+
+              });
+          }
+      });
+  
+      this.patService.getProyectosPendientes().subscribe(actividad => {
+          this.totalProyectosPendientes = actividad;
+      });
+  
+      this.patService.getProyectosPendientesArea().subscribe(actividad => {
+          this.totalProyectosAreaPendientes = actividad;
+      });
   }
+  
+  
 
 
 

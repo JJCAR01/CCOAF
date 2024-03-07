@@ -28,7 +28,6 @@ import { SprintListarComponent } from './sprint/listar/sprint.listar.component';
 import { SprintCrearComponent } from './sprint/crear/sprint.crear.component';
 import { ProyectoListarComponent } from './proyecto/listar/proyecto.listar.component';
 import { ProyectoPendienteListarComponent } from './proyecto/pendientes/proyecto.pendiente.component';
-import { ActividadEstrategicaPendienteListarComponent } from './actividadestrategica/pendiente/actividadestrategica.pendiente.component';
 import { ModificarDireccionesComponent } from './usuario/modificar.direcciones/modificar.direcciones.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProcesoCrearComponent } from './proceso/crear/proceso.crear.component';
@@ -59,6 +58,7 @@ import { NgxCaptchaModule } from 'ngx-captcha';
 import { ActividadestrategicaListarComponent } from './actividadestrategica/listar/actividadestrategica.listar.component';
 import { ListarHistoricoComponent } from './historico/listar.historico/listar.historico.component';
 import { BuscarFechaAnualPipe } from 'src/pipes/buscarfechaanual.pipes';
+import { BuscarUsuarioPipe } from 'src/pipes/buscar.usuario';
 
 
 @NgModule({
@@ -67,10 +67,10 @@ import { BuscarFechaAnualPipe } from 'src/pipes/buscarfechaanual.pipes';
     CargoCrearComponent,CargoListarComponent,UsuarioCrearComponent,UsuarioListarComponent, BuscarPipe,EnumPipe,PatListarComponent,
     PatCrearComponent,TipogeListarComponent,ActividadCrearComponent, ActividadListarComponent,TipoGECrearComponent,
     SprintListarComponent,SprintCrearComponent, ProyectoListarComponent, ProyectoPendienteListarComponent,
-    ActividadEstrategicaPendienteListarComponent, ComasPipe, ModificarDireccionesComponent,DashboardComponent,
+    ComasPipe, ModificarDireccionesComponent,DashboardComponent,
     DireccionCrearComponent,ProcesoCrearComponent,CrearProyectoComponent,CrearGestionComponent,CrearProyectoareaComponent,
     ListarSprintproyectoareaComponent,CrearSprintproyectoareaComponent,ActividadestrategicaListarComponent,ListarHistoricoComponent,
-    BuscarFechaAnualPipe,BuscarDireccionPipe,BuscarResponsablePipe
+    BuscarFechaAnualPipe,BuscarDireccionPipe,BuscarResponsablePipe,BuscarUsuarioPipe
   ],
   imports: [
     CommonModule,

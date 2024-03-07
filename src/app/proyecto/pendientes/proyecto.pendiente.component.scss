@@ -5,8 +5,6 @@
 h1 {
   font-family: "Roboto", sans-serif;
   color: #a54747;
-  padding: 5px;
-  margin: 0;
   text-align: left;
 }
 
@@ -53,20 +51,23 @@ width: auto; /* Los botones ocuparán todo el ancho de su contenedor */
   
   a:active, // Aplica el estilo cuando el enlace está activo
   a:focus {  // Aplica el estilo cuando el enlace está enfocado
-    color: #000000;
+    color:rgb(216, 48, 82);
   }
 }
 .nav-link {
   font-family: 'Roboto', initial;
   font-size: 20px;
-  color: rgb(0, 0, 0);
+  color:rgb(216, 48, 82);
 }
 .nav-tabs .nav-item:hover {
   background: rgba(156, 155, 155, 0.438);
 }
 
 .nav-tabs .nav-link:hover {
-  color:rgb(0, 0, 0);
+  color:rgb(216, 48, 82);
+}
+.pendiente{
+  color:rgb(216, 48, 82);
 }
 
 .table-color th{

@@ -4,10 +4,8 @@ import { UsuarioService } from 'src/app/usuario/services/usuario.service';
 import { PatService } from '../services/pat.service';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import Swal from 'sweetalert2';
-import { ProcesoService } from 'src/app/proceso/services/proceso.service';
 import { DireccionService } from 'src/app/direccion/services/direccion.service';
 import { Usuario } from 'src/app/modelo/usuario';
-import { Proceso } from 'src/app/modelo/proceso';
 import { Direccion } from 'src/app/modelo/direccion';
 
 @Component({
@@ -18,14 +16,12 @@ import { Direccion } from 'src/app/modelo/direccion';
 export class PatCrearComponent implements OnInit{
   title = 'crearPat';
   ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
-  procesos: Proceso [] = [];
   direcciones: Direccion [] = [];
   usuarios: Usuario[] = [];
   form:FormGroup;
   
   constructor(private patService:PatService,private usuarioService: UsuarioService,
-    private formBuilder: FormBuilder,private auth:AuthService,
-    private procesoService:ProcesoService, private direccionService:DireccionService) 
+    private formBuilder: FormBuilder,private auth:AuthService, private direccionService:DireccionService) 
   { 
     this.form = this.formBuilder.group({
       nombre: ['', Validators.required],

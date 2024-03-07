@@ -55,12 +55,12 @@ export class ListarHistoricoComponent {
   actividadesGestionFiltradas: string[] = [];
   pats: Pat[] = [];
   usuarios: Usuario[] = [];
-  procesos: Proceso[] = [];
   direcciones: Direccion[] = [];
   observaciones: ObservacionPat[] = [];
   busqueda: any;
   busquedaFechaAnual:any;
   busquedaDireccion:any;
+  busquedaUsuario:any;
 
     constructor(
       private patService: PatService,private auth:AuthService,
@@ -100,15 +100,7 @@ export class ListarHistoricoComponent {
         }
       )
     }
-    cargarObservaciones(idPat:any) {
-      this.patService.listarObservacionPorIdPat(idPat,this.auth.obtenerHeader()).subscribe(
-          (data: any) => { 
-            this.observaciones = data; 
-          }
-      )
-    } 
-
-    cargarPats() {
+     cargarPats() {
       this.patService.listarPat(this.auth.obtenerHeader()).toPromise().then(
         (data: any) => {
           // Obtener el token

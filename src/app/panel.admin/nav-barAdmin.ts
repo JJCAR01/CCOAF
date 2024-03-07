@@ -19,11 +19,11 @@ export const navbarAdminData = [
         imageSource: 'assets/proyecto.png',
         label: 'Proyectos'
     },
-    {
+    /*{
         routeLink: 'listarActividadesEstrategicasPendiente',
         imageSource: 'assets/estrategicaadvertencia.png',
         label: 'Act estratégicas pendientes'
-    },
+    },*/
     {
         routeLink: 'listarProyectosPendiente',
         imageSource: 'assets/proyectoadvertencia.png',

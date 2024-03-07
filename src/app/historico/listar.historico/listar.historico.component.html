@@ -31,6 +31,12 @@
           <input type="text" class="form-control me-1" [(ngModel)]="busquedaDireccion"/>
       </div>
     </div>
+    <div class="col-md-3">
+      <div class="custom-button d-flex align-items-center">
+          <span>Responsable:&nbsp;</span>
+          <input type="text" class="form-control me-1" [(ngModel)]="busquedaUsuario"/>
+      </div>
+    </div>
   </div>
  
   <main class="main text-center smaller-main">
@@ -48,7 +54,7 @@
         </tr>
       </thead>
       <tbody>
-        <ng-container *ngFor="let pat of pats | buscar: busqueda | buscarFechaAnual :busquedaFechaAnual | buscarDireccion :busquedaDireccion">
+        <ng-container *ngFor="let pat of pats | buscar: busqueda | buscarFechaAnual :busquedaFechaAnual | buscarDireccion :busquedaDireccion |buscarUsuario: busquedaDireccion: usuarios">
           <tr title="{{pat.nombre}}" >
             <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]" >{{ pat.nombre }}</td>
             <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]">{{ pat.fechaAnual }}</td>

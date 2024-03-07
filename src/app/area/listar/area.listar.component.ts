@@ -4,6 +4,8 @@ import { AuthService } from 'src/app/login/auth/auth.service';
 import Swal from 'sweetalert2';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DireccionService } from 'src/app/direccion/services/direccion.service';
+import { Area } from 'src/app/modelo/area';
+import { Direccion } from 'src/app/modelo/direccion';
 
 @Component({
   selector: 'app-root:not(p)',
@@ -12,13 +14,14 @@ import { DireccionService } from 'src/app/direccion/services/direccion.service';
 })
 export class AreaListarComponent implements OnInit {
   title = 'listarArea';
-  areas: any[] = [];
+  areas: Area[] = [];
+  direcciones:Direccion[] = [];
+
   idAreaSeleccionada:number = 0;
-  nombreAreaSeleccionada:any;
-  direccionSeleccionada:any;
+  
   form:FormGroup
   busqueda: any;
-  direcciones:any;
+
 
   constructor(
     private areaService: AreaService,
@@ -60,7 +63,6 @@ export class AreaListarComponent implements OnInit {
   }
   
   eliminarArea(idArea: number) {
-      const areaAEliminar = this.areas.find(area => area.idArea === idArea);
 
       Swal.fire({
         icon:"question",
@@ -76,7 +78,7 @@ export class AreaListarComponent implements OnInit {
         if (confirmacion.isConfirmed) {
         this.areaService.eliminar(idArea, this.auth.obtenerHeader()).subscribe(
           (response) => {
-            this.swalSatisfactorio('elimianada','área')
+            this.swalSatisfactorio('área','eliminado')
             this.cargarAreas()
           },
           (error) => {this.swalError(error);}
@@ -121,12 +123,10 @@ export class AreaListarComponent implements OnInit {
   
   areaSeleccionada(idArea: number,area:any) {
     this.idAreaSeleccionada = idArea;
-    this.nombreAreaSeleccionada = area.nombre;
-    this.direccionSeleccionada = area.idDireccion;
 
     this.form.patchValue({
-      nombre: this.nombreAreaSeleccionada,
-      direccion: this.direccionSeleccionada,
+      nombre: area.nombre,
+      direccion: area.idDireccion,
     });
   }
 

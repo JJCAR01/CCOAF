@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import { DireccionService } from '../services/direccion.service';
 import Swal from 'sweetalert2';
+import { Direccion } from 'src/app/modelo/direccion';
 
 @Component({
   selector: 'app-crear',
@@ -12,11 +13,14 @@ import Swal from 'sweetalert2';
 export class DireccionCrearComponent implements OnInit {
   title = 'crearDireccion';
   ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
-  form:FormGroup;
-  direcciones:any;
-  busqueda: any;
+  direcciones:Direccion[]=[];
+
   idSeleccionada:number | undefined;
-  nombreSeleccionado:string | undefined;
+  nombreSeleccionado:string = '';
+
+  form:FormGroup;
+  formModificar:FormGroup;
+  busqueda: any;
 
   ngOnInit(): void {
     this.cargarDireciones()
@@ -27,6 +31,9 @@ export class DireccionCrearComponent implements OnInit {
     private formBuilder: FormBuilder) 
     { 
       this.form = this.formBuilder.group({
+        nombre: ['', Validators.required],
+      });
+      this.formModificar = this.formBuilder.group({
         nombre: ['', Validators.required],
       });
   }
@@ -115,7 +122,7 @@ export class DireccionCrearComponent implements OnInit {
         icon: "warning",
         confirmButtonColor: '#0E823F',
       });
-    } else if (this.form.valid ) {
+    } else if (this.formModificar.valid ) {
       const nombre = this.form.get('nombre')?.value;
       const direccion = {
         nombre: nombre,
@@ -160,11 +167,11 @@ export class DireccionCrearComponent implements OnInit {
   }
   direccionSeleccionado(idDireccion: number,direccion:any) {
     this.idSeleccionada = idDireccion;
-    this.nombreSeleccionado = direccion.nombre;
-
-    this.form.patchValue({
+    this.nombreSeleccionado  = direccion.nombre;
+    this.formModificar.patchValue({
       nombre: this.nombreSeleccionado,
     });
+
   }
 
   get nombreVacio(){

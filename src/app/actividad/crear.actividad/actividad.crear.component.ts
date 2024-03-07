@@ -6,6 +6,7 @@ import { ActividadService } from '../services/actividad.service';
 import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 import { EModalidad } from 'src/enums/emodalidad';
+import { Usuario } from 'src/app/modelo/usuario';
 
 @Component({
   selector: 'app-crear',
@@ -15,10 +16,10 @@ import { EModalidad } from 'src/enums/emodalidad';
 export class ActividadCrearComponent implements OnInit{
   title = 'crearActividad';
   ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
-  usuarios: any[] = [];
-  form: FormGroup;
+  usuarios: Usuario[] = [];
   actividadNombre:any;
   idActividadEstrategica:number = 0;
+  form: FormGroup;
 
   constructor(private formBuilder: FormBuilder, private auth: AuthService,
     private actividadService:ActividadService, private usuarioService:UsuarioService,
@@ -42,7 +43,7 @@ export class ActividadCrearComponent implements OnInit{
   cargarUsuarios() {
     this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
-        this.usuarios = data;
+        this.usuarios = data.sort((a:any, b:any) => a.nombre.localeCompare(b.nombre));
     });
   }
 

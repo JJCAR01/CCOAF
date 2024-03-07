@@ -14,6 +14,7 @@ import { initializeApp } from 'firebase/app';
 import { environment } from "src/environments/environment.development";
 import { EPeriodicidad } from "src/enums/eperiodicidad";
 import { MENSAJE_TITULO } from "src/app/utilitarios/mensaje/mensajetitulo";
+import { Usuario } from "src/app/modelo/usuario";
 
 @Component({
   selector: 'app-sprint',
@@ -52,27 +53,24 @@ export class SprintListarComponent implements OnInit {
   sprints: any[] = [];
   proyectos: any[] = [];
   tareas:any[] =[];
-  usuarios:any[] =[];
+  usuarios:Usuario[] =[];
   observaciones:any[] =[];
   documentoObtenido: any [] = [];
   patNombre:any;
   nombreSprint:any;
-  fechaInicialSprint:any;
-  fechaFinalSprint:any;
   totalSprint:any;
-  contadorSprint:any;
   planeacionSprint:any;
   proyectoNombre:any;
   proyectoPorcentaje:any;
   proyectoUsuario:any;
-  idProyecto:any;
+  idProyecto:number = 0;
   actividad:any;
-  idSprintSeleccionado:any;
-  idTareaSeleccionado:any;
+  idSprintSeleccionado:number = 0;
+  idTareaSeleccionado:number = 0;
   nombreTarea:any;
   periodicidadTarea:any;
   porcentajeTarea:any;
-  idTareaTipo:any;
+  idTareaTipo:number = 0;
   estadoTarea:any;
   formSprint:FormGroup;
   formModificarEstadoTarea:FormGroup;
@@ -330,12 +328,8 @@ export class SprintListarComponent implements OnInit {
   cargarUsuario() {
     this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
-        this.usuarios = data;
-    },
-      (error) => {
-        console.log(error);
-      }
-    );
+        this.usuarios = data.sort((a:any, b:any) => a.nombre.localeCompare(b.nombre));
+    });
   }
 
 

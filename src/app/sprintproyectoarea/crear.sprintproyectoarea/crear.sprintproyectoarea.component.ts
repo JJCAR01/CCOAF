@@ -5,6 +5,7 @@ import { ServicesSprintProyectoAreaService } from '../services/services.sprintpr
 import { UsuarioService } from 'src/app/usuario/services/usuario.service';
 import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
+import { Usuario } from 'src/app/modelo/usuario';
 
 @Component({
   selector: 'app-crear.sprintproyectoarea',
@@ -14,14 +15,11 @@ import Swal from 'sweetalert2';
 export class CrearSprintproyectoareaComponent {
   title = 'crearSprintProyectoArea';
   ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
-  usuarios: any[] = [];
+  usuarios: Usuario[] = [];
   form: FormGroup;
   patNombre:any;
   proyectoNombre:any;
-  idProyecto:any;
-  tipoActividadGestionActividadEstrategica: boolean = false;
-  tipoProyecto: boolean = false;
-  tipo: string = ''; // Variable para rastrear el tipo de actividad
+  idProyecto: number = 0;
 
   constructor(private formBuilder: FormBuilder, private auth: AuthService,
     private sprintService:ServicesSprintProyectoAreaService, private usuarioService:UsuarioService,
@@ -45,12 +43,8 @@ export class CrearSprintproyectoareaComponent {
   cargarUsuarios() {
     this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
-        this.usuarios = data;
-    },
-      (error) => {
-        console.log(error);
-      }
-    );
+        this.usuarios = data.sort((a:any, b:any) => a.nombre.localeCompare(b.nombre));
+    });
   }
   crearSprint() { 
     if(this.form.valid){

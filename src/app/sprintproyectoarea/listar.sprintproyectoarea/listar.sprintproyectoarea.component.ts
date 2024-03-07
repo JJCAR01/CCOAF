@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { initializeApp } from 'firebase/app';
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
-import { ActividadService } from 'src/app/actividad/services/actividad.service';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import { ObservacionService } from 'src/app/observacion/services/observacion.service';
 import { TareaService } from 'src/app/tarea/services/tarea.service';
@@ -15,6 +14,7 @@ import Swal from 'sweetalert2';
 import { ServicesSprintProyectoAreaService } from '../services/services.sprintproyectoarea.service';
 import { TipoGEService } from 'src/app/gestion/services/tipoGE.service';
 import { MENSAJE_TITULO } from 'src/app/utilitarios/mensaje/mensajetitulo';
+import { Usuario } from 'src/app/modelo/usuario';
 
 @Component({
   selector: 'app-listar.sprintproyectoarea',
@@ -53,27 +53,24 @@ export class ListarSprintproyectoareaComponent implements OnInit  {
   sprints: any[] = [];
   proyectos: any[] = [];
   tareas:any[] =[];
-  usuarios:any[] =[];
+  usuarios:Usuario[] =[];
   observaciones:any[] =[];
   documentoObtenido: any [] = [];
   patNombre:any;
   nombreSprint:any;
-  fechaInicialSprint:any;
-  fechaFinalSprint:any;
   totalSprint:any;
-  contadorSprint:any;
   planeacionSprint:any;
   proyectoNombre:any;
   proyectoPorcentaje:any;
   proyectoUsuario:any;
-  idProyectoArea:any;
-  idPat:any;
-  idSprintSeleccionado:any;
+  idProyectoArea:number = 0;
+  idPat:number = 0;
+  idSprintSeleccionado:number = 0;
   idTareaSeleccionado:any;
   nombreTarea:any;
   periodicidadTarea:any;
   porcentajeTarea:any;
-  idTareaTipo:any;
+  idTareaTipo:number = 0;
   estadoTarea:any;
   formSprint:FormGroup;
   formModificarEstadoTarea:FormGroup;
@@ -293,12 +290,8 @@ export class ListarSprintproyectoareaComponent implements OnInit  {
   cargarUsuario() {
     this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
-        this.usuarios = data;
-    },
-      (error) => {
-        console.log(error);
-      }
-    );
+        this.usuarios = data.sort((a:any, b:any) => a.nombre.localeCompare(b.nombre));
+    });
   }
 
 

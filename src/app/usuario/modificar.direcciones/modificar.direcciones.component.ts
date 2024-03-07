@@ -18,9 +18,6 @@ export class ModificarDireccionesComponent implements OnInit {
   busqueda: any;
   direcciones:any;
   pats:Pat[] = [];
-  direccionesLista:any;
-  procesosLista:any;
-  deshabilitar: boolean = true;
   idUsuario:number = 0;
   nombreUsuarioSeleccionado:string = '';
   direccionesUsuarioSeleccionado:any;

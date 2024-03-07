@@ -9,12 +9,15 @@
 <body>
   <div>
     <div class="row">
-      <div class="mb-2">
+      <div >
         <h1 >Actividades Estratégicas - PAT</h1>
       </div>
         <div class="row">
-            <h3>Total: {{ totalActividadesEstrategicas }} </h3>           
+          <h2>Total PAT: {{ totalActividadesEstrategicas }} </h2>           
         </div>
+        <div class="row">
+          <h3>Total PAT pendientes: {{ totalActividadesEstrategicasPendintes }} </h3>           
+      </div>
     </div>
   </div>
   <div class="row align-items-center">
@@ -30,42 +33,97 @@
         </div>
     </div>
   </div>
-
-  <main class="main text-center smaller-main">
-    <table class="table table-hover">
-      <thead class="table table-color">
-        <tr>
-          <th class="column-nombre">Nombre</th>
-          <th>Fecha Inicial</th>
-          <th>Fecha Final</th>
-          <th>Duracion (Días)</th>
-          <th>Dias Restantes</th>
-          <th>% Avance real</th>
-          <th>% Avance esperado</th>
-          <th>% Cumplimiento</th>
-          <th>Responsable</th>
-        </tr>
-      </thead>
-      <tbody>
-        <ng-container *ngFor="let actividad of actividadesEstrategicas  | buscar: busqueda">
-          <tr (click)="irADetalles(actividad)" title="{{actividad.nombre}}">
-            <td>{{ actividad.nombre }}</td>
-            <td>{{ actividad.fechaInicial }}</td>
-            <td>{{ actividad.fechaFinal }}</td>
-            <td>{{ actividad.duracion }}</td>
-            <td [ngClass]="colorPorcentaje(actividad.porcentajeReal)">
-            <span *ngIf="actividad.avance !== 100"[ngClass]="colorDias(actividad.diasRestantes)">{{ actividad.diasRestantes }}</span>
-              <span *ngIf="actividad.avance === 100">Finalizado</span>
-            </td>
-            <td >{{ actividad.porcentajeReal | comasPipe}} %</td>
-            <td >{{ actividad.porcentajeEsperado | comasPipe}} %</td>
-            <td [ngClass]="colorPorcentaje(actividad.porcentajeCumplimiento)">{{ actividad.porcentajeCumplimiento | comasPipe}} %</td>
-            <td>{{ obtenerNombreUsuario(actividad.idUsuario) }}</td>
-          </tr>
-        </ng-container>
-      </tbody>
-    </table>
-  </main>
+  <ul class="nav nav-tabs header" id="myTab" role="tablist">
+    <li class="nav-item me-1" title="Actividades estratégicas - PAT" >
+      <a class="nav-link active" id="estrategicas-tab" data-bs-toggle="tab" href="#estrategicas" role="tab" aria-controls="estrategicas"
+       aria-selected="true">Actividades Estratégicas - PAT</a>
+    </li>    
+    <li class="nav-item me-1" title="Actividades estratégicas - PAT pendientes">
+      <a class="nav-link pendiente" id="estrategicaspendientes-tab" data-bs-toggle="tab" href="#estrategicaspendientes" role="tab" aria-controls="estrategicaspendientes" 
+      aria-selected="false">Actividades Estratégicas - PAT pendientes</a>
+    </li>
+  </ul>
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="estrategicas" role="tabpanel" aria-labelledby="estrategicas-tab">  
+      <main class="main text-center smaller-main">
+        <table class="table table-hover">
+          <thead class="table table-color">
+            <tr>
+              <th class="column-nombre">Nombre</th>
+              <th>Fecha Inicial</th>
+              <th>Fecha Final</th>
+              <th>Duracion (Días)</th>
+              <th>Dias Restantes</th>
+              <th>% Avance real</th>
+              <th>% Avance esperado</th>
+              <th>% Cumplimiento</th>
+              <th>Responsable</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let actividad of actividadesEstrategicas  | buscar: busqueda">
+              <tr (click)="irADetalles(actividad)" title="{{actividad.nombre}}">
+                <td>{{ actividad.nombre }}</td>
+                <td>{{ actividad.fechaInicial }}</td>
+                <td>{{ actividad.fechaFinal }}</td>
+                <td>{{ actividad.duracion }}</td>
+                <td [ngClass]="colorPorcentaje(actividad.porcentajeReal)">
+                <span *ngIf="actividad.avance !== 100"[ngClass]="colorDias(actividad.diasRestantes)">{{ actividad.diasRestantes }}</span>
+                  <span *ngIf="actividad.avance === 100">Finalizado</span>
+                </td>
+                <td >{{ actividad.porcentajeReal | comasPipe}} %</td>
+                <td >{{ actividad.porcentajeEsperado | comasPipe}} %</td>
+                <td [ngClass]="colorPorcentaje(actividad.porcentajeCumplimiento)">{{ actividad.porcentajeCumplimiento | comasPipe}} %</td>
+                <td>{{ obtenerNombreUsuario(actividad.idUsuario) }}</td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </main>
+    </div>
+    <div class="tab-pane fade" id="estrategicaspendientes" role="tabpanel" aria-labelledby="estrategicaspendientes-tab">
+      <main class="main text-center smaller-main">
+        <div *ngIf="actividadesEstrategicasPendientes.length === 0; else actividadListNotEmpty">
+          <p>No hay actividades estratégicas pendientes.</p>
+        </div>
+        <ng-template #actividadListNotEmpty>
+          <table class="table table-hover">
+            <thead class="table-danger">
+              <tr>
+                <th class="column-nombre">Nombre</th>
+                <th>Fecha Inicial</th>
+                <th>Fecha Final</th>
+                <th>Duracion (Días)</th>
+                <th>Dias Restantes</th>
+                <th>% Avance real</th>
+                <th>% Avance esperado</th>
+                <th>% Cumplimiento</th>
+                <th>Responsable</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let actividad of actividadesEstrategicasPendientes">
+                  <tr (click)="irADetalles(actividad)" title="{{actividad.nombre}}">
+                    <td>{{ actividad.nombre }}</td>
+                    <td>{{ actividad.fechaInicial }}</td>
+                    <td>{{ actividad.fechaFinal }}</td>
+                    <td>{{ actividad.duracion }}</td>
+                    <td [ngClass]="colorPorcentaje(actividad.avance)">
+                    <span *ngIf="actividad.avance !== 100"[ngClass]="colorDias(actividad.diasRestantes)">{{ actividad.diasRestantes }}</span>
+                      <span *ngIf="actividad.avance === 100">Finalizado</span>
+                    </td>
+                    <td >{{ actividad.porcentajeReal | comasPipe}} %</td>
+                    <td >{{ actividad.porcentajeEsperado | comasPipe}} %</td>
+                    <td [ngClass]="colorPorcentaje(actividad.porcentajeCumplimiento)">{{ actividad.porcentajeCumplimiento | comasPipe}} %</td>
+                    <td>{{ obtenerNombreUsuario(actividad.idUsuario) }}</td>
+                  </tr>
+                </ng-container>
+            </tbody>
+          </table>
+        </ng-template>
+      </main>
+    </div>
+  </div>
 
   
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

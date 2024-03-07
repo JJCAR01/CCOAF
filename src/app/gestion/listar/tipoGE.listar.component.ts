@@ -251,7 +251,7 @@ export class TipogeListarComponent implements OnInit {
   cargarUsuario() {
     this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
-        this.usuarios = data;
+        this.usuarios = data.sort((a:any, b:any) => a.nombre.localeCompare(b.nombre));
     });
   }
   cargarActividadesEstrategicas(idPat: number) {

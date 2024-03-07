@@ -5,6 +5,7 @@ import { AuthService } from 'src/app/login/auth/auth.service';
 import Swal from 'sweetalert2';
 import { DireccionService } from 'src/app/direccion/services/direccion.service';
 import { throwError } from 'rxjs';
+import { Direccion } from 'src/app/modelo/direccion';
 
 
 @Component({
@@ -15,7 +16,7 @@ import { throwError } from 'rxjs';
 export class AreaCrearComponent implements OnInit {
   title = 'crearArea';
   ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
-  direcciones: any[] = [];
+  direcciones: Direccion[] = [];
   form!:FormGroup;
 
   constructor(private areaService: AreaService,private auth: AuthService,

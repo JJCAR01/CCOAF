@@ -6,9 +6,13 @@ h1 {
     font-size:xx-large;
     margin-top: 1dvh ;
 }  
-h3{
+h2{
   font-size: large;
   color: #257236;
+}
+h3{
+  font-size: large;
+  color:rgb(216, 48, 82);
 }
 h5 {
     font-family: "Roboto", unset;
@@ -33,11 +37,45 @@ h5 {
   width: auto; /* Los botones ocuparán todo el ancho de su contenedor */
 }
 
+.header {
+  justify-content: center;
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.nav-item {
+  margin-top: 10px;
+  text-align: center;
+  flex:  1;
+  background: rgba(170, 170, 170, 0.315);
+  
+  a:active, // Aplica el estilo cuando el enlace está activo
+  a:focus {  // Aplica el estilo cuando el enlace está enfocado
+    color: #000000;
+  }
+}
+.nav-link {
+  font-family: 'Roboto', initial;
+  font-size: 20px;
+  color: rgb(0, 0, 0);
+}
+.nav-tabs .nav-item:hover {
+  background: rgba(156, 155, 155, 0.438);
+}
+
+.nav-tabs .nav-link:hover {
+  color:rgb(0, 0, 0);
+}
+
 
 .table-color th{
     background-color: #bbbbbb;
 }
 
+.nav-link.pendiente {
+  color:rgb(216, 48, 82);// Cambia el color del texto a rojo
+}
 
   .porcentaje-bajo {
     color: red; // Define el color rojo para porcentajes bajos.

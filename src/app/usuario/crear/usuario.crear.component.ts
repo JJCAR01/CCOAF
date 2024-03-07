@@ -4,7 +4,6 @@ import { CargoService } from 'src/app/cargo/services/cargo.service';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import Swal from 'sweetalert2';
-import { ProcesoService } from 'src/app/proceso/services/proceso.service';
 import { DireccionService } from 'src/app/direccion/services/direccion.service';
 
 @Component({
@@ -15,18 +14,14 @@ import { DireccionService } from 'src/app/direccion/services/direccion.service';
 export class UsuarioCrearComponent implements OnInit {
   title = 'crearUsuario';
   ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
-  procesosLista: any;
-  direccionesLista: any;
   listaDeDireccionesSeleccionadas: string[] = [];
   listaDeProcesosSeleccionadas: string[] = [];
   cargos: any[] = [];
-  procesos: any[] = [];
   direcciones: any[] = [];
   roles: any[] =[];
   form:FormGroup;
   
   constructor(private usuarioService: UsuarioService, 
-    private procesoService: ProcesoService, 
     private direccionService: DireccionService, 
     private formBuilder: FormBuilder, private cargoService:CargoService
     ,private auth:AuthService) 

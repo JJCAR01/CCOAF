@@ -14,6 +14,7 @@ export class ProyectoListarComponent implements OnInit {
   title = 'listarProyecto';
   proyectos: any[] = [];
   totalProyectos: number=0;
+  totalProyectosArea: number=0;
   proyectosArea: any[] = [];
   actividadesEstrategicas:any[] = [];
   busqueda: any;
@@ -58,7 +59,7 @@ export class ProyectoListarComponent implements OnInit {
                               }
                           }
                       );
-                this.tipoService.listarActividadEstrategicaPorIdPat(idPat, this.auth.obtenerHeader())
+                this.tipoService.listarProyectoAreaPorIdPat(idPat, this.auth.obtenerHeader())
                     .toPromise()
                       .then(
                         (data: any) => {
@@ -68,16 +69,22 @@ export class ProyectoListarComponent implements OnInit {
                           if (idPat === idsPats[idsPats.length - 1]) {
                             this.proyectosArea = todosLosProyectoArea;
                           }
+                          this.patService.setProyectosArea(this.proyectosArea.length);
                         }
                       );
               }
               // Almacenar todas las actividades estratégicas y proyectos obtenidos
               this.actividadesEstrategicas = todasLasActividadesEstrategicasRelacionadas;
               this.proyectos = todosLosProyecto;
+
           }
+
       });
       this.patService.getProyectos().subscribe(actividad => {
         this.totalProyectos = actividad;
+      });
+      this.patService.getProyectosArea().subscribe(actividad => {
+        this.totalProyectosArea = actividad;
       });
   }
   

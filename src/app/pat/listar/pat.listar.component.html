@@ -122,12 +122,20 @@
         <div class="modal-body">
           <form [formGroup]="form" (ngSubmit)="modificarPat()">
             <div class="form-floating mb-2">
-              <input type="text" class="form-control" id="nombre" formControlName="nombre" [value]="nombrePatSeleccionado">
+              <input type="text" class="form-control" id="nombre" formControlName="nombre" >
               <label for="nombre" class="form-label">Nombre</label>
             </div>
             <div class="form-floating mb-2">
-              <input type="text" class="form-control" id="fechaAnual" formControlName="fechaAnual" [value]="fechaAnualSeleccionada">
+              <input type="text" class="form-control" id="fechaAnual" formControlName="fechaAnual">
               <label for="fechaAnual" class="form-label">Año</label>
+            </div>
+            <div class="mb-3">
+              <label for="fechaInicial" class="form-label">Fecha Inicial</label>
+              <input type="date" class="form-control" id="fechaInicial" formControlName="fechaInicial" >
+            </div>
+            <div class="mb-3">
+              <label for="fechaFinal" class="form-label">Fecha Final</label>
+              <input type="date" class="form-control" id="fechaFinal" formControlName="fechaFinal" >
             </div>
             <div class="form-floating mb-2">
               <select class="form-select" id="direccion" formControlName="direccion" [(value)]="direccionSeleccionada">
@@ -138,7 +146,7 @@
               <label for="direccion" class="form-label">Direccion</label>
             </div>
             <div class="form-floating mb-3">
-              <select class="form-select" id="idUsuario" formControlName="idUsuario" [(value)]="idUsuarioSeleccionado">
+              <select class="form-select" id="idUsuario" formControlName="idUsuario">
                 <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario">
                   {{ usuario.nombre + ' ' + usuario.apellidos }}
                 </option>

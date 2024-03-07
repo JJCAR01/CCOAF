@@ -57,11 +57,11 @@
               <form [formGroup]="form" (ngSubmit)="modificarCargo()">
                 <div class="mb-3">
                   <label for="nombre" class="form-label">Nombre</label>
-                  <input type="text" class="form-control" id="nombre" formControlName="nombre" [value]="nombreCargoSeleccionado">
+                  <input type="text" class="form-control" id="nombre" formControlName="nombre">
                 </div>
                 <div class="mb-3">
                   <label for="idArea" class="form-label">Área</label>
-                  <select class="form-select" id="idArea" formControlName="idArea" [(value)]="areaSeleccionada">
+                  <select class="form-select" id="idArea" formControlName="idArea" >
                     <option *ngFor="let area of areas" [value]="area.idArea"> {{ area.nombre }}
                     </option>
                   </select>

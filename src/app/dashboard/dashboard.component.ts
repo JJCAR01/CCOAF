@@ -18,12 +18,6 @@ Chart.register(...registerables);
 export class DashboardComponent implements OnInit {
   title = 'dashboard';
   idsPats: any[] = []
-  datoPat: any[] = [];
-  dataActvidadesEstrategicas: any;
-  dataAct: any;
-  datoProyectos:any;
-  idPat:number | any;
-  idActividadEstrategica:[] = [];
   nombrePats: any[] = [];
   porcentajePats: any[] = [];
   porcentajeRealEstrategica: number[] = [];
@@ -34,17 +28,10 @@ export class DashboardComponent implements OnInit {
   porcentajeKpi: number[] = [];
   sumadorPromediadorPorcentajePat: number = 0;
   promedioPorcentajePat: number = 0;
-  label: any[] = [];
-  avanceProyectos: any[] = [];
-  sumaTotalActividadesGestion: any[] = [];
-  sumaTotalActividadesEstrategicas: any[] = [];
-  sumaTotalProyectos: any;
-  total: any[] = [];
-  selectedPat: string = '';
-  nombreActividades: string[] = ['Actividades de Gestión', 'Actividades estratégicas','Proyectos'];
-  patSeleccionado :string = ''
   idPatsConActividadesEstrategicas : number [] =[];
   contadorPatsConActividades = 0;
+  porcentajeACien = 0;
+  porcentajeACienDiez = 10;
   pats: Pat [] = [];
   form:FormGroup;
   chartPorcentajePat:Chart | any;
@@ -226,24 +213,26 @@ export class DashboardComponent implements OnInit {
     this.chartPorcentajeKpi.data.datasets[0].data = this.porcentajeKpi;
     this.chartPorcentajeKpi.update();
 
+    this.porcentajeACien =  100 - this.promedioPorcentajePat;
+    this.porcentajeACienDiez = 110 - this.promedioPorcentajePat;
     this.promedioPorcentajePat = this.sumadorPromediadorPorcentajePat / this.contadorPatsConActividades;
-    this.chartAcelerador.data.datasets[0].data = [this.promedioPorcentajePat, 100 - this.promedioPorcentajePat];
+    this.chartAcelerador.data.datasets[0].data = [this.promedioPorcentajePat, this.porcentajeACien, this.porcentajeACienDiez];
     this.chartAcelerador.update();
   }
 
-
-
   inicializarGraficoPrincipal(): void {
+  
     // Crear el gráfico con datos iniciales
     this.chartAcelerador = new Chart('chartAcelerador', {
       type: 'doughnut',
       data: {
-          labels: ['Porcentaje PAT','Restante'],
+          labels: ['Porcentaje PAT','Restante','Sobre ejecutado'],
           datasets: [{
-              data: [this.promedioPorcentajePat, 100 - this.promedioPorcentajePat],
-              backgroundColor: ['rgb(178,218,250)', 'rgb(215, 219, 221)'],
+              data: [this.promedioPorcentajePat, this.porcentajeACien, this.porcentajeACienDiez],
+              backgroundColor: ['rgb(178,218,250)', 'rgb(215, 219, 221)','rgb(238, 238, 238)'],
               circumference: 180,
               rotation:270,
+              
             }]
       },
       options: {

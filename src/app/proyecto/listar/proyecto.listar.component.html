@@ -9,11 +9,14 @@
 <body>
   <div>
     <div class="row">
-      <div class="mb-2">
+      <div>
         <h1 >Proyectos</h1>
       </div>
       <div class="row">
-        <h3>Total: {{ totalProyectos }} </h3>           
+        <h3>Total PAT: {{ totalProyectos }} </h3>           
+      </div>
+      <div class="row">
+        <h3>Total área: {{ totalProyectosArea }} </h3>           
       </div>
     </div>
   </div>
@@ -74,6 +77,58 @@
                 <td [ngClass]="colorPorcentaje(proyecto.porcentajeCumplimiento)">{{ proyecto.porcentajeCumplimiento | comasPipe }} %</td>
                 <td>{{ proyecto.planeacionSprint | formatEnum  }}</td>
                 <td>{{ proyecto.totalSprint }}</td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </main>
+    </div>
+    <div class="tab-pane fade" id="proyecto" role="tabpanel" aria-labelledby="proyecto-tab">
+      <main class="main text-center smaller-main">
+        <table class="table table-bordered table-hover">
+          <thead class="table table-color">
+            <tr>
+              <th class="column-nombre" >Nombre</th>
+              <th class="column-presupuesto" >Presupuesto</th>
+              <th class="column-modalidad" >Modalidad</th>
+              <th class="column-presupuesto" >Valor Ejecutado</th>
+              <th class="column-fecha" >Fecha inicial</th>
+              <th class="column-fecha">&nbsp; Fecha &nbsp; Final</th>
+              <th class="column-duracion" >Duracion (Días)</th>
+              <th class="column-avance" >% Avance real</th>
+              <th class="column-avance" >% Avance esperado</th>
+              <th class="column-avance" >% Cumplimiento</th>
+              <th class="column-planeacion" >Planeación Sprint</th>
+              <th class="column-totalsprint" >Total sprint</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let proyecto of proyectosArea">
+              <tr title="{{proyecto.nombre}}">
+                <td  class="fila-nombre">
+                      {{ proyecto.nombre }}</td>
+                <td >
+                      {{ proyecto.presupuesto | currency : '$ ' : 'symbol' : '1.0-0' }}</td>
+                <td >
+                      {{ proyecto.modalidad  | formatEnum  }}</td>
+                      <td data-bs-toggle="modal" data-bs-target="#modalModificarValorEjecutado" >
+                        {{ proyecto.valorEjecutado | currency : '$ ' : 'symbol' : '1.0-0' }}</td>
+                <td >
+                      {{ proyecto.fechaInicial }}</td>
+                <td > 
+                      {{ proyecto.fechaFinal }}</td>
+                <td >
+                      {{ proyecto.duracion }}</td>
+                <td  
+                      >{{ proyecto.porcentajeReal  | comasPipe }} %</td>
+                <td  
+                      >{{ proyecto.porcentajeEsperado | comasPipe }} %</td> 
+                <td  
+                      >{{ proyecto.porcentajeCumplimiento | comasPipe }} %</td>     
+                <td >
+                      {{ proyecto.planeacionSprint | formatEnum }}</td>
+                <td >
+                      {{ proyecto.totalSprint }}</td>
               </tr>
             </ng-container>
           </tbody>

@@ -3,7 +3,6 @@ import { UsuarioService } from '../services/usuario.service';
 import { AuthService } from 'src/app/login/auth/auth.service';
 import Swal from 'sweetalert2';
 import { CargoService } from 'src/app/cargo/services/cargo.service';
-import { DireccionService } from 'src/app/direccion/services/direccion.service';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 
 @Component({
@@ -16,18 +15,13 @@ export class UsuarioListarComponent implements OnInit{
   ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
   usuarios: any[] = [];
   cargos: any[] = [];
-  direcciones: any[] = [];
-  busqueda: any;
-  idUsuario:any;
-  nombreUsuario:string | undefined;
-  nombreSeleccionado:any;
-  apellidoSeleccionado:any;
-  correoSeleccionado:any;
-  idCargoUsuario:any;
+  idUsuario:number = 0;
+  nombreUsuario:string ='';
   formContrasena:FormGroup;
   form:FormGroup;
   passwordVisible: boolean = false;
   cpasswordVisible: boolean = false;
+  busqueda: any;
   
     constructor(private usuarioService: UsuarioService, 
       private auth:AuthService,
@@ -161,17 +155,12 @@ export class UsuarioListarComponent implements OnInit{
 
   obtengoUsuario(idUsuario: number,usuario:any) {
       this.idUsuario = idUsuario;
-      this.nombreUsuario = usuario.nombre + ' ' + usuario.apellidos;
-      this.nombreSeleccionado = usuario.nombre
-      this.apellidoSeleccionado = usuario.apellidos
-      this.correoSeleccionado = usuario.correo
-      this.idCargoUsuario = usuario.idCargo
-
+      this.nombreUsuario = usuario.nombre;
       this.form.patchValue({
-        nombre: this.nombreSeleccionado,
-        apellido: this.apellidoSeleccionado,
-        correo: this.correoSeleccionado,
-        idCargo :this.idCargoUsuario
+        nombre: this.nombreUsuario,
+        apellido: usuario.apellidos,
+        correo: usuario.correo,
+        idCargo : usuario.idCargo
       });
   }
 

@@ -21,7 +21,6 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProyectoListarComponent } from './proyecto/listar/proyecto.listar.component';
 import { ProyectoPendienteListarComponent } from './proyecto/pendientes/proyecto.pendiente.component';
 import { ActividadestrategicaListarComponent } from './actividadestrategica/listar/actividadestrategica.listar.component';
-import { ActividadEstrategicaPendienteListarComponent } from './actividadestrategica/pendiente/actividadestrategica.pendiente.component';
 import { ModificarDireccionesComponent } from './usuario/modificar.direcciones/modificar.direcciones.component';
 import { DireccionCrearComponent } from './direccion/crear/direccion.crear.component';
 import { ProcesoCrearComponent } from './proceso/crear/proceso.crear.component';
@@ -52,7 +51,6 @@ const routes: Routes = [
     { path: "listarPat", component: PatListarComponent,outlet:"OutletAdmin"},
     { path: "listarHistorico", component: ListarHistoricoComponent, outlet:"OutletAdmin"},
     { path: "listarActividadesEstrategicas", component: ActividadestrategicaListarComponent, outlet:"OutletAdmin"},
-    { path: "listarActividadesEstrategicasPendiente", component: ActividadEstrategicaPendienteListarComponent, outlet:"OutletAdmin"},
     { path: "modificarDirecciones", component: ModificarDireccionesComponent, outlet:"OutletAdmin"},
     { path: "listarProyecto", component: ProyectoListarComponent, outlet:"OutletAdmin"},
     { path: "listarProyectosPendiente", component: ProyectoPendienteListarComponent, outlet:"OutletAdmin"},
