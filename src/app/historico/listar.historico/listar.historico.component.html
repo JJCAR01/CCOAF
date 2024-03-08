@@ -54,7 +54,7 @@
         </tr>
       </thead>
       <tbody>
-        <ng-container *ngFor="let pat of pats | buscar: busqueda | buscarFechaAnual :busquedaFechaAnual | buscarDireccion :busquedaDireccion |buscarUsuario: busquedaDireccion: usuarios">
+        <ng-container *ngFor="let pat of pats | buscar: busqueda | buscarFechaAnual :busquedaFechaAnual | buscarDireccion :busquedaDireccion | buscarUsuario: busquedaUsuario : usuarios">
           <tr title="{{pat.nombre}}" >
             <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]" >{{ pat.nombre }}</td>
             <td [routerLink]="['/panel', { outlets: { 'OutletAdmin': ['listarTipoGE', pat.idPat] } }]">{{ pat.fechaAnual }}</td>

@@ -30,8 +30,8 @@ export class DashboardComponent implements OnInit {
   promedioPorcentajePat: number = 0;
   idPatsConActividadesEstrategicas : number [] =[];
   contadorPatsConActividades = 0;
-  porcentajeACien = 0;
-  porcentajeACienDiez = 10;
+  porcentajeACien : number = 0;
+  porcentajeACienDiez: number = 0;
   pats: Pat [] = [];
   form:FormGroup;
   chartPorcentajePat:Chart | any;
@@ -213,9 +213,19 @@ export class DashboardComponent implements OnInit {
     this.chartPorcentajeKpi.data.datasets[0].data = this.porcentajeKpi;
     this.chartPorcentajeKpi.update();
 
-    this.porcentajeACien =  100 - this.promedioPorcentajePat;
-    this.porcentajeACienDiez = 110 - this.promedioPorcentajePat;
     this.promedioPorcentajePat = this.sumadorPromediadorPorcentajePat / this.contadorPatsConActividades;
+
+
+    if(this.promedioPorcentajePat < 100){
+      this.porcentajeACien = 100 - this.promedioPorcentajePat;
+      this.porcentajeACienDiez = 10;
+      
+    } else if(this.promedioPorcentajePat === 100){
+      this.porcentajeACien = 0;
+      this.porcentajeACienDiez = 110 - this.promedioPorcentajePat
+    }
+
+
     this.chartAcelerador.data.datasets[0].data = [this.promedioPorcentajePat, this.porcentajeACien, this.porcentajeACienDiez];
     this.chartAcelerador.update();
   }

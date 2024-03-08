@@ -21,6 +21,7 @@ export class ActividadestrategicaListarComponent implements OnInit{
   totalActividadesEstrategicas : number = 0;
   totalActividadesEstrategicasPendintes: number =0;
   busqueda: any;
+  busquedaUsuario:any;
 
   constructor(private tipoService: TipoGEService,
     private auth: AuthService,

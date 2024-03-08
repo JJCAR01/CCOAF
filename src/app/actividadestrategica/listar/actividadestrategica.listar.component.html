@@ -32,6 +32,12 @@
             <input type="text" class="form-control" [(ngModel)]="busqueda"/>
         </div>
     </div>
+    <div class="col-md-3">
+      <div class="custom-button d-flex align-items-center">
+          <span>Responsable:&nbsp;</span>
+          <input type="text" class="form-control me-1" [(ngModel)]="busquedaUsuario"/>
+      </div>
+    </div>
   </div>
   <ul class="nav nav-tabs header" id="myTab" role="tablist">
     <li class="nav-item me-1" title="Actividades estratégicas - PAT" >
@@ -61,7 +67,7 @@
             </tr>
           </thead>
           <tbody>
-            <ng-container *ngFor="let actividad of actividadesEstrategicas  | buscar: busqueda">
+            <ng-container *ngFor="let actividad of actividadesEstrategicas  | buscar: busqueda | buscarUsuario: busquedaUsuario : usuarios">
               <tr (click)="irADetalles(actividad)" title="{{actividad.nombre}}">
                 <td>{{ actividad.nombre }}</td>
                 <td>{{ actividad.fechaInicial }}</td>
@@ -102,7 +108,7 @@
               </tr>
             </thead>
             <tbody>
-              <ng-container *ngFor="let actividad of actividadesEstrategicasPendientes">
+              <ng-container *ngFor="let actividad of actividadesEstrategicasPendientes | buscar: busqueda | buscarUsuario: busquedaUsuario : usuarios">
                   <tr (click)="irADetalles(actividad)" title="{{actividad.nombre}}">
                     <td>{{ actividad.nombre }}</td>
                     <td>{{ actividad.fechaInicial }}</td>
