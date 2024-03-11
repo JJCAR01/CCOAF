@@ -146,6 +146,14 @@
     background-color: #ebeaea;
 }
 
+.footer-label {
+    position: fixed;
+    bottom: 5px; /* ajusta según sea necesario */
+    right: 12px; /* ajusta según sea necesario */
+    padding: 2px 5px;
+}
+
+
 .separator-line {
     border-top: 1px solid #ccc;
     margin: 1px 0;

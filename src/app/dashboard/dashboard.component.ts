@@ -63,6 +63,12 @@ export class DashboardComponent implements OnInit {
     this.patService.getPatsAsociados().subscribe(
       (pats: Pat[]) => {
         this.pats = pats;
+        this.pats.sort((a: any, b: any) => {
+          const textA = a.nombre.toUpperCase();
+          const textB = b.nombre.toUpperCase();
+          return textA.localeCompare(textB);
+        });
+
       }
     );
   }
