@@ -485,13 +485,13 @@
           <table class="table table-bordered table-hover">
             <thead class="table table-color">
                 <th>Fecha</th>
-                <th>Nombre</th>
+                <th>Descripción</th>
               </thead>
               <tbody>
                 <ng-container *ngFor="let observacion of observaciones">
                   <tr>
                     <td>{{ observacion.fecha }}</td>
-                    <td>{{ observacion.nombre }} </td>
+                    <td>{{ observacion.descripcion }} </td>
                   </tr>
                 </ng-container>
               </tbody>
@@ -720,10 +720,10 @@
               <small *ngIf="fechaVacio" class="text-danger">{{ CAMPO_OBLIGATORIO }}</small>
             </div>
             <div class="form-floating">
-              <input type="text" id="nombre" [class.is-invalid]="nombreObservacionVacio" class="form-control form-control-lg" formControlName="nombre"
-               placeholder="Nombre">
-              <label class="form-label" for="nombre">Nombre<span class="required-field">*</span></label>
-              <small *ngIf="nombreObservacionVacio" class="text-danger">{{ CAMPO_OBLIGATORIO }}</small>
+              <input type="text" id="descripcion" [class.is-invalid]="descripcionObservacionVacio" class="form-control form-control-lg" formControlName="descripcion"
+               placeholder="Descripción">
+              <label class="form-label" for="descripcion">Descripción<span class="required-field">*</span></label>
+              <small *ngIf="descripcionObservacionVacio" class="text-danger">{{ CAMPO_OBLIGATORIO }}</small>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

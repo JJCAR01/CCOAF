@@ -103,7 +103,7 @@ export class SprintListarComponent implements OnInit {
     this.formObservacion = this.formBuilder.group({
       id: ['', Validators.required],
       fecha: [this.obtenerFechaActual(), Validators.required],
-      nombre: ['', Validators.required],
+      descripcion: ['', Validators.required],
     });
     this.formTarea = this.formBuilder.group({
       nombre: ['', Validators.required],
@@ -471,12 +471,12 @@ export class SprintListarComponent implements OnInit {
   crearObservacion() {
     if (this.formObservacion.valid) {
       const fecha = this.formObservacion.get('fecha')?.value;
-      const nombre = this.formObservacion.get('nombre')?.value;
+      const descripcion = this.formObservacion.get('descripcion')?.value;
 
       if(this.tipoFormulario === 'TAREA'){
         const observacion = {
           idTarea: this.idTareaSeleccionado,
-          nombre: nombre,
+          descripcion: descripcion,
           fecha: fecha,
         };
         this.tareaService
@@ -491,7 +491,7 @@ export class SprintListarComponent implements OnInit {
       } else if( this.tipoFormulario === 'SPRINT'){
         const observacion = {
           idSprint: this.idSprintSeleccionado,
-          nombre: nombre,
+          descripcion: descripcion,
           fecha: fecha,
         };
         this.sprintService
@@ -756,8 +756,8 @@ export class SprintListarComponent implements OnInit {
   get idUsuarioVacio(){
     return this.formTarea.get('idUsuario')?.invalid && this.formTarea.get('idUsuario')?.touched;
   }
-  get nombreObservacionVacio(){
-    return this.formObservacion.get('nombre')?.invalid && this.formObservacion.get('nombre')?.touched;
+  get descripcionObservacionVacio(){
+    return this.formObservacion.get('descripcion')?.invalid && this.formObservacion.get('descripcion')?.touched;
   }
   get fechaVacio(){
     return this.formObservacion.get('fecha')?.invalid && this.formObservacion.get('fecha')?.touched;

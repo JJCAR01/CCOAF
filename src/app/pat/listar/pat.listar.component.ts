@@ -84,7 +84,7 @@ export class PatListarComponent implements OnInit{
         this.formObservacion = this.formBuilder.group({
           idPat: ['', Validators.required],
           fecha: [this.obtenerFechaActual(), Validators.required],
-          nombre: ['', Validators.required],
+          descripcion: ['', Validators.required],
         }); 
     }  
 
@@ -377,10 +377,10 @@ export class PatListarComponent implements OnInit{
     crearObservacion() {
       if (this.formObservacion.valid) {
         const fecha = this.formObservacion.get('fecha')?.value;
-        const nombre = this.formObservacion.get('nombre')?.value;
+        const descripcion = this.formObservacion.get('descripcion')?.value;
         const observacion = {
           idPat: this.idPatSeleccionado,
-          nombre: nombre,
+          descripcion: descripcion,
           fecha: fecha,
         };
         this.patService
@@ -445,8 +445,8 @@ export class PatListarComponent implements OnInit{
         return 'porcentaje-cien';
       }
     }   
-    get nombreObservacionVacio(){
-      return this.formObservacion.get('nombre')?.invalid && this.formObservacion.get('nombre')?.touched;
+    get descripcionObservacionVacio(){
+      return this.formObservacion.get('descripcion')?.invalid && this.formObservacion.get('descripcion')?.touched;
     }
     get fechaVacio(){
       return this.formObservacion.get('fecha')?.invalid && this.formObservacion.get('fecha')?.touched;

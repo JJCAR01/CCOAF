@@ -178,7 +178,7 @@ export class TipogeListarComponent implements OnInit {
     this.formObservacion = this.formBuilder.group({
       id: ['', Validators.required],
       fecha: [this.obtenerFechaActual(), Validators.required],
-      nombre: ['', Validators.required],
+      descripcion: ['', Validators.required],
     });
     this.formAgregarEntregable = this.formBuilder.group({
       entregable: ['', Validators.required],
@@ -611,12 +611,12 @@ export class TipogeListarComponent implements OnInit {
   crearObservacion() {
     if (this.formObservacion.valid) {
       const fecha = this.formObservacion.get('fecha')?.value;
-      const nombre = this.formObservacion.get('nombre')?.value;
+      const descripcion = this.formObservacion.get('descripcion')?.value;
 
       if(this.tipoFormulario === 'TAREA'){
         const observacion = {
           idTarea: this.idTareaSeleccionado,
-          nombre: nombre,
+          descripcion: descripcion,
           fecha: fecha,
         };
         this.tareaService
@@ -631,7 +631,7 @@ export class TipogeListarComponent implements OnInit {
       } else if( this.tipoFormulario === 'ACTIVIDAD_GESTION'){
         const observacion = {
           idActividadGestion: this.idActividadGestionSeleccionado,
-          nombre: nombre,
+          nomdescripcionbre: descripcion,
           fecha: fecha,
         };
         this.gestionService
@@ -646,7 +646,7 @@ export class TipogeListarComponent implements OnInit {
       } else if (this.tipoFormulario === 'ACTIVIDAD_ESTRATEGICA'){
         const observacion = {
           idActividadEstrategica: this.idActividadEstrategicaSeleccionado,
-          nombre: nombre,
+          descripcion: descripcion,
           fecha: fecha,
         };
         this.gestionService
@@ -661,7 +661,7 @@ export class TipogeListarComponent implements OnInit {
         } else if (this.tipoFormulario === 'PROYECTO_AREA') {
           const observacion = {
             idProyectoArea: this.idProyectoSeleccionado,
-            nombre: nombre,
+            descripcion: descripcion,
             fecha: fecha,
           };
           this.gestionService
@@ -1144,8 +1144,8 @@ export class TipogeListarComponent implements OnInit {
     } else {
       return meta.toString(); // Si la unidad no es PORCENTAJE ni PESOS, simplemente devuelve el número como una cadena
     }
-}
-
+  }
+  
   isEstado(tareaEstado:any, estado:any) {
     return tareaEstado === estado;
   }
@@ -1183,8 +1183,8 @@ export class TipogeListarComponent implements OnInit {
   get idUsuarioVacio(){
     return this.formTarea.get('idUsuario')?.invalid && this.formTarea.get('idUsuario')?.touched;
   }
-  get nombreObservacionVacio(){
-    return (this.formObservacion.get('nombre')?.invalid && this.formObservacion.get('nombre')?.touched);
+  get descripcionObservacionVacio(){
+    return (this.formObservacion.get('descripcion')?.invalid && this.formObservacion.get('descripcion')?.touched);
   }
   get fechaVacio(){
     return this.formObservacion.get('fecha')?.invalid && this.formObservacion.get('fecha')?.touched;

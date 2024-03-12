@@ -37,6 +37,12 @@ h2 {
     }
 
 }
+.form-check-input {
+  width: 15px; /* Ancho deseado */
+  height: 15px; /* Altura deseada */
+  border: 1px solid #000000; /* Borde con color gris claro */
+  border-radius:10px;  /* Espacio entre el input y la etiqueta de texto */
+}
 
 .column-proceso{
     max-width: 20%;

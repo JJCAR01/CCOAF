@@ -51,7 +51,8 @@
                                 <small *ngIf="valorEjecutadoVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
                             </div>
                             <div class="mb-2" [class.is-invalid]="planeacionSprintVacio" >
-                                <h6><i class="bi bi-info-circle tamaño-iconos color-iconoInfo" title="Texto con información"></i> Planeacion: <span class="required-field">*</span></h6>
+                                <h5><i class="bi bi-info-circle tamaño-iconos color-iconoInfo" title="Texto con información"></i> Seguimiento Sprint: <span class="required-field">*</span></h5>
+                                <h6 >Para proyectos igual a 1 mes el sprint es semanal, mayor a 1 mes y menor a 5 meses quincenal, mayor a 5 meses mensual.</h6>
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="planeacionSprint" id="semanal" value="SEMANAL" formControlName="planeacionSprint" />
                                     <label class="form-check-label" for="semanal">SEMANAL</label>

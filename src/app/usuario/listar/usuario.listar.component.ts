@@ -4,6 +4,7 @@ import { AuthService } from 'src/app/login/auth/auth.service';
 import Swal from 'sweetalert2';
 import { CargoService } from 'src/app/cargo/services/cargo.service';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { Usuario } from 'src/app/modelo/usuario';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,7 @@ import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn,
 export class UsuarioListarComponent implements OnInit{
   title = 'listarUsuario';
   ESTE_CAMPO_ES_OBLIGARORIO: string = 'Este campo es obligatorio*';
-  usuarios: any[] = [];
+  usuarios: Usuario[] = [];
   cargos: any[] = [];
   idUsuario:number = 0;
   nombreUsuario:string ='';
@@ -34,6 +35,7 @@ export class UsuarioListarComponent implements OnInit{
           apellido: ['', Validators.required],  // Agrega el control para confirmar la contraseña
           correo: ['', Validators.required],
           idCargo: ['', Validators.required],
+          rol: ['', Validators.required],
         }),
 
         this.formContrasena = this.formBuilder.group({
@@ -112,19 +114,21 @@ export class UsuarioListarComponent implements OnInit{
       })
     }
   }
-
+  
   modificarUsuario() {
     if (this.form.valid) {
-        const nombre = this.form.get('nombre')?.value;
-        const apellido = this.form.get('apellido')?.value;
-        const correo = this.form.get('correo')?.value;
-        const idCargo = this.form.get('idCargo')?.value;
-        const pat = {
-          nombre: nombre,
-          apellido: apellido,
-          correo: correo,
-          idCargo: idCargo
-        }
+      const usuario = {
+        nombre: this.form.get('nombre')?.value,
+        apellido: this.form.get('apellido')?.value,
+        correo: this.form.get('correo')?.value,
+        password: this.form.get('password')?.value,
+        idCargo: this.form.get('idCargo')?.value,
+        roles: [
+          {
+            rol: this.form.get('rol')?.value
+          }
+        ]
+      };
       Swal.fire({
         icon:"question",
         title: "¿Estás seguro de modificar?",
@@ -138,7 +142,7 @@ export class UsuarioListarComponent implements OnInit{
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
           if (this.idUsuario != null) {
-              this.usuarioService.modificar(pat, this.idUsuario, this.auth.obtenerHeader()).subscribe(
+              this.usuarioService.modificar(usuario, this.idUsuario, this.auth.obtenerHeader()).subscribe(
               (response) => {
                 this.swalSatisfactorio('modificado','usuario')
                     this.form.reset()
@@ -160,7 +164,8 @@ export class UsuarioListarComponent implements OnInit{
         nombre: this.nombreUsuario,
         apellido: usuario.apellidos,
         correo: usuario.correo,
-        idCargo : usuario.idCargo
+        idCargo : usuario.idCargo,
+        rol:usuario.roles
       });
   }
 

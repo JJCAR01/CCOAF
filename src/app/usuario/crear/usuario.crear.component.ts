@@ -33,7 +33,7 @@ export class UsuarioCrearComponent implements OnInit {
       password: ['', Validators.required],
       cpassword: ['', Validators.required], 
       idCargo: ['', Validators.required],
-      nombreRol: ['', Validators.required],
+      rol: ['', Validators.required],
       direcciones: ['', Validators.required],
     }, 
     {
@@ -65,11 +65,7 @@ export class UsuarioCrearComponent implements OnInit {
     this.direccionService.listar(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
         this.direcciones = data;
-    },
-      (error) => {
-        console.log(error);
-      }
-    );
+    });
   }
 
   crearUsuario() {
@@ -83,7 +79,7 @@ export class UsuarioCrearComponent implements OnInit {
         direcciones: this.listaDeDireccionesSeleccionadas,
         roles: [
           {
-            nombreRol: this.form.get('nombreRol')?.value
+            rol: this.form.get('rol')?.value
           }
         ]
       };
@@ -140,7 +136,7 @@ export class UsuarioCrearComponent implements OnInit {
     return this.form.get('idCargo')?.invalid && this.form.get('idCargo')?.touched;
   }
   get nombreRolVacio(){
-    return this.form.get('nombreRol')?.invalid && this.form.get('nombreRol')?.touched;
+    return this.form.get('rol')?.invalid && this.form.get('rol')?.touched;
   }
   get direccionesVacio(){
     return this.form.get('direcciones')?.invalid && this.form.get('direcciones')?.touched;

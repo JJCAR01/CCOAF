@@ -18,6 +18,14 @@
     margin-top: 0; /* Elimina el margen superior del título */
     text-align: center; /* Centra el título */
   }
+  h5 {
+    font-family: "Roboto", unset;
+    font-size: large;
+  }
+  h6 {
+    font-family: "Roboto", unset;
+    font-size: small;
+  }
   
   .form-check-input {
     border: 2px solid #060f18; /* Cambia el color del borde según tus preferencias */
