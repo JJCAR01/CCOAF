@@ -368,7 +368,7 @@ export class PatListarComponent implements OnInit{
               this.cargarPats();
             },
             (error) => {
-              this.swalError(error);
+              this.swalError(error.mensajeHumano);
             }
           );
         }

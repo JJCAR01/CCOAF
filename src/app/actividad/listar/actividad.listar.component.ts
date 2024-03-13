@@ -578,7 +578,7 @@ private obtenerFechaActual(): string {
                 this.swalSatisfactorio('modificado','porcentaje de la tarea')
                   this.cargarGestiones(this.idActividadEstrategica);
                     this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA');
-                    this.formTarea.reset();              
+                    this.formModificarPorcentaje.reset()              
               },
               (error) => {this.swalError(error);}
             );

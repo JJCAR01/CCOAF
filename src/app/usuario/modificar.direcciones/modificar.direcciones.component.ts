@@ -50,7 +50,7 @@ export class ModificarDireccionesComponent implements OnInit {
   cargarUsuarios() {
     this.usuarioService.listarUsuario(this.auth.obtenerHeader()).toPromise().then(
       (data: any) => {
-        this.usuarios = data;
+        this.usuarios = data.sort((a:any, b:any) => a.nombre.localeCompare(b.nombre));
       },
       (error) => {
         Swal.fire('Error', error.error.mensajeTecnico, 'error');
@@ -61,14 +61,14 @@ export class ModificarDireccionesComponent implements OnInit {
   cargarDirecciones() {
     this.direccionService.listar(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
-        this.direcciones = data;
+        this.direcciones = data.sort((a:any, b:any) => a.nombre.localeCompare(b.nombre));
     });
   }
 
   cargarPats() {
     this.patService.listarPat(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
-        this.pats = data;
+        this.pats = data.sort((a:any, b:any) => a.nombre.localeCompare(b.nombre));
     });
   }
   

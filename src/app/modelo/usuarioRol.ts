@@ -1,4 +1,4 @@
 export interface UsuarioRol {
-    nombreRol: string;
+    rol: string;
   }
   

@@ -18,6 +18,7 @@ export class UsuarioListarComponent implements OnInit{
   cargos: any[] = [];
   idUsuario:number = 0;
   nombreUsuario:string ='';
+  rolUsuario:string = '';
   formContrasena:FormGroup;
   form:FormGroup;
   passwordVisible: boolean = false;
@@ -56,7 +57,7 @@ export class UsuarioListarComponent implements OnInit{
     cargarCargos() {
       this.cargoService.listar(this.auth.obtenerHeader()).subscribe(
         (data: any) => {
-          this.cargos = data;
+          this.cargos = data.sort((a:any, b:any) => a.nombre.localeCompare(b.nombre));
       });
     }
   
@@ -64,7 +65,7 @@ export class UsuarioListarComponent implements OnInit{
     cargarUsuarios() {
       this.usuarioService.listarUsuario(this.auth.obtenerHeader()).toPromise().then(
         (data: any) => {
-          this.usuarios = data;
+          this.usuarios = data.sort((a:any, b:any) => a.nombre.localeCompare(b.nombre));
         });
     }
 
@@ -116,6 +117,7 @@ export class UsuarioListarComponent implements OnInit{
   }
   
   modificarUsuario() {
+
     if (this.form.valid) {
       const usuario = {
         nombre: this.form.get('nombre')?.value,
@@ -160,12 +162,16 @@ export class UsuarioListarComponent implements OnInit{
   obtengoUsuario(idUsuario: number,usuario:any) {
       this.idUsuario = idUsuario;
       this.nombreUsuario = usuario.nombre;
+      for (const rolObjeto of usuario.rol) {
+        // Supongamos que cada objeto en usuario.rol tiene una propiedad llamada "nombre" que contiene el valor del rol
+        this.rolUsuario = rolObjeto.rol;
+      }
       this.form.patchValue({
         nombre: this.nombreUsuario,
         apellido: usuario.apellidos,
         correo: usuario.correo,
         idCargo : usuario.idCargo,
-        rol:usuario.roles
+        rol: this.rolUsuario
       });
   }
 

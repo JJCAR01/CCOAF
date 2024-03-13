@@ -57,14 +57,14 @@ export class UsuarioCrearComponent implements OnInit {
   cargarCargos() {
     this.cargoService.listar(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
-        this.cargos = data;
+        this.cargos = data.sort((a:any, b:any) => a.nombre.localeCompare(b.nombre));
     });
   }
 
   cargarDirecciones() {
     this.direccionService.listar(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
-        this.direcciones = data;
+        this.direcciones = data.sort((a:any, b:any) => a.nombre.localeCompare(b.nombre));
     });
   }
 

@@ -175,9 +175,9 @@
                         <td>{{ obtenerNombreUsuario(tarea.idUsuario) }}</td>
                         <td>
                           <button title="Modificar Tarea" class="btn btn-outline-secondary me-1 mb-1"  data-bs-toggle="modal" data-bs-target="#modalModificarTarea"
-                          (click)="obtenerTareaAModificar(tarea.idTarea,tarea)" *ngIf="esAdmin || esOperador"><i class="bi bi-pencil-square"></i></button>
+                          (click)="obtenerTareaAModificar(tarea.idTarea,tarea)" *ngIf="esAdmin || esOperador|| esDirector"><i class="bi bi-pencil-square"></i></button>
                           <button title="Modificar estado" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalModificarEstado" 
-                          (click)="obtenerTarea(tarea.idTarea,tarea)" *ngIf="esAdmin || esOperador"
+                          (click)="obtenerTarea(tarea.idTarea,tarea)" *ngIf="esAdmin || esOperador || esDirector"
                           ><i class="bi bi-pen-fill"></i></button>
                           <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" (click)="eliminarTarea(tarea.idTarea, sprint.idSprint)" *ngIf="esAdmin || esDirector"
                           ><i class="bi bi-trash3-fill"></i></button>
@@ -189,7 +189,7 @@
                             (click)="obtenerDocumento(tarea.idTarea, 'TAREA')">            
                           <i class="bi bi-file-earmark-check"></i></button>
                           <button title="Agregar Observación" class="btn btn-outline-success me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion"
-                           (click)="obtenerTarea(tarea.idTarea,tarea)" *ngIf="esAdmin || esOperador"><i class="bi bi-node-plus-fill"></i></button>
+                           (click)="obtenerTarea(tarea.idTarea,tarea)" *ngIf="esAdmin || esOperador|| esDirector"><i class="bi bi-node-plus-fill"></i></button>
                           <button title="Ver observación" class="btn btn-outline-dark me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(tarea.idTarea,'TAREA')"><i class="bi bi-eye-fill"></i></button>
                         </td>
                     </tr>

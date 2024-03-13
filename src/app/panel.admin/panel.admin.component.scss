@@ -147,10 +147,14 @@
 }
 
 .footer-label {
-    position: fixed;
-    bottom: 5px; /* ajusta según sea necesario */
-    right: 12px; /* ajusta según sea necesario */
-    padding: 2px 5px;
+    position: relative;
+    color: #ffffff;
+    left: 40%; /* ajusta según sea necesario */
+    bottom: 15px; /* ajusta según sea necesario */
+     
+    span{
+        font-size: small;
+    }
 }
 
 

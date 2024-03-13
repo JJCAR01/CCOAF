@@ -755,8 +755,8 @@ export class TipogeListarComponent implements OnInit {
         if (confirmacion.isConfirmed) {
           this.tareaService.modificarPorcentajeTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
               () => {
-                  this.swalSatisfactorio('modificado','porcentaje de la actividad')
-                  this.cargarGestiones(this.idPat)
+                  this.swalSatisfactorio('modificado','porcentaje de la actividad');
+                  this.cargarGestiones(this.idPat);
                   this.formModificarPorcentaje.reset()              
               },
               (error) => {this.swalError(error);}

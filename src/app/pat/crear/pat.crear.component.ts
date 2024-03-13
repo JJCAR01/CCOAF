@@ -41,14 +41,14 @@ export class PatCrearComponent implements OnInit{
   cargarUsuarios() {
     this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
-        this.usuarios = data;
+        this.usuarios = data.sort((a:any, b:any) => a.nombre.localeCompare(b.nombre));
     });
   }
 
   cargarDirecciones() {
     this.direccionService.listar(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
-        this.direcciones = data;
+        this.direcciones = data.sort((a:any, b:any) => a.nombre.localeCompare(b.nombre));
     })
   }
 
