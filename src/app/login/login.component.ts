@@ -53,7 +53,7 @@ export class LoginComponent implements OnInit{
               const jwt = resp.jwt;
               this.cookieService.set('jwt', jwt);
               const decode:any = jwt_decode(jwt);
-              if (decode.type === 'OPERADOR' || decode.type === 'DIRECTOR')
+              if (decode.type === 'OPERADOR' || decode.type === 'DIRECTOR'|| decode.type === 'OPERADOR_EDITOR')
               {
                 this.loggedIn = response!=null;
                 this.router.navigate(['/panel', { outlets: { 'OutletAdmin': ['listarPat'] } }]);
@@ -104,7 +104,7 @@ export class LoginComponent implements OnInit{
           this.loggedIn = response!=null;
           this.router.navigate(['/panel', { outlets: { 'OutletAdmin': ['listarArea'] } }]);
         }
-        else if (decode.type === 'OPERADOR' || decode.type === 'DIRECTOR')
+        else if (decode.type === 'OPERADOR' || decode.type === 'DIRECTOR' || decode.type === 'OPERADOR_EDITOR')
         {
           this.loggedIn = response!=null;
           this.router.navigate(['/panel', { outlets: { 'OutletAdmin': ['listarPat'] } }]);

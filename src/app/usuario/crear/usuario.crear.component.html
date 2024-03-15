@@ -60,10 +60,10 @@
                   </div>
 
                   <div class="row mb-2">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                       <div class="d-md-flex justify-content-start align-items-center py-2" [class.is-invalid]="nombreRolVacio">
                         <label >Rol<span class="required-field " >*</span>: </label>
-                        <div class="form-check form-check-inline me-1">
+                        <div class="form-check form-check-inline">
                           <input class="form-check-input" type="radio" name="rol" id="administrador"  value="ADMIN" formControlName="rol" />
                           <label class="form-check-label" for="admin">Administrador</label>
                         </div>
@@ -79,18 +79,20 @@
                           <input class="form-check-input" type="radio" name="rol" id="consultor" value="CONSULTOR" formControlName="rol" />
                           <label class="form-check-label" for="consultor">Consultor</label>
                         </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" name="rol" id="operador_editor" value="OPERADOR_EDITOR" formControlName="rol" />
+                          <label class="form-check-label" for="operador_editor">Operador editor</label>
+                        </div>
                       </div>
                       <small *ngIf="nombreRolVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
                     </div>
-                    <div class="col-md-6">
-                      <div class="form-floating">
-                        <select class="form-select" id="idCargo" [class.is-invalid]="idCargoVacio" formControlName="idCargo">
-                          <option value="" disabled selected>Seleccione el cargo<span class="required-field">*</span></option>
-                          <option *ngFor="let cargo of cargos" [value]="cargo.idCargo">{{ cargo.nombre}}</option>
-                        </select>
-                        <small *ngIf="idCargoVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
-                      </div>
-                    </div>
+                  </div>
+                  <div class="form-floating mb-2">
+                    <select class="form-select" id="idCargo" [class.is-invalid]="idCargoVacio" formControlName="idCargo">
+                      <option value="" disabled selected>Seleccione el cargo<span class="required-field">*</span></option>
+                      <option *ngFor="let cargo of cargos" [value]="cargo.idCargo">{{ cargo.nombre}}</option>
+                    </select>
+                    <small *ngIf="idCargoVacio" class="text-danger">{{ ESTE_CAMPO_ES_OBLIGARORIO }}</small>
                   </div>
                   <div class="form-floating mb-2">
                     <div class="input">

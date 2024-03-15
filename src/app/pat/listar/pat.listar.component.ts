@@ -144,12 +144,12 @@ export class PatListarComponent implements OnInit{
           // Convertir las cadenas de direcciones y pats a arrays
           //const direccionesArray = decodedPayload.direccion.split(',').map((direccion: string) => direccion.trim());
           const idUsuarioLogueado = decodedPayload.idUser;
-          const listaDePatsUsuario = decodedPayload.pats.split(',').map((pat: string) => pat.trim());
-          const listaDeDireccionesUsuario = decodedPayload.direcciones.split(',').map((direccion: string) => direccion.trim());
-          const tipoUsuario = decodedPayload.type;
+          const listaDePatsUsuario = decodedPayload.pats.split('-').map((pat: string) => pat.trim());
+          const listaDeDireccionesUsuario = decodedPayload.direcciones.split('-').map((direccion: string) => direccion.trim());
           // Verificar si son todas las direcciones y todos los procesos
           //const sonTodasLasDirecciones = direccionesArray.includes('TODAS LAS DIRECCIONES');
           const patsFiltrados = data.filter((d: any) => {
+            console.log(listaDePatsUsuario)
             if (d.fechaAnual === this.obtenerAnual()) {// Verificar si la fecha anual coincide con el año actual
               if (this.esAdmin) { // Si es administrador, mostrar todos los datos
                 return true;

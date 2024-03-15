@@ -55,6 +55,7 @@ export class ActividadListarComponent implements OnInit{
   esAdmin: boolean = false; 
   esDirector: boolean = false; 
   esOperador: boolean = false; // Agrega esta línea
+  esOperadorEditor: boolean = false;
   esConsultor: boolean = false;
 
   tipoFormulario: 'PROYECTO' | 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA' | 'TAREA' = 'PROYECTO';
@@ -156,12 +157,14 @@ ngOnInit() {
     this.auth.esAdmin(),
     this.auth.esDirector(),
     this.auth.esOperador(),
+    this.auth.esOperadorEditor(),
     this.auth.esConsultor()
-  ]).then(([esAdmin, esDirector, esOperador, esConsultor]) => {
+  ]).then(([esAdmin, esDirector, esOperador,esOperadorEditor, esConsultor]) => {
     // Asignar los resultados a las propiedades correspondientes
     this.esAdmin = esAdmin;
     this.esDirector = esDirector;
     this.esOperador = esOperador;
+    this.esOperadorEditor = esOperadorEditor;
     this.esConsultor = esConsultor;
   });
   this.modalidadEnumList= Object.values(EModalidad);

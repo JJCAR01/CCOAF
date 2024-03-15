@@ -64,9 +64,11 @@ export class SprintCrearComponent implements OnInit{
             (response) => {
               Swal.fire({
                 title:'Creado!!!',
-                text: "El sprint se ha eliminado.",
-                icon: "success",
-                confirmButtonColor: '#0E823F'
+                text: "El sprint se ha creado.",
+                icon:'success',
+                position: "center",
+                showConfirmButton: false,
+                timer: 1500
               });
               this.form.reset();
             },

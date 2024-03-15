@@ -68,6 +68,9 @@ export class AuthService {
   esOperador(): Promise<boolean> {
     return this.verificarRol('OPERADOR');
   }
+  esOperadorEditor(): Promise<boolean> {
+    return this.verificarRol('OPERADOR_EDITOR');
+  }
   esConsultor(): Promise<boolean> {
     return this.verificarRol('CONSULTOR');
   }

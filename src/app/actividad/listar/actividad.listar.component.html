@@ -111,20 +111,20 @@
                       {{ proyecto.totalSprint }}</td>
                 <td>
                   <button title="Modificar" type="button" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalModificarProyecto" 
-                  (click)="obtenerProyecto(proyecto.idProyecto,proyecto)" *ngIf="esAdmin || esOperador || esDirector">
+                  (click)="obtenerProyecto(proyecto.idProyecto,proyecto)" *ngIf="esAdmin || esDirector || esOperadorEditor">
                       <i class="bi bi-pen-fill"></i>
                   </button>
                   <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" (click)="eliminarProyecto(proyecto.idProyecto)" *ngIf="esAdmin || esDirector"
                   ><i class="bi bi-trash3-fill"></i></button>
                   <button title="Agregar documento" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#agregarDocumentoProyecto"
-                  (click)="abrirModalAgregarDocumento(proyecto.idProyecto,'PROYECTO')" *ngIf="esAdmin || esOperador || esDirector"
+                  (click)="abrirModalAgregarDocumento(proyecto.idProyecto,'PROYECTO')" *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor"
                       ><i class="bi bi-folder-plus"></i>
                     </button>
                   <button title="Ver documento"  class="btn btn-outline-primary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalVerDocumentos" 
                   (click)="obtenerDocumento(proyecto.idProyecto,'PROYECTO')">            
                     <i class="bi bi-file-earmark-check"></i></button>
                   <button title="Agregar Observación" class="btn btn-outline-success me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" 
-                  (click)="obtenerProyecto(proyecto.idProyecto,proyecto)" *ngIf="esAdmin || esOperador || esDirector">
+                  (click)="obtenerProyecto(proyecto.idProyecto,proyecto)" *ngIf="esAdmin || esOperador || esDirector  || esOperadorEditor">
                     <i class="bi bi-node-plus-fill"></i>
                   </button>
                   <button title="Ver observación" class="btn btn-outline-dark me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(proyecto.idProyecto,'PROYECTO')">
@@ -184,20 +184,20 @@
                   </div>
                   <div class="col-md-2">
                     <button title="Modificar" type="button" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalModificarGestion" 
-                    (click)="obtenerActividadGestionEstrategica(gestion.idActividadGestionEstrategica,gestion)" *ngIf="esAdmin || esDirector">
+                    (click)="obtenerActividadGestionEstrategica(gestion.idActividadGestionEstrategica,gestion)" *ngIf="esAdmin || esDirector  || esOperadorEditor">
                       <i class="bi bi-pen-fill"></i>
                     </button>
                   <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" (click)="eliminarGestion(gestion.idActividadGestionEstrategica)" *ngIf="esAdmin || esDirector"
                   ><i class="bi bi-trash3-fill"></i></button>
                   <button title="Agregar documento" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#agregarDocumento"
-                  (click)="abrirModalAgregarDocumento(gestion.idActividadGestionEstrategica,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')" *ngIf="esAdmin || esOperador || esDirector"
+                  (click)="abrirModalAgregarDocumento(gestion.idActividadGestionEstrategica,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')" *ngIf="esAdmin || esOperador || esDirector  || esOperadorEditor"
                       ><i class="bi bi-folder-plus"></i>
                     </button>
                   <button title="Ver documento"  class="btn btn-outline-primary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalVerDocumentos" 
                   (click)="obtenerDocumento(gestion.idActividadGestionEstrategica,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')">            
                     <i class="bi bi-file-earmark-check"></i></button>
                   <button title="Agregar Observación" class="btn btn-outline-success me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" 
-                  (click)="obtenerActividadGestionEstrategica(gestion.idActividadGestionEstrategica ,gestion)" *ngIf="esAdmin || esOperador || esDirector">
+                  (click)="obtenerActividadGestionEstrategica(gestion.idActividadGestionEstrategica ,gestion)" *ngIf="esAdmin || esOperador || esDirector  || esOperadorEditor">
                       <i class="bi bi-node-plus-fill"></i>
                   </button>
                   <button title="Ver observación" class="btn btn-outline-dark me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(gestion.idActividadGestionEstrategica,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')">
@@ -273,21 +273,21 @@
                         <td>{{ obtenerNombreUsuario(tarea.idUsuario) }}</td>
                         <td>
                           <button title="Modificar Tarea" class="btn btn-outline-secondary me-1 mb-1"  data-bs-toggle="modal" data-bs-target="#modalModificarTarea"
-                          (click)="obtenerTareaAModificar(tarea.idTarea,tarea)" *ngIf="esAdmin || esOperador || esDirector"><i class="bi bi-pencil-square"></i></button>
+                          (click)="obtenerTareaAModificar(tarea.idTarea,tarea)" *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor"><i class="bi bi-pencil-square"></i></button>
                           <button title="Modificar estado" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalModificarEstado" 
-                          (click)="obtenerTarea(tarea.idTarea,tarea)" *ngIf="esAdmin || esOperador || esDirector"
+                          (click)="obtenerTarea(tarea.idTarea,tarea)" *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor"
                           ><i class="bi bi-pen-fill"></i></button>
-                          <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" (click)="eliminarTarea(tarea.idTarea, gestion.idActividadGestionEstrategica)" *ngIf="esAdmin || esDirector"
+                          <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" (click)="eliminarTarea(tarea.idTarea, gestion.idActividadGestionEstrategica)" *ngIf="esAdmin || esDirector || esOperadorEditor"
                           ><i class="bi bi-trash3-fill"></i></button>
                           <button title="Agregar documento" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#agregarDocumentoTarea"
-                            (click)="abrirModalAgregarDocumento(tarea.idTarea,'TAREA')" *ngIf="esAdmin || esOperador || esDirector"
+                            (click)="abrirModalAgregarDocumento(tarea.idTarea,'TAREA')" *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor"
                                 ><i class="bi bi-folder-plus"></i>
                               </button>
                             <button title="Ver documento" class="btn btn-outline-primary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalVerDocumentos" 
                             (click)="obtenerDocumento(tarea.idTarea, 'TAREA')">            
                           <i class="bi bi-file-earmark-check"></i></button>
                           <button title="Agregar Observación" class="btn btn-outline-success me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" 
-                          (click)="obtenerTarea(tarea.idTarea,tarea)" *ngIf="esAdmin || esOperador || esDirector"><i class="bi bi-node-plus-fill"></i></button>
+                          (click)="obtenerTarea(tarea.idTarea,tarea)" *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor"><i class="bi bi-node-plus-fill"></i></button>
                           <button title="Ver observación" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(tarea.idTarea,'TAREA')"><i class="bi bi-eye-fill"></i></button>
                         </td>
                       </tr>

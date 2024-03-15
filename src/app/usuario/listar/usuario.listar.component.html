@@ -90,14 +90,14 @@
                       <input id="correo" class="form-control form-control-lg" formControlName="correo" placeholder="correo">
                       <label class="form-label" for="correo">Correo</label>
                     </div>
-                    <div class="form-floating mb-2">  
+                    <div class="form-floating mb-4">  
                       <select class="form-select" id="idCargo" formControlName="idCargo" >
                         <option *ngFor="let cargo of cargos" [value]="cargo.idCargo"> {{ cargo.nombre }}
                         </option>
                       </select>
                       <label for="idCargo" class="form-label">Cargo</label>
                     </div>
-                      <div class="col-md-6">
+                      <div class="col-md-12 mb-4">
                         <div class="d-md-flex justify-content-start align-items-center" >
                           <label class="me-4">Rol<span class="required-field" >*</span>: </label>
                           <div class="form-check form-check-inline me-3">
@@ -115,6 +115,10 @@
                           <div class="form-check form-check-inline me-3">
                             <input class="form-check-input" type="radio" name="rol" id="consultor" value="CONSULTOR" formControlName="rol" />
                             <label class="form-check-label" for="consultor">Consultor</label>
+                          </div>
+                          <div class="form-check form-check-inline me-3">
+                            <input class="form-check-input" type="radio" name="rol" id="operador_editor" value="OPERADOR_EDITOR" formControlName="rol" />
+                            <label class="form-check-label" for="operador_editor">Operador editor</label>
                           </div>
                         </div>
                       </div>

@@ -41,6 +41,7 @@ export class ListarSprintproyectoareaComponent implements OnInit  {
   esAdmin: boolean = false; 
   esDirector: boolean = false; 
   esOperador: boolean = false; // Agrega esta línea
+  esOperadorEditor: boolean = false;
   esConsultor:boolean = false;
 
   tipoFormulario: 'SPRINT_PROYECTO_AREA' | 'TAREA' = 'SPRINT_PROYECTO_AREA';
@@ -121,17 +122,19 @@ export class ListarSprintproyectoareaComponent implements OnInit  {
   }
   ngOnInit() {
             // Usar Promise.all para esperar a que todas las promesas se resuelvan
-    Promise.all([
-      this.auth.esAdmin(),
-      this.auth.esDirector(),
-      this.auth.esOperador(),
-      this.auth.esConsultor()
-    ]).then(([esAdmin, esDirector, esOperador, esConsultor]) => {
-      // Asignar los resultados a las propiedades correspondientes
-      this.esAdmin = esAdmin;
-      this.esDirector = esDirector;
-      this.esOperador = esOperador;
-      this.esConsultor = esConsultor;
+            Promise.all([
+              this.auth.esAdmin(),
+              this.auth.esDirector(),
+              this.auth.esOperador(),
+              this.auth.esOperadorEditor(),
+              this.auth.esConsultor()
+            ]).then(([esAdmin, esDirector, esOperador,esOperadorEditor, esConsultor]) => {
+              // Asignar los resultados a las propiedades correspondientes
+              this.esAdmin = esAdmin;
+              this.esDirector = esDirector;
+              this.esOperador = esOperador;
+              this.esOperadorEditor = esOperadorEditor;
+              this.esConsultor = esConsultor;
     });
     // Obtén el valor de idPat de la URL
     this.route.params.subscribe(params => {

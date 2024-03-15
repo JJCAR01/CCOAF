@@ -72,6 +72,7 @@ export class TipogeListarComponent implements OnInit {
   esAdmin: boolean = false; 
   esDirector: boolean = false; 
   esOperador: boolean = false;
+  esOperadorEditor: boolean = false;
   esConsultor: boolean = false;
 
   tipoFormulario: 'ACTIVIDAD_ESTRATEGICA' | 'ACTIVIDAD_GESTION' | 'TAREA' | 'PROYECTO_AREA' = 'ACTIVIDAD_ESTRATEGICA'; // Por defecto, muestra el formulario para actividad estratégica
@@ -209,12 +210,14 @@ export class TipogeListarComponent implements OnInit {
       this.auth.esAdmin(),
       this.auth.esDirector(),
       this.auth.esOperador(),
+      this.auth.esOperadorEditor(),
       this.auth.esConsultor()
-    ]).then(([esAdmin, esDirector, esOperador, esConsultor]) => {
+    ]).then(([esAdmin, esDirector, esOperador,esOperadorEditor, esConsultor]) => {
       // Asignar los resultados a las propiedades correspondientes
       this.esAdmin = esAdmin;
       this.esDirector = esDirector;
       this.esOperador = esOperador;
+      this.esOperadorEditor = esOperadorEditor;
       this.esConsultor = esConsultor;
     });
         // Obtén el valor de idPat de la URL

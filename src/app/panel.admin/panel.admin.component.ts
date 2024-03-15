@@ -104,7 +104,13 @@ export class PanelAdminComponent implements OnInit {
     .then((confirmacion) => {
       if (confirmacion.isConfirmed) {
         this.router.navigate(["/login"]);
-            Swal.fire({title:"Exitoso!!!", icon: "success",confirmButtonColor: '#0E823F',}).then(() => {
+            Swal.fire({title:"Exitoso!!!",
+             icon: "success",
+             confirmButtonColor: '#0E823F',
+             position: "center",
+             showConfirmButton: false,
+             timer: 1500
+            }).then(() => {
               this.cookie.deleteAll();
               this.loggedIn = false;
               const auth = getAuth();
