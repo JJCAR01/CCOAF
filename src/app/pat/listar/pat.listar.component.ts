@@ -39,6 +39,7 @@ export class PatListarComponent implements OnInit{
   esConsultor: boolean = false;
 
   idPatSeleccionado: number = 0;
+  idObservacionPatSeleccionado: number = 0;
   direccionSeleccionada: any | undefined;
   idUsuarioSeleccionado: number = 0;
   cantidadPats: number = 0;
@@ -63,6 +64,7 @@ export class PatListarComponent implements OnInit{
   busqueda: any;
   form: FormGroup;
   formObservacion: FormGroup;
+  formModificarObservacion: FormGroup;
 
     constructor(
       private patService: PatService,private auth:AuthService,
@@ -84,6 +86,9 @@ export class PatListarComponent implements OnInit{
         this.formObservacion = this.formBuilder.group({
           idPat: ['', Validators.required],
           fecha: [this.obtenerFechaActual(), Validators.required],
+          descripcion: ['', Validators.required],
+        }); 
+        this.formModificarObservacion = this.formBuilder.group({
           descripcion: ['', Validators.required],
         }); 
     }  
@@ -144,12 +149,11 @@ export class PatListarComponent implements OnInit{
           // Convertir las cadenas de direcciones y pats a arrays
           //const direccionesArray = decodedPayload.direccion.split(',').map((direccion: string) => direccion.trim());
           const idUsuarioLogueado = decodedPayload.idUser;
-          const listaDePatsUsuario = decodedPayload.pats.split('-').map((pat: string) => pat.trim());
-          const listaDeDireccionesUsuario = decodedPayload.direcciones.split('-').map((direccion: string) => direccion.trim());
+          const listaDePatsUsuario = decodedPayload.pats.split('&').map((pat: string) => pat.trim());
+          const listaDeDireccionesUsuario = decodedPayload.direcciones.split('&').map((direccion: string) => direccion.trim());
           // Verificar si son todas las direcciones y todos los procesos
           //const sonTodasLasDirecciones = direccionesArray.includes('TODAS LAS DIRECCIONES');
           const patsFiltrados = data.filter((d: any) => {
-            console.log(listaDePatsUsuario)
             if (d.fechaAnual === this.obtenerAnual()) {// Verificar si la fecha anual coincide con el año actual
               if (this.esAdmin) { // Si es administrador, mostrar todos los datos
                 return true;
@@ -374,6 +378,7 @@ export class PatListarComponent implements OnInit{
         }
       });
     }
+
     crearObservacion() {
       if (this.formObservacion.valid) {
         const fecha = this.formObservacion.get('fecha')?.value;
@@ -393,6 +398,62 @@ export class PatListarComponent implements OnInit{
             (error) => {this.swalError(error);}
           );
       }
+    }
+    modificarObservacionPat() {
+      if (this.formModificarObservacion.valid ) {
+        const descripcion = this.formModificarObservacion.get('descripcion')?.value;
+        const observacionPat = {
+          descripcion: descripcion,
+        }
+        Swal.fire({
+          icon:"question",
+          title: "¿Estás seguro de modificar?",
+          text: "Una vez modificado no podrás revertir los cambios",
+          showCancelButton: true,
+          cancelButtonText: "Cancelar",
+          confirmButtonText: "Confirmar",
+          confirmButtonColor: '#0E823F',
+          reverseButtons: true, 
+        })
+        .then((confirmacion) => {
+          if (confirmacion.isConfirmed) {
+                this.patService.modificarObservacionPat(observacionPat, this.idObservacionPatSeleccionado, this.auth.obtenerHeader()).subscribe(
+                () => {
+                  this.swalSatisfactorio('modificado','plan anual de trabajo')
+                  this.cargarObservaciones(this.idPatSeleccionado);
+                },
+                (error) => {
+                  this.swalError(error)
+                }
+              );
+          }
+        });
+      } 
+    }
+    eliminarObservacionPat(idObservacionPat: number,idPat:number) {
+      Swal.fire({
+        icon:"question",
+        title: "¿Estás seguro?",
+        text: "Una vez eliminado la observación, no podrás recuperar este elemento.",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: '#0E823F',
+        reverseButtons: true, 
+      })
+      .then((confirmacion) => {
+        if (confirmacion.isConfirmed) {
+          this.patService.eliminarObservacionPat(idObservacionPat, this.auth.obtenerHeader()).subscribe(
+            () => {
+              this.swalSatisfactorio('eliminado','la observación');
+              this.cargarObservaciones(idPat)
+            },
+            (error) => {
+              this.swalError(error.mensajeHumano);
+            }
+          );
+        }
+      });
     }
 
     sumarCantidadesGestion(data: any[]) {
@@ -433,6 +494,13 @@ export class PatListarComponent implements OnInit{
       });
       this.formObservacion.patchValue({
         idPat: this.idPatSeleccionado,
+        fecha: this.obtenerFechaActual(),
+      });
+    }
+    obtenerObservacionPat(idObservacionPat: number,observacionPat:any) {
+      this.idObservacionPatSeleccionado = idObservacionPat;
+      this.formModificarObservacion.patchValue({
+        descripcion: observacionPat.descripcion,
       });
     }
 
@@ -467,7 +535,7 @@ export class PatListarComponent implements OnInit{
       Swal.fire(
         {
           title:"Error!!!",
-          text:error.error.mensajeHumano, 
+          text:error.error.mensajeTecnico, 
           icon:"error",
           confirmButtonColor: '#0E823F',
         }

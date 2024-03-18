@@ -463,7 +463,6 @@ export class SprintListarComponent implements OnInit {
             this.swalSatisfactorio('creada','tarea')
               this.cargarTareas(this.idSprintSeleccionado,'SPRINT');
               this.formTarea.reset();
-              this.cargarSprints(this.idProyecto);
           },
           (error) => {this.swalError(error);}
         );
@@ -532,7 +531,6 @@ export class SprintListarComponent implements OnInit {
           this.tareaService.modificarEstadoTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
               (response) => {
                 this.swalSatisfactorio ('modificado','estado del área')
-                  this.cargarSprints(this.idProyecto);
                   this.cargarTareas(this.idTareaTipo,'SPRINT');
                   this.formTarea.reset();              
               },
@@ -570,9 +568,8 @@ export class SprintListarComponent implements OnInit {
           this.tareaService.modificarPorcentajeTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
               (response) => {
                 this.swalSatisfactorio('modificado','porcentaje del área')
-                  this.cargarSprints(this.idProyecto);
-                    this.cargarTareas(this.idTareaTipo,'SPRINT');
-                    this.formTarea.reset();             
+                this.cargarTareas(this.idTareaTipo,'SPRINT');
+                this.formTarea.reset();             
               },
               (error) => {this.swalError(error);}
             );
@@ -740,7 +737,7 @@ export class SprintListarComponent implements OnInit {
     Swal.fire(
       {
         title:"Error!!!",
-        text:error.error.mensajeHumano, 
+        text:error.error.mensajeTecnico, 
         icon:"error",
         confirmButtonColor: '#0E823F',
       }

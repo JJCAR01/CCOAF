@@ -315,7 +315,7 @@ th{
   text-align: left; /* Alinea el texto a la izquierda */
 }
 
-@media screen and (max-width: 1366px) {
+@media screen and (max-width: 1450px) {
   .column-responsableTarea {
     width: 100px; /* Ajusta el ancho a tu preferencia */
   }
@@ -328,19 +328,18 @@ th{
   .column-porcentaje {
     width: 100px; /* Ajusta el ancho a tu preferencia */
   }
-
-  th .en-backlog::before { content: "\F8E6"; } /* Icono de backlog */
-  th .en-proceso::before { content: "\f085"; } /* Icono de proceso */
-  th .terminado::before { content: "\f00c"; } /* Icono de terminado */
-  th .impedimento::before { content: "\f06a"; } /* Icono de impedimento */
+  
 
   /* Estilos para ocultar el texto en los títulos */
   th .estado-text {
-    padding: 5px;
-    overflow: hidden;
-    white-space: nowrap;
+    font-size: xx-small;
+    overflow: inherit;
     text-indent: 100%;
-    display: inline-block;
     width: 0;
   }
+}
+
+.modal-largo{
+  max-width: 90%; /* Porcentaje del ancho máximo que deseas */
+  width: auto;
 }

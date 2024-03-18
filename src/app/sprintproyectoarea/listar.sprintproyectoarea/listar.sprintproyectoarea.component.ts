@@ -424,7 +424,6 @@ export class ListarSprintproyectoareaComponent implements OnInit  {
             this.swalSatisfactorio('creada','tarea')
               this.cargarTareas(this.idSprintSeleccionado,'SPRINT_PROYECTO_AREA');
               this.formTarea.reset();
-              this.cargarSprints(this.idProyectoArea);
           },
           (error) => {this.swalError(error);}
         );
@@ -493,9 +492,8 @@ export class ListarSprintproyectoareaComponent implements OnInit  {
           this.tareaService.modificarEstadoTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
               (response) => {
                 this.swalSatisfactorio ('modificado','estado del área')
-                  this.cargarSprints(this.idProyectoArea);
                   this.cargarTareas(this.idTareaTipo,'SPRINT_PROYECTO_AREA');
-                  this.formTarea.reset();              
+                  this.formModificarEstadoTarea.reset();              
               },
               (error) => {this.swalError(error);}
             );
@@ -531,9 +529,8 @@ export class ListarSprintproyectoareaComponent implements OnInit  {
           this.tareaService.modificarPorcentajeTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
               (response) => {
                 this.swalSatisfactorio('modificado','porcentaje del área')
-                  this.cargarSprints(this.idProyectoArea);
-                    this.cargarTareas(this.idTareaTipo,'SPRINT_PROYECTO_AREA');
-                    this.formTarea.reset();             
+                  this.cargarTareas(this.idTareaTipo,'SPRINT_PROYECTO_AREA');
+                  this.formModificarPorcentaje.reset();             
               },
               (error) => {this.swalError(error);}
             );

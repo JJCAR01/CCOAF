@@ -51,6 +51,13 @@ export class PatService {
   listarObservacionPorIdPat(idPat: number, headers?: HttpHeaders): Observable<any[]> {
     return this.http.get<any[]>(`${environment.apiUrl}/ccoa/pat/observaciones/pats/${idPat}`, { headers });
   }
+  modificarObservacionPat<T>(observacionPat : any,idObservacionPat:number,headers?: HttpHeaders):Observable<T>{
+    return this.http.put<T>(`${environment.apiUrl}/ccoa/pat/observaciones/${idObservacionPat}`,observacionPat,{headers});
+  }
+  eliminarObservacionPat<T>(idObservacionPat:number,headers?: HttpHeaders):Observable<T>{
+    return this.http.delete<T>(`${environment.apiUrl}/ccoa/pat/observaciones/${idObservacionPat}`,{headers});
+  }
+
 
   getPatsAsociados(): Observable<any[]> {
     return this.patsDataSubject.asObservable();

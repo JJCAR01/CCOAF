@@ -601,9 +601,8 @@ export class TipogeListarComponent implements OnInit {
         .subscribe(
           (response) => {
               this.swalSatisfactorio('creado','tarea')
-              this.cargarTareas(this.idActividadGestionSeleccionado,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')
+              this.cargarTareas(this.idActividadGestionSeleccionado,'ACTIVIDAD_GESTION')
               this.formTarea.reset()
-              this.cargarGestiones(this.idPat)
           },
           (error) => {this.swalError(error);}
         );
@@ -721,7 +720,6 @@ export class TipogeListarComponent implements OnInit {
           this.tareaService.modificarEstadoTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
               () => {
                   this.swalSatisfactorio('modificado','estado de la tarea')
-                  this.cargarGestiones(this.idPat);
                   this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION');
                   this.formModificarEstadoTarea.reset();           
               },
@@ -759,7 +757,7 @@ export class TipogeListarComponent implements OnInit {
           this.tareaService.modificarPorcentajeTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
               () => {
                   this.swalSatisfactorio('modificado','porcentaje de la actividad');
-                  this.cargarGestiones(this.idPat);
+                  this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION')
                   this.formModificarPorcentaje.reset()              
               },
               (error) => {this.swalError(error);}

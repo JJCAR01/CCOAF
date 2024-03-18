@@ -163,6 +163,11 @@ p {
 .column-acciones{
     width: 10%;
 }
+.modal-largo{
+    max-width: 90%; /* Porcentaje del ancho máximo que deseas */
+    width: auto;
+}
+
 
 .table-color th{
     background-color: #bbbbbb;

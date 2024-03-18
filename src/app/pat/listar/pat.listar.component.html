@@ -163,30 +163,59 @@
     </div>
   </div>
   <div class="modal fade" id="modalVerObservacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-largo">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Observaciones</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
-          <table class="table table-bordered table-hover">
+        <div class="modal-body table-responsive">
+          <table class="table">
             <thead class="table table-color">
-                <th>Fecha</th>
-                <th>Descripción</th>
+                <th >Fecha</th>
+                <th >Descripción</th>
+                  <th></th>
               </thead>
               <tbody>
                 <ng-container *ngFor="let observacion of observaciones">
                   <tr>
                     <td>{{ observacion.fecha }}</td>
                     <td>{{ observacion.descripcion }} </td>
+                    <td> 
+                      <button title="Modificar" type="button" class="btn btn-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalModificarObservacion" 
+                       *ngIf="esAdmin || esOperador || esDirector" (click)="obtenerObservacionPat(observacion.idObservacionPat,observacion)">
+                      <i class="bi bi-pen-fill"></i>
+                    </button>
+                    <button title="Eliminar" class="btn btn-danger me-1 mb-1" 
+                     *ngIf="esAdmin || esOperador || esDirector"><i class="bi bi-trash3-fill" (click)="eliminarObservacionPat(observacion.idObservacionPat, observacion.idPat)"
+                    ></i></button>
+                    </td>
                   </tr>
                 </ng-container>
               </tbody>
             </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="modalModificarObservacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modificar observación</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="formModificarObservacion" (ngSubmit)="modificarObservacionPat()">
+            <div class="form-floating mb-2">
+              <input type="text" class="form-control" id="descripcion" formControlName="descripcion" >
+              <label for="descripcion" class="form-label">Descripcion</label>
+            </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-success" [attr.data-bs-dismiss]="formModificarObservacion.valid ? 'modal' : null">Guardar</button>
             </div>
+          </form>
         </div>
       </div>
     </div>

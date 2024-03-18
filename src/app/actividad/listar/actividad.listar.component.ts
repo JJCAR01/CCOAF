@@ -458,7 +458,6 @@ private obtenerFechaActual(): string {
             this.swalSatisfactorio('creado','tarea')
               this.cargarTareas(this.idActividadGestionEstrategicaSeleccionado,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')
               this.formTarea.reset()
-              this.cargarGestiones(this.idActividadEstrategica)
           },
           (error) => {this.swalError(error);}
         );
@@ -541,7 +540,6 @@ private obtenerFechaActual(): string {
           this.tareaService.modificarEstadoTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
               () => {
                 this.swalSatisfactorio('modificado','estado de la tarea')
-                  this.cargarGestiones(this.idActividadEstrategica);
                   this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA');
                   this.formTarea.reset();             
               },
@@ -578,10 +576,9 @@ private obtenerFechaActual(): string {
         if (confirmacion.isConfirmed) {
           this.tareaService.modificarPorcentajeTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
               (response) => {
-                this.swalSatisfactorio('modificado','porcentaje de la tarea')
-                  this.cargarGestiones(this.idActividadEstrategica);
-                    this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA');
-                    this.formModificarPorcentaje.reset()              
+                this.swalSatisfactorio('modificado','porcentaje de la tarea');
+                this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA');
+                this.formModificarPorcentaje.reset()              
               },
               (error) => {this.swalError(error);}
             );
