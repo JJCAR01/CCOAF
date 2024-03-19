@@ -207,7 +207,8 @@
               </div>
             </div>
           </div>
-            <div [id]="'collapse-' + gestion.idActividadGestionEstrategica" class="collapse">
+          <div [id]="'collapse-' + gestion.idActividadGestionEstrategica" class="collapse" [class.show]="collapseSeleccionado === gestion.idActividadGestionEstrategica">
+
               <div class="card-body" >
                 <!-- Detalles de la gestión... -->
       
@@ -494,8 +495,8 @@
                     <td>{{ observacion.fecha }}</td>
                     <td>{{ observacion.descripcion }} </td>
                     <td> 
-                      <button title="Modificar" type="button" class="btn btn-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalModificarGestion" 
-                       *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor">
+                      <button title="Modificar" type="button" class="btn btn-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalModificarObservacion" 
+                       *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor" (click)="obtenerObservacion(tipoFormulario ,observacion)">
                       <i class="bi bi-pen-fill"></i>
                     </button>
                     <button title="Eliminar" class="btn btn-danger me-1 mb-1" 
@@ -506,9 +507,28 @@
                 </ng-container>
               </tbody>
             </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="modalModificarObservacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modificar observación</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="formModificarObservacion" (ngSubmit)="modificarObservacion(tipoFormulario)">
+            <div class="form-floating mb-2">
+              <input type="text" class="form-control" id="descripcion" formControlName="descripcion" >
+              <label for="descripcion" class="form-label">Descripcion</label>
+            </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-success" [attr.data-bs-dismiss]="formModificarObservacion.valid ? 'modal' : null">Guardar</button>
             </div>
+          </form>
         </div>
       </div>
     </div>

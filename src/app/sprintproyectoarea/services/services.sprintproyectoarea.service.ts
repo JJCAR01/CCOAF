@@ -46,4 +46,10 @@ export class ServicesSprintProyectoAreaService {
   listarPorIdSprintProyectoArea(idSprintProyectoArea: number, headers?: HttpHeaders): Observable<any[]> {
     return this.http.get<any[]>(`${environment.apiUrl}/ccoa/sprintproyectoarea/observaciones/sprints/${idSprintProyectoArea}`, { headers });
   }
+  modificarObservacionSprintProyectoArea<T>(observacionSprintProyectoArea : any,idObservacionSprintProyectoArea:number,headers?: HttpHeaders):Observable<T>{
+    return this.http.put<T>(`${environment.apiUrl}/ccoa/sprintproyectoarea/observaciones/${idObservacionSprintProyectoArea}`,observacionSprintProyectoArea,{headers});
+  }
+  eliminarObservacionSprintProyectoArea<T>(idObservacionSprintProyectoArea:number,headers?: HttpHeaders):Observable<T>{
+    return this.http.delete<T>(`${environment.apiUrl}/ccoa/sprintproyectoarea/observaciones/${idObservacionSprintProyectoArea}`,{headers});
+  }
 }

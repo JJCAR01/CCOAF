@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 
 @Injectable({
@@ -64,5 +65,11 @@ export class TareaService {
   }
   listarPorIdTarea(idTarea:number,headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/tarea/observaciones/tareas/${idTarea}`,{headers});
+  }
+  modificarObservacionTarea<T>(observacionTarea : any,idObservacionTarea:number,headers?: HttpHeaders):Observable<T>{
+    return this.http.put<T>(`${environment.apiUrl}/ccoa/tarea/observaciones/${idObservacionTarea}`,observacionTarea,{headers});
+  }
+  eliminarObservacionTarea<T>(idObservacionTarea:number,headers?: HttpHeaders):Observable<T>{
+    return this.http.delete<T>(`${environment.apiUrl}/ccoa/tarea/observaciones/${idObservacionTarea}`,{headers});
   }
 }

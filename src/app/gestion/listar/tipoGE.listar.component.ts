@@ -83,6 +83,10 @@ export class TipogeListarComponent implements OnInit {
   planeacionEnumList = Object.values(EPlaneacion);
   archivoSeleccionado: File | null = null;
   documentoObtenido: any [] = [];
+  idObservacionProyectoAreaSeleccionado: number = 0;
+  idObservacionActividadGestionSeleccionado: number = 0;
+  idObservacionActividadEstrategicaSeleccionado: number = 0;
+  idObservacionTareaSeleccionado: number = 0;
   usuarioPat:number | 0 = 0;
   porcentajeRealPat:number = 0;
   porcentajeRealActividadesEstrategica:number = 0;
@@ -116,6 +120,7 @@ export class TipogeListarComponent implements OnInit {
   estadoEnumList: string[] = [];
   periodiciadLista: string[] = [];
   periodiciadMetaLista: string[] = [];
+  collapseSeleccionado : number | null = null;
   gestiones: ActividadGestion[] = [];
   proyectosarea: ProyectoArea[] = [];
   actividades: ActividadEstrategica[] = [];
@@ -134,6 +139,7 @@ export class TipogeListarComponent implements OnInit {
   formAgregarResultadoMeta:FormGroup;
   formProyecto:FormGroup;
   formModificarValorEjecutado:FormGroup;
+  formModificarObservacion:FormGroup;
 
   constructor(
     private gestionService: TipoGEService,private auth: AuthService,
@@ -200,6 +206,9 @@ export class TipogeListarComponent implements OnInit {
       periodicidad: ['', Validators.required],
       idUsuario: ['', Validators.required],
     });
+    this.formModificarObservacion = this.formBuilder.group({
+      descripcion: ['', Validators.required],
+    }); 
   }
   
 
@@ -564,22 +573,29 @@ export class TipogeListarComponent implements OnInit {
      });
    }
  }
+ cargarTareas(idASE: any, tipoASE: any) {
+    // Si se hace clic en la misma gestión, la cerramos
+    if (this.collapseSeleccionado === idASE) {
+    this.collapseSeleccionado = null;
+    } else {
+      this.collapseSeleccionado = idASE;
+      if(tipoASE === 'ACTIVIDAD_GESTION'){
+        this.tareaService
+        .listarTareaPorActvidadGestion(idASE,this.auth.obtenerHeader()) 
+          .toPromise()
+          .then(
+            (data: any) => {
+              this.tareas = data;
+              this.nombreTarea = data.descripcion;
+            },
+            (error) => {
+              Swal.fire('Error', error.error.mensajeTecnico, 'error');
+            }
+          );
+      }
+    }
+  }
 
-  cargarTareas(idASE:any, tipoASE:any) {
-    if(tipoASE === 'ACTIVIDAD_GESTION'){
-    this.tareaService
-      .listarTareaPorActvidadGestion(idASE,this.auth.obtenerHeader()) 
-      .toPromise()
-      .then(
-        (data: any) => {
-        this.tareas = data;
-        this.nombreTarea = data.descripcion
-        },
-        (error) => {
-          Swal.fire('Error',error.error.mensajeHumano,'error');
-        }
-    )};
-  } 
   crearTarea() {
     if (this.formTarea.valid) {
       const nombre = this.formTarea.get('nombre')?.value;
@@ -611,6 +627,7 @@ export class TipogeListarComponent implements OnInit {
     }
   }
   crearObservacion() {
+
     if (this.formObservacion.valid) {
       const fecha = this.formObservacion.get('fecha')?.value;
       const descripcion = this.formObservacion.get('descripcion')?.value;
@@ -621,6 +638,7 @@ export class TipogeListarComponent implements OnInit {
           descripcion: descripcion,
           fecha: fecha,
         };
+
         this.tareaService
           .crearObservacion(observacion,this.auth.obtenerHeader())
           .subscribe(
@@ -633,7 +651,7 @@ export class TipogeListarComponent implements OnInit {
       } else if( this.tipoFormulario === 'ACTIVIDAD_GESTION'){
         const observacion = {
           idActividadGestion: this.idActividadGestionSeleccionado,
-          nomdescripcionbre: descripcion,
+          descripcion: descripcion,
           fecha: fecha,
         };
         this.gestionService
@@ -681,6 +699,71 @@ export class TipogeListarComponent implements OnInit {
       return this.formObservacion.markAllAsTouched();
     }    
   }
+  modificarObservacion(tipo: string) {
+    if (this.formModificarObservacion.valid) {
+      const descripcion = this.formModificarObservacion.get('descripcion')?.value;
+      const observacion = {
+        descripcion: descripcion,
+      }
+      Swal.fire({
+        icon: "question",
+        title: "¿Estás seguro de modificar?",
+        text: "Una vez modificado no podrás revertir los cambios",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: '#0E823F',
+        reverseButtons: true,
+      })
+      .then((confirmacion) => {
+        if (confirmacion.isConfirmed) {
+          switch (tipo) {
+            case 'TAREA':
+              this.tareaService.modificarObservacionTarea(observacion, this.idObservacionTareaSeleccionado, this.auth.obtenerHeader()).subscribe(
+                () => {
+                  this.swalSatisfactorio('modificado', 'tarea');
+                },
+                (error) => {
+                  this.swalError(error);
+                }
+              );
+              break;
+            case 'ACTIVIDAD_ESTRATEGICA':
+              this.gestionService.modificarObservacionActividadEstrategica(observacion, this.idObservacionActividadEstrategicaSeleccionado, this.auth.obtenerHeader()).subscribe(
+                () => {
+                  this.swalSatisfactorio('modificado', 'actividad estratégica');
+                },
+                (error) => {
+                  this.swalError(error);
+                }
+              );
+              break;
+            case 'ACTIVIDAD_GESTION':
+              this.gestionService.modificarObservacionActividadGestion(observacion, this.idObservacionActividadGestionSeleccionado, this.auth.obtenerHeader()).subscribe(
+                () => {
+                  this.swalSatisfactorio('modificado', 'actividad de gestión');
+                },
+                (error) => {
+                  this.swalError(error);
+                }
+              );
+              break;
+            case 'PROYECTO_AREA':
+              this.gestionService.modificarObservacionProyectoArea(observacion, this.idObservacionProyectoAreaSeleccionado, this.auth.obtenerHeader()).subscribe(
+                () => {
+                  this.swalSatisfactorio('modificado', 'proyecto de área');
+                },
+                (error) => {
+                  this.swalError(error);
+                }
+              );
+              break;
+          }
+        }
+      });
+    }
+  }
+  
   agregarResultadoMeta() {
     if (this.formAgregarResultadoMeta.valid) {
       const resultadoMeta = this.formAgregarResultadoMeta.get('resultadoMeta')?.value;
@@ -1100,6 +1183,41 @@ export class TipogeListarComponent implements OnInit {
       fecha: this.obtenerFechaActual(),
     });
   }
+
+    obtenerObservacion(tipo : string,observacion:any) {
+    
+      switch (tipo) {
+        case 'TAREA':
+          this.tipoFormulario = 'TAREA';
+          this.idObservacionTareaSeleccionado = observacion.idObservacionTarea;
+          this.formModificarObservacion.patchValue({
+            descripcion: observacion.descripcion,
+          });
+          break;
+        case 'ACTIVIDAD_ESTRATEGICA':
+          this.tipoFormulario = 'ACTIVIDAD_ESTRATEGICA'; 
+          this.idObservacionActividadEstrategicaSeleccionado = observacion.idObservacionActividadEstrategica;
+          this.formModificarObservacion.patchValue({
+            descripcion: observacion.descripcion,
+          });
+          break;
+        case 'ACTIVIDAD_GESTION':
+          this.tipoFormulario = 'ACTIVIDAD_GESTION';
+          this.idObservacionActividadGestionSeleccionado = observacion.idObservacionActividadGestion;
+          this.formModificarObservacion.patchValue({
+            descripcion: observacion.descripcion,
+          });
+          break;
+        case 'PROYECTO_AREA':
+          this.tipoFormulario = 'PROYECTO_AREA';
+          this.idObservacionProyectoAreaSeleccionado = observacion.idObservacionProyectoArea;
+          this.formModificarObservacion.patchValue({
+            descripcion: observacion.descripcion,
+          });
+          break;
+      }
+  }  
+
   obtenerNombreUsuario(idUsuario: number) {
     const usuario = this.usuarios.find((u) => u.idUsuario === idUsuario);
     return usuario ? usuario.nombre + " " + usuario.apellidos : '';

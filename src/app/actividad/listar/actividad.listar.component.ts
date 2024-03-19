@@ -61,6 +61,9 @@ export class ActividadListarComponent implements OnInit{
   tipoFormulario: 'PROYECTO' | 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA' | 'TAREA' = 'PROYECTO';
   pesoDeArchivo = 300 * 1024 * 1024; // 300 MB
   extencionesPermitidas = /\.(doc|docx|xls|xlsx|ppt|pptx|zip|pdf)$/i;
+  idObservacionProyectoSeleccionado: number = 0;
+  idObservacionActividadGestionEstrategicaSeleccionado: number = 0;
+  idObservacionTareaSeleccionado: number = 0;
   nombreArchivoSeleccionado: string = '';
   archivoSeleccionado: File | null = null;
   documentoObtenido: any [] = [];
@@ -89,6 +92,7 @@ export class ActividadListarComponent implements OnInit{
   estadoTarea:any;
   idTareaTipo:number = 0;
   periodicidadTarea:any;
+  collapseSeleccionado : number | null = null;
   form:FormGroup;
   formProyecto:FormGroup;
   formModificarEstadoTarea:FormGroup;
@@ -97,6 +101,7 @@ export class ActividadListarComponent implements OnInit{
   formModificarTarea:FormGroup;
   formObservacion:FormGroup;
   formModificarValorEjecutado:FormGroup;
+  formModificarObservacion:FormGroup;
   busqueda: any;
 
   constructor(
@@ -149,6 +154,9 @@ export class ActividadListarComponent implements OnInit{
       periodicidad: ['', Validators.required],
       idUsuario: ['', Validators.required],
     });
+    this.formModificarObservacion = this.formBuilder.group({
+      descripcion: ['', Validators.required],
+    }); 
 }
 
 ngOnInit() {
@@ -394,21 +402,29 @@ private obtenerFechaActual(): string {
       })
     }
   }
-  cargarTareas(idASE:any, tipoASE:any) {
-    if(tipoASE === 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA'){
-    this.tareaService
-      .listarTareaPorActvidadGestionActividadEstrategica(idASE,this.auth.obtenerHeader()) 
-      .toPromise()
-      .then(
-        (data: any) => {
-        this.tareas = data;
-        this.nombreTarea = data.descripcion
-        },
-        (error) => {
-          Swal.fire('Error',error.error.mensajeTecnico,'error');
-        }
-    )};
-  } 
+  cargarTareas(idASE: any, tipoASE: any) {
+    // Si se hace clic en la misma gestión, la cerramos
+    if (this.collapseSeleccionado === idASE) {
+      this.collapseSeleccionado = null;
+    } else {
+      this.collapseSeleccionado = idASE;
+      if (tipoASE === 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA') {
+        this.tareaService
+          .listarTareaPorActvidadGestionActividadEstrategica(idASE, this.auth.obtenerHeader())
+          .toPromise()
+          .then(
+            (data: any) => {
+              this.tareas = data;
+              this.nombreTarea = data.descripcion;
+            },
+            (error) => {
+              Swal.fire('Error', error.error.mensajeTecnico, 'error');
+            }
+          );
+      }
+    }
+  }
+  
   cargarObservaciones(id:any,tipo:string) {
     if(tipo === 'TAREA'){
       this.tareaService
@@ -518,6 +534,60 @@ private obtenerFechaActual(): string {
     } else {
       return this.formObservacion.markAllAsTouched();
     }     
+  }
+  modificarObservacion(tipo: string) {
+    if (this.formModificarObservacion.valid) {
+      const descripcion = this.formModificarObservacion.get('descripcion')?.value;
+      const observacion = {
+        descripcion: descripcion,
+      }
+      Swal.fire({
+        icon: "question",
+        title: "¿Estás seguro de modificar?",
+        text: "Una vez modificado no podrás revertir los cambios",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: '#0E823F',
+        reverseButtons: true,
+      })
+      .then((confirmacion) => {
+        if (confirmacion.isConfirmed) {
+          switch (tipo) {
+            case 'TAREA':
+              this.tareaService.modificarObservacionTarea(observacion, this.idObservacionTareaSeleccionado, this.auth.obtenerHeader()).subscribe(
+                () => {
+                  this.swalSatisfactorio('modificado', 'tarea');
+                },
+                (error) => {
+                  this.swalError(error);
+                }
+              );
+              break;
+            case 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA':
+              this.actividadService.modificarObservacionActividadGestionActividadEstrategica(observacion, this.idObservacionActividadGestionEstrategicaSeleccionado, this.auth.obtenerHeader()).subscribe(
+                () => {
+                  this.swalSatisfactorio('modificado', 'actividad estratégica');
+                },
+                (error) => {
+                  this.swalError(error);
+                }
+              );
+              break;
+            case 'PROYECTO':
+              this.actividadService.modificarObservacionProyecto(observacion, this.idObservacionProyectoSeleccionado, this.auth.obtenerHeader()).subscribe(
+                () => {
+                  this.swalSatisfactorio('modificado', 'proyecto de área');
+                },
+                (error) => {
+                  this.swalError(error);
+                }
+              );
+              break;
+          }
+        }
+      });
+    }
   }
   modificarEstado() {
     if (this.formModificarEstadoTarea.valid) {
@@ -917,6 +987,32 @@ private obtenerFechaActual(): string {
       fecha:  this.obtenerFechaActual(),
     });
   }
+  obtenerObservacion(tipo : string,observacion:any) {
+    
+    switch (tipo) {
+      case 'TAREA':
+        this.tipoFormulario = 'TAREA';
+        this.idObservacionTareaSeleccionado = observacion.idObservacionTarea;
+        this.formModificarObservacion.patchValue({
+          descripcion: observacion.descripcion,
+        });
+        break;
+      case 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA':
+        this.tipoFormulario = 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA'; 
+        this.idObservacionActividadGestionEstrategicaSeleccionado = observacion.idObservacionActividadGestionEstrategica;
+        this.formModificarObservacion.patchValue({
+          descripcion: observacion.descripcion,
+        });
+        break;
+      case 'PROYECTO':
+        this.tipoFormulario = 'PROYECTO';
+        this.idObservacionProyectoSeleccionado = observacion.idObservacionProyecto;
+        this.formModificarObservacion.patchValue({
+          descripcion: observacion.descripcion,
+        });
+        break;
+    }
+}  
 
   obtenerNombreUsuario(idUsuario: number) {
     const usuario = this.usuarios.find((u) => u.idUsuario === idUsuario);

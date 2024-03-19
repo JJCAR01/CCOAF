@@ -46,5 +46,11 @@ export class SprintService {
   }
   listarPorIdSprint(idSprint: number, headers?: HttpHeaders): Observable<any[]> {
     return this.http.get<any[]>(`${environment.apiUrl}/ccoa/sprint/observaciones/sprints/${idSprint}`, { headers });
+  }  
+  modificarObservacionSprint<T>(observacionSprint : any,idObservacionSprint:number,headers?: HttpHeaders):Observable<T>{
+    return this.http.put<T>(`${environment.apiUrl}/ccoa/sprint/observaciones/${idObservacionSprint}`,observacionSprint,{headers});
+  }
+  eliminarObservacionSprint<T>(idObservacionSprint:number,headers?: HttpHeaders):Observable<T>{
+    return this.http.delete<T>(`${environment.apiUrl}/ccoa/sprint/observaciones/${idObservacionSprint}`,{headers});
   }
 }

@@ -47,6 +47,12 @@ export class TipoGEService {
   listarObservacionPorIdActividadGestion<T>(idActividadGestion: number, headers?:HttpHeaders):Observable<T> {
     return this.http.get<T>(`${environment.apiUrl}/ccoa/gestion/observaciones/gestiones/${idActividadGestion}`, { headers });
   }
+  modificarObservacionActividadGestion<T>(observacionActividadGestion : any,idObservacionActividadGestion:number,headers?: HttpHeaders):Observable<T>{
+    return this.http.put<T>(`${environment.apiUrl}/ccoa/gestion/observaciones/${idObservacionActividadGestion}`,observacionActividadGestion,{headers});
+  }
+  eliminarObservacionActividadGestion<T>(idObservacionActividadGestion:number,headers?: HttpHeaders):Observable<T>{
+    return this.http.delete<T>(`${environment.apiUrl}/ccoa/gestion/observaciones/${idObservacionActividadGestion}`,{headers});
+  }
 
 
 
@@ -88,6 +94,12 @@ export class TipoGEService {
   }
   listarObservacionPorIdActividadEstrategica<T>(idActividadEstrategica: number, headers?:HttpHeaders):Observable<T> {
     return this.http.get<T>(`${environment.apiUrl}/ccoa/estrategica/observaciones/estrategicas/${idActividadEstrategica}`, { headers });
+  }
+  modificarObservacionActividadEstrategica<T>(observacionActividadEstrategica : any,idObservacionActividadEstrategica:number,headers?: HttpHeaders):Observable<T>{
+    return this.http.put<T>(`${environment.apiUrl}/ccoa/estrategica/observaciones/${idObservacionActividadEstrategica}`,observacionActividadEstrategica,{headers});
+  }
+  eliminarObservacionActividadEstrategica<T>(idObservacionActividadEstrategica:number,headers?: HttpHeaders):Observable<T>{
+    return this.http.delete<T>(`${environment.apiUrl}/ccoa/estrategica/observaciones/${idObservacionActividadEstrategica}`,{headers});
   }
 
   
@@ -131,6 +143,12 @@ export class TipoGEService {
   }
   listarObservacionPorIdProyectoArea<T>(idProyectoArea: number, headers?:HttpHeaders):Observable<T> {
     return this.http.get<T>(`${environment.apiUrl}/ccoa/proyectoarea/observaciones/proyectosarea/${idProyectoArea}`, { headers });
+  }
+  modificarObservacionProyectoArea<T>(observacionProyectoArea : any,idObservacionProyectoArea:number,headers?: HttpHeaders):Observable<T>{
+    return this.http.put<T>(`${environment.apiUrl}/ccoa/proyectoarea/observaciones/${idObservacionProyectoArea}`,observacionProyectoArea,{headers});
+  }
+  eliminarObservacionProyectoArea<T>(idObservacionProyectoArea:number,headers?: HttpHeaders):Observable<T>{
+    return this.http.delete<T>(`${environment.apiUrl}/ccoa/proyectoarea/observaciones/${idObservacionProyectoArea}`,{headers});
   }
 
 

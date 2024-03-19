@@ -47,6 +47,8 @@ export class SprintListarComponent implements OnInit {
   tipoFormulario: 'SPRINT' | 'TAREA' = 'SPRINT';
   pesoDeArchivo = 300 * 1024 * 1024; // 300 MB
   extencionesPermitidas = /\.(doc|docx|xls|xlsx|ppt|pptx|zip|pdf)$/i;
+  idObservacionSprintSeleccionado: number = 0;
+  idObservacionTareaSeleccionado: number = 0;
   nombreArchivoSeleccionado: string = '';
   archivoSeleccionado: File | null = null;
   estadoEnumList: string[] = [];
@@ -73,12 +75,14 @@ export class SprintListarComponent implements OnInit {
   porcentajeTarea:any;
   idTareaTipo:number = 0;
   estadoTarea:any;
+  collapseSeleccionado : number | null = null;
   formSprint:FormGroup;
   formModificarEstadoTarea:FormGroup;
   formModificarPorcentaje:FormGroup;
   formTarea:FormGroup;
   formModificarTarea:FormGroup;
   formObservacion:FormGroup;
+  formModificarObservacion:FormGroup;
   
 
   constructor(
@@ -118,6 +122,9 @@ export class SprintListarComponent implements OnInit {
       periodicidad: ['', Validators.required],
       idUsuario: ['', Validators.required],
     });
+    this.formModificarObservacion = this.formBuilder.group({
+      descripcion: ['', Validators.required],
+    }); 
   }
 
   ngOnInit() {
@@ -407,20 +414,27 @@ export class SprintListarComponent implements OnInit {
       }
     });
   }
-  cargarTareas(idASE:any, tipoASE:any) {
-    if(tipoASE === 'SPRINT'){
-    this.tareaService
-      .listarTareaPorSprint(idASE,this.auth.obtenerHeader()) 
-      .toPromise()
-      .then(
-        (data: any) => {
-        this.tareas = data;
-        this.nombreTarea = data.descripcion
-        },
-        (error) => {
-          Swal.fire('Error',error.error.mensajeTecnico,'error');
-        }
-    )};
+  cargarTareas(idASE: any, tipoASE: any) {
+    // Si se hace clic en la misma gestión, la cerramos
+    if (this.collapseSeleccionado === idASE) {
+    this.collapseSeleccionado = null;
+    } else {
+      this.collapseSeleccionado = idASE;
+      if(tipoASE === 'SPRINT'){
+        this.tareaService
+        .listarTareaPorSprint(idASE,this.auth.obtenerHeader()) 
+          .toPromise()
+          .then(
+            (data: any) => {
+              this.tareas = data;
+              this.nombreTarea = data.descripcion;
+            },
+            (error) => {
+              Swal.fire('Error', error.error.mensajeTecnico, 'error');
+            }
+          );
+      }
+    }
   } 
   cargarObservaciones(id:any,tipo:string) {
     console.log(tipo)
@@ -440,6 +454,50 @@ export class SprintListarComponent implements OnInit {
         )
     } 
   } 
+  modificarObservacion(tipo: string) {
+    if (this.formModificarObservacion.valid) {
+      const descripcion = this.formModificarObservacion.get('descripcion')?.value;
+      const observacion = {
+        descripcion: descripcion,
+      }
+      Swal.fire({
+        icon: "question",
+        title: "¿Estás seguro de modificar?",
+        text: "Una vez modificado no podrás revertir los cambios",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: '#0E823F',
+        reverseButtons: true,
+      })
+      .then((confirmacion) => {
+        if (confirmacion.isConfirmed) {
+          switch (tipo) {
+            case 'TAREA':
+              this.tareaService.modificarObservacionTarea(observacion, this.idObservacionTareaSeleccionado, this.auth.obtenerHeader()).subscribe(
+                () => {
+                  this.swalSatisfactorio('modificado', 'tarea');
+                },
+                (error) => {
+                  this.swalError(error);
+                }
+              );
+              break;
+            case 'SPRINT':
+              this.sprintService.modificarObservacionSprint(observacion, this.idObservacionSprintSeleccionado, this.auth.obtenerHeader()).subscribe(
+                () => {
+                  this.swalSatisfactorio('modificado', 'actividad estratégica');
+                },
+                (error) => {
+                  this.swalError(error);
+                }
+              );
+              break;
+          }
+        }
+      });
+    }
+  }
   crearTarea() {
     if (this.formTarea.valid) {
       const nombre = this.formTarea.get('nombre')?.value;
@@ -682,6 +740,24 @@ export class SprintListarComponent implements OnInit {
     });
 
   }
+  obtenerObservacion(tipo : string,observacion:any) {
+    switch (tipo) {
+      case 'TAREA':
+        this.tipoFormulario = 'TAREA';
+        this.idObservacionTareaSeleccionado = observacion.idObservacionTarea;
+        this.formModificarObservacion.patchValue({
+          descripcion: observacion.descripcion,
+        });
+        break;
+      case 'SPRINT':
+        this.tipoFormulario = 'SPRINT'; 
+        this.idObservacionSprintSeleccionado = observacion.idObservacionSprint;
+        this.formModificarObservacion.patchValue({
+          descripcion: observacion.descripcion,
+        });
+        break;
+    }
+  }  
   
   obtenerNombreUsuario(idUsuario: number) {
     const usuario = this.usuarios.find((u) => u.idUsuario === idUsuario);
