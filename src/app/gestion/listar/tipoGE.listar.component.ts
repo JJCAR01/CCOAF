@@ -108,6 +108,7 @@ export class TipogeListarComponent implements OnInit {
   idUsuarioSeleccionado: any | 0 = 0;
   idActividadGestionSeleccionado: number | 0 = 0;
   idActividadEstrategicaSeleccionado: number | 0 = 0;
+  idDocumentoActividadEstrategicaSeleccionado: number | 0 = 0;
   idProyectoSeleccionado: number | 0 = 0;
   planeacionProyecto = EPlaneacion;
   idTareaSeleccionado: number | 0 = 0;
@@ -316,6 +317,7 @@ export class TipogeListarComponent implements OnInit {
         .listarPorIdTarea(id,this.auth.obtenerHeader()) .subscribe(
           (data: any) => {
             this.observaciones = data;
+            this.tipoFormulario = 'TAREA';
           },
         )
     } else if( tipo === 'ACTIVIDAD_GESTION'){
@@ -323,6 +325,8 @@ export class TipogeListarComponent implements OnInit {
         .listarObservacionPorIdActividadGestion(id,this.auth.obtenerHeader()) .subscribe(
           (data: any) => {
             this.observaciones = data;
+            this.observaciones = data;
+            this.tipoFormulario = 'ACTIVIDAD_GESTION';
           },
         )
     } else if (tipo === 'ACTIVIDAD_ESTRATEGICA'){
@@ -330,6 +334,8 @@ export class TipogeListarComponent implements OnInit {
         .listarObservacionPorIdActividadEstrategica(id,this.auth.obtenerHeader()) .subscribe(
           (data: any) => {
             this.observaciones = data;
+            this.observaciones = data;
+            this.tipoFormulario = 'ACTIVIDAD_ESTRATEGICA';
           },
         )
     } else if (tipo === 'PROYECTO_AREA'){
@@ -337,9 +343,75 @@ export class TipogeListarComponent implements OnInit {
         .listarObservacionPorIdProyectoArea(id,this.auth.obtenerHeader()) .subscribe(
           (data: any) => {
             this.observaciones = data;
+            this.tipoFormulario = 'PROYECTO_AREA';
           },
         )
     }
+  }
+  eliminarObservacion(observacion: any, tipo:string) {
+    Swal.fire({
+      icon:"question",
+      title: "¿Estás seguro?",
+      text: "Una vez eliminado la observación, no podrás recuperar este elemento.",
+      showCancelButton: true,
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Confirmar",
+      confirmButtonColor: '#0E823F',
+      reverseButtons: true, 
+    })
+    .then((confirmacion) => {
+      if (confirmacion.isConfirmed) {
+        if(tipo === 'TAREA'){
+          const idTarea = observacion.idTarea;
+          this.tareaService.eliminarObservacionTarea(observacion.idObservacionTarea, this.auth.obtenerHeader()).subscribe(
+            () => {
+              this.swalSatisfactorio('eliminado','la observación');
+              this.cargarObservaciones(idTarea, 'TAREA')
+            },
+            (error) => {
+              this.swalError(error.mensajeHumano);
+            }
+          );
+        } else if( tipo === 'ACTIVIDAD_GESTION'){
+          const idActividadGestion = observacion.idActividadGestion;
+          this.gestionService
+            .eliminarObservacionActividadGestion(observacion.idObservacionActividadGestion,this.auth.obtenerHeader()) .subscribe(
+                () => {
+                  this.swalSatisfactorio('eliminado','la observación');
+                  this.cargarObservaciones(idActividadGestion, 'ACTIVIDAD_GESTION')
+                },
+                (error) => {
+                  this.swalError(error.mensajeHumano);
+                }
+            );
+        } else if (tipo === 'ACTIVIDAD_ESTRATEGICA'){
+          const idActividadEstrategica = observacion.idActividadEstrategica;
+          this.gestionService
+            .eliminarObservacionActividadEstrategica(observacion.idObservacionActividadEstrategica,this.auth.obtenerHeader()) .subscribe(
+              () => {
+                this.swalSatisfactorio('eliminado','la observación');
+                this.cargarObservaciones(idActividadEstrategica, 'ACTIVIDAD_ESTRATEGICA');
+              },
+              (error) => {
+                this.swalError(error.mensajeHumano);
+              }
+          );
+        } else if (tipo === 'PROYECTO_AREA'){
+          const idProyectoArea = observacion.idProyectoArea;
+          this.gestionService
+            .eliminarObservacionProyectoArea(observacion.idObservacionProyectoArea,this.auth.obtenerHeader()) .subscribe(
+              () => {
+                this.swalSatisfactorio('eliminado','la observación');
+                this.cargarObservaciones(idProyectoArea, 'PROYECTO_AREA')
+              },
+              (error) => {
+                this.swalError(error.mensajeHumano);
+              }
+          );
+        }
+        
+      }
+    });
   } 
   eliminarGestion(idActividadGestion: number) {
     Swal.fire({
@@ -932,96 +1004,111 @@ export class TipogeListarComponent implements OnInit {
       this.idProyectoSeleccionado = idRecibido;
     }
   }
-  async subirDocumento(formulario: any,id:number,tipo:string) {
+  async subirDocumento(formulario: any, id: number, tipo: string) {
+    try {
+        if (!this.archivoSeleccionado) {
+            throw new Error('No se ha seleccionado ningún archivo.');
+        }
 
-    if (!this.archivoSeleccionado) {
-      // Puedes mostrar un mensaje de error o manejarlo de otra manera
-      return;
-    }
-      try {
         const app = initializeApp(environment.firebase);
         const storage = getStorage(app);
         const storageRef = ref(storage, `${tipo}/${id}/${this.archivoSeleccionado.name}`);
         const snapshot = await uploadBytes(storageRef, this.archivoSeleccionado);
         const downloadURL = await getDownloadURL(storageRef);
-        // Crear un objeto sprint que incluya la URL de descarga
+
         const documento = {
-          fecha: this.obtenerFechaActual(),
-          rutaDocumento: downloadURL, // Asegúrate de que el nombre de la propiedad coincida con lo que espera tu backend
+            fecha: this.obtenerFechaActual(),
+            rutaDocumento: downloadURL,
         };
-        if(tipo === 'actividadGestion'){
-          this.gestionService.guardarDocumento(documento, this.idActividadGestionSeleccionado, this.auth.obtenerHeaderDocumento()).subscribe(
-            (data: any) => {
-              Swal.fire({
-                title:'Archivo cargado!',
-                text:'El archivo se cargó correctamente',
-                icon:'success',
-                confirmButtonColor: '#0E823F',
-              })   
-              this.nombreArchivoSeleccionado = '';           
-            },
-            (error) => {
-              Swal.fire({
-                title:'Hubo un error!!!',
-                text:error.error.mensajeTecnico,
-                icon:'error',
-                confirmButtonColor: '#0E823F',
-              })
-            }
-          );
-        } else if (tipo === 'actividadEstrategica'){
-          this.gestionService.guardarDocumentoAcividadEstrategica(documento, this.idActividadEstrategicaSeleccionado, this.auth.obtenerHeaderDocumento()).subscribe(
-            (data: any) => {
-              Swal.fire({
-                title:'Archivo cargado!',
-                text:'El archivo se cargó correctamente',
-                icon:'success',
-                confirmButtonColor: '#0E823F',
-              })
-              this.nombreArchivoSeleccionado = '';   
-            },
-            (error) => {
-              Swal.fire({
-                title:'Hubo un error!!!',
-                text:error.error.mensajeTecnico,
-                icon:'error',
-                confirmButtonColor: '#0E823F',
-              })
-            }
-          );
-        } else {
-          this.gestionService.guardarDocumentoProyectoArea(documento, this.idProyectoSeleccionado, this.auth.obtenerHeaderDocumento()).subscribe(
-            (data: any) => {
-              Swal.fire({
-                title:'Archivo cargado!',
-                text:'El archivo se cargó correctamente',
-                icon:'success',
-                confirmButtonColor: '#0E823F',
-              })
-              this.nombreArchivoSeleccionado = '';   
-            },
-            (error) => {
-              Swal.fire({
-                title:'Hubo un error!!!',
-                text:error.error.mensajeTecnico,
-                icon:'error',
-                confirmButtonColor: '#0E823F',
-              })
-            }
-          );
+
+        let guardarDocumentoObservable;
+
+        switch (tipo) {
+            case 'actividadGestion':
+                guardarDocumentoObservable = this.gestionService.guardarDocumento(documento, this.idActividadGestionSeleccionado, this.auth.obtenerHeaderDocumento());
+                break;
+            case 'actividadEstrategica':
+                guardarDocumentoObservable = this.gestionService.guardarDocumentoAcividadEstrategica(documento, this.idActividadEstrategicaSeleccionado, this.auth.obtenerHeaderDocumento());
+                break;
+            case 'proyectoArea':
+                guardarDocumentoObservable = this.gestionService.guardarDocumentoProyectoArea(documento, this.idProyectoSeleccionado, this.auth.obtenerHeaderDocumento());
+                break;
+            default:
+                throw new Error(`Tipo de documento no válido: ${tipo}`);
         }
-        
+
+        guardarDocumentoObservable.subscribe(
+            () => {
+                this.mostrarMensaje('Archivo cargado correctamente', 'success');
+                this.archivoSeleccionado = null; // Limpiar el archivo seleccionado
+                this.nombreArchivoSeleccionado = ''; // Limpiar el nombre del archivo seleccionado
+                // Restablecer otros estados relevantes si es necesario
+            },
+            error => this.mostrarMensaje('Hubo un error: ' + error.error.mensajeTecnico, 'error')
+        );
 
     } catch (error) {
-      Swal.fire({
-        title:'Hubo un error!!!',
-        text:'Error durante la subida del archivo',
-        icon:'error',
-        confirmButtonColor: '#0E823F',
-      })
+        this.mostrarMensaje('Hubo un error durante al cargar el archivo', 'error');
     }
   }
-  obtenerDocumento(id: number,tipo: string) {
+  async modificarDocumento(formulario: any, id: number, tipo: string) {
+    try {
+        if (!this.archivoSeleccionado) {
+            throw new Error('No se ha seleccionado ningún archivo.');
+        }
+
+        const app = initializeApp(environment.firebase);
+        const storage = getStorage(app);
+        const storageRef = ref(storage, `${tipo}/${id}/${this.archivoSeleccionado.name}`);
+        const snapshot = await uploadBytes(storageRef, this.archivoSeleccionado);
+        const downloadURL = await getDownloadURL(storageRef);
+
+        const documento = {
+            fecha: this.obtenerFechaActual(),
+            rutaDocumento: downloadURL,
+        };
+
+        let guardarDocumentoObservable;
+
+        switch (tipo) {
+            case 'actividadGestion':
+                guardarDocumentoObservable = this.gestionService.guardarDocumento(documento, this.idActividadGestionSeleccionado, this.auth.obtenerHeaderDocumento());
+                break;
+            case 'actividadEstrategica':
+                guardarDocumentoObservable = this.gestionService.modificarDocumentoActividadEstrategica(documento, this.idDocumentoActividadEstrategicaSeleccionado, this.auth.obtenerHeaderDocumento());
+                break;
+            case 'proyectoArea':
+                guardarDocumentoObservable = this.gestionService.guardarDocumentoProyectoArea(documento, this.idProyectoSeleccionado, this.auth.obtenerHeaderDocumento());
+                break;
+            default:
+                throw new Error(`Tipo de documento no válido: ${tipo}`);
+        }
+
+        guardarDocumentoObservable.subscribe(
+            () => {
+                this.mostrarMensaje('Archivo cargado correctamente', 'success');
+                this.archivoSeleccionado = null; // Limpiar el archivo seleccionado
+                this.nombreArchivoSeleccionado = ''; // Limpiar el nombre del archivo seleccionado
+                // Restablecer otros estados relevantes si es necesario
+            },
+            error => this.mostrarMensaje('Hubo un error: ' + error.error.mensajeTecnico, 'error')
+        );
+
+    } catch (error) {
+        this.mostrarMensaje('Hubo un error durante al cargar el archivo', 'error');
+    }
+  }
+
+
+  mostrarMensaje(mensaje: string, tipo: 'success' | 'error') {
+      Swal.fire({
+          title: tipo === 'success' ? 'Archivo cargado!' : 'Hubo un error!!!',
+          text: mensaje,
+          icon: tipo,
+          confirmButtonColor: '#0E823F',
+      });
+  }
+  verDocumentos(id: number,tipo: string) {
 
     if(tipo === 'ACTIVIDAD_GESTION'){
       this.gestionService.obtenerDocumento(id, this.auth.obtenerHeaderDocumento()).subscribe(
@@ -1105,6 +1192,10 @@ export class TipogeListarComponent implements OnInit {
       fecha: this.obtenerFechaActual(),
     });
   }
+  obtenerDocumento(documento:any){
+    this.idDocumentoActividadEstrategicaSeleccionado = documento.idDocumentoActividadEstrategica;
+    this.nombreArchivoSeleccionado =  documento.rutaDocumento;
+  }
   obtenerTarea(idTarea: number,tarea:any) {
     this.idTareaSeleccionado = idTarea;
     this.nombreTarea = tarea.nombre;
@@ -1162,6 +1253,8 @@ export class TipogeListarComponent implements OnInit {
       resultadoMeta: actividadEstrategica.resultadoMeta,
     });
   }
+
+
   obtenerProyectoArea(idProyectoArea: number,proyectoArea:any) {
     this.tipoFormulario = 'PROYECTO_AREA'; 
     this.idProyectoSeleccionado = idProyectoArea;

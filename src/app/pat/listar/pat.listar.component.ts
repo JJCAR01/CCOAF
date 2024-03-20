@@ -38,6 +38,8 @@ export class PatListarComponent implements OnInit{
   esOperador: boolean = false; // Agrega esta línea
   esConsultor: boolean = false;
 
+  cargando: boolean = false;
+
   idPatSeleccionado: number = 0;
   idObservacionPatSeleccionado: number = 0;
   direccionSeleccionada: any | undefined;
@@ -93,7 +95,7 @@ export class PatListarComponent implements OnInit{
         }); 
     }  
 
-    ngOnInit() {
+    async ngOnInit(): Promise<void> {
       // Usar Promise.all para esperar a que todas las promesas se resuelvan
       Promise.all([
         this.auth.esAdmin(),
@@ -113,19 +115,23 @@ export class PatListarComponent implements OnInit{
       this.cargarUsuario();
       this.cargarDirecciones();
     }
-    cargarUsuario() {
+    async cargarUsuario() {
+      this.cargando = true;
       this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
         (data: any) => {
-          this.usuarios = data.sort((a:any, b:any) => a.nombre.localeCompare(b.nombre));
+          this.usuarios = data.sort((a: any, b: any) => a.nombre.localeCompare(b.nombre));
         }
       );
+      this.cargando = false;
     }
-    cargarDirecciones() {
+    async cargarDirecciones() {
+      this.cargando = true;
       this.direccionService.listar(this.auth.obtenerHeader()).subscribe(
-        (data: any) => {         
-          this.direcciones = data.sort((a:any, b:any) => a.nombre.localeCompare(b.nombre));
+        (data: any) => {
+          this.direcciones = data.sort((a: any, b: any) => a.nombre.localeCompare(b.nombre));
         }
-      )
+      );
+      this.cargando = false;
     }
     cargarObservaciones(idPat:any) {
       this.patService.listarObservacionPorIdPat(idPat,this.auth.obtenerHeader()).subscribe(
@@ -135,8 +141,9 @@ export class PatListarComponent implements OnInit{
       )
     } 
 
-    cargarPats() {
-      this.patService.listarPat(this.auth.obtenerHeader()).toPromise().then(
+    async cargarPats() {
+      this.cargando = true;
+      await this.patService.listarPat(this.auth.obtenerHeader()).toPromise().then(
         (data: any) => {
           // Obtener el token
           const token: any = this.auth.getToken();
@@ -183,13 +190,15 @@ export class PatListarComponent implements OnInit{
           this.swalError(error);
         }
       );
+      this.cargando = false;
     }
-    cargarPatsActividadGestion(pats: any[]) {
+    async cargarPatsActividadGestion(pats: any[]) {
+      this.cargando = true;
       // Obtener los IDs de los planes anuales
       const idsPats = pats.map(pat => pat.idPat);
     
       // Filtrar las actividades de gestión por los IDs de los planes anuales
-      this.tipoService.listarGestion(this.auth.obtenerHeader()).toPromise().then(
+      await this.tipoService.listarGestion(this.auth.obtenerHeader()).toPromise().then(
         (data: any) => {
           const actividadesFiltradas = data.filter((actividad: any) =>
             idsPats.includes(actividad.idPat)
@@ -212,13 +221,15 @@ export class PatListarComponent implements OnInit{
           this.swalError(error);
         }
       );
+      this.cargando = false;
     }
-    cargarActividadesEstrategica(pats: any[]) {
+    async cargarActividadesEstrategica(pats: any[]) {
+      this.cargando = true;
       // Obtener los IDs de los planes anuales
       const idsPats = pats.map(pat => pat.idPat);
     
       // Filtrar las actividades estratégicas por los IDs de los planes anuales
-      this.tipoService.listarActividadEstrategica(this.auth.obtenerHeader()).toPromise().then(
+      await this.tipoService.listarActividadEstrategica(this.auth.obtenerHeader()).toPromise().then(
         (data: any) => {
           this.actividadesFiltradas = data.filter((actividad: any) =>
             idsPats.includes(actividad.idPat)
@@ -243,13 +254,15 @@ export class PatListarComponent implements OnInit{
         }
         
       );
+      this.cargando = false;
 
     }
-    cargarActividadGestionActividadesEstrategica(actividadesEstrategicas: any[]) {
+    async cargarActividadGestionActividadesEstrategica(actividadesEstrategicas: any[]) {
+      this.cargando = true;
       // Obtener los IDs de las actividades estratégicas
       const idsActividadesEstrategicas = actividadesEstrategicas.map(actividad => actividad.idActividadEstrategica);
       // Consultar las actividades de gestión relacionadas con las actividades estratégicas
-      this.actividadService.listarActividadGestionActividadEstrategica(this.auth.obtenerHeader()).toPromise().then(
+      await this.actividadService.listarActividadGestionActividadEstrategica(this.auth.obtenerHeader()).toPromise().then(
         (data: any) => {
           this.actividadesGestionFiltradas = data.filter((actividad: any) =>
             idsActividadesEstrategicas.includes(actividad.idActividadEstrategica)
@@ -272,13 +285,15 @@ export class PatListarComponent implements OnInit{
           this.swalError(error);
         }
       );
+      this.cargando = false;
     }
     
-    cargarPatsProyectos(proyectos: any[]) {
+    async cargarPatsProyectos(proyectos: any[]) {
+      this.cargando = true;
       // Obtener los IDs de las actividades estratégicas
       const idsProyectos = proyectos.map(proyecto => proyecto.idActividadEstrategica);
 
-      this.actividadService.listarProyecto(this.auth.obtenerHeader()).toPromise().then(
+      await this.actividadService.listarProyecto(this.auth.obtenerHeader()).toPromise().then(
         (data: any) => {
           this.proyectosFiltrados = data.filter((proyecto: any) =>
             idsProyectos.includes(proyecto.idActividadEstrategica)
@@ -300,7 +315,7 @@ export class PatListarComponent implements OnInit{
           this.swalError(error);
         }
       );
-
+      this.cargando = false;
     }
 
     modificarPat() {

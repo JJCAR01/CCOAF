@@ -404,6 +404,7 @@ export class ListarSprintproyectoareaComponent implements OnInit  {
         .listarPorIdTarea(id,this.auth.obtenerHeader()) .subscribe(
           (data: any) => {
             this.observaciones = data;
+            this.tipoFormulario = 'TAREA';
           },
         )
     } else if( tipo === 'SPRINT_PROYECTO_AREA'){
@@ -411,9 +412,50 @@ export class ListarSprintproyectoareaComponent implements OnInit  {
         .listarPorIdSprintProyectoArea(id,this.auth.obtenerHeader()) .subscribe(
           (data: any) => {
             this.observaciones = data;
+            this.tipoFormulario = 'SPRINT_PROYECTO_AREA';
           },
         )
     } 
+  } 
+  eliminarObservacion(observacion: any, tipo:string) {
+    Swal.fire({
+      icon:"question",
+      title: "¿Estás seguro?",
+      text: "Una vez eliminado la observación, no podrás recuperar este elemento.",
+      showCancelButton: true,
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Confirmar",
+      confirmButtonColor: '#0E823F',
+      reverseButtons: true, 
+    })
+    .then((confirmacion) => {
+      if (confirmacion.isConfirmed) {
+        if(tipo === 'TAREA'){
+          const idTarea = observacion.idTarea;
+          this.tareaService.eliminarObservacionTarea(observacion.idObservacionTarea, this.auth.obtenerHeader()).subscribe(
+            () => {
+              this.swalSatisfactorio('eliminado','la observación');
+              this.cargarObservaciones(idTarea, 'TAREA')
+            },
+            (error) => {
+              this.swalError(error.mensajeHumano);
+            }
+          );
+        } else if( tipo === 'SPRINT_PROYECTO_AREA'){
+          const idSprintProyectoArea = observacion.idSprintProyectoArea;
+          this.sprintService
+            .eliminarObservacionSprintProyectoArea(observacion.idObservacionSprintProyectoArea,this.auth.obtenerHeader()) .subscribe(
+                () => {
+                  this.swalSatisfactorio('eliminado','la observación');
+                  this.cargarObservaciones(idSprintProyectoArea, 'SPRINT_PROYECTO_AREA')
+                },
+                (error) => {
+                  this.swalError(error.mensajeHumano);
+                }
+            );
+        }       
+      }
+    });
   } 
  
   crearTarea() {
@@ -777,7 +819,7 @@ export class ListarSprintproyectoareaComponent implements OnInit  {
     Swal.fire(
       {
         title:"Error!!!",
-        text:error.error.mensajeHumano, 
+        text:error.error.mensajeTecnico, 
         icon:"error",
         confirmButtonColor: '#0E823F',
       }

@@ -443,6 +443,7 @@ export class SprintListarComponent implements OnInit {
         .listarPorIdTarea(id,this.auth.obtenerHeader()) .subscribe(
           (data: any) => {
             this.observaciones = data;
+            this.tipoFormulario = 'TAREA';
           },
         )
     } else if( tipo === 'SPRINT'){
@@ -450,6 +451,7 @@ export class SprintListarComponent implements OnInit {
         .listarPorIdSprint(id,this.auth.obtenerHeader()) .subscribe(
           (data: any) => {
             this.observaciones = data;
+            this.tipoFormulario = 'SPRINT';
           },
         )
     } 
@@ -498,6 +500,46 @@ export class SprintListarComponent implements OnInit {
       });
     }
   }
+  eliminarObservacion(observacion: any, tipo:string) {
+    Swal.fire({
+      icon:"question",
+      title: "¿Estás seguro?",
+      text: "Una vez eliminado la observación, no podrás recuperar este elemento.",
+      showCancelButton: true,
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Confirmar",
+      confirmButtonColor: '#0E823F',
+      reverseButtons: true, 
+    })
+    .then((confirmacion) => {
+      if (confirmacion.isConfirmed) {
+        if(tipo === 'TAREA'){
+          const idTarea = observacion.idTarea;
+          this.tareaService.eliminarObservacionTarea(observacion.idObservacionTarea, this.auth.obtenerHeader()).subscribe(
+            () => {
+              this.swalSatisfactorio('eliminado','la observación');
+              this.cargarObservaciones(idTarea, 'TAREA')
+            },
+            (error) => {
+              this.swalError(error.mensajeHumano);
+            }
+          );
+        } else if( tipo === 'SPRINT'){
+          const idSprint = observacion.idSprint;
+          this.sprintService
+            .eliminarObservacionSprint(observacion.idObservacionSprint,this.auth.obtenerHeader()) .subscribe(
+                () => {
+                  this.swalSatisfactorio('eliminado','la observación');
+                  this.cargarObservaciones(idSprint, 'SPRINT')
+                },
+                (error) => {
+                  this.swalError(error.mensajeHumano);
+                }
+            );
+        }       
+      }
+    });
+  } 
   crearTarea() {
     if (this.formTarea.valid) {
       const nombre = this.formTarea.get('nombre')?.value;

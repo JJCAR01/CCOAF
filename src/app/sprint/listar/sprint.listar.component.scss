@@ -240,24 +240,28 @@ th,td {
   background-color: rgb(87, 97, 89);
   border-color: rgb(87, 97, 89);
   color: #552a2a;
+  pointer-events: none; /* Bloquea la interacción del usuario */
 }
 
 .form-check-input.en-proceso:checked {
   background-color: rgba(202, 139, 22, 0.925);
   border-color: rgba(202, 139, 22, 0.925);
   color: #552a2a;
+  pointer-events: none; /* Bloquea la interacción del usuario */
 }
 
 .form-check-input.terminado:checked {
   background-color: green;
   border-color: green;
   color: #552a2a;
+  pointer-events: none; /* Bloquea la interacción del usuario */
 }
 
 .form-check-input.impedimento:checked {
   background-color: rgb(206, 49, 49);
   border-color:rgb(206, 49, 49);
   color: #552a2a;
+  pointer-events: none; /* Bloquea la interacción del usuario */
 }
 
 .bi-info {

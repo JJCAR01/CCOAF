@@ -167,7 +167,7 @@
                       ><i class="bi bi-folder-plus"></i>
                     </button>
                   <button title="Ver documento" class="btn btn-outline-primary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalVerDocumentos" 
-                  (click)="obtenerDocumento(actividad.idActividadEstrategica,'ACTIVIDAD_ESTRATEGICA')">            
+                  (click)="verDocumentos(actividad.idActividadEstrategica,'ACTIVIDAD_ESTRATEGICA')">            
                     <i class="bi bi-file-earmark-check"></i></button>
                   <button title="Agregar Observación" class="btn btn-outline-success me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" 
                   (click)="obtenerActividadEstrategica(actividad.idActividadEstrategica,actividad)" *ngIf="esAdmin || esOperador || esDirector">
@@ -242,7 +242,7 @@
                       ><i class="bi bi-folder-plus"></i>
                     </button>
                   <button title="Ver documento" class="btn btn-outline-primary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalVerDocumentos" 
-                  (click)="obtenerDocumento(gestion.idActividadGestion,'ACTIVIDAD_GESTION')">            
+                  (click)="verDocumentos(gestion.idActividadGestion,'ACTIVIDAD_GESTION')">            
                     <i class="bi bi-file-earmark-check"></i></button>
                     <button title="Agregar Observación" class="btn btn-outline-success me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" 
                     (click)="obtenerActividadGestion(gestion.idActividadGestion,gestion)" *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor">
@@ -397,7 +397,7 @@
                       ><i class="bi bi-folder-plus"></i>
                     </button>
                   <button title="Ver documento" class="btn btn-outline-primary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalVerDocumentos" 
-                  (click)="obtenerDocumento(proyecto.idProyectoArea,'PROYECTO_AREA')">            
+                  (click)="verDocumentos(proyecto.idProyectoArea,'PROYECTO_AREA')">            
                     <i class="bi bi-file-earmark-check"></i></button>
                   <button title="Agregar Observación" class="btn btn-outline-success me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" 
                   (click)="obtenerProyectoArea(proyecto.idProyectoArea,proyecto)" *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor">
@@ -454,12 +454,38 @@
               <div class="input-group" title="Click para cargar el archivo">
                   <label class="input-group-text" for="formFileMultiple">Cargar Archivo</label>
                   <input type="file" class="form-control campo-carga" id="formFileMultiple" accept=".pdf, .doc, .docx, .odt, .xls, .xlsx, .ppt, .pptx, .zip" style="display:none;" (change)="documento($event,idActividadEstrategicaSeleccionado)">
-                  <span id="nombreArchivoSeleccionado" class="ml-2">{{ nombreArchivoSeleccionado }}</span>
+                  <span id="nombreArchivoSeleccionado" class="ml-2">{{ extraerNombreArchivo(nombreArchivoSeleccionado) }}</span>
               </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
               <button type="button" class="btn btn-success" (click)="subirDocumento($event,idActividadEstrategicaSeleccionado,'actividadEstrategica')" data-bs-dismiss="modal">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="modificarDocumentoActividadEstrategica" tabindex="-1" aria-labelledby="modalAgregar" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalAgregar">Modificar documento</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3 d-flex">
+              <label>Adjuntar documento</label>
+              <div class="input-group" title="Click para cargar el archivo">
+                  <label class="input-group-text" for="formFileMultiple">Cargar Archivo</label>
+                  <input type="file" class="form-control campo-carga" id="formFileMultiple" accept=".pdf, .doc, .docx, .odt, .xls, .xlsx, .ppt, .pptx, .zip" style="display:none;" (change)="documento($event,idActividadEstrategicaSeleccionado)">
+                  <span id="nombreArchivoSeleccionado" class="ml-2">{{ nombreArchivoSeleccionado }}</span>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-success" (click)="modificarDocumento($event,idActividadEstrategicaSeleccionado,'actividadEstrategica')" data-bs-dismiss="modal">Guardar</button>
             </div>
           </form>
         </div>
@@ -714,7 +740,7 @@
                       <i class="bi bi-pen-fill"></i>
                     </button>
                     <button title="Eliminar" class="btn btn-danger me-1 mb-1" 
-                     *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor"><i class="bi bi-trash3-fill" 
+                     *ngIf="esAdmin || esOperador || esDirector"><i class="bi bi-trash3-fill" (click)="eliminarObservacion(observacion,tipoFormulario)"
                     ></i></button>
                     </td>
                   </tr>
@@ -765,8 +791,13 @@
             <tbody>
               <ng-container *ngFor="let documento of documentoObtenido">
                 <tr>
-                  <td>{{ documento.fecha }}</td> <!-- Fecha de carga del documento -->
-                  <td class="nombre-documento"><a [href]="documento.rutaDocumento" target="_blank">{{ extraerNombreArchivo(documento.rutaDocumento) }}</a></td> <!-- Nombre del archivo -->
+                  <td>{{ documento.idActividadEstrategica }}</td> <!-- Fecha de carga del documento -->
+                  <td class="nombre-documento"><a [href]="documento.rutaDocumento" target="_blank">{{ extraerNombreArchivo(documento.rutaDocumento) }}</a>
+                    <button title="Modificar" type="button" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modificarDocumentoActividadEstrategica" 
+                     *ngIf="esAdmin" (click)="obtenerDocumento(documento)">
+                      <i class="bi bi-pen-fill"></i>
+                    </button>
+                  </td> <!-- Nombre del archivo -->
                 </tr>
               </ng-container>
             </tbody>

@@ -65,6 +65,9 @@ export class TipoGEService {
   obtenerDocumentoActividadEstrategica<T>(idActividadEstrategica:number,headers?:HttpHeaders):Observable<T>{
     return this.http.get<T>(`${environment.apiUrl}/ccoa/estrategicas/archivo/${idActividadEstrategica}`,{headers});
   }
+  modificarDocumentoActividadEstrategica<T>(documento : any,idActividadEstrategica:number,headers?:HttpHeaders):Observable<T>{
+    return this.http.put<T>(`${environment.apiUrl}/ccoa/estrategicas/archivo/modificar/${idActividadEstrategica}`,documento,{headers});
+  }
   listarActividadEstrategica<T>(headers?:HttpHeaders):Observable<T>{
     return this.http.get<T>(`${environment.apiUrl}/ccoa/estrategicas`,{headers});
   }

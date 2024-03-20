@@ -431,6 +431,7 @@ private obtenerFechaActual(): string {
         .listarPorIdTarea(id,this.auth.obtenerHeader()) .subscribe(
           (data: any) => {
             this.observaciones = data;
+            this.tipoFormulario = 'TAREA';
           },
         )
     } else if( tipo === 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA'){
@@ -438,6 +439,7 @@ private obtenerFechaActual(): string {
         .listarObservacionPorIdActividadGestionActividadEstrategica(id,this.auth.obtenerHeader()) .subscribe(
           (data: any) => {
             this.observaciones = data;
+            this.tipoFormulario = 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA';
           },
         )
     } else if (tipo === 'PROYECTO'){
@@ -445,10 +447,63 @@ private obtenerFechaActual(): string {
         .listarObservacionPorIdProyecto(id,this.auth.obtenerHeader()) .subscribe(
           (data: any) => {
             this.observaciones = data;
+            this.tipoFormulario = 'PROYECTO';
           },
         )
     }
-
+  } 
+  eliminarObservacion(observacion: any, tipo:string) {
+    Swal.fire({
+      icon:"question",
+      title: "¿Estás seguro?",
+      text: "Una vez eliminado la observación, no podrás recuperar este elemento.",
+      showCancelButton: true,
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Confirmar",
+      confirmButtonColor: '#0E823F',
+      reverseButtons: true, 
+    })
+    .then((confirmacion) => {
+      if (confirmacion.isConfirmed) {
+        if(tipo === 'TAREA'){
+          const idTarea = observacion.idTarea;
+          this.tareaService.eliminarObservacionTarea(observacion.idObservacionTarea, this.auth.obtenerHeader()).subscribe(
+            () => {
+              this.swalSatisfactorio('eliminado','la observación');
+              this.cargarObservaciones(idTarea, 'TAREA')
+            },
+            (error) => {
+              this.swalError(error.mensajeHumano);
+            }
+          );
+        } else if( tipo === 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA'){
+          const idActividadGestionEstrategica = observacion.idActividadGestionEstrategica;
+          this.actividadService
+            .eliminarObservacionActividadGestionActividadEstrategica(observacion.idObservacionActividadGestionEstrategica,this.auth.obtenerHeader()) .subscribe(
+                () => {
+                  this.swalSatisfactorio('eliminado','la observación');
+                  this.cargarObservaciones(idActividadGestionEstrategica, 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')
+                },
+                (error) => {
+                  this.swalError(error.mensajeHumano);
+                }
+            );
+        } else if (tipo === 'PROYECTO'){
+          const idProyecto = observacion.idProyecto;
+          this.actividadService
+            .eliminarObservacionProyecto(observacion.idObservacionProyecto,this.auth.obtenerHeader()) .subscribe(
+              () => {
+                this.swalSatisfactorio('eliminado','la observación');
+                this.cargarObservaciones(idProyecto, 'PROYECTO')
+              },
+              (error) => {
+                this.swalError(error.mensajeHumano);
+              }
+          );
+        }
+        
+      }
+    });
   } 
   crearTarea() {
     if (this.formTarea.valid) {
@@ -872,7 +927,7 @@ private obtenerFechaActual(): string {
         },
         (error: any) => {
           Swal.fire({
-            title: 'La actividad no tiene documentos adjuntos',
+            title: 'El proyecto no tiene documentos adjuntos',
             text: 'Cargue un documento para visualizarlo',
             icon: 'info',
             confirmButtonColor: '#0E823F',
@@ -988,7 +1043,6 @@ private obtenerFechaActual(): string {
     });
   }
   obtenerObservacion(tipo : string,observacion:any) {
-    
     switch (tipo) {
       case 'TAREA':
         this.tipoFormulario = 'TAREA';
@@ -1068,7 +1122,7 @@ private obtenerFechaActual(): string {
     Swal.fire(
       {
         title:"Error!!!",
-        text:error.error.mensajeHumano, 
+        text:error.error.mensajeTecnico, 
         icon:"error",
         confirmButtonColor: '#0E823F',
       }
