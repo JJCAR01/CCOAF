@@ -22,6 +22,7 @@ import { EModalidad } from 'src/enums/emodalidad';
 import { EPlaneacion } from 'src/enums/eplaneacion';
 import { EPeriodicidadMeta } from 'src/enums/eperiodicidadmeta';
 import { MENSAJE_TITULO } from 'src/app/utilitarios/mensaje/mensajetitulo';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root:not(p)',
@@ -109,6 +110,9 @@ export class TipogeListarComponent implements OnInit {
   idActividadGestionSeleccionado: number | 0 = 0;
   idActividadEstrategicaSeleccionado: number | 0 = 0;
   idDocumentoActividadEstrategicaSeleccionado: number | 0 = 0;
+  idDocumentoActividadGestionSeleccionado: number | 0 = 0;
+  idDocumentoProyectoAreaSeleccionado: number | 0 = 0;
+  idDocumentoTareaSeleccionado: number | 0 = 0;
   idProyectoSeleccionado: number | 0 = 0;
   planeacionProyecto = EPlaneacion;
   idTareaSeleccionado: number | 0 = 0;
@@ -312,40 +316,32 @@ export class TipogeListarComponent implements OnInit {
         });
   }
   cargarObservaciones(id:any,tipo:string) {
-    if(tipo === 'TAREA'){
-      this.tareaService
-        .listarPorIdTarea(id,this.auth.obtenerHeader()) .subscribe(
-          (data: any) => {
-            this.observaciones = data;
-            this.tipoFormulario = 'TAREA';
-          },
-        )
-    } else if( tipo === 'ACTIVIDAD_GESTION'){
-      this.gestionService
-        .listarObservacionPorIdActividadGestion(id,this.auth.obtenerHeader()) .subscribe(
-          (data: any) => {
-            this.observaciones = data;
-            this.observaciones = data;
-            this.tipoFormulario = 'ACTIVIDAD_GESTION';
-          },
-        )
-    } else if (tipo === 'ACTIVIDAD_ESTRATEGICA'){
-      this.gestionService
-        .listarObservacionPorIdActividadEstrategica(id,this.auth.obtenerHeader()) .subscribe(
-          (data: any) => {
-            this.observaciones = data;
-            this.observaciones = data;
-            this.tipoFormulario = 'ACTIVIDAD_ESTRATEGICA';
-          },
-        )
-    } else if (tipo === 'PROYECTO_AREA'){
-      this.gestionService
-        .listarObservacionPorIdProyectoArea(id,this.auth.obtenerHeader()) .subscribe(
-          (data: any) => {
-            this.observaciones = data;
-            this.tipoFormulario = 'PROYECTO_AREA';
-          },
-        )
+    const obtenerObservaciones = (observable: Observable<any>) => {
+      observable.subscribe((data: any) => {
+        this.observaciones = data;
+      });
+    };
+    
+    switch (tipo) {
+      case 'TAREA':
+        obtenerObservaciones(this.tareaService.listarPorIdTarea(id, this.auth.obtenerHeader()));
+        this.tipoFormulario = 'TAREA';
+        break;    
+      case 'ACTIVIDAD_GESTION':
+        obtenerObservaciones(this.gestionService.listarObservacionPorIdActividadGestion(id, this.auth.obtenerHeader()));
+        this.tipoFormulario = 'ACTIVIDAD_GESTION';
+        break;
+      case 'ACTIVIDAD_ESTRATEGICA':
+        obtenerObservaciones(this.gestionService.listarObservacionPorIdActividadEstrategica(id, this.auth.obtenerHeader()));
+        this.tipoFormulario = 'ACTIVIDAD_ESTRATEGICA';
+        break;
+      case 'PROYECTO_AREA':
+        obtenerObservaciones(this.gestionService.listarObservacionPorIdProyectoArea(id, this.auth.obtenerHeader()));
+        this.tipoFormulario = 'PROYECTO_AREA';
+        break;
+      default:
+        // Manejar caso no reconocido o error
+        break;
     }
   }
   eliminarObservacion(observacion: any, tipo:string) {
@@ -981,8 +977,14 @@ export class TipogeListarComponent implements OnInit {
       }
       }); 
   }
-  async documento(event: any, idActividadGestionSeleccionado: number): Promise<void> {
-    this.idActividadGestionSeleccionado = idActividadGestionSeleccionado;
+  async documento(event: any, tipo: string): Promise<void> {
+    if(tipo === 'ACTIVIDAD_ESTRATEGICA'){
+      this.idActividadEstrategicaSeleccionado;
+    } else if (tipo === 'ACTIVIDAD_GESTION'){
+      this.idActividadGestionSeleccionado ;
+    } else if (tipo === 'PROYECTO_AREA'){
+      this.idProyectoSeleccionado;
+    }
     this.archivoSeleccionado = event.target.files[0];
   
     try {
@@ -1080,6 +1082,9 @@ export class TipogeListarComponent implements OnInit {
             case 'proyectoArea':
                 guardarDocumentoObservable = this.gestionService.guardarDocumentoProyectoArea(documento, this.idProyectoSeleccionado, this.auth.obtenerHeaderDocumento());
                 break;
+            case 'tarea':
+                guardarDocumentoObservable = this.tareaService.guardarDocumentoTarea(documento, this.idTareaSeleccionado, this.auth.obtenerHeaderDocumento());
+                break;
             default:
                 throw new Error(`Tipo de documento no válido: ${tipo}`);
         }
@@ -1109,7 +1114,6 @@ export class TipogeListarComponent implements OnInit {
       });
   }
   verDocumentos(id: number,tipo: string) {
-
     if(tipo === 'ACTIVIDAD_GESTION'){
       this.gestionService.obtenerDocumento(id, this.auth.obtenerHeaderDocumento()).subscribe(
         (data: any) => {
@@ -1192,9 +1196,25 @@ export class TipogeListarComponent implements OnInit {
       fecha: this.obtenerFechaActual(),
     });
   }
-  obtenerDocumento(documento:any){
-    this.idDocumentoActividadEstrategicaSeleccionado = documento.idDocumentoActividadEstrategica;
-    this.nombreArchivoSeleccionado =  documento.rutaDocumento;
+  obtenerDocumento(documento:any, tipo:string){
+    switch (tipo) {
+      case 'ACTIVIDAD_GESTION':
+        this.idDocumentoActividadGestionSeleccionado = documento.idDocumentoActividadGestion;
+          break;
+      case 'ACTIVIDAD_ESTRATEGICA':
+        this.idDocumentoActividadEstrategicaSeleccionado = documento.idDocumentoActividadEstrategica;
+          break;
+      case 'PROYECTO_AREA':
+        this.idDocumentoProyectoAreaSeleccionado = documento.idDocumentoProyectoArea;
+          break;
+      case 'TAREA':
+        this.idDocumentoTareaSeleccionado = documento.idDocumentoTarea;
+          break;
+      default:
+          throw new Error(`No se obtuvo el documento: ${tipo}`);
+    }
+  this.nombreArchivoSeleccionado =  documento.rutaDocumento;
+
   }
   obtenerTarea(idTarea: number,tarea:any) {
     this.idTareaSeleccionado = idTarea;

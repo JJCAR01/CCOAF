@@ -414,8 +414,47 @@
       </main>
     </div>
   </div>
+    <div class="modal fade" id="modalVerDocumentos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Documentos adjuntos</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-bordered table-hover">
+            <thead class="table-color">
+              <tr>
+                <th>Fecha de carga</th>
+                <th>Documento</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let documento of documentoObtenido">
+                <tr>
+                  <td>{{ documento.fecha }}</td> <!-- Fecha de carga del documento -->
+                  <td class="nombre-documento"><a [href]="documento.rutaDocumento" target="_blank">{{ extraerNombreArchivo(documento.rutaDocumento) }}</a>
+                  </td> <!-- Nombre del archivo -->
+                  <td>
+                    <button title="Modificar" type="button" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modificarDocumentoActividadEstrategica" 
+                      *ngIf="esAdmin" (click)="obtenerDocumento(documento,tipoFormulario)">
+                      <i class="bi bi-pen-fill"></i>
+                    </button>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="modal fade" id="agregarDocumento" tabindex="-1" aria-labelledby="modalAgregar" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="modalAgregar">Agregar entrega</h5>
@@ -427,7 +466,7 @@
               <label>Adjuntar documento</label>
               <div class="input-group" title="Click para cargar el archivo">
                   <label class="input-group-text" for="formFileMultiple">Cargar Archivo</label>
-                  <input type="file" class="form-control campo-carga" id="formFileMultiple" accept=".pdf, .doc, .docx, .odt, .xls, .xlsx, .ppt, .pptx, .zip" style="display:none;" (change)="documento($event, idActividadGestionSeleccionado)">
+                  <input type="file" class="form-control campo-carga" id="formFileMultiple" accept=".pdf, .doc, .docx, .odt, .xls, .xlsx, .ppt, .pptx, .zip" style="display:none;" (change)="documento($event, tipoFormulario)">
                   <span id="nombreArchivoSeleccionado" class="ml-2">{{ nombreArchivoSeleccionado }}</span>
               </div>
             </div>
@@ -441,7 +480,7 @@
     </div>
   </div>
   <div class="modal fade" id="agregarDocumentoActividadEstrategica" tabindex="-1" aria-labelledby="modalAgregar" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="modalAgregar">Agregar entrega</h5>
@@ -453,13 +492,91 @@
               <label>Adjuntar documento</label>
               <div class="input-group" title="Click para cargar el archivo">
                   <label class="input-group-text" for="formFileMultiple">Cargar Archivo</label>
-                  <input type="file" class="form-control campo-carga" id="formFileMultiple" accept=".pdf, .doc, .docx, .odt, .xls, .xlsx, .ppt, .pptx, .zip" style="display:none;" (change)="documento($event,idActividadEstrategicaSeleccionado)">
-                  <span id="nombreArchivoSeleccionado" class="ml-2">{{ extraerNombreArchivo(nombreArchivoSeleccionado) }}</span>
+                  <input type="file" class="form-control campo-carga" id="formFileMultiple" accept=".pdf, .doc, .docx, .odt, .xls, .xlsx, .ppt, .pptx, .zip" style="display:none;" (change)="documento($event,tipoFormulario)">
+                  <span id="nombreArchivoSeleccionado" class="ml-2">{{ nombreArchivoSeleccionado }}</span>
               </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
               <button type="button" class="btn btn-success" (click)="subirDocumento($event,idActividadEstrategicaSeleccionado,'actividadEstrategica')" data-bs-dismiss="modal">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="agregarDocumentoProyectoArea" tabindex="-1" aria-labelledby="modalAgregar" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalAgregar">Agregar entrega proyecto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3 d-flex">
+              <label>Adjuntar documento</label>
+              <div class="input-group" title="Click para cargar el archivo">
+                  <label class="input-group-text" for="formFileMultiple">Cargar Archivo</label>
+                  <input type="file" class="form-control campo-carga" id="formFileMultiple" accept=".pdf, .doc, .docx, .odt, .xls, .xlsx, .ppt, .pptx, .zip" style="display:none;" (change)="documento($event,tipoFormulario)">
+                  <span id="nombreArchivoSeleccionado" class="ml-2">{{ nombreArchivoSeleccionado }}</span>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-success" (click)="subirDocumento($event,idProyectoSeleccionado,'proyectoArea')" data-bs-dismiss="modal">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="modificarDocumentoActividadEstrategica" tabindex="-1" aria-labelledby="modalAgregar" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalAgregar">Modificar documento</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3 d-flex">
+              <label>Adjuntar documento</label>
+              <div class="input-group" title="Click para cargar el archivo">
+                  <label class="input-group-text" for="formFileMultiple">Cargar Archivo</label>
+                  <input type="file" class="form-control campo-carga" id="formFileMultiple" accept=".pdf, .doc, .docx, .odt, .xls, .xlsx, .ppt, .pptx, .zip" style="display:none;" (change)="documento($event,tipoFormulario)">
+                  <span id="nombreArchivoSeleccionado" class="ml-2">{{ nombreArchivoSeleccionado }}</span>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-success" (click)="modificarDocumento($event,idActividadEstrategicaSeleccionado,'actividadEstrategica')" data-bs-dismiss="modal">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="modificarDocumentoActividadGestion" tabindex="-1" aria-labelledby="modalAgregar" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalAgregar">Modificar documento</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3 d-flex">
+              <label>Adjuntar documento</label>
+              <div class="input-group" title="Click para cargar el archivo">
+                  <label class="input-group-text" for="formFileMultiple">Cargar Archivo</label>
+                  <input type="file" class="form-control campo-carga" id="formFileMultiple" accept=".pdf, .doc, .docx, .odt, .xls, .xlsx, .ppt, .pptx, .zip" style="display:none;" (change)="documento($event,tipoFormulario)">
+                  <span id="nombreArchivoSeleccionado" class="ml-2">{{ nombreArchivoSeleccionado }}</span>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-success" (click)="modificarDocumento($event,idActividadEstrategicaSeleccionado,'actividadEstrategica')" data-bs-dismiss="modal">Guardar</button>
             </div>
           </form>
         </div>
@@ -479,7 +596,7 @@
               <label>Adjuntar documento</label>
               <div class="input-group" title="Click para cargar el archivo">
                   <label class="input-group-text" for="formFileMultiple">Cargar Archivo</label>
-                  <input type="file" class="form-control campo-carga" id="formFileMultiple" accept=".pdf, .doc, .docx, .odt, .xls, .xlsx, .ppt, .pptx, .zip" style="display:none;" (change)="documento($event,idActividadEstrategicaSeleccionado)">
+                  <input type="file" class="form-control campo-carga" id="formFileMultiple" accept=".pdf, .doc, .docx, .odt, .xls, .xlsx, .ppt, .pptx, .zip" style="display:none;" (change)="documento($event,tipoFormulario)">
                   <span id="nombreArchivoSeleccionado" class="ml-2">{{ nombreArchivoSeleccionado }}</span>
               </div>
             </div>
@@ -492,11 +609,11 @@
       </div>
     </div>
   </div>
-  <div class="modal fade" id="agregarDocumentoProyectoArea" tabindex="-1" aria-labelledby="modalAgregar" aria-hidden="true">
+  <div class="modal fade" id="modificarDocumentoActividadEstrategica" tabindex="-1" aria-labelledby="modalAgregar" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="modalAgregar">Agregar entrega proyecto</h5>
+          <h5 class="modal-title" id="modalAgregar">Modificar documento</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -505,19 +622,20 @@
               <label>Adjuntar documento</label>
               <div class="input-group" title="Click para cargar el archivo">
                   <label class="input-group-text" for="formFileMultiple">Cargar Archivo</label>
-                  <input type="file" class="form-control campo-carga" id="formFileMultiple" accept=".pdf, .doc, .docx, .odt, .xls, .xlsx, .ppt, .pptx, .zip" style="display:none;" (change)="documento($event,idProyectoSeleccionado)">
+                  <input type="file" class="form-control campo-carga" id="formFileMultiple" accept=".pdf, .doc, .docx, .odt, .xls, .xlsx, .ppt, .pptx, .zip" style="display:none;" (change)="documento($event,tipoFormulario)">
                   <span id="nombreArchivoSeleccionado" class="ml-2">{{ nombreArchivoSeleccionado }}</span>
               </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <button type="button" class="btn btn-success" (click)="subirDocumento($event,idProyectoSeleccionado,'proyectoArea')" data-bs-dismiss="modal">Guardar</button>
+              <button type="button" class="btn btn-success" (click)="modificarDocumento($event,idActividadEstrategicaSeleccionado,'actividadEstrategica')" data-bs-dismiss="modal">Guardar</button>
             </div>
           </form>
         </div>
       </div>
     </div>
   </div>
+
   <div class="modal fade" id="modalModificarValorEjecutado" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -773,42 +891,7 @@
       </div>
     </div>
   </div>
-  <div class="modal fade" id="modalVerDocumentos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Documentos adjuntos</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <table class="table table-bordered table-hover">
-            <thead class="table-color">
-              <tr>
-                <th>Fecha de carga</th>
-                <th>Documento</th>
-              </tr>
-            </thead>
-            <tbody>
-              <ng-container *ngFor="let documento of documentoObtenido">
-                <tr>
-                  <td>{{ documento.idActividadEstrategica }}</td> <!-- Fecha de carga del documento -->
-                  <td class="nombre-documento"><a [href]="documento.rutaDocumento" target="_blank">{{ extraerNombreArchivo(documento.rutaDocumento) }}</a>
-                    <button title="Modificar" type="button" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modificarDocumentoActividadEstrategica" 
-                     *ngIf="esAdmin" (click)="obtenerDocumento(documento)">
-                      <i class="bi bi-pen-fill"></i>
-                    </button>
-                  </td> <!-- Nombre del archivo -->
-                </tr>
-              </ng-container>
-            </tbody>
-          </table>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        </div>
-      </div>
-    </div>
-  </div>
+
   <div class="modal fade" id="modalAgregarObservacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
