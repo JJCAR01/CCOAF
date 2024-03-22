@@ -64,6 +64,9 @@ export class ActividadListarComponent implements OnInit{
   idObservacionProyectoSeleccionado: number = 0;
   idObservacionActividadGestionEstrategicaSeleccionado: number = 0;
   idObservacionTareaSeleccionado: number = 0;
+  idDocumentoActividadGestionEstrategicaSeleccionado: number | 0 = 0;
+  idDocumentoTareaSeleccionado: number | 0 = 0;
+  idDocumentoProyectoSeleccionado: number | 0 = 0;
   nombreArchivoSeleccionado: string = '';
   archivoSeleccionado: File | null = null;
   documentoObtenido: any [] = [];
@@ -770,8 +773,14 @@ private obtenerFechaActual(): string {
       }
       });
   }
-  async documento(event: any, idActividadGestionSeleccionado: number): Promise<void> {
-    this.idActividadGestionEstrategicaSeleccionado = idActividadGestionSeleccionado;
+  async documento(event: any, tipo: string): Promise<void> {
+    if(tipo === 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA'){
+      this.idActividadGestionEstrategicaSeleccionado;
+    } else if (tipo === 'PROYECTO'){
+      this.idProyectoSeleccionado;
+    } else if (tipo === 'TAREA'){
+      this.idTareaSeleccionado;
+    }
     this.archivoSeleccionado = event.target.files[0];
   
     try {
@@ -784,15 +793,14 @@ private obtenerFechaActual(): string {
       this.nombreArchivoSeleccionado = '';
     }
   }
-  abrirModalAgregarDocumento(idSeleccionado: number,tipo:string): void {
+  abrirModalAgregarDocumento(idRecibido: number,tipo:string): void {
     if(tipo === 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA'){
-      this.idActividadGestionEstrategicaSeleccionado = idSeleccionado;
-    } else if( tipo === 'PROYECTO'){
-      this.idProyectoSeleccionado = idSeleccionado;
-    } else if( tipo === 'TAREA'){
-      this.idTareaSeleccionado = idSeleccionado;
+      this.idActividadGestionEstrategicaSeleccionado = idRecibido;
+    } else if (tipo === 'PROYECTO'){
+      this.idProyectoSeleccionado = idRecibido;
+    }else if (tipo === 'TAREA'){
+      this.idTareaSeleccionado = idRecibido;
     }
-
   }
 
 
@@ -816,139 +824,116 @@ private obtenerFechaActual(): string {
 
     return true;
   }
-  async subirDocumento(formulario: any,id:number,tipo:string) {
+  async subirDocumento(formulario: any,tipo: string) {
+    try {
+        if (!this.archivoSeleccionado) {
+            throw new Error('No se ha seleccionado ningún archivo.');
+        }
 
-    if (!this.archivoSeleccionado) {
-      // Puedes mostrar un mensaje de error o manejarlo de otra manera
-      return;
-    }
-      try {
+        const { id, carpeta } = this.obtenerIdYCarpetaporTipo(tipo);
+
         const app = initializeApp(environment.firebase);
         const storage = getStorage(app);
-        const storageRef = ref(storage, `${tipo}/${id}/${this.archivoSeleccionado.name}`);
+        const storageRef = ref(storage, `${carpeta}/${id}/${this.archivoSeleccionado.name}`);
         const snapshot = await uploadBytes(storageRef, this.archivoSeleccionado);
         const downloadURL = await getDownloadURL(storageRef);
-        // Crear un objeto sprint que incluya la URL de descarga
+
         const documento = {
-          fecha:this.obtenerFechaActual(),
-          rutaDocumento: downloadURL, // Asegúrate de que el nombre de la propiedad coincida con lo que espera tu backend
+            fecha: this.obtenerFechaActual(),
+            rutaDocumento: downloadURL,
         };
-        if(tipo === 'actividadGestionEstrategica'){
-          this.actividadService.guardarDocumento(documento, this.idActividadGestionEstrategicaSeleccionado, this.auth.obtenerHeaderDocumento()).subscribe(
-            (data: any) => {
-              Swal.fire({
-                title:'Archivo cargado!',
-                text:'El archivo se cargó correctamente',
-                icon:'success',
-                confirmButtonColor: '#0E823F',
-              })
-              this.nombreArchivoSeleccionado = ''; 
+
+        let guardarDocumentoObservable;
+
+        switch (tipo) {
+            case 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA':
+                guardarDocumentoObservable = this.actividadService.guardarDocumentoActividadGestionActividadEstrategica(documento, this.idActividadGestionEstrategicaSeleccionado, this.auth.obtenerHeaderDocumento());
+                break;
+            case 'PROYECTO':
+                guardarDocumentoObservable = this.actividadService.guardarDocumentoProyecto(documento, this.idProyectoSeleccionado, this.auth.obtenerHeaderDocumento());
+                break;
+            case 'TAREA':
+                guardarDocumentoObservable = this.tareaService.guardarDocumentoTarea(documento, this.idTareaSeleccionado, this.auth.obtenerHeaderDocumento());
+                break;
+            default:
+                throw new Error(`Tipo de documento no válido: ${tipo}`);
+        }
+        guardarDocumentoObservable.subscribe(
+            () => {
+                this.mostrarMensaje('Archivo cargado correctamente', 'success');  
+                this.archivoSeleccionado = null; // Limpiar el archivo seleccionado
+                this.nombreArchivoSeleccionado = ''; // Limpiar el nombre del archivo seleccionado  
             },
-            (error) => {
-              Swal.fire({
-                title:'Hubo un error!!!',
-                text:error.error.mensajeTecnico,
-                icon:'error',
-                confirmButtonColor: '#0E823F',
-              })
-            }
-          );
-        } else if (tipo === 'proyecto'){
-          this.actividadService.guardarDocumentoProyecto(documento, this.idProyectoSeleccionado, this.auth.obtenerHeaderDocumento()).subscribe(
-            (data: any) => {
-              Swal.fire({
-                title:'Archivo cargado!',
-                text:'El archivo se cargó correctamente',
-                icon:'success',
-                confirmButtonColor: '#0E823F',
-              })
-              this.nombreArchivoSeleccionado = ''; 
-            },
-            (error) => {
-              Swal.fire({
-                title:'Hubo un error!!!',
-                text:error.error.mensajeTecnico,
-                icon:'error',
-                confirmButtonColor: '#0E823F',
-              })
-            }
-          );
-        } else if (tipo === 'tarea'){
-          this.tareaService.guardarDocumentoTarea(documento, this.idTareaSeleccionado, this.auth.obtenerHeaderDocumento()).subscribe(
-            (data: any) => {
-              Swal.fire({
-                title:'Archivo cargado!',
-                text:'El archivo se cargó correctamente',
-                icon:'success',
-                confirmButtonColor: '#0E823F',
-              })
-              this.nombreArchivoSeleccionado = ''; 
-            },
-            (error) => {
-              Swal.fire({
-                title:'Hubo un error!!!',
-                text:error.error.mensajeTecnico,
-                icon:'error',
-                confirmButtonColor: '#0E823F',
-              })
-            }
+            error => this.mostrarMensaje('Hubo un error: ' + error.error.mensajeTecnico, 'error')
         );
-        } 
-        
+
     } catch (error) {
-      Swal.fire({
-        title:'Hubo un error!!!',
-        text:'Error durante la subida del archivo',
-        icon:'error',
-        confirmButtonColor: '#0E823F',
-      })
+        this.mostrarMensaje('Hubo un error durante al cargar el archivo', 'error');
     }
   }
-  obtenerDocumento(id: number,tipo: string) {
+  async modificarDocumento(formulario: any, tipo: string) {
+    try {
+        if (!this.archivoSeleccionado) {
+            throw new Error('No se ha seleccionado ningún archivo.');
+        }
 
-    if(tipo === 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA'){
-      this.actividadService.obtenerDocumento(id, this.auth.obtenerHeaderDocumento()).subscribe(
-        (data: any) => {
-          this.documentoObtenido = data;
-        },
-        (error: any) => {
-          Swal.fire({
-            title: 'La actividad no tiene documentos adjuntos',
-            text: 'Cargue un documento para visualizarlo',
-            icon: 'info',
-            confirmButtonColor: '#0E823F',
-          });
-        }
-      );
-    } else if(tipo === 'PROYECTO'){
-      this.actividadService.obtenerDocumentoProyecto(id, this.auth.obtenerHeaderDocumento()).subscribe(
-        (data: any) => {
-          this.documentoObtenido = data;
-        },
-        (error: any) => {
-          Swal.fire({
-            title: 'El proyecto no tiene documentos adjuntos',
-            text: 'Cargue un documento para visualizarlo',
-            icon: 'info',
-            confirmButtonColor: '#0E823F',
-          });
-        }
-      );
-    } else if(tipo === 'TAREA'){
-      this.tareaService.obtenerDocumentoTarea(id, this.auth.obtenerHeaderDocumento()).subscribe(
-        (data: any) => {
-          this.documentoObtenido = data;
-        },
-        (error: any) => {
-          Swal.fire({
-            title: 'La tarea no tiene documentos adjuntos',
-            text: 'Cargue un documento para visualizarlo',
-            icon: 'info',
-            confirmButtonColor: '#0E823F',
-          });
-        }
-      );
+        const { id, carpeta } = this.obtenerIdYCarpetaporTipo(tipo);
+
+        const app = initializeApp(environment.firebase);
+        const storage = getStorage(app);
+        const storageRef = ref(storage, `${carpeta}/${id}/${this.archivoSeleccionado.name}`);
+        const snapshot = await uploadBytes(storageRef, this.archivoSeleccionado);
+        const downloadURL = await getDownloadURL(storageRef);
+
+        const documento = {
+            fecha: this.obtenerFechaActual(),
+            rutaDocumento: downloadURL,
+        };
+
+        let guardarDocumentoObservable;
+
+        switch (tipo) {
+          case 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA':
+              guardarDocumentoObservable = this.actividadService.modificarDocumentoActividadGestionEstrategica(documento, this.idActividadGestionEstrategicaSeleccionado, this.auth.obtenerHeaderDocumento());
+              break;
+          case 'PROYECTO':
+              guardarDocumentoObservable = this.actividadService.modificarDocumentoProyecto(documento, this.idProyectoSeleccionado, this.auth.obtenerHeaderDocumento());
+              break;
+          case 'TAREA':
+              guardarDocumentoObservable = this.tareaService.modificarDocumentoTarea(documento, this.idTareaSeleccionado, this.auth.obtenerHeaderDocumento());
+              break;
+          default:
+              throw new Error(`Tipo de documento no válido: ${tipo}`);
+      }
+        guardarDocumentoObservable.subscribe(
+            () => {
+                this.mostrarMensaje('Archivo cargado correctamente', 'success');
+                this.archivoSeleccionado = null; // Limpiar el archivo seleccionado
+                this.nombreArchivoSeleccionado = ''; // Limpiar el nombre del archivo seleccionado
+            },
+            error => this.mostrarMensaje('Hubo un error: ' + error.error.mensajeTecnico, 'error')
+        );
+
+    } catch (error) {
+        this.mostrarMensaje('Hubo un error durante al cargar el archivo', 'error');
     }
+  }
+
+  obtenerDocumento(documento:any, tipo:string){
+    switch (tipo) {
+      case 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA':
+        this.idDocumentoActividadGestionEstrategicaSeleccionado = documento.idDocumentoActividadGestion;
+          break;
+      case 'PROYECTO_AREA':
+        this.idDocumentoProyectoSeleccionado = documento.idDocumentoProyectoArea;
+          break;
+      case 'TAREA':
+        this.idDocumentoTareaSeleccionado = documento.idDocumentoTarea;
+          break;
+      default:
+          throw new Error(`No se obtuvo el documento: ${tipo}`);
+    }
+    this.nombreArchivoSeleccionado =  documento.rutaDocumento;
   }
   
   extraerNombreArchivo(rutaArchivo: string): string {
@@ -1066,7 +1051,28 @@ private obtenerFechaActual(): string {
         });
         break;
     }
-}  
+  }  
+  obtenerIdYCarpetaporTipo(tipo: string): { id: number, carpeta: string } {
+    let id;
+    let carpeta;
+    switch (tipo) {
+        case 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA':
+            id = this.idActividadGestionEstrategicaSeleccionado;
+            carpeta = 'actividadGestionEstrategica';
+            break;
+        case 'PROYECTO':
+            id = this.idProyectoSeleccionado;
+            carpeta = 'proyecto';
+            break;
+        case 'TAREA':
+            id = this.idProyectoSeleccionado;
+            carpeta = 'tarea';
+            break;
+        default:
+            throw new Error(`Tipo inválido: ${tipo}`);
+    }
+    return { id: id, carpeta: carpeta };
+  }
 
   obtenerNombreUsuario(idUsuario: number) {
     const usuario = this.usuarios.find((u) => u.idUsuario === idUsuario);
@@ -1128,6 +1134,14 @@ private obtenerFechaActual(): string {
       }
     );
   } 
+  mostrarMensaje(mensaje: string, tipo: 'success' | 'error') {
+    Swal.fire({
+        title: tipo === 'success' ? 'Archivo cargado!' : 'Hubo un error!!!',
+        text: mensaje,
+        icon: tipo,
+        confirmButtonColor: '#0E823F',
+    });
+}
 
   get nombreVacio(){
     return this.formTarea.get('nombre')?.invalid && this.formTarea.get('nombre')?.touched;

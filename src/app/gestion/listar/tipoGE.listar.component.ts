@@ -984,6 +984,8 @@ export class TipogeListarComponent implements OnInit {
       this.idActividadGestionSeleccionado ;
     } else if (tipo === 'PROYECTO_AREA'){
       this.idProyectoSeleccionado;
+    } else if (tipo === 'TAREA'){
+      this.idTareaSeleccionado;
     }
     this.archivoSeleccionado = event.target.files[0];
   
@@ -1004,17 +1006,21 @@ export class TipogeListarComponent implements OnInit {
       this.idActividadGestionSeleccionado = idRecibido;
     } else if (tipo === 'PROYECTO_AREA'){
       this.idProyectoSeleccionado = idRecibido;
+    }else if (tipo === 'TAREA'){
+      this.idTareaSeleccionado = idRecibido;
     }
   }
-  async subirDocumento(formulario: any, id: number, tipo: string) {
+  async subirDocumento(formulario: any,tipo: string) {
     try {
         if (!this.archivoSeleccionado) {
             throw new Error('No se ha seleccionado ningún archivo.');
         }
 
+        const { id, carpeta } = this.obtenerIdYCarpetaporTipo(tipo);
+
         const app = initializeApp(environment.firebase);
         const storage = getStorage(app);
-        const storageRef = ref(storage, `${tipo}/${id}/${this.archivoSeleccionado.name}`);
+        const storageRef = ref(storage, `${carpeta}/${id}/${this.archivoSeleccionado.name}`);
         const snapshot = await uploadBytes(storageRef, this.archivoSeleccionado);
         const downloadURL = await getDownloadURL(storageRef);
 
@@ -1026,63 +1032,16 @@ export class TipogeListarComponent implements OnInit {
         let guardarDocumentoObservable;
 
         switch (tipo) {
-            case 'actividadGestion':
+            case 'ACTIVIDAD_GESTION':
                 guardarDocumentoObservable = this.gestionService.guardarDocumento(documento, this.idActividadGestionSeleccionado, this.auth.obtenerHeaderDocumento());
                 break;
-            case 'actividadEstrategica':
+            case 'ACTIVIDAD_ESTRATEGICA':
                 guardarDocumentoObservable = this.gestionService.guardarDocumentoAcividadEstrategica(documento, this.idActividadEstrategicaSeleccionado, this.auth.obtenerHeaderDocumento());
                 break;
-            case 'proyectoArea':
+            case 'PROYECTO_AREA':
                 guardarDocumentoObservable = this.gestionService.guardarDocumentoProyectoArea(documento, this.idProyectoSeleccionado, this.auth.obtenerHeaderDocumento());
                 break;
-            default:
-                throw new Error(`Tipo de documento no válido: ${tipo}`);
-        }
-
-        guardarDocumentoObservable.subscribe(
-            () => {
-                this.mostrarMensaje('Archivo cargado correctamente', 'success');
-                this.archivoSeleccionado = null; // Limpiar el archivo seleccionado
-                this.nombreArchivoSeleccionado = ''; // Limpiar el nombre del archivo seleccionado
-                // Restablecer otros estados relevantes si es necesario
-            },
-            error => this.mostrarMensaje('Hubo un error: ' + error.error.mensajeTecnico, 'error')
-        );
-
-    } catch (error) {
-        this.mostrarMensaje('Hubo un error durante al cargar el archivo', 'error');
-    }
-  }
-  async modificarDocumento(formulario: any, id: number, tipo: string) {
-    try {
-        if (!this.archivoSeleccionado) {
-            throw new Error('No se ha seleccionado ningún archivo.');
-        }
-
-        const app = initializeApp(environment.firebase);
-        const storage = getStorage(app);
-        const storageRef = ref(storage, `${tipo}/${id}/${this.archivoSeleccionado.name}`);
-        const snapshot = await uploadBytes(storageRef, this.archivoSeleccionado);
-        const downloadURL = await getDownloadURL(storageRef);
-
-        const documento = {
-            fecha: this.obtenerFechaActual(),
-            rutaDocumento: downloadURL,
-        };
-
-        let guardarDocumentoObservable;
-
-        switch (tipo) {
-            case 'actividadGestion':
-                guardarDocumentoObservable = this.gestionService.guardarDocumento(documento, this.idActividadGestionSeleccionado, this.auth.obtenerHeaderDocumento());
-                break;
-            case 'actividadEstrategica':
-                guardarDocumentoObservable = this.gestionService.modificarDocumentoActividadEstrategica(documento, this.idDocumentoActividadEstrategicaSeleccionado, this.auth.obtenerHeaderDocumento());
-                break;
-            case 'proyectoArea':
-                guardarDocumentoObservable = this.gestionService.guardarDocumentoProyectoArea(documento, this.idProyectoSeleccionado, this.auth.obtenerHeaderDocumento());
-                break;
-            case 'tarea':
+            case 'TAREA':
                 guardarDocumentoObservable = this.tareaService.guardarDocumentoTarea(documento, this.idTareaSeleccionado, this.auth.obtenerHeaderDocumento());
                 break;
             default:
@@ -1091,10 +1050,63 @@ export class TipogeListarComponent implements OnInit {
 
         guardarDocumentoObservable.subscribe(
             () => {
+                this.mostrarMensaje('Archivo cargado correctamente', 'success');  
+                this.archivoSeleccionado = null; // Limpiar el archivo seleccionado
+                this.nombreArchivoSeleccionado = ''; // Limpiar el nombre del archivo seleccionado  
+            },
+            error => this.mostrarMensaje('Hubo un error: ' + error.error.mensajeTecnico, 'error')
+        );
+
+    } catch (error) {
+        this.mostrarMensaje('Hubo un error durante al cargar el archivo', 'error');
+    }
+
+  }
+
+
+  async modificarDocumento(formulario: any, tipo: string) {
+    try {
+        if (!this.archivoSeleccionado) {
+            throw new Error('No se ha seleccionado ningún archivo.');
+        }
+
+        const { id, carpeta } = this.obtenerIdYCarpetaporTipo(tipo);
+
+        const app = initializeApp(environment.firebase);
+        const storage = getStorage(app);
+        const storageRef = ref(storage, `${carpeta}/${id}/${this.archivoSeleccionado.name}`);
+        const snapshot = await uploadBytes(storageRef, this.archivoSeleccionado);
+        const downloadURL = await getDownloadURL(storageRef);
+
+        const documento = {
+            fecha: this.obtenerFechaActual(),
+            rutaDocumento: downloadURL,
+        };
+
+        let modificarDocumentoObservable;
+
+        switch (tipo) {
+          case 'ACTIVIDAD_GESTION':
+                modificarDocumentoObservable = this.gestionService.modificarDocumentoActividadGestion(documento, this.idActividadGestionSeleccionado, this.auth.obtenerHeaderDocumento());
+                break;
+          case 'ACTIVIDAD_ESTRATEGICA':
+                modificarDocumentoObservable = this.gestionService.modificarDocumentoActividadEstrategica(documento, this.idDocumentoActividadEstrategicaSeleccionado, this.auth.obtenerHeaderDocumento());
+                break;
+          case 'PROYECTO_AREA':
+                modificarDocumentoObservable = this.gestionService.modificarDocumentoProyectoArea(documento, this.idProyectoSeleccionado, this.auth.obtenerHeaderDocumento());
+                break;
+          case 'TAREA':
+                modificarDocumentoObservable = this.tareaService.modificarDocumentoTarea(documento, this.idTareaSeleccionado, this.auth.obtenerHeaderDocumento());
+                break;
+            default:
+                throw new Error(`Tipo de documento no válido: ${tipo}`);
+        }
+
+        modificarDocumentoObservable.subscribe(
+            () => {
                 this.mostrarMensaje('Archivo cargado correctamente', 'success');
                 this.archivoSeleccionado = null; // Limpiar el archivo seleccionado
                 this.nombreArchivoSeleccionado = ''; // Limpiar el nombre del archivo seleccionado
-                // Restablecer otros estados relevantes si es necesario
             },
             error => this.mostrarMensaje('Hubo un error: ' + error.error.mensajeTecnico, 'error')
         );
@@ -1213,8 +1225,32 @@ export class TipogeListarComponent implements OnInit {
       default:
           throw new Error(`No se obtuvo el documento: ${tipo}`);
     }
-  this.nombreArchivoSeleccionado =  documento.rutaDocumento;
-
+    this.nombreArchivoSeleccionado =  documento.rutaDocumento;
+  }
+  obtenerIdYCarpetaporTipo(tipo: string): { id: number, carpeta: string } {
+    let id;
+    let carpeta;
+    switch (tipo) {
+        case 'ACTIVIDAD_GESTION':
+            id = this.idActividadGestionSeleccionado;
+            carpeta = 'actividadGestion';
+            break;
+        case 'ACTIVIDAD_ESTRATEGICA':
+            id = this.idActividadEstrategicaSeleccionado;
+            carpeta = 'actividadEstrategica';
+            break;
+        case 'PROYECTO_AREA':
+            id = this.idProyectoSeleccionado;
+            carpeta = 'proyectoArea';
+            break;
+        case 'TAREA':
+            id = this.idProyectoSeleccionado;
+            carpeta = 'tarea';
+            break;
+        default:
+            throw new Error(`Tipo inválido: ${tipo}`);
+    }
+    return { id: id, carpeta: carpeta };
   }
   obtenerTarea(idTarea: number,tarea:any) {
     this.idTareaSeleccionado = idTarea;

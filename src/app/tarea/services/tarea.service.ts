@@ -21,6 +21,12 @@ export class TareaService {
   obtenerDocumentoTarea(idTarea:number,headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/tareas/archivo/${idTarea}`,{headers});
   }
+  modificarDocumentoTarea<T>(documento : any,idTarea:number,headers?:HttpHeaders):Observable<T>{
+    return this.http.put<T>(`${environment.apiUrl}/ccoa/tareas/archivo/modificar/${idTarea}`,documento,{headers});
+  }
+  eliminarDocumentoTarea<T>(idDocumentoTarea:number,headers?:HttpHeaders):Observable<T>{
+    return this.http.delete<T>(`${environment.apiUrl}/ccoa/tareas/archivo/eliminar/${idDocumentoTarea}`,{headers});
+  }
 
   listarTarea(headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/tareas`,{headers});

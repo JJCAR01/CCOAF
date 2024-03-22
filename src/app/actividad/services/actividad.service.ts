@@ -13,11 +13,17 @@ export class ActividadService {
   crearActividadGestionActividadEstrategica(gestionActividadEstrategica : any,headers?: HttpHeaders){
     return this.http.post(`${environment.apiUrl}/ccoa/gestionesestrategicas`,gestionActividadEstrategica,{headers});
   }
-  guardarDocumento(documento : any,idGestionActividadEstrategica:number,headers?: HttpHeaders){
+  guardarDocumentoActividadGestionActividadEstrategica(documento : any,idGestionActividadEstrategica:number,headers?: HttpHeaders){
     return this.http.put(`${environment.apiUrl}/ccoa/gestionesestrategicas/archivo/${idGestionActividadEstrategica}`, documento,{headers});
   }
   obtenerDocumento(idGestionActividadEstrategica:number,headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/gestionesestrategicas/archivo/${idGestionActividadEstrategica}`,{headers});
+  }
+  modificarDocumentoActividadGestionEstrategica<T>(documento : any,idActividadGestionEstrategica:number,headers?:HttpHeaders):Observable<T>{
+    return this.http.put<T>(`${environment.apiUrl}/ccoa/gestionesestrategicas/archivo/modificar/${idActividadGestionEstrategica}`,documento,{headers});
+  }
+  eliminarDocumentoActividadGestionEstrategica<T>(idDocumentoActividadGestionEstrategica:number,headers?:HttpHeaders):Observable<T>{
+    return this.http.delete<T>(`${environment.apiUrl}/ccoa/gestionesestrategicas/archivo/eliminar/${idDocumentoActividadGestionEstrategica}`,{headers});
   }
   listarActividadGestionActividadEstrategica(headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/gestionesestrategicas`,{headers});
@@ -58,6 +64,12 @@ export class ActividadService {
   }
   guardarDocumentoProyecto(documento : any,idProyecto:number,headers?: HttpHeaders){
     return this.http.put(`${environment.apiUrl}/ccoa/proyectos/archivo/${idProyecto}`, documento,{headers});
+  }
+  modificarDocumentoProyecto<T>(documento : any,idProyecto:number,headers?:HttpHeaders):Observable<T>{
+    return this.http.put<T>(`${environment.apiUrl}/ccoa/proyectos/archivo/modificar/${idProyecto}`,documento,{headers});
+  }
+  eliminarDocumentoProyecto<T>(idDocumentoProyecto:number,headers?:HttpHeaders):Observable<T>{
+    return this.http.delete<T>(`${environment.apiUrl}/ccoa/proyectos/archivo/eliminar/${idDocumentoProyecto}`,{headers});
   }
   obtenerDocumentoProyecto(idProyecto:number,headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/proyectos/archivo/${idProyecto}`,{headers});
