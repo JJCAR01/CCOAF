@@ -872,6 +872,8 @@ private obtenerFechaActual(): string {
     }
   }
   async modificarDocumento(formulario: any, tipo: string) {
+
+
     try {
         if (!this.archivoSeleccionado) {
             throw new Error('No se ha seleccionado ningún archivo.');
@@ -923,12 +925,15 @@ private obtenerFechaActual(): string {
     switch (tipo) {
       case 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA':
         this.idDocumentoActividadGestionEstrategicaSeleccionado = documento.idDocumentoActividadGestion;
+        this.idActividadGestionEstrategicaSeleccionado = documento.idActividadGestionEstrategica;
           break;
-      case 'PROYECTO_AREA':
+      case 'PROYECTO':
         this.idDocumentoProyectoSeleccionado = documento.idDocumentoProyectoArea;
+        this.idProyectoSeleccionado = documento.idProyecto;
           break;
       case 'TAREA':
         this.idDocumentoTareaSeleccionado = documento.idDocumentoTarea;
+        this.idTareaSeleccionado = documento.idTarea;
           break;
       default:
           throw new Error(`No se obtuvo el documento: ${tipo}`);

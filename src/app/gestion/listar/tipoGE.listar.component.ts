@@ -113,7 +113,7 @@ export class TipogeListarComponent implements OnInit {
   idDocumentoActividadGestionSeleccionado: number | 0 = 0;
   idDocumentoProyectoAreaSeleccionado: number | 0 = 0;
   idDocumentoTareaSeleccionado: number | 0 = 0;
-  idProyectoSeleccionado: number | 0 = 0;
+  idProyectoAreaSeleccionado: number | 0 = 0;
   planeacionProyecto = EPlaneacion;
   idTareaSeleccionado: number | 0 = 0;
   idTareaTipo: number | 0 = 0;
@@ -599,7 +599,7 @@ export class TipogeListarComponent implements OnInit {
       }).then((confirmacion) => {
         if (confirmacion.isConfirmed) {
         this.gestionService
-          .modificarProyectoArea(proyecto, this.idProyectoSeleccionado, this.auth.obtenerHeader())
+          .modificarProyectoArea(proyecto, this.idProyectoAreaSeleccionado, this.auth.obtenerHeader())
           .subscribe(
             (response) => {
               this.swalSatisfactorio('modificado','proyecto')
@@ -629,7 +629,7 @@ export class TipogeListarComponent implements OnInit {
      })
      .then((confirmacion) => {
        if (confirmacion.isConfirmed) {
-         this.gestionService.modificarValorEjecutado(proyectoValorEjecutado, this.idProyectoSeleccionado,this.auth.obtenerHeader()).subscribe(
+         this.gestionService.modificarValorEjecutado(proyectoValorEjecutado, this.idProyectoAreaSeleccionado,this.auth.obtenerHeader()).subscribe(
              (response) => {
                this.swalSatisfactorio('modificado','valor ejecutado')
                  this.cargarProyectosArea(this.idPat);
@@ -748,7 +748,7 @@ export class TipogeListarComponent implements OnInit {
           );
         } else if (this.tipoFormulario === 'PROYECTO_AREA') {
           const observacion = {
-            idProyectoArea: this.idProyectoSeleccionado,
+            idProyectoArea: this.idProyectoAreaSeleccionado,
             descripcion: descripcion,
             fecha: fecha,
           };
@@ -978,12 +978,17 @@ export class TipogeListarComponent implements OnInit {
       }); 
   }
   async documento(event: any, tipo: string): Promise<void> {
+    if (tipo === 'ACTIVIDAD_ESTRATEGICA' || tipo === 'ACTIVIDAD_GESTION' || tipo === 'TAREA' || tipo === 'PROYECTO_AREA') {
+      this.tipoFormulario = tipo;
+    } else {
+      throw new Error(`Tipo inválido: ${tipo}`);
+    }
     if(tipo === 'ACTIVIDAD_ESTRATEGICA'){
       this.idActividadEstrategicaSeleccionado;
     } else if (tipo === 'ACTIVIDAD_GESTION'){
       this.idActividadGestionSeleccionado ;
     } else if (tipo === 'PROYECTO_AREA'){
-      this.idProyectoSeleccionado;
+      this.idProyectoAreaSeleccionado;
     } else if (tipo === 'TAREA'){
       this.idTareaSeleccionado;
     }
@@ -999,18 +1004,28 @@ export class TipogeListarComponent implements OnInit {
       this.nombreArchivoSeleccionado = '';
     }
   }
-  abrirModalAgregarDocumento(idRecibido: number,tipo:string): void {
+  obtenerId(idRecibido: number,tipo:string): void {
+    if (tipo === 'ACTIVIDAD_ESTRATEGICA' || tipo === 'ACTIVIDAD_GESTION' || tipo === 'TAREA' || tipo === 'PROYECTO_AREA') {
+      this.tipoFormulario = tipo;
+    } else {
+      throw new Error(`Tipo inválido: ${tipo}`);
+    }
     if(tipo === 'ACTIVIDAD_ESTRATEGICA'){
       this.idActividadEstrategicaSeleccionado = idRecibido;
     } else if (tipo === 'ACTIVIDAD_GESTION'){
       this.idActividadGestionSeleccionado = idRecibido;
     } else if (tipo === 'PROYECTO_AREA'){
-      this.idProyectoSeleccionado = idRecibido;
+      this.idProyectoAreaSeleccionado = idRecibido;
     }else if (tipo === 'TAREA'){
       this.idTareaSeleccionado = idRecibido;
     }
   }
   async subirDocumento(formulario: any,tipo: string) {
+    if (tipo === 'ACTIVIDAD_ESTRATEGICA' || tipo === 'ACTIVIDAD_GESTION' || tipo === 'TAREA' || tipo === 'PROYECTO_AREA') {
+      this.tipoFormulario = tipo;
+    } else {
+      throw new Error(`Tipo inválido: ${tipo}`);
+    }
     try {
         if (!this.archivoSeleccionado) {
             throw new Error('No se ha seleccionado ningún archivo.');
@@ -1039,7 +1054,7 @@ export class TipogeListarComponent implements OnInit {
                 guardarDocumentoObservable = this.gestionService.guardarDocumentoAcividadEstrategica(documento, this.idActividadEstrategicaSeleccionado, this.auth.obtenerHeaderDocumento());
                 break;
             case 'PROYECTO_AREA':
-                guardarDocumentoObservable = this.gestionService.guardarDocumentoProyectoArea(documento, this.idProyectoSeleccionado, this.auth.obtenerHeaderDocumento());
+                guardarDocumentoObservable = this.gestionService.guardarDocumentoProyectoArea(documento, this.idProyectoAreaSeleccionado, this.auth.obtenerHeaderDocumento());
                 break;
             case 'TAREA':
                 guardarDocumentoObservable = this.tareaService.guardarDocumentoTarea(documento, this.idTareaSeleccionado, this.auth.obtenerHeaderDocumento());
@@ -1065,6 +1080,11 @@ export class TipogeListarComponent implements OnInit {
 
 
   async modificarDocumento(formulario: any, tipo: string) {
+    if (tipo === 'ACTIVIDAD_ESTRATEGICA' || tipo === 'ACTIVIDAD_GESTION' || tipo === 'TAREA' || tipo === 'PROYECTO_AREA') {
+      this.tipoFormulario = tipo;
+    } else {
+      throw new Error(`Tipo inválido: ${tipo}`);
+    }
     try {
         if (!this.archivoSeleccionado) {
             throw new Error('No se ha seleccionado ningún archivo.');
@@ -1093,7 +1113,7 @@ export class TipogeListarComponent implements OnInit {
                 modificarDocumentoObservable = this.gestionService.modificarDocumentoActividadEstrategica(documento, this.idDocumentoActividadEstrategicaSeleccionado, this.auth.obtenerHeaderDocumento());
                 break;
           case 'PROYECTO_AREA':
-                modificarDocumentoObservable = this.gestionService.modificarDocumentoProyectoArea(documento, this.idProyectoSeleccionado, this.auth.obtenerHeaderDocumento());
+                modificarDocumentoObservable = this.gestionService.modificarDocumentoProyectoArea(documento, this.idProyectoAreaSeleccionado, this.auth.obtenerHeaderDocumento());
                 break;
           case 'TAREA':
                 modificarDocumentoObservable = this.tareaService.modificarDocumentoTarea(documento, this.idTareaSeleccionado, this.auth.obtenerHeaderDocumento());
@@ -1117,57 +1137,39 @@ export class TipogeListarComponent implements OnInit {
   }
 
 
-  mostrarMensaje(mensaje: string, tipo: 'success' | 'error') {
-      Swal.fire({
-          title: tipo === 'success' ? 'Archivo cargado!' : 'Hubo un error!!!',
-          text: mensaje,
-          icon: tipo,
-          confirmButtonColor: '#0E823F',
-      });
-  }
-  verDocumentos(id: number,tipo: string) {
-    if(tipo === 'ACTIVIDAD_GESTION'){
-      this.gestionService.obtenerDocumento(id, this.auth.obtenerHeaderDocumento()).subscribe(
+
+  verDocumentos(id: number, tipo: string) {
+    if (tipo === 'ACTIVIDAD_ESTRATEGICA' || tipo === 'ACTIVIDAD_GESTION' || tipo === 'TAREA' || tipo === 'PROYECTO_AREA') {
+      this.tipoFormulario = tipo;
+    } else {
+      throw new Error(`Tipo inválido: ${tipo}`);
+    }
+    let obtenerDocumentoObservable;
+    switch (tipo) {
+      case 'ACTIVIDAD_GESTION':
+        obtenerDocumentoObservable = this.gestionService.obtenerDocumento(id, this.auth.obtenerHeaderDocumento());
+        break;
+      case 'ACTIVIDAD_ESTRATEGICA':
+        obtenerDocumentoObservable = this.gestionService.obtenerDocumentoActividadEstrategica(id, this.auth.obtenerHeaderDocumento());
+        break;
+      case 'PROYECTO_AREA':
+        obtenerDocumentoObservable = this.gestionService.obtenerDocumentoProyectoArea(id, this.auth.obtenerHeaderDocumento());
+        break;
+      default:
+        obtenerDocumentoObservable = null;
+        break;
+    }
+
+    if (obtenerDocumentoObservable) {
+      obtenerDocumentoObservable.subscribe(
         (data: any) => {
           this.documentoObtenido = data;
         },
-        (error: any) => {
-          Swal.fire({
-            title: 'La actividad no tiene documentos adjuntos',
-            text: 'Cargue un documento para visualizarlo',
-            icon: 'info',
-            confirmButtonColor: '#0E823F',
-          });
-        }
+        error => this.mostrarMensaje('Hubo un error: ' + error.error.mensajeTecnico, 'error')
+        
       );
-    } else if (tipo === 'ACTIVIDAD_ESTRATEGICA') {
-      this.gestionService.obtenerDocumentoActividadEstrategica(id, this.auth.obtenerHeaderDocumento()).subscribe(
-        (data: any) => {
-          this.documentoObtenido = data;
-        },
-        (error: any) => {
-          Swal.fire({
-            title: 'La actividad no tiene documentos adjuntos',
-            text: 'Cargue un documento para visualizarlo',
-            icon: 'info',
-            confirmButtonColor: '#0E823F',
-          });
-        }
-      );
-    } else if (tipo === 'PROYECTO_AREA') {
-      this.gestionService.obtenerDocumentoProyectoArea(id, this.auth.obtenerHeaderDocumento()).subscribe(
-        (data: any) => {
-          this.documentoObtenido = data;
-        },
-        (error: any) => {
-          Swal.fire({
-            title: 'La actividad no tiene documentos adjuntos',
-            text: 'Cargue un documento para visualizarlo',
-            icon: 'info',
-            confirmButtonColor: '#0E823F',
-          });
-        }
-      );
+    } else {
+      this.mostrarMensaje('Hubo un error durante al cargar el archivo', 'error');
     }
   }
   
@@ -1209,18 +1211,23 @@ export class TipogeListarComponent implements OnInit {
     });
   }
   obtenerDocumento(documento:any, tipo:string){
+    tipo = this.tipoFormulario;
     switch (tipo) {
       case 'ACTIVIDAD_GESTION':
         this.idDocumentoActividadGestionSeleccionado = documento.idDocumentoActividadGestion;
+        this.idActividadGestionSeleccionado = documento.idActividadGestion;
           break;
       case 'ACTIVIDAD_ESTRATEGICA':
         this.idDocumentoActividadEstrategicaSeleccionado = documento.idDocumentoActividadEstrategica;
+        this.idActividadEstrategicaSeleccionado = documento.idActividadEstrategica;
           break;
       case 'PROYECTO_AREA':
         this.idDocumentoProyectoAreaSeleccionado = documento.idDocumentoProyectoArea;
+        this.idProyectoAreaSeleccionado = documento.idProyectoArea;
           break;
       case 'TAREA':
         this.idDocumentoTareaSeleccionado = documento.idDocumentoTarea;
+        this.idTareaSeleccionado = documento.idTarea;
           break;
       default:
           throw new Error(`No se obtuvo el documento: ${tipo}`);
@@ -1240,11 +1247,11 @@ export class TipogeListarComponent implements OnInit {
             carpeta = 'actividadEstrategica';
             break;
         case 'PROYECTO_AREA':
-            id = this.idProyectoSeleccionado;
+            id = this.idProyectoAreaSeleccionado;
             carpeta = 'proyectoArea';
             break;
         case 'TAREA':
-            id = this.idProyectoSeleccionado;
+            id = this.idProyectoAreaSeleccionado;
             carpeta = 'tarea';
             break;
         default:
@@ -1252,6 +1259,56 @@ export class TipogeListarComponent implements OnInit {
     }
     return { id: id, carpeta: carpeta };
   }
+  eliminarDocumento(documento: any, tipo: string) {
+    if (tipo === 'ACTIVIDAD_ESTRATEGICA' || tipo === 'ACTIVIDAD_GESTION' || tipo === 'TAREA' || tipo === 'PROYECTO_AREA') {
+      this.tipoFormulario = tipo;
+    } else {
+      throw new Error(`Tipo inválido: ${tipo}`);
+    }
+    Swal.fire({
+      icon: "question",
+      title: "¿Estás seguro?",
+      text: "Una vez eliminado el proyecto del área, NO podrás recuperarlo.",
+      showCancelButton: true,
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Confirmar",
+      confirmButtonColor: '#0E823F',
+      reverseButtons: true,
+    }).then((confirmacion) => {
+      if (confirmacion.isConfirmed) {
+        let id;
+        let eliminarDocumentoObservable;
+        switch (tipo) {
+          case 'ACTIVIDAD_GESTION':
+            id = documento.idDocumentoActividadGestion;
+            eliminarDocumentoObservable = this.gestionService.eliminarDocumentoActividadGestion(id, this.auth.obtenerHeader());
+            break;
+          case 'ACTIVIDAD_ESTRATEGICA':
+            id = documento.idDocumentoActividadEstrategica;
+            eliminarDocumentoObservable = this.gestionService.eliminarDocumentoActividadEstrategica(id, this.auth.obtenerHeader());
+            break;
+          case 'PROYECTO_AREA':
+            id = documento.idDocumentoProyectoArea;
+            eliminarDocumentoObservable = this.gestionService.eliminarDocumentoProyectoArea(id, this.auth.obtenerHeader());
+            break;
+          case 'TAREA':
+            id = documento.idDocumentoTarea;
+            eliminarDocumentoObservable = this.tareaService.eliminarDocumentoTarea(id, this.auth.obtenerHeader());
+            break;
+          default:
+            throw new Error(`Tipo inválido: ${tipo}`);
+        }
+  
+
+          eliminarDocumentoObservable.subscribe(
+            () => {
+              this.mostrarMensaje('eliminado', 'success');
+            },
+          );
+      }
+    });
+  }
+  
   obtenerTarea(idTarea: number,tarea:any) {
     this.idTareaSeleccionado = idTarea;
     this.nombreTarea = tarea.nombre;
@@ -1313,7 +1370,7 @@ export class TipogeListarComponent implements OnInit {
 
   obtenerProyectoArea(idProyectoArea: number,proyectoArea:any) {
     this.tipoFormulario = 'PROYECTO_AREA'; 
-    this.idProyectoSeleccionado = idProyectoArea;
+    this.idProyectoAreaSeleccionado = idProyectoArea;
 
     this.formProyecto.patchValue({
       nombre: proyectoArea.nombre,
@@ -1439,6 +1496,14 @@ export class TipogeListarComponent implements OnInit {
       }
     );
   } 
+  mostrarMensaje(mensaje: string, tipo: 'success' | 'error') {
+    Swal.fire({
+        title: tipo === 'success' ? 'Archivo cargado!' : 'Hubo un error!!!',
+        text: mensaje,
+        icon: tipo,
+        confirmButtonColor: '#0E823F',
+    });
+}
   get nombreVacio(){
     return this.formTarea.get('nombre')?.invalid && this.formTarea.get('nombre')?.touched;
   }

@@ -163,7 +163,7 @@
                     <i class="bi bi-trash3-fill"></i>
                   </button>
                   <button title="Agregar documento" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#agregarDocumento"
-                  (click)="abrirModalAgregarDocumento(actividad.idActividadEstrategica,'ACTIVIDAD_ESTRATEGICA')" *ngIf="esAdmin || esOperador || esDirector"
+                  (click)="obtenerId(actividad.idActividadEstrategica,'ACTIVIDAD_ESTRATEGICA')" *ngIf="esAdmin || esOperador || esDirector"
                       ><i class="bi bi-folder-plus"></i>
                     </button>
                   <button title="Ver documento" class="btn btn-outline-primary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalVerDocumentos" 
@@ -238,7 +238,7 @@
                   (click)="eliminarGestion(gestion.idActividadGestion)" *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor"><i class="bi bi-trash3-fill" 
                   ></i></button>
                   <button title="Agregar documento" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#agregarDocumento"
-                  (click)="abrirModalAgregarDocumento(gestion.idActividadGestion,'ACTIVIDAD_GESTION')" *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor"
+                  (click)="obtenerId(gestion.idActividadGestion,'ACTIVIDAD_GESTION')" *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor"
                       ><i class="bi bi-folder-plus"></i>
                     </button>
                   <button title="Ver documento" class="btn btn-outline-primary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalVerDocumentos" 
@@ -393,7 +393,7 @@
                   (click)="eliminarProyectoArea(proyecto.idProyectoArea)" *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor"
                   ><i class="bi bi-trash3-fill"></i></button>
                   <button title="Agregar documento" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#agregarDocumento"
-                  (click)="abrirModalAgregarDocumento(proyecto.idProyectoArea,'PROYECTO_AREA')" *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor"
+                  (click)="obtenerId(proyecto.idProyectoArea,'PROYECTO_AREA')" *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor"
                       ><i class="bi bi-folder-plus"></i>
                     </button>
                   <button title="Ver documento" class="btn btn-outline-primary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalVerDocumentos" 
@@ -441,6 +441,9 @@
                       *ngIf="esAdmin" (click)="obtenerDocumento(documento,tipoFormulario)">
                       <i class="bi bi-pen-fill"></i>
                     </button>
+                    <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" 
+                      (click)="eliminarDocumento(documento,tipoFormulario)" *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor"
+                      ><i class="bi bi-trash3-fill"></i></button>
                   </td>
                 </tr>
               </ng-container>
@@ -494,7 +497,7 @@
               <div class="input-group" title="Click para cargar el archivo">
                   <label class="input-group-text" for="formFileMultiple">Cargar Archivo</label>
                   <input type="file" class="form-control campo-carga" id="formFileMultiple" accept=".pdf, .doc, .docx, .odt, .xls, .xlsx, .ppt, .pptx, .zip" style="display:none;" (change)="documento($event,tipoFormulario)">
-                  <span id="nombreArchivoSeleccionado" class="ml-2">{{ extraerNombreArchivo(nombreArchivoSeleccionado) }}</span>
+                  <span id="nombreArchivoSeleccionado" class="ml-2">{{ nombreArchivoSeleccionado }}</span>
               </div>
             </div>
             <div class="modal-footer">
