@@ -19,6 +19,12 @@ export class ServicesSprintProyectoAreaService {
   obtenerDocumento(idSprintProyectoArea:number,headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/sprintsproyectoarea/archivo/${idSprintProyectoArea}`,{headers});
   }
+  modificarDocumentoSprintProyectoArea<T>(documento : any,idSprintProyectoArea:number,headers?:HttpHeaders):Observable<T>{
+    return this.http.put<T>(`${environment.apiUrl}/ccoa/sprintsproyectoarea/archivo/modificar/${idSprintProyectoArea}`,documento,{headers});
+  }
+  eliminarDocumentoSprintProyectoArea<T>(idDocumentoSprintProyectoArea:number,headers?:HttpHeaders):Observable<T>{
+    return this.http.delete<T>(`${environment.apiUrl}/ccoa/sprintsproyectoarea/archivo/eliminar/${idDocumentoSprintProyectoArea}`,{headers});
+  }
   listarSprintProyectoArea(headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/sprintsproyectoarea`,{headers});
   }

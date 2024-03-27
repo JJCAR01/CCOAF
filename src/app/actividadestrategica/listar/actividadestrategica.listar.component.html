@@ -55,6 +55,7 @@
         <table class="table table-hover">
           <thead class="table table-color">
             <tr>
+              <th >Programa - PAT</th>
               <th class="column-nombre">Nombre</th>
               <th>Fecha Inicial</th>
               <th>Fecha Final</th>
@@ -69,6 +70,7 @@
           <tbody>
             <ng-container *ngFor="let actividad of actividadesEstrategicas  | buscar: busqueda | buscarUsuario: busquedaUsuario : usuarios">
               <tr (click)="irADetalles(actividad)" title="{{actividad.nombre}}">
+                <td > {{ nombresPatPorId[actividad.idPat] }} </td>
                 <td>{{ actividad.nombre }}</td>
                 <td>{{ actividad.fechaInicial }}</td>
                 <td>{{ actividad.fechaFinal }}</td>
@@ -96,6 +98,7 @@
           <table class="table table-hover">
             <thead class="table-danger">
               <tr>
+                <th >Programa - PAT</th>
                 <th class="column-nombre">Nombre</th>
                 <th>Fecha Inicial</th>
                 <th>Fecha Final</th>
@@ -109,7 +112,9 @@
             </thead>
             <tbody>
               <ng-container *ngFor="let actividad of actividadesEstrategicasPendientes | buscar: busqueda | buscarUsuario: busquedaUsuario : usuarios">
+
                   <tr (click)="irADetalles(actividad)" title="{{actividad.nombre}}">
+                    <td > {{ nombresPatPorId[actividad.idPat] }} </td>
                     <td>{{ actividad.nombre }}</td>
                     <td>{{ actividad.fechaInicial }}</td>
                     <td>{{ actividad.fechaFinal }}</td>

@@ -15,6 +15,7 @@ import { environment } from "src/environments/environment.development";
 import { EPeriodicidad } from "src/enums/eperiodicidad";
 import { MENSAJE_TITULO } from "src/app/utilitarios/mensaje/mensajetitulo";
 import { Usuario } from "src/app/modelo/usuario";
+import { CustomValidators } from "src/custom/custom-validators";
 
 @Component({
   selector: 'app-sprint',
@@ -24,6 +25,8 @@ import { Usuario } from "src/app/modelo/usuario";
 export class SprintListarComponent implements OnInit {
   title = 'listarSprint';
   CAMPO_OBLIGATORIO = MENSAJE_TITULO.CAMPO_OBLIGATORIO;
+  CAMPO_OBLIGATORIO_MINIMO_CARACTERES = MENSAJE_TITULO.CAMPO_OBLIGATORIO_MINIMO_CARACTERES;
+  CAMPO_MINIMO_CARACTERES = MENSAJE_TITULO.MINIMO_CARACTERES_DESCRIPCION;
   NOMBRE_SPRINT = MENSAJE_TITULO.NOMBRE_SPRINT_PROYECTO;
   NOMBRE_TAREA = MENSAJE_TITULO.NOMBRE_TAREA_SPRINT_PROYECTO;
   FECHA_INICIAL_SPRINT = MENSAJE_TITULO.FECHA_INICIAL_SPRINT_PROYECTO;
@@ -49,6 +52,8 @@ export class SprintListarComponent implements OnInit {
   extencionesPermitidas = /\.(doc|docx|xls|xlsx|ppt|pptx|zip|pdf)$/i;
   idObservacionSprintSeleccionado: number = 0;
   idObservacionTareaSeleccionado: number = 0;
+  idDocumentoTareaSeleccionado: number | 0 = 0;
+  idDocumentoSprintSeleccionado: number | 0 = 0;
   nombreArchivoSeleccionado: string = '';
   archivoSeleccionado: File | null = null;
   estadoEnumList: string[] = [];
@@ -112,13 +117,13 @@ export class SprintListarComponent implements OnInit {
     });
     this.formTarea = this.formBuilder.group({
       nombre: ['', Validators.required],
-      descripcion: ['', Validators.required],
+      descripcion: ['', Validators.required, CustomValidators.minimoCaracteres(50)],
       periodicidad: ['', Validators.required],
       idUsuario: ['', Validators.required],
     });
     this.formModificarTarea = this.formBuilder.group({
       nombre: ['', Validators.required],
-      descripcion: ['', Validators.required],
+      descripcion: ['', Validators.required, CustomValidators.minimoCaracteres(50)],
       periodicidad: ['', Validators.required],
       idUsuario: ['', Validators.required],
     });
@@ -161,180 +166,11 @@ export class SprintListarComponent implements OnInit {
       this.cargarSprints(idProyecto);
     });
     this.cargarUsuario();
-    this.crearTarea();
     this.estadoEnumList = Object.values(EEstado);
     this.periodiciadEnumLista = Object.values(EPeriodicidad);
   }
 
-
-
-  async documento(event: any, idSprintSeleccionado: number): Promise<void> {
-    this.idSprintSeleccionado = idSprintSeleccionado;
-    this.archivoSeleccionado = event.target.files[0];
   
-    try {
-      await this.validarArchivo();
-      // Actualizar el nombre del archivo seleccionado
-      this.nombreArchivoSeleccionado = this.archivoSeleccionado ? this.archivoSeleccionado.name : '';
-      // Resto del código si la validación es exitosa
-    } catch (error) {
-      // Mostrar un mensaje de error o tomar alguna acción si la validación falla
-      console.error(error);
-      this.archivoSeleccionado = null;
-      this.nombreArchivoSeleccionado = '';
-    }
-  }
-
-  private validarArchivo(): boolean {
-    if (!this.archivoSeleccionado) {
-      // Puedes mostrar un mensaje de error o manejarlo de otra manera
-      return false;
-    }
-
-
-    const fileSize = this.archivoSeleccionado.size;
-    const fileName = this.archivoSeleccionado.name;
-
-    if (fileSize > this.pesoDeArchivo) {
-      alert('El archivo supera el límite de tamaño permitido (300MB).');
-      return false;
-    } else if (!this.extencionesPermitidas.test(fileName)) {
-      alert('Formato de archivo no permitido. Por favor, elija un archivo con una de las siguientes extensiones: .doc, .docx, .xls, .xlsx, .ppt, .pptx, .zip');
-      return false;
-    }
-
-    return true;
-  }
-  async subirDocumento(formulario: any,id:number,tipo:string) {
-
-    if (!this.archivoSeleccionado) {
-      // Puedes mostrar un mensaje de error o manejarlo de otra manera
-      return;
-    }
-      try {
-        const app = initializeApp(environment.firebase);
-        const storage = getStorage(app);
-        const storageRef = ref(storage, `${tipo}/${id}/${this.archivoSeleccionado.name}`);
-        const snapshot = await uploadBytes(storageRef, this.archivoSeleccionado);
-        const downloadURL = await getDownloadURL(storageRef);
-        // Crear un objeto sprint que incluya la URL de descarga
-        const documento = {
-          fecha:this.obtenerFechaActual(),
-          rutaDocumento: downloadURL, // Asegúrate de que el nombre de la propiedad coincida con lo que espera tu backend
-        };
-        if(tipo === 'sprint'){
-          this.sprintService.guardarDocumentoSprint(documento, this.idSprintSeleccionado, this.auth.obtenerHeaderDocumento()).subscribe(
-            (data: any) => {
-              Swal.fire({
-                title:'Archivo cargado!',
-                text:'El archivo se cargó correctamente',
-                icon:'success',
-                confirmButtonColor: '#0E823F',
-              })
-              this.nombreArchivoSeleccionado = ''; 
-            },
-            (error) => {
-              Swal.fire({
-                title:'Hubo un error!!!',
-                text:error.error.mensajeTecnico,
-                icon:'error',
-                confirmButtonColor: '#0E823F',
-              })
-            }
-          );
-        } else if (tipo === 'tarea'){
-          this.tareaService.guardarDocumentoTarea(documento, this.idTareaSeleccionado, this.auth.obtenerHeaderDocumento()).subscribe(
-            (data: any) => {
-              Swal.fire({
-                title:'Archivo cargado!',
-                text:'El archivo se cargó correctamente',
-                icon:'success',
-                confirmButtonColor: '#0E823F',
-              })
-              this.nombreArchivoSeleccionado = ''; 
-            },
-            (error) => {
-              Swal.fire({
-                title:'Hubo un error!!!',
-                text:error.error.mensajeTecnico,
-                icon:'error',
-                confirmButtonColor: '#0E823F',
-              })
-            }
-        );
-        }
-        
-    } catch (error) {
-      Swal.fire({
-        title:'Hubo un error!!!',
-        text:'Error durante la subida del archivo',
-        icon:'error',
-        confirmButtonColor: '#0E823F',
-      })
-    }
-  }
-  obtenerDocumento(id: number,tipo: string) {
-
-    if(tipo === 'SPRINT'){
-      this.sprintService.obtenerDocumento(id, this.auth.obtenerHeaderDocumento()).subscribe(
-        (data: any) => {
-          this.documentoObtenido = data;
-        },
-        (error: any) => {
-          Swal.fire({
-            title: 'El sprint no tiene documentos adjuntos',
-            text: 'Cargue un documento para visualizarlo',
-            icon: 'info',
-            confirmButtonColor: '#0E823F',
-          });
-        }
-      );
-    } else if(tipo === 'TAREA'){
-      this.tareaService.obtenerDocumentoTarea(id, this.auth.obtenerHeaderDocumento()).subscribe(
-        (data: any) => {
-          this.documentoObtenido = data;
-        },
-        (error: any) => {
-          Swal.fire({
-            title: 'La tarea no tiene documentos adjuntos',
-            text: 'Cargue un documento para visualizarlo',
-            icon: 'info',
-            confirmButtonColor: '#0E823F',
-          });
-        }
-      );
-    }
-  }
-  
-  extraerNombreArchivo(rutaArchivo: string): string {
-    // Decodificar la URL para manejar códigos de escape
-    const nombreArchivoDecodificado = decodeURIComponent(rutaArchivo);
-  
-    // Buscar la posición de la última '/'
-    const posicionUltimaBarra = nombreArchivoDecodificado.lastIndexOf('/');
-  
-    // Buscar la posición del primer '?' después de la extensión
-    const posicionInterrogante = nombreArchivoDecodificado.indexOf('?', posicionUltimaBarra);
-  
-    // Verificar si se encontró la posición adecuada
-    if (posicionUltimaBarra !== -1 && posicionInterrogante !== -1) {
-      // Extraer el nombre del archivo
-      const nombreArchivo = nombreArchivoDecodificado.substring(posicionUltimaBarra + 1, posicionInterrogante);
-      return nombreArchivo;
-    } else {
-      console.error('No se pudo determinar el nombre del archivo desde la URL:', rutaArchivo);
-      return '';
-    }
-  }
-  
-  abrirModalAgregarDocumento(idSeleccionado: number,tipo:string): void {
-    if(tipo === 'SPRINT'){
-      this.idSprintSeleccionado = idSeleccionado;
-    } else if( tipo === 'TAREA'){
-      this.idTareaSeleccionado = idSeleccionado;
-    }
-
-  }
   cargarUsuario() {
     this.usuarioService.listarUsuario(this.auth.obtenerHeader()).subscribe(
       (data: any) => {
@@ -367,22 +203,14 @@ export class SprintListarComponent implements OnInit {
         fechaInicial: fechaInicial,
         fechaFinal: fechaFinal, 
       };
-      Swal.fire({
-        title: "¿Estás seguro de modificar?",
-        icon:"question",
-        text: "Una vez modificado no podrás revertir los cambios",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: '#0E823F',
-        reverseButtons: true, 
-      }).then((confirmacion) => {
+      this.mensajePregunta('¿Deseas modificarlo?','modificado','question')
+      .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
           this.sprintService.modificarSprint(sprint, this.idSprintSeleccionado, this.auth.obtenerHeader())
           .subscribe(
             (response) => {
-              this.swalSatisfactorio('modificado','sprint')
-                this.cargarSprints(this.idProyecto)
+              this.mostrarMensaje('Se ha modificado el sprint ' + descripcion ,'success');
+              this.cargarSprints(this.idProyecto);
             },
             (error) => {this.swalError(error);}
         );
@@ -392,21 +220,12 @@ export class SprintListarComponent implements OnInit {
   }
 
   eliminarSprint(idSprint: number) {
-    Swal.fire({
-        title: "¿Estás seguro?",
-        text: "Una vez eliminado, no podrás recuperar este elemento.",
-        icon: "question",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: '#0E823F',
-        reverseButtons: true,  
-      })
-      .then((confirmacion) => {
+    this.mensajePregunta('¿Deseas eliminarlo?','eliminado','question')
+    .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
         this.sprintService.eliminarSprint(idSprint, this.auth.obtenerHeader()).subscribe(
           (response) => {
-            this.swalSatisfactorio('eliminado','sprint')
+            this.mostrarMensaje('Se ha eliminado el sprint' ,'success');
               this.cargarSprints(this.idProyecto)
           },
           (error) => {this.swalError(error);}
@@ -417,7 +236,7 @@ export class SprintListarComponent implements OnInit {
   cargarTareas(idASE: any, tipoASE: any) {
     // Si se hace clic en la misma gestión, la cerramos
     if (this.collapseSeleccionado === idASE) {
-    this.collapseSeleccionado = null;
+      this.collapseSeleccionado = null;
     } else {
       this.collapseSeleccionado = idASE;
       if(tipoASE === 'SPRINT'){
@@ -462,23 +281,14 @@ export class SprintListarComponent implements OnInit {
       const observacion = {
         descripcion: descripcion,
       }
-      Swal.fire({
-        icon: "question",
-        title: "¿Estás seguro de modificar?",
-        text: "Una vez modificado no podrás revertir los cambios",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: '#0E823F',
-        reverseButtons: true,
-      })
+      this.mensajePregunta('¿Deseas modificarlo?','modificado','question')
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
           switch (tipo) {
             case 'TAREA':
               this.tareaService.modificarObservacionTarea(observacion, this.idObservacionTareaSeleccionado, this.auth.obtenerHeader()).subscribe(
                 () => {
-                  this.swalSatisfactorio('modificado', 'tarea');
+                  this.mostrarMensaje('Se ha modificado la observación ' + descripcion ,'success');
                 },
                 (error) => {
                   this.swalError(error);
@@ -488,7 +298,7 @@ export class SprintListarComponent implements OnInit {
             case 'SPRINT':
               this.sprintService.modificarObservacionSprint(observacion, this.idObservacionSprintSeleccionado, this.auth.obtenerHeader()).subscribe(
                 () => {
-                  this.swalSatisfactorio('modificado', 'actividad estratégica');
+                  this.mostrarMensaje('Se ha modificado la observación ' + descripcion ,'success');
                 },
                 (error) => {
                   this.swalError(error);
@@ -501,23 +311,14 @@ export class SprintListarComponent implements OnInit {
     }
   }
   eliminarObservacion(observacion: any, tipo:string) {
-    Swal.fire({
-      icon:"question",
-      title: "¿Estás seguro?",
-      text: "Una vez eliminado la observación, no podrás recuperar este elemento.",
-      showCancelButton: true,
-      cancelButtonText: "Cancelar",
-      confirmButtonText: "Confirmar",
-      confirmButtonColor: '#0E823F',
-      reverseButtons: true, 
-    })
+    this.mensajePregunta('¿Deseas eliminarlo?','eliminado','question')
     .then((confirmacion) => {
       if (confirmacion.isConfirmed) {
         if(tipo === 'TAREA'){
           const idTarea = observacion.idTarea;
           this.tareaService.eliminarObservacionTarea(observacion.idObservacionTarea, this.auth.obtenerHeader()).subscribe(
             () => {
-              this.swalSatisfactorio('eliminado','la observación');
+              this.mostrarMensaje('Se ha eliminado la observación ','success');
               this.cargarObservaciones(idTarea, 'TAREA')
             },
             (error) => {
@@ -529,7 +330,7 @@ export class SprintListarComponent implements OnInit {
           this.sprintService
             .eliminarObservacionSprint(observacion.idObservacionSprint,this.auth.obtenerHeader()) .subscribe(
                 () => {
-                  this.swalSatisfactorio('eliminado','la observación');
+                  this.mostrarMensaje('Se ha eliminado la observación ','success');
                   this.cargarObservaciones(idSprint, 'SPRINT')
                 },
                 (error) => {
@@ -560,9 +361,10 @@ export class SprintListarComponent implements OnInit {
         .crearTarea(tarea,this.auth.obtenerHeader())
         .subscribe(
           (response) => {
-            this.swalSatisfactorio('creada','tarea')
-              this.cargarTareas(this.idSprintSeleccionado,'SPRINT');
-              this.formTarea.reset();
+            this.mostrarMensaje('Se ha creado la tarea ' + nombre,'success');
+            this.collapseSeleccionado = null;
+            this.cargarTareas(this.idSprintSeleccionado,'SPRINT');
+            this.formTarea.reset();
           },
           (error) => {this.swalError(error);}
         );
@@ -585,7 +387,7 @@ export class SprintListarComponent implements OnInit {
           .crearObservacion(observacion,this.auth.obtenerHeader())
           .subscribe(
             (response) => {
-                this.swalSatisfactorio('creado','observación')
+              this.mostrarMensaje('Se ha creado la observación ' + descripcion,'success');
                 this.formObservacion.reset()
             },
             (error) => {this.swalError(error);}
@@ -600,7 +402,7 @@ export class SprintListarComponent implements OnInit {
           .crearObservacionSprint(observacion,this.auth.obtenerHeader())
           .subscribe(
             (response) => {
-                this.swalSatisfactorio('creado','observación')
+              this.mostrarMensaje('Se ha creado la observación ' + descripcion,'success');
                 this.formObservacion.reset()
             },
             (error) => {this.swalError(error);}
@@ -616,21 +418,13 @@ export class SprintListarComponent implements OnInit {
       const tareaModificar = {
         estado: estado,
       };
-      Swal.fire({
-        title: "¿Deseas modificarlo?",
-        text: "Una vez modificado no podrás revertir los cambios",
-        icon: "question",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: '#0E823F',
-        reverseButtons: true, 
-      })
+      this.mensajePregunta('¿Deseas modificarlo?','modificado','question')
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
           this.tareaService.modificarEstadoTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
               (response) => {
-                this.swalSatisfactorio ('modificado','estado del área')
+                this.mostrarMensaje('El estado de la tarea ha sido modificado','success');
+                this.collapseSeleccionado = null;
                   this.cargarTareas(this.idTareaTipo,'SPRINT');
                   this.formTarea.reset();              
               },
@@ -653,21 +447,13 @@ export class SprintListarComponent implements OnInit {
       const tareaModificar = {
         porcentajeReal: porcentajeReal,
       };
-      Swal.fire({
-        title: "¿Deseas modificarlo?",
-        text: "Una vez modificado no podrás revertir los cambios",
-        icon: "question",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: '#0E823F',
-        reverseButtons: true, 
-      })
+      this.mensajePregunta('¿Deseas modificarlo?','modificado','question')
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
           this.tareaService.modificarPorcentajeTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
               (response) => {
-                this.swalSatisfactorio('modificado','porcentaje del área')
+                this.mostrarMensaje('El porcentaje de la tarea ha sido modificado','success');
+                this.collapseSeleccionado = null;
                 this.cargarTareas(this.idTareaTipo,'SPRINT');
                 this.formTarea.reset();             
               },
@@ -689,21 +475,13 @@ export class SprintListarComponent implements OnInit {
         descripcion: descripcion,
         idUsuario: idUsuario,
       };
-      Swal.fire({
-        title: "¿Deseas modificarlo?",
-        text: "La gestión del área se ha modificado",
-        icon: "question",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: '#0E823F',
-        reverseButtons: true, 
-      })
+      this.mensajePregunta('¿Deseas modificarlo?','modificado','question')
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
           this.tareaService.modificarTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
               (response) => {
-                this.swalSatisfactorio('modificado','tarea')
+                this.mostrarMensaje('La tarea '+ nombre +', ha sido modificada','success');
+                this.collapseSeleccionado = null;
                   this.cargarTareas(this.idTareaTipo,'SPRINT');
                   this.formModificarTarea.reset();               
               },
@@ -714,27 +492,295 @@ export class SprintListarComponent implements OnInit {
     }
   }
   eliminarTarea(idTarea: number, idSprint: number) {
-    Swal.fire({
-        title: "¿Estás seguro?",
-        text: "Una vez eliminado, no podrás recuperar este elemento.",
-        icon: "question",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: '#0E823F',
-        reverseButtons: true, 
-      })
-      .then((confirmacion) => {
+    this.mensajePregunta('¿Deseas eliminar?','eliminado','question')
+    .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
         this.tareaService.eliminarTarea(idTarea, this.auth.obtenerHeader()).subscribe(
           (response) => {
-            this.swalSatisfactorio('eliminado','tarea')
+            this.mostrarMensaje('La tarea ha sido eliminada','success');
             this.cargarTareas(idSprint,'SPRINT');
           },
           (error) => {this.swalError(error);}
         );
       }
       });
+  }
+  async documento(event: any, tipo: string): Promise<void> {
+    if (tipo === 'SPRINT' || tipo === 'TAREA') {
+      this.tipoFormulario = tipo;
+      if(tipo === 'SPRINT'){
+        this.idSprintSeleccionado;
+      }else if (tipo === 'TAREA'){
+        this.idTareaSeleccionado;
+      }
+      this.archivoSeleccionado = event.target.files[0];
+    
+      try {
+        await this.validarArchivo();
+        // Actualizar el nombre del archivo seleccionado
+        this.nombreArchivoSeleccionado = this.archivoSeleccionado ? this.archivoSeleccionado.name : '';
+        // Resto del código si la validación es exitosa
+      } catch (error) {
+        this.archivoSeleccionado = null;
+        this.nombreArchivoSeleccionado = '';
+      }
+    } else {
+      throw new Error(`Tipo inválido: ${tipo}`);
+    }
+  }
+  obtenerId(idRecibido: number,tipo:string): void {
+    if (tipo === 'SPRINT' || tipo === 'TAREA') {
+      this.tipoFormulario = tipo;
+
+      if(tipo === 'SPRINT'){
+        this.idSprintSeleccionado = idRecibido;
+      }else if (tipo === 'TAREA'){
+        this.idTareaSeleccionado = idRecibido;
+      }
+    } else {
+      throw new Error(`Tipo inválido: ${tipo}`);
+    }
+  }
+  private validarArchivo(): boolean {
+    if (!this.archivoSeleccionado) {
+      // Puedes mostrar un mensaje de error o manejarlo de otra manera
+      return false;
+    }
+
+
+    const fileSize = this.archivoSeleccionado.size;
+    const fileName = this.archivoSeleccionado.name;
+
+    if (fileSize > this.pesoDeArchivo) {
+      alert('El archivo supera el límite de tamaño permitido (300MB).');
+      return false;
+    } else if (!this.extencionesPermitidas.test(fileName)) {
+      alert('Formato de archivo no permitido. Por favor, elija un archivo con una de las siguientes extensiones: .doc, .docx, .xls, .xlsx, .ppt, .pptx, .zip');
+      return false;
+    }
+
+    return true;
+  }
+  async subirDocumento(formulario: any,tipo: string) {
+    if (tipo === 'SPRINT' || tipo === 'TAREA') {
+      this.tipoFormulario = tipo;
+        try {
+            if (!this.archivoSeleccionado) {
+                throw new Error('No se ha seleccionado ningún archivo.');
+            }
+
+            const { id, carpeta } = this.obtenerIdYCarpetaporTipo(tipo);
+
+            const app = initializeApp(environment.firebase);
+            const storage = getStorage(app);
+            const storageRef = ref(storage, `${carpeta}/${id}/${this.archivoSeleccionado.name}`);
+            const snapshot = await uploadBytes(storageRef, this.archivoSeleccionado);
+            const downloadURL = await getDownloadURL(storageRef);
+
+            const documento = {
+                fecha: this.obtenerFechaActual(),
+                rutaDocumento: downloadURL,
+            };
+
+            let guardarDocumentoObservable;
+
+            switch (tipo) {
+                case 'SPRINT':
+                    guardarDocumentoObservable = this.sprintService.guardarDocumentoSprint(documento, this.idSprintSeleccionado, this.auth.obtenerHeaderDocumento());
+                    break;
+                case 'TAREA':
+                    guardarDocumentoObservable = this.tareaService.guardarDocumentoTarea(documento, this.idTareaSeleccionado, this.auth.obtenerHeaderDocumento());
+                    break;
+                default:
+                    throw new Error(`Tipo de documento no válido: ${tipo}`);
+            }
+
+            guardarDocumentoObservable.subscribe(
+                () => {
+                    this.mostrarMensaje('Archivo cargado correctamente', 'success');  
+                    this.archivoSeleccionado = null; // Limpiar el archivo seleccionado
+                    this.nombreArchivoSeleccionado = ''; // Limpiar el nombre del archivo seleccionado  
+                },
+                error => this.mostrarMensaje('Hubo un error: ' + error.error.mensajeTecnico, 'error')
+            );
+
+        } catch (error) {
+            this.mostrarMensaje('Hubo un error durante al cargar el archivo', 'error');
+        }
+      } else {
+      throw new Error(`Tipo inválido: ${tipo}`);
+      }
+  }
+
+
+  async modificarDocumento(formulario: any, tipo: string) {
+    if (tipo === 'SPRINT' || tipo === 'TAREA') {
+      this.tipoFormulario = tipo;
+      try {
+          if (!this.archivoSeleccionado) {
+              throw new Error('No se ha seleccionado ningún archivo.');
+          }
+
+          const { id, carpeta } = this.obtenerIdYCarpetaporTipo(tipo);
+
+          const app = initializeApp(environment.firebase);
+          const storage = getStorage(app);
+          const storageRef = ref(storage, `${carpeta}/${id}/${this.archivoSeleccionado.name}`);
+          const snapshot = await uploadBytes(storageRef, this.archivoSeleccionado);
+          const downloadURL = await getDownloadURL(storageRef);
+
+          const documento = {
+              fecha: this.obtenerFechaActual(),
+              rutaDocumento: downloadURL,
+          };
+
+          let modificarDocumentoObservable;
+
+          switch (tipo) {
+            case 'SPRINT':
+                  modificarDocumentoObservable = this.sprintService.modificarDocumentoSprint(documento, this.idDocumentoSprintSeleccionado, this.auth.obtenerHeaderDocumento());
+                  break;
+            case 'TAREA':
+                  modificarDocumentoObservable = this.tareaService.modificarDocumentoTarea(documento, this.idDocumentoTareaSeleccionado, this.auth.obtenerHeaderDocumento());
+                  break;
+              default:
+                  throw new Error(`Tipo de documento no válido: ${tipo}`);
+          }
+
+          modificarDocumentoObservable.subscribe(
+              () => {
+                  this.mostrarMensaje('Archivo cargado correctamente', 'success');
+                  this.archivoSeleccionado = null; // Limpiar el archivo seleccionado
+                  this.nombreArchivoSeleccionado = ''; // Limpiar el nombre del archivo seleccionado
+              },
+              error => this.mostrarMensaje('Hubo un error: ' + error.error.mensajeTecnico, 'error')
+          );
+
+      } catch (error) {
+          this.mostrarMensaje('Hubo un error durante al cargar el archivo', 'error');
+      }
+    } else {
+    throw new Error(`Tipo inválido: ${tipo}`);
+    }
+  }
+  verDocumentos(id: number, tipo: string) {
+    if (tipo === 'SPRINT' || tipo === 'TAREA') {
+      this.tipoFormulario = tipo;
+      let obtenerDocumentoObservable;
+      switch (tipo) {
+        case 'SPRINT':
+          obtenerDocumentoObservable = this.sprintService.obtenerDocumento(id, this.auth.obtenerHeaderDocumento());
+          break;
+        case 'TAREA':
+          obtenerDocumentoObservable = this.tareaService.obtenerDocumentoTarea(id, this.auth.obtenerHeaderDocumento());
+          break;
+        default:
+          obtenerDocumentoObservable = null;
+          break;
+      }
+
+      if (obtenerDocumentoObservable) {
+        obtenerDocumentoObservable.subscribe(
+          (data: any) => {
+            this.documentoObtenido = data;
+          },
+          error => this.mostrarMensaje('Hubo un error: ' + error.error.mensajeTecnico, 'error')
+          
+        );
+      } else {
+        this.mostrarMensaje('Hubo un error durante al cargar el archivo', 'error');
+      }
+    } else {
+      throw new Error(`Tipo inválido: ${tipo}`);
+    }
+  }
+  eliminarDocumento(documento: any, tipo: string) {
+    if (tipo === 'SPRINT' || tipo === 'TAREA') {
+      this.tipoFormulario = tipo;
+
+
+      this.mensajePregunta('¿Deseas eliminar?','eliminado','question')
+      .then((confirmacion) => {
+        if (confirmacion.isConfirmed) {
+          let id;
+          let eliminarDocumentoObservable;
+          switch (tipo) {
+            case 'SPRINT':
+              id = documento.idDocumentoSprint;
+              eliminarDocumentoObservable = this.sprintService.eliminarDocumentoSprint(id, this.auth.obtenerHeader());
+              break;
+            case 'TAREA':
+              id = documento.idDocumentoTarea;
+              eliminarDocumentoObservable = this.tareaService.eliminarDocumentoTarea(id, this.auth.obtenerHeader());
+              break;
+            default:
+              throw new Error(`Tipo inválido: ${tipo}`);
+          }
+            eliminarDocumentoObservable.subscribe(
+              () => {
+                this.mostrarMensajeDocumentoEliminado('Archivo eliminado!!!', 'success');
+              },
+            );
+        }
+      });
+    } else {
+      throw new Error(`Tipo inválido: ${tipo}`);
+    }
+
+  }
+  
+  extraerNombreArchivo(rutaArchivo: string): string {
+    // Decodificar la URL para manejar códigos de escape
+    const nombreArchivoDecodificado = decodeURIComponent(rutaArchivo);
+  
+    // Buscar la posición de la última '/'
+    const posicionUltimaBarra = nombreArchivoDecodificado.lastIndexOf('/');
+  
+    // Buscar la posición del primer '?' después de la extensión
+    const posicionInterrogante = nombreArchivoDecodificado.indexOf('?', posicionUltimaBarra);
+  
+    // Verificar si se encontró la posición adecuada
+    if (posicionUltimaBarra !== -1 && posicionInterrogante !== -1) {
+      // Extraer el nombre del archivo
+      const nombreArchivo = nombreArchivoDecodificado.substring(posicionUltimaBarra + 1, posicionInterrogante);
+      return nombreArchivo;
+    } else {
+      console.error('No se pudo determinar el nombre del archivo desde la URL:', rutaArchivo);
+      return '';
+    }
+  }
+  obtenerIdYCarpetaporTipo(tipo: string): { id: number, carpeta: string } {
+    let id;
+    let carpeta;
+    switch (tipo) {
+        case 'SPRINT':
+            id = this.idSprintSeleccionado;
+            carpeta = 'sprint';
+            break;
+        case 'TAREA':
+            id = this.idTareaSeleccionado;
+            carpeta = 'tarea';
+            break;
+        default:
+            throw new Error(`Tipo inválido: ${tipo}`);
+    }
+    return { id: id, carpeta: carpeta };
+  }
+  obtenerDocumento(documento:any, tipo:string){
+    tipo = this.tipoFormulario;
+    switch (tipo) {
+      case 'SPRINT':
+        this.idDocumentoSprintSeleccionado = documento.idDocumentoSprint;
+        this.idSprintSeleccionado = documento.idSprint;
+          break;
+      case 'TAREA':
+        this.idDocumentoTareaSeleccionado = documento.idDocumentoTarea;
+        this.idTareaSeleccionado = documento.idTarea;
+          break;
+      default:
+          throw new Error(`No se obtuvo el documento: ${tipo}`);
+    }
+    this.nombreArchivoSeleccionado =  documento.rutaDocumento;
   }
   obtenerSprint(idSprint: number,sprint:any) {
     this.tipoFormulario = 'SPRINT';
@@ -840,17 +886,6 @@ export class SprintListarComponent implements OnInit {
     return tareaEstado === estado;
   }
 
-  swalSatisfactorio(metodo: string, tipo:string) {
-    Swal.fire({
-      title: `Se ha ${metodo}.`,
-      text: `El ${tipo} se ha ${metodo}!!`,
-      icon:'success',
-        position: "center",
-        showConfirmButton: false,
-        timer: 1000
-    }
-    );
-  }
   swalError(error: any) {
     Swal.fire(
       {
@@ -861,12 +896,52 @@ export class SprintListarComponent implements OnInit {
       }
     );
   } 
+  mensajePregunta(pregunta: string,metodo :string, tipo: 'question' | 'error') {
+    return Swal.fire({
+      title: tipo === 'question' ? pregunta : 'Hubo un error!!!',
+      icon: tipo,
+      text: "Una vez " + metodo + ", NO podrás recuperarlo.",
+      showCancelButton: true,
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Confirmar",
+      confirmButtonColor: '#0E823F',
+      reverseButtons: true,
+    });
+  }
+  mostrarMensaje(mensaje: string, tipo: 'success' | 'error') {
+    Swal.fire({
+        title: tipo === 'success' ? mensaje : 'Hubo un error!!!',
+        icon: tipo,
+        confirmButtonColor: '#0E823F',
+        position: "center",
+        showConfirmButton: false,
+        timer: 2000
+    });
+  }
+  mostrarMensajeDocumentoEliminado(mensaje: string, tipo: 'success' | 'error') {
+    Swal.fire({
+        title: tipo === 'success' ? mensaje : 'Hubo un error!!!',
+        icon: tipo,
+        confirmButtonColor: '#0E823F',
+        iconHtml: '<i class="bi bi-trash"></i>',
+        position: "center",
+        showConfirmButton: false,
+        timer: 1500
+    });
+  }
+
 
   get nombreVacio(){
     return this.formTarea.get('nombre')?.invalid && this.formTarea.get('nombre')?.touched;
   }
   get descripcionVacio(){
     return this.formTarea.get('descripcion')?.invalid && this.formTarea.get('descripcion')?.touched;
+  }
+  get descripcionMinimoCaracteres() {
+    return this.formTarea.get('descripcion')?.hasError('maxCharacters');
+  }
+  get descripcionModificarTareaMinimoCaracteres() {
+    return this.formModificarTarea.get('descripcion')?.hasError('maxCharacters');
   }
   get periodicidadVacio(){
     return this.formTarea.get('periodicidad')?.invalid && this.formTarea.get('periodicidad')?.touched;

@@ -18,6 +18,7 @@ export class ActividadestrategicaListarComponent implements OnInit{
   actividadesEstrategicasPendientes: any[] = [];
   usuarios:Usuario[] =[];
   pats : Pat[] = [];
+  nombresPatPorId: {[id: string]: string} = {};
   totalActividadesEstrategicas : number = 0;
   totalActividadesEstrategicasPendintes: number =0;
   busqueda: any;
@@ -35,6 +36,11 @@ export class ActividadestrategicaListarComponent implements OnInit{
       if (patsData && patsData.length > 0) {
         // Obtener los IDs de los Pats
         const idsPats = patsData.map(pat => pat.idPat);
+
+        // Obtener los nombres de los PATs junto con sus IDs
+        for (const pat of patsData) {
+          this.nombresPatPorId[pat.idPat] = pat.nombre; // Suponiendo que el nombre del PAT se encuentra en pat.nombre
+        }
         // Lista acumulativa para almacenar todas las actividades estratégicas
         const allActividades: any[] = [];
         const allActividadesPendientes: any[] = [];

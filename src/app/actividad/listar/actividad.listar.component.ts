@@ -16,6 +16,7 @@ import { environment } from 'src/environments/environment.development';
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 import { Usuario } from 'src/app/modelo/usuario';
 import { MENSAJE_TITULO } from 'src/app/utilitarios/mensaje/mensajetitulo';
+import { CustomValidators } from 'src/custom/custom-validators';
 
 @Component({
   selector: 'app-listar',
@@ -25,6 +26,8 @@ import { MENSAJE_TITULO } from 'src/app/utilitarios/mensaje/mensajetitulo';
 export class ActividadListarComponent implements OnInit{
   title = 'listarActividad';
   CAMPO_OBLIGATORIO = MENSAJE_TITULO.CAMPO_OBLIGATORIO;
+  CAMPO_OBLIGATORIO_MINIMO_CARACTERES = MENSAJE_TITULO.CAMPO_OBLIGATORIO_MINIMO_CARACTERES;
+  CAMPO_MINIMO_CARACTERES = MENSAJE_TITULO.MINIMO_CARACTERES_DESCRIPCION;
   NOMBRE_ACTIVDIDAD_GESTION = MENSAJE_TITULO.NOMBRE_ACTIVIDAD_GESTION;
   NOMBRE_PROYECTO = MENSAJE_TITULO.NOMBRE_PROYECTO;
   NOMBRE_TAREA = MENSAJE_TITULO.NOMBRE_TAREA_ACTVIDAD_GESTION;
@@ -147,13 +150,13 @@ export class ActividadListarComponent implements OnInit{
     });
     this.formTarea = this.formBuilder.group({
       nombre: ['', Validators.required],
-      descripcion: ['', Validators.required],
+      descripcion: ['', Validators.required, CustomValidators.minimoCaracteres(50)],
       periodicidad: ['', Validators.required],
       idUsuario: ['', Validators.required],
     });
     this.formModificarTarea = this.formBuilder.group({
       nombre: ['', Validators.required],
-      descripcion: ['', Validators.required],
+      descripcion: ['', Validators.required, CustomValidators.minimoCaracteres(50)],
       periodicidad: ['', Validators.required],
       idUsuario: ['', Validators.required],
     });
@@ -196,7 +199,6 @@ ngOnInit() {
     );
   });
   this.cargarUsuario();
-  this.crearTarea();
   this.estadoEnumList = Object.values(EEstado);
   this.periodiciadEnumLista = Object.values(EPeriodicidad);
 
@@ -246,21 +248,12 @@ private obtenerFechaActual(): string {
       const proyectoValorEjecutado = {
         valorEjecutado: valorEjecutado,
       };
-      console.log(proyectoValorEjecutado)
-      Swal.fire({
-        title: "¿Deseas modificarlo?",
-        icon: "question",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: '#0E823F',
-        reverseButtons: true, 
-      })
+      this.mensajePregunta('¿Deseas modificarlo?','modificado','question')
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
           this.actividadService.modificarValorEjecutado(proyectoValorEjecutado, this.idProyectoSeleccionado,this.auth.obtenerHeader()).subscribe(
               (response) => {
-                this.swalSatisfactorio('modificado','valor ejecutado')
+                this.mostrarMensaje('Se ha modificado el valor ejecutado del proyecto','success');
                   this.cargarProyectos(this.idActividadEstrategica);
                   this.formModificarValorEjecutado.reset();              
               },
@@ -273,21 +266,12 @@ private obtenerFechaActual(): string {
 
   eliminarGestion(idActividadGestionActividadEstrategica: number) {
 
-      Swal.fire({
-        title: "¿Estás seguro?",
-        text: "Una vez eliminado, no podrás recuperar este elemento.",
-        icon: "question",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: '#0E823F',
-        reverseButtons: true,     
-      })
-      .then((confirmacion) => {
+    this.mensajePregunta('¿Deseas eliminarlo?','eliminado','question')
+    .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
         this.actividadService.eliminarActividadGestionActividadEstrategica(idActividadGestionActividadEstrategica, this.auth.obtenerHeader()).subscribe(
           () => {
-            this.swalSatisfactorio('eliminado','actividad de gestión')
+            this.mostrarMensaje('Se ha eliminado la actividad gestión','success');
               this.cargarGestiones(this.idActividadEstrategica)
           },
           (error) => {this.swalError(error);}
@@ -297,21 +281,12 @@ private obtenerFechaActual(): string {
   }
   eliminarProyecto(idProyecto: number) {
 
-      Swal.fire({
-        title: "¿Estás seguro?",
-        text: "Una vez eliminado, no podrás recuperar este elemento.",
-        icon: "question",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: '#0E823F',
-        reverseButtons: true,  
-      })
-      .then((confirmacion) => {
+    this.mensajePregunta('¿Deseas eliminarlo?','eliminado','question')
+    .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
         this.actividadService.eliminarProyecto(idProyecto, this.auth.obtenerHeader()).subscribe(
           () => {
-            this.swalSatisfactorio('eliminado','proyecto')
+            this.mostrarMensaje('Se ha modificado el proyecto','success');
               this.cargarProyectos(this.idActividadEstrategica)
           },
           (error) => {this.swalError(error);}
@@ -336,21 +311,13 @@ private obtenerFechaActual(): string {
         idActividadEstrategica:idActividadEstrategica
       };
 
-      Swal.fire({
-        title: "¿Estás seguro de modificar?",
-        icon:"question",
-        text: "Una vez modificado no podrás revertir los cambios",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: '#0E823F',
-        reverseButtons: true, 
-      }).then((confirmacion) => {
+      this.mensajePregunta('¿Deseas modificarlo?','modificado','question')
+      .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
           this.actividadService.modificarActividadGestionActividadEstrategica(actividadGestion, this.idActividadGestionEstrategicaSeleccionado, this.auth.obtenerHeader())
             .subscribe(
               () => {
-                this.swalSatisfactorio('modificado','actividad de gestión')
+                this.mostrarMensaje('Se ha modificado la actividad gestión ' + nombre,'success');
                 this.cargarGestiones(this.idActividadEstrategica)
               },
               (error) => {this.swalError(error);}
@@ -381,22 +348,14 @@ private obtenerFechaActual(): string {
         idActividadEstrategica : idActividadEstrategica
       };
 
-      Swal.fire({
-        title: "¿Estás seguro de modificar?",
-        icon:"question",
-        text: "Una vez modificado no podrás revertir los cambios",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: '#0E823F',
-        reverseButtons: true, 
-      }).then((confirmacion) => {
+      this.mensajePregunta('¿Deseas modificarlo?','modificado','question')
+      .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
         this.actividadService
           .modificarProyecto(proyecto, this.idProyectoSeleccionado, this.auth.obtenerHeader())
           .subscribe(
             (response) => {
-              this.swalSatisfactorio('modificado','proyecto')
+              this.mostrarMensaje('Se ha modificado el proyecto ' + nombre,'success');
                 this.cargarProyectos(this.idActividadEstrategica)
             },
             (error) => {this.swalError(error);}
@@ -456,23 +415,14 @@ private obtenerFechaActual(): string {
     }
   } 
   eliminarObservacion(observacion: any, tipo:string) {
-    Swal.fire({
-      icon:"question",
-      title: "¿Estás seguro?",
-      text: "Una vez eliminado la observación, no podrás recuperar este elemento.",
-      showCancelButton: true,
-      cancelButtonText: "Cancelar",
-      confirmButtonText: "Confirmar",
-      confirmButtonColor: '#0E823F',
-      reverseButtons: true, 
-    })
+    this.mensajePregunta('¿Deseas eliminarlo?','eliminado','question')
     .then((confirmacion) => {
       if (confirmacion.isConfirmed) {
         if(tipo === 'TAREA'){
           const idTarea = observacion.idTarea;
           this.tareaService.eliminarObservacionTarea(observacion.idObservacionTarea, this.auth.obtenerHeader()).subscribe(
             () => {
-              this.swalSatisfactorio('eliminado','la observación');
+              this.mostrarMensaje('Se ha eliminado la observación','success');
               this.cargarObservaciones(idTarea, 'TAREA')
             },
             (error) => {
@@ -484,7 +434,7 @@ private obtenerFechaActual(): string {
           this.actividadService
             .eliminarObservacionActividadGestionActividadEstrategica(observacion.idObservacionActividadGestionEstrategica,this.auth.obtenerHeader()) .subscribe(
                 () => {
-                  this.swalSatisfactorio('eliminado','la observación');
+                  this.mostrarMensaje('Se ha eliminado la observación','success');
                   this.cargarObservaciones(idActividadGestionEstrategica, 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')
                 },
                 (error) => {
@@ -496,7 +446,7 @@ private obtenerFechaActual(): string {
           this.actividadService
             .eliminarObservacionProyecto(observacion.idObservacionProyecto,this.auth.obtenerHeader()) .subscribe(
               () => {
-                this.swalSatisfactorio('eliminado','la observación');
+                this.mostrarMensaje('Se ha eliminado la observación','success');
                 this.cargarObservaciones(idProyecto, 'PROYECTO')
               },
               (error) => {
@@ -529,7 +479,7 @@ private obtenerFechaActual(): string {
         .crearTarea(tarea,this.auth.obtenerHeader())
         .subscribe(
           () => {
-            this.swalSatisfactorio('creado','tarea')
+            this.mostrarMensaje('Se ha creado la tarea ' + nombre,'success');
               this.cargarTareas(this.idActividadGestionEstrategicaSeleccionado,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')
               this.formTarea.reset()
           },
@@ -553,7 +503,7 @@ private obtenerFechaActual(): string {
           .crearObservacion(observacion,this.auth.obtenerHeader())
           .subscribe(
             (response) => {
-                this.swalSatisfactorio('creado','observación')
+              this.mostrarMensaje('Se ha creado la observación ' + descripcion,'success');
                 this.formObservacion.reset()
             },
             (error) => {this.swalError(error);}
@@ -568,7 +518,7 @@ private obtenerFechaActual(): string {
           .crearObservacionActividadGestionActividadEstrategica(observacion,this.auth.obtenerHeader())
           .subscribe(
             (response) => {
-                this.swalSatisfactorio('creado','observación')
+              this.mostrarMensaje('Se ha creado la observación ' + descripcion,'success');
                 this.formObservacion.reset()
             },
             (error) => {this.swalError(error);}
@@ -583,7 +533,7 @@ private obtenerFechaActual(): string {
           .crearObservacionProyecto(observacion,this.auth.obtenerHeader())
           .subscribe(
             (response) => {
-                this.swalSatisfactorio('creado','observación')
+              this.mostrarMensaje('Se ha creado la observación ' + descripcion,'success');
                 this.formObservacion.reset()
             },
             (error) => {this.swalError(error);}
@@ -599,23 +549,14 @@ private obtenerFechaActual(): string {
       const observacion = {
         descripcion: descripcion,
       }
-      Swal.fire({
-        icon: "question",
-        title: "¿Estás seguro de modificar?",
-        text: "Una vez modificado no podrás revertir los cambios",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: '#0E823F',
-        reverseButtons: true,
-      })
+      this.mensajePregunta('¿Deseas modificarlo?','modificado','question')
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
           switch (tipo) {
             case 'TAREA':
               this.tareaService.modificarObservacionTarea(observacion, this.idObservacionTareaSeleccionado, this.auth.obtenerHeader()).subscribe(
                 () => {
-                  this.swalSatisfactorio('modificado', 'tarea');
+                  this.mostrarMensaje('Se ha modificado la observación ' + descripcion,'success');
                 },
                 (error) => {
                   this.swalError(error);
@@ -625,7 +566,7 @@ private obtenerFechaActual(): string {
             case 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA':
               this.actividadService.modificarObservacionActividadGestionActividadEstrategica(observacion, this.idObservacionActividadGestionEstrategicaSeleccionado, this.auth.obtenerHeader()).subscribe(
                 () => {
-                  this.swalSatisfactorio('modificado', 'actividad estratégica');
+                  this.mostrarMensaje('Se ha modificado la observación ' + descripcion,'success');
                 },
                 (error) => {
                   this.swalError(error);
@@ -635,7 +576,7 @@ private obtenerFechaActual(): string {
             case 'PROYECTO':
               this.actividadService.modificarObservacionProyecto(observacion, this.idObservacionProyectoSeleccionado, this.auth.obtenerHeader()).subscribe(
                 () => {
-                  this.swalSatisfactorio('modificado', 'proyecto de área');
+                  this.mostrarMensaje('Se ha modificado la observación ' + descripcion,'success');
                 },
                 (error) => {
                   this.swalError(error);
@@ -653,23 +594,15 @@ private obtenerFechaActual(): string {
       const tareaModificar = {
         estado: estado,
       };
-      Swal.fire({
-        title: "¿Deseas modificarlo?",
-        text: "Una vez modificado no podrás revertir los cambios",
-        icon: "question",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: '#0E823F',
-        reverseButtons: true, 
-      })
+      this.mensajePregunta('¿Deseas modificarlo?','modificado','question')
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
           this.tareaService.modificarEstadoTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
               () => {
-                this.swalSatisfactorio('modificado','estado de la tarea')
-                  this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA');
-                  this.formTarea.reset();             
+                this.mostrarMensaje('Se ha modificado el estado de la tarea','success');
+                this.collapseSeleccionado = null;
+                this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA');
+                this.formTarea.reset();             
               },
               (error) => {this.swalError(error);}
             );
@@ -690,21 +623,13 @@ private obtenerFechaActual(): string {
       const tareaModificar = {
         porcentajeReal: porcentajeReal,
       };
-      Swal.fire({
-        title: "¿Deseas modificarlo?",
-        text: "Una vez modificado no podrás revertir los cambios",
-        icon: "question",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: '#0E823F',
-        reverseButtons: true, 
-      })
+      this.mensajePregunta('¿Deseas modificarlo?','modificado','question')
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
           this.tareaService.modificarPorcentajeTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
               (response) => {
-                this.swalSatisfactorio('modificado','porcentaje de la tarea');
+                this.mostrarMensaje('Se ha modificado el porcentaje de la tarea','success');
+                this.collapseSeleccionado = null;
                 this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA');
                 this.formModificarPorcentaje.reset()              
               },
@@ -726,23 +651,15 @@ private obtenerFechaActual(): string {
         descripcion: descripcion,
         idUsuario: idUsuario,
       };
-      Swal.fire({
-        title: "¿Deseas modificarlo?",
-        text: "La gestión del área se ha modificado",
-        icon: "question",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: '#0E823F',
-        reverseButtons: true, 
-      })
+      this.mensajePregunta('¿Deseas modificarlo?','modificado','question')
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
           this.tareaService.modificarTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
               (response) => {
-                this.swalSatisfactorio('modificado','tarea')
-                  this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA');
-                  this.formTarea.reset();             
+                this.mostrarMensaje('Se ha modificado la tarea ' + nombre,'success');
+                this.collapseSeleccionado = null;
+                this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA');
+                this.formTarea.reset();             
               },
               (error) => {this.swalError(error);}
             );
@@ -751,21 +668,13 @@ private obtenerFechaActual(): string {
     }
   }
   eliminarTarea(idTarea: number, idActividadGestionActividadEstrategica: number) {
-    Swal.fire({
-        title: "¿Estás seguro?",
-        text: "Una vez eliminado, no podrás recuperar este elemento.",
-        icon: "question",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: '#0E823F',
-        reverseButtons: true, 
-      })
-      .then((confirmacion) => {
+    this.mensajePregunta('¿Deseas eliminarlo?','eliminado','question')
+    .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
         this.tareaService.eliminarTarea(idTarea, this.auth.obtenerHeader()).subscribe(
           () => {
-            this.swalSatisfactorio('eliminado','tarea')
+            this.mostrarMensaje('Se ha eliminado la tarea ','success');
+            this.collapseSeleccionado = null;
             this.cargarTareas(idActividadGestionActividadEstrategica,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')
           },
           (error) => {this.swalError(error);}
@@ -774,42 +683,52 @@ private obtenerFechaActual(): string {
       });
   }
   async documento(event: any, tipo: string): Promise<void> {
-    if(tipo === 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA'){
-      this.idActividadGestionEstrategicaSeleccionado;
-    } else if (tipo === 'PROYECTO'){
-      this.idProyectoSeleccionado;
-    } else if (tipo === 'TAREA'){
-      this.idTareaSeleccionado;
-    }
-    this.archivoSeleccionado = event.target.files[0];
-  
-    try {
-      await this.validarArchivo();
-      // Actualizar el nombre del archivo seleccionado
-      this.nombreArchivoSeleccionado = this.archivoSeleccionado ? this.archivoSeleccionado.name : '';
-      // Resto del código si la validación es exitosa
-    } catch (error) {
-      this.archivoSeleccionado = null;
-      this.nombreArchivoSeleccionado = '';
-    }
-  }
-  abrirModalAgregarDocumento(idRecibido: number,tipo:string): void {
-    if(tipo === 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA'){
-      this.idActividadGestionEstrategicaSeleccionado = idRecibido;
-    } else if (tipo === 'PROYECTO'){
-      this.idProyectoSeleccionado = idRecibido;
-    }else if (tipo === 'TAREA'){
-      this.idTareaSeleccionado = idRecibido;
-    }
-  }
+    if (tipo === 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA' || tipo === 'PROYECTO' || tipo === 'TAREA') {
+      this.tipoFormulario = tipo;
 
+      if(tipo === 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA'){
+        this.idActividadGestionEstrategicaSeleccionado;
+      } else if (tipo === 'PROYECTO'){
+        this.idProyectoSeleccionado;
+      } else if (tipo === 'TAREA'){
+        this.idTareaSeleccionado;
+      }
+      this.archivoSeleccionado = event.target.files[0];
+    
+      try {
+        await this.validarArchivo();
+        // Actualizar el nombre del archivo seleccionado
+        this.nombreArchivoSeleccionado = this.archivoSeleccionado ? this.archivoSeleccionado.name : '';
+        // Resto del código si la validación es exitosa
+      } catch (error) {
+        this.archivoSeleccionado = null;
+        this.nombreArchivoSeleccionado = '';
+      }
+    } else {
+      throw new Error(`Tipo inválido: ${tipo}`);
+    }
+  }
+  obtenerId(idRecibido: number,tipo:string): void {
+    if (tipo === 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA' || tipo === 'PROYECTO' || tipo === 'TAREA') {
+      this.tipoFormulario = tipo;
+
+      if(tipo === 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA'){
+        this.idActividadGestionEstrategicaSeleccionado = idRecibido;
+      } else if (tipo === 'PROYECTO'){
+        this.idProyectoSeleccionado = idRecibido;
+      }else if (tipo === 'TAREA'){
+        this.idTareaSeleccionado = idRecibido;
+      }
+    } else {
+      throw new Error(`Tipo inválido: ${tipo}`);
+    }
+  }
 
   private validarArchivo(): boolean {
     if (!this.archivoSeleccionado) {
       // Puedes mostrar un mensaje de error o manejarlo de otra manera
       return false;
     }
-
 
     const fileSize = this.archivoSeleccionado.size;
     const fileName = this.archivoSeleccionado.name;
@@ -825,120 +744,185 @@ private obtenerFechaActual(): string {
     return true;
   }
   async subirDocumento(formulario: any,tipo: string) {
-    try {
-        if (!this.archivoSeleccionado) {
-            throw new Error('No se ha seleccionado ningún archivo.');
+    if (tipo === 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA' || tipo === 'PROYECTO' || tipo === 'TAREA') {
+      this.tipoFormulario = tipo;
+        try {
+            if (!this.archivoSeleccionado) {
+                throw new Error('No se ha seleccionado ningún archivo.');
+            }
+
+            const { id, carpeta } = this.obtenerIdYCarpetaporTipo(tipo);
+
+            const app = initializeApp(environment.firebase);
+            const storage = getStorage(app);
+            const storageRef = ref(storage, `${carpeta}/${id}/${this.archivoSeleccionado.name}`);
+            const snapshot = await uploadBytes(storageRef, this.archivoSeleccionado);
+            const downloadURL = await getDownloadURL(storageRef);
+
+            const documento = {
+                fecha: this.obtenerFechaActual(),
+                rutaDocumento: downloadURL,
+            };
+
+            let guardarDocumentoObservable;
+
+            switch (tipo) {
+                case 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA':
+                    guardarDocumentoObservable = this.actividadService.guardarDocumentoActividadGestionActividadEstrategica(documento, this.idActividadGestionEstrategicaSeleccionado, this.auth.obtenerHeaderDocumento());
+                    break;
+                case 'PROYECTO':
+                    guardarDocumentoObservable = this.actividadService.guardarDocumentoProyecto(documento, this.idProyectoSeleccionado, this.auth.obtenerHeaderDocumento());
+                    break;
+                case 'TAREA':
+                    guardarDocumentoObservable = this.tareaService.guardarDocumentoTarea(documento, this.idTareaSeleccionado, this.auth.obtenerHeaderDocumento());
+                    break;
+                default:
+                    throw new Error(`Tipo de documento no válido: ${tipo}`);
+            }
+
+            guardarDocumentoObservable.subscribe(
+                () => {
+                    this.mostrarMensaje('Archivo modificado correctamente', 'success');  
+                    this.archivoSeleccionado = null; // Limpiar el archivo seleccionado
+                    this.nombreArchivoSeleccionado = ''; // Limpiar el nombre del archivo seleccionado  
+                },
+                error => this.mostrarMensaje('Hubo un error: ' + error.error.mensajeTecnico, 'error')
+            );
+
+        } catch (error) {
+            this.mostrarMensaje('Hubo un error durante al cargar el archivo', 'error');
         }
-
-        const { id, carpeta } = this.obtenerIdYCarpetaporTipo(tipo);
-
-        const app = initializeApp(environment.firebase);
-        const storage = getStorage(app);
-        const storageRef = ref(storage, `${carpeta}/${id}/${this.archivoSeleccionado.name}`);
-        const snapshot = await uploadBytes(storageRef, this.archivoSeleccionado);
-        const downloadURL = await getDownloadURL(storageRef);
-
-        const documento = {
-            fecha: this.obtenerFechaActual(),
-            rutaDocumento: downloadURL,
-        };
-
-        let guardarDocumentoObservable;
-
-        switch (tipo) {
-            case 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA':
-                guardarDocumentoObservable = this.actividadService.guardarDocumentoActividadGestionActividadEstrategica(documento, this.idActividadGestionEstrategicaSeleccionado, this.auth.obtenerHeaderDocumento());
-                break;
-            case 'PROYECTO':
-                guardarDocumentoObservable = this.actividadService.guardarDocumentoProyecto(documento, this.idProyectoSeleccionado, this.auth.obtenerHeaderDocumento());
-                break;
-            case 'TAREA':
-                guardarDocumentoObservable = this.tareaService.guardarDocumentoTarea(documento, this.idTareaSeleccionado, this.auth.obtenerHeaderDocumento());
-                break;
-            default:
-                throw new Error(`Tipo de documento no válido: ${tipo}`);
-        }
-        guardarDocumentoObservable.subscribe(
-            () => {
-                this.mostrarMensaje('Archivo cargado correctamente', 'success');  
-                this.archivoSeleccionado = null; // Limpiar el archivo seleccionado
-                this.nombreArchivoSeleccionado = ''; // Limpiar el nombre del archivo seleccionado  
-            },
-            error => this.mostrarMensaje('Hubo un error: ' + error.error.mensajeTecnico, 'error')
-        );
-
-    } catch (error) {
-        this.mostrarMensaje('Hubo un error durante al cargar el archivo', 'error');
-    }
-  }
-  async modificarDocumento(formulario: any, tipo: string) {
-
-
-    try {
-        if (!this.archivoSeleccionado) {
-            throw new Error('No se ha seleccionado ningún archivo.');
-        }
-
-        const { id, carpeta } = this.obtenerIdYCarpetaporTipo(tipo);
-
-        const app = initializeApp(environment.firebase);
-        const storage = getStorage(app);
-        const storageRef = ref(storage, `${carpeta}/${id}/${this.archivoSeleccionado.name}`);
-        const snapshot = await uploadBytes(storageRef, this.archivoSeleccionado);
-        const downloadURL = await getDownloadURL(storageRef);
-
-        const documento = {
-            fecha: this.obtenerFechaActual(),
-            rutaDocumento: downloadURL,
-        };
-
-        let guardarDocumentoObservable;
-
-        switch (tipo) {
-          case 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA':
-              guardarDocumentoObservable = this.actividadService.modificarDocumentoActividadGestionEstrategica(documento, this.idActividadGestionEstrategicaSeleccionado, this.auth.obtenerHeaderDocumento());
-              break;
-          case 'PROYECTO':
-              guardarDocumentoObservable = this.actividadService.modificarDocumentoProyecto(documento, this.idProyectoSeleccionado, this.auth.obtenerHeaderDocumento());
-              break;
-          case 'TAREA':
-              guardarDocumentoObservable = this.tareaService.modificarDocumentoTarea(documento, this.idTareaSeleccionado, this.auth.obtenerHeaderDocumento());
-              break;
-          default:
-              throw new Error(`Tipo de documento no válido: ${tipo}`);
+      } else {
+      throw new Error(`Tipo inválido: ${tipo}`);
       }
-        guardarDocumentoObservable.subscribe(
-            () => {
-                this.mostrarMensaje('Archivo cargado correctamente', 'success');
-                this.archivoSeleccionado = null; // Limpiar el archivo seleccionado
-                this.nombreArchivoSeleccionado = ''; // Limpiar el nombre del archivo seleccionado
-            },
-            error => this.mostrarMensaje('Hubo un error: ' + error.error.mensajeTecnico, 'error')
-        );
+  }
 
-    } catch (error) {
-        this.mostrarMensaje('Hubo un error durante al cargar el archivo', 'error');
+
+  async modificarDocumento(formulario: any, tipo: string) {
+    if (tipo === 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA' || tipo === 'PROYECTO' || tipo === 'TAREA') {
+      this.tipoFormulario = tipo;
+      try {
+          if (!this.archivoSeleccionado) {
+              throw new Error('No se ha seleccionado ningún archivo.');
+          }
+
+          const { id, carpeta } = this.obtenerIdYCarpetaporTipo(tipo);
+
+          const app = initializeApp(environment.firebase);
+          const storage = getStorage(app);
+          const storageRef = ref(storage, `${carpeta}/${id}/${this.archivoSeleccionado.name}`);
+          const snapshot = await uploadBytes(storageRef, this.archivoSeleccionado);
+          const downloadURL = await getDownloadURL(storageRef);
+
+          const documento = {
+              fecha: this.obtenerFechaActual(),
+              rutaDocumento: downloadURL,
+          };
+
+          let modificarDocumentoObservable;
+
+          switch (tipo) {
+            case 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA':
+                  modificarDocumentoObservable = this.actividadService.modificarDocumentoActividadGestionEstrategica(documento, this.idDocumentoActividadGestionEstrategicaSeleccionado, this.auth.obtenerHeaderDocumento());
+                  break;
+            case 'PROYECTO':
+                  modificarDocumentoObservable = this.actividadService.modificarDocumentoProyecto(documento, this.idDocumentoProyectoSeleccionado, this.auth.obtenerHeaderDocumento());
+                  break;
+            case 'TAREA':
+                  modificarDocumentoObservable = this.tareaService.modificarDocumentoTarea(documento, this.idDocumentoTareaSeleccionado, this.auth.obtenerHeaderDocumento());
+                  break;
+              default:
+                  throw new Error(`Tipo de documento no válido: ${tipo}`);
+          }
+
+          modificarDocumentoObservable.subscribe(
+              () => {
+                  this.mostrarMensaje('Archivo cargado correctamente', 'success');
+                  this.archivoSeleccionado = null; // Limpiar el archivo seleccionado
+                  this.nombreArchivoSeleccionado = ''; // Limpiar el nombre del archivo seleccionado
+              },
+              error => this.mostrarMensaje('Hubo un error: ' + error.error.mensajeTecnico, 'error')
+          );
+
+      } catch (error) {
+          this.mostrarMensaje('Hubo un error durante al cargar el archivo', 'error');
+      }
+    } else {
+    throw new Error(`Tipo inválido: ${tipo}`);
     }
   }
 
-  obtenerDocumento(documento:any, tipo:string){
-    switch (tipo) {
-      case 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA':
-        this.idDocumentoActividadGestionEstrategicaSeleccionado = documento.idDocumentoActividadGestion;
-        this.idActividadGestionEstrategicaSeleccionado = documento.idActividadGestionEstrategica;
+  verDocumentos(id: number, tipo: string) {
+    if (tipo === 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA' || tipo === 'PROYECTO' || tipo === 'TAREA') {
+      this.tipoFormulario = tipo;
+      let obtenerDocumentoObservable;
+      switch (tipo) {
+        case 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA':
+          obtenerDocumentoObservable = this.actividadService.obtenerDocumento(id, this.auth.obtenerHeaderDocumento());
           break;
-      case 'PROYECTO':
-        this.idDocumentoProyectoSeleccionado = documento.idDocumentoProyectoArea;
-        this.idProyectoSeleccionado = documento.idProyecto;
+        case 'PROYECTO':
+          obtenerDocumentoObservable = this.actividadService.obtenerDocumentoProyecto(id, this.auth.obtenerHeaderDocumento());
           break;
-      case 'TAREA':
-        this.idDocumentoTareaSeleccionado = documento.idDocumentoTarea;
-        this.idTareaSeleccionado = documento.idTarea;
+        case 'TAREA':
+          obtenerDocumentoObservable = this.tareaService.obtenerDocumentoTarea(id, this.auth.obtenerHeaderDocumento());
           break;
-      default:
-          throw new Error(`No se obtuvo el documento: ${tipo}`);
+        default:
+          obtenerDocumentoObservable = null;
+          break;
+      }
+
+      if (obtenerDocumentoObservable) {
+        obtenerDocumentoObservable.subscribe(
+          (data: any) => {
+            this.documentoObtenido = data;
+          },
+          error => this.mostrarMensaje('Hubo un error: ' + error.error.mensajeTecnico, 'error')
+          
+        );
+      } else {
+        this.mostrarMensaje('Hubo un error durante al cargar el archivo', 'error');
+      }
+    } else {
+      throw new Error(`Tipo inválido: ${tipo}`);
     }
-    this.nombreArchivoSeleccionado =  documento.rutaDocumento;
+  }
+  eliminarDocumento(documento: any, tipo: string) {
+    if (tipo === 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA' || tipo === 'PROYECTO' || tipo === 'TAREA') {
+      this.tipoFormulario = tipo;
+
+      this.mensajePregunta('¿Deseas eliminarlo?','eliminado','question')
+      .then((confirmacion) => {
+        if (confirmacion.isConfirmed) {
+          let id;
+          let eliminarDocumentoObservable;
+          switch (tipo) {
+            case 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA':
+              id = documento.idDocumentoActividadGestionEstrategica;
+              eliminarDocumentoObservable = this.actividadService.eliminarDocumentoActividadGestionEstrategica(id, this.auth.obtenerHeader());
+              break;
+            case 'PROYECTO':
+              id = documento.idDocumentoProyectoArea;
+              eliminarDocumentoObservable = this.actividadService.eliminarDocumentoProyecto(id, this.auth.obtenerHeader());
+              break;
+            case 'TAREA':
+              id = documento.idDocumentoTarea;
+              eliminarDocumentoObservable = this.tareaService.eliminarDocumentoTarea(id, this.auth.obtenerHeader());
+              break;
+            default:
+              throw new Error(`Tipo inválido: ${tipo}`);
+          }
+            eliminarDocumentoObservable.subscribe(
+              () => {
+                this.mostrarMensajeDocumentoEliminado('Archivo eliminado!!!', 'success');
+              },
+            );
+            this.verDocumentos(id,this.tipoFormulario);
+        }
+      });
+    } else {
+      throw new Error(`Tipo inválido: ${tipo}`);
+    }
+
   }
   
   extraerNombreArchivo(rutaArchivo: string): string {
@@ -1070,13 +1054,33 @@ private obtenerFechaActual(): string {
             carpeta = 'proyecto';
             break;
         case 'TAREA':
-            id = this.idProyectoSeleccionado;
+            id = this.idTareaSeleccionado;
             carpeta = 'tarea';
             break;
         default:
             throw new Error(`Tipo inválido: ${tipo}`);
     }
     return { id: id, carpeta: carpeta };
+  }
+  obtenerDocumento(documento:any, tipo:string){
+    tipo = this.tipoFormulario;
+    switch (tipo) {
+      case 'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA':
+        this.idDocumentoActividadGestionEstrategicaSeleccionado = documento.idDocumentoActividadGestionEstrategica;
+        this.idActividadGestionEstrategicaSeleccionado = documento.idActividadGestionEstrategica;
+          break;
+      case 'PROYECTO':
+        this.idDocumentoProyectoSeleccionado = documento.idDocumentoProyecto;
+        this.idProyectoSeleccionado = documento.idProyecto;
+          break;
+      case 'TAREA':
+        this.idDocumentoTareaSeleccionado = documento.idDocumentoTarea;
+        this.idTareaSeleccionado = documento.idTarea;
+          break;
+      default:
+          throw new Error(`No se obtuvo el documento: ${tipo}`);
+    }
+    this.nombreArchivoSeleccionado =  documento.rutaDocumento;
   }
 
   obtenerNombreUsuario(idUsuario: number) {
@@ -1117,18 +1121,6 @@ private obtenerFechaActual(): string {
   isEstado(tareaEstado:any, estado:any) {
     return tareaEstado === estado;
   }
-
-  swalSatisfactorio(metodo: string, tipo:string) {
-    Swal.fire({
-      title: `Se ha ${metodo}.`,
-      text: `El ${tipo} se ha ${metodo}!!`,
-      icon:'success',
-        position: "center",
-        showConfirmButton: false,
-        timer: 1000
-      }
-    );
-  }
   swalError(error: any) {
     Swal.fire(
       {
@@ -1139,20 +1131,51 @@ private obtenerFechaActual(): string {
       }
     );
   } 
+  mensajePregunta(pregunta: string,metodo :string, tipo: 'question' | 'error') {
+    return Swal.fire({
+      title: tipo === 'question' ? pregunta : 'Hubo un error!!!',
+      icon: tipo,
+      text: "Una vez " + metodo + ", NO podrás recuperarlo.",
+      showCancelButton: true,
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Confirmar",
+      confirmButtonColor: '#0E823F',
+      reverseButtons: true,
+    });
+  }
   mostrarMensaje(mensaje: string, tipo: 'success' | 'error') {
     Swal.fire({
-        title: tipo === 'success' ? 'Archivo cargado!' : 'Hubo un error!!!',
-        text: mensaje,
+        title: tipo === 'success' ? mensaje : 'Hubo un error!!!',
         icon: tipo,
         confirmButtonColor: '#0E823F',
+        position: "center",
+        showConfirmButton: false,
+        timer: 2000
     });
-}
+  }
+  mostrarMensajeDocumentoEliminado(mensaje: string, tipo: 'success' | 'error') {
+    Swal.fire({
+        title: tipo === 'success' ? mensaje : 'Hubo un error!!!',
+        icon: tipo,
+        confirmButtonColor: '#0E823F',
+        iconHtml: '<i class="bi bi-trash"></i>',
+        position: "center",
+        showConfirmButton: false,
+        timer: 1500
+    });
+  }
 
   get nombreVacio(){
     return this.formTarea.get('nombre')?.invalid && this.formTarea.get('nombre')?.touched;
   }
   get descripcionVacio(){
     return this.formTarea.get('descripcion')?.invalid && this.formTarea.get('descripcion')?.touched;
+  }
+  get descripcionMinimoCaracteres() {
+    return this.formTarea.get('descripcion')?.hasError('maxCharacters');
+  }
+  get descripcionModificarTareaMinimoCaracteres() {
+    return this.formModificarTarea.get('descripcion')?.hasError('maxCharacters');
   }
   get periodicidadVacio(){
     return this.formTarea.get('periodicidad')?.invalid && this.formTarea.get('periodicidad')?.touched;

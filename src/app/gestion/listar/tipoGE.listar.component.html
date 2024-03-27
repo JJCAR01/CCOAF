@@ -163,14 +163,14 @@
                     <i class="bi bi-trash3-fill"></i>
                   </button>
                   <button title="Agregar documento" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#agregarDocumento"
-                  (click)="obtenerId(actividad.idActividadEstrategica,'ACTIVIDAD_ESTRATEGICA')" *ngIf="esAdmin || esOperador || esDirector"
+                  (click)="obtenerId(actividad.idActividadEstrategica,'ACTIVIDAD_ESTRATEGICA')" *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor"
                       ><i class="bi bi-folder-plus"></i>
                     </button>
                   <button title="Ver documento" class="btn btn-outline-primary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalVerDocumentos" 
                   (click)="verDocumentos(actividad.idActividadEstrategica,'ACTIVIDAD_ESTRATEGICA')">            
                     <i class="bi bi-file-earmark-check"></i></button>
                   <button title="Agregar Observación" class="btn btn-outline-success me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" 
-                  (click)="obtenerActividadEstrategica(actividad.idActividadEstrategica,actividad)" *ngIf="esAdmin || esOperador || esDirector">
+                  (click)="obtenerActividadEstrategica(actividad.idActividadEstrategica,actividad)" *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor">
                     <i class="bi bi-node-plus-fill"></i>
                   </button>
                   <button title="Ver observación" class="btn btn-outline-dark me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalVerObservacion" (click)="cargarObservaciones(actividad.idActividadEstrategica,'ACTIVIDAD_ESTRATEGICA')">
@@ -438,11 +438,11 @@
                   </td> <!-- Nombre del archivo -->
                   <td>
                     <button title="Modificar" type="button" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modificarDocumento" 
-                      *ngIf="esAdmin" (click)="obtenerDocumento(documento,tipoFormulario)">
+                    *ngIf="esAdmin  || esDirector || esOperadorEditor" (click)="obtenerDocumento(documento,tipoFormulario)">
                       <i class="bi bi-pen-fill"></i>
                     </button>
-                    <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" 
-                      (click)="eliminarDocumento(documento,tipoFormulario)" *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor"
+                    <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" data-bs-dismiss="modal" 
+                      (click)="eliminarDocumento(documento,tipoFormulario)" *ngIf="esAdmin  || esDirector || esOperadorEditor"
                       ><i class="bi bi-trash3-fill"></i></button>
                   </td>
                 </tr>
@@ -456,6 +456,7 @@
       </div>
     </div>
   </div>
+  
   <div class="modal fade" id="agregarDocumento" tabindex="-1" aria-labelledby="modalAgregar" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
@@ -733,7 +734,8 @@
                       <i class="bi bi-pen-fill"></i>
                     </button>
                     <button title="Eliminar" class="btn btn-danger me-1 mb-1" 
-                     *ngIf="esAdmin || esOperador || esDirector"><i class="bi bi-trash3-fill" (click)="eliminarObservacion(observacion,tipoFormulario)"
+                     *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor"><i class="bi bi-trash3-fill" data-bs-dismiss="modal" 
+                     (click)="eliminarObservacion(observacion,tipoFormulario)"
                     ></i></button>
                     </td>
                   </tr>
@@ -866,10 +868,11 @@
                   <option *ngFor="let periodicidad of periodiciadLista" [value]="periodicidad">{{ periodicidad | formatEnum }}</option>
               </select>
           </div>
-            <div class="mb-3">
-              <label for="descripcion" class="form-label">Descripcion</label>
-              <input type="text" class="form-control" id="descripcion" formControlName="descripcion" >
-            </div>
+          <div class="form-floating mb-3">
+            <textarea type="text" id="descripcion" [class.is-invalid]="descripcionModificarTareaMinimoCaracteres" class="form-control form-control-lg" formControlName="descripcion" placeholder="descripcion"></textarea>
+            <label class="form-label" for="descripcion">Descripcion<span class="required-field">*</span></label>
+            <div *ngIf="descripcionModificarTareaMinimoCaracteres" class="text-danger"><small>{{ CAMPO_MINIMO_CARACTERES }}</small></div>
+          </div>
             <div class="mb-3">
               <label for="idUsuario" placeholder="usuario">Responsable:</label>
               <select class="form-select" id="idUsuario" formControlName="idUsuario">
@@ -948,11 +951,13 @@
               <label for="periodicidad" placeholder="periodicidad">Periodicidad<span class="required-field">*</span></label>
               <small *ngIf="periodicidadVacio" class="text-danger">{{ CAMPO_OBLIGATORIO }}</small>
             </div> 
-            <div class="form-floating mb-2">
-              <input type="text" id="descripcion" [class.is-invalid]="descripcionVacio" class="form-control" formControlName="descripcion" placeholder="descripcion">
-              <label for="descripcion" class="form-label">Descripcion<span class="required-field">*</span></label>
-              <small *ngIf="descripcionVacio" class="text-danger">{{ CAMPO_OBLIGATORIO }}</small>
+            <div class="form-floating mb-3">
+              <textarea type="text" id="descripcion" [class.is-invalid]="descripcionVacio || descripcionMinimoCaracteres" class="form-control form-control-lg" formControlName="descripcion" placeholder="descripcion"></textarea>
+              <label class="form-label" for="descripcion">Descripcion<span class="required-field">*</span></label>
+              <div *ngIf="descripcionVacio" class="text-danger"><small>{{ CAMPO_OBLIGATORIO_MINIMO_CARACTERES }}</small></div>
+              <div *ngIf="descripcionMinimoCaracteres" class="text-danger"><small>{{ CAMPO_MINIMO_CARACTERES }}</small></div>
             </div>
+            
             <div class="form-floating mb-2">
               <select class="form-select" id="idUsuario" formControlName="idUsuario">
                   <option value="" disabled selected> Seleccione el usuario responsable<span class="required-field">*</span></option>

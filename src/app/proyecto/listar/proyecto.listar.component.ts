@@ -17,6 +17,7 @@ export class ProyectoListarComponent implements OnInit {
   totalProyectosArea: number=0;
   proyectosArea: any[] = [];
   actividadesEstrategicas:any[] = [];
+  nombresPatPorId: {[id: string]: string} = {};
   busqueda: any;
 
   constructor(private actividadService: ActividadService,
@@ -25,7 +26,7 @@ export class ProyectoListarComponent implements OnInit {
     private tipoService: TipoGEService
     ){ }
 
-  ngOnInit(): void {
+    ngOnInit(): void {
       this.patService.getPatsAsociados().subscribe((patsData: any[]) => {
           if (patsData && patsData.length > 0) {
               // Obtener los IDs de los Pats
@@ -54,37 +55,44 @@ export class ProyectoListarComponent implements OnInit {
                                       .then(
                                           (proyectos: any) => {
                                               // Concatenar los proyectos obtenidos a la lista acumulativa
+                                              // Agregar el nombre del Pat asociado a cada proyecto
+                                              proyectos.forEach((proyecto: any) => {
+                                                  proyecto.nombrePat = patsData.find(pat => pat.idPat === idPat).nombre;
+                                              });
                                               todosLosProyecto.push(...proyectos);
-                                          })
+                                          });
                               }
                           }
                       );
-                this.tipoService.listarProyectoAreaPorIdPat(idPat, this.auth.obtenerHeader())
-                    .toPromise()
+                  this.tipoService.listarProyectoAreaPorIdPat(idPat, this.auth.obtenerHeader())
+                      .toPromise()
                       .then(
-                        (data: any) => {
-                          // Concatenar las actividades estratégicas obtenidas a la lista acumulativa
-                          todosLosProyectoArea.push(...data);
-                          // Si es la última iteración, asignar las actividades acumuladas a this.actividadesEstrategicas
-                          if (idPat === idsPats[idsPats.length - 1]) {
-                            this.proyectosArea = todosLosProyectoArea;
+                          (data: any) => {
+                              data.forEach((proyecto: any) => {
+                                  proyecto.nombrePat = patsData.find(pat => pat.idPat === idPat).nombre;
+                              });
+                              // Concatenar las actividades estratégicas obtenidas a la lista acumulativa
+                              todosLosProyectoArea.push(...data);
+                              // Si es la última iteración, asignar las actividades acumuladas a this.actividadesEstrategicas
+                              if (idPat === idsPats[idsPats.length - 1]) {
+                                  this.proyectosArea = todosLosProyectoArea;
+                              }
+                              this.patService.setProyectosArea(this.proyectosArea.length);
                           }
-                          this.patService.setProyectosArea(this.proyectosArea.length);
-                        }
                       );
               }
               // Almacenar todas las actividades estratégicas y proyectos obtenidos
               this.actividadesEstrategicas = todasLasActividadesEstrategicasRelacionadas;
               this.proyectos = todosLosProyecto;
-
+  
           }
-
+  
       });
       this.patService.getProyectos().subscribe(actividad => {
-        this.totalProyectos = actividad;
+          this.totalProyectos = actividad;
       });
       this.patService.getProyectosArea().subscribe(actividad => {
-        this.totalProyectosArea = actividad;
+          this.totalProyectosArea = actividad;
       });
   }
   

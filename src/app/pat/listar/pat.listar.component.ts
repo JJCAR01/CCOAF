@@ -340,22 +340,13 @@ export class PatListarComponent implements OnInit{
           porcentajeCumplimiento:porcentajeCumplimiento,
           idUsuario: idUsuario
         }
-        Swal.fire({
-          icon:"question",
-          title: "¿Estás seguro de modificar?",
-          text: "Una vez modificado no podrás revertir los cambios",
-          showCancelButton: true,
-          cancelButtonText: "Cancelar",
-          confirmButtonText: "Confirmar",
-          confirmButtonColor: '#0E823F',
-          reverseButtons: true, 
-        })
+        this.mensajePregunta('¿Deseas modificarlo?','modificado','question')
         .then((confirmacion) => {
           if (confirmacion.isConfirmed) {
             if (this.idPatSeleccionado != null) {
                 this.patService.modificarPat(pat, this.idPatSeleccionado, this.auth.obtenerHeader()).subscribe(
                 () => {
-                  this.swalSatisfactorio('modificado','plan anual de trabajo')
+                  this.mostrarMensaje('Se ha modificado plan anual de trabajo '+ nombre, 'success');
                   this.cargarPats();
                 },
                 (error) => {
@@ -369,21 +360,12 @@ export class PatListarComponent implements OnInit{
     }
     
     eliminarPat(idPat: number) {
-      Swal.fire({
-        icon:"question",
-        title: "¿Estás seguro?",
-        text: "Una vez eliminado  el pat, no podrás recuperar este elemento.",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: '#0E823F',
-        reverseButtons: true, 
-      })
+      this.mensajePregunta('¿Deseas eliminarlo?','eliminado','question')
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
           this.patService.eliminarPat(idPat, this.auth.obtenerHeader()).subscribe(
             () => {
-              this.swalSatisfactorio('eliminado','plan anual de trabajo');
+              this.mostrarMensaje('Se ha eliminado el programa - PAT', 'success');
               this.cargarPats();
             },
             (error) => {
@@ -407,7 +389,7 @@ export class PatListarComponent implements OnInit{
           .crearObservacion(observacion,this.auth.obtenerHeader())
           .subscribe(
             (response) => {
-                this.swalSatisfactorio('creado','observación')
+              this.mostrarMensaje('Se ha credo la observación '+ descripcion, 'success');
                 this.formObservacion.reset()
             },
             (error) => {this.swalError(error);}
@@ -420,21 +402,12 @@ export class PatListarComponent implements OnInit{
         const observacionPat = {
           descripcion: descripcion,
         }
-        Swal.fire({
-          icon:"question",
-          title: "¿Estás seguro de modificar?",
-          text: "Una vez modificado no podrás revertir los cambios",
-          showCancelButton: true,
-          cancelButtonText: "Cancelar",
-          confirmButtonText: "Confirmar",
-          confirmButtonColor: '#0E823F',
-          reverseButtons: true, 
-        })
+        this.mensajePregunta('¿Deseas modificarlo?','modificado','question')
         .then((confirmacion) => {
           if (confirmacion.isConfirmed) {
                 this.patService.modificarObservacionPat(observacionPat, this.idObservacionPatSeleccionado, this.auth.obtenerHeader()).subscribe(
                 () => {
-                  this.swalSatisfactorio('modificado','plan anual de trabajo')
+                  this.mostrarMensaje('Se ha modificado la observación '+ descripcion, 'success');
                   this.cargarObservaciones(this.idPatSeleccionado);
                 },
                 (error) => {
@@ -446,21 +419,12 @@ export class PatListarComponent implements OnInit{
       } 
     }
     eliminarObservacionPat(idObservacionPat: number,idPat:number) {
-      Swal.fire({
-        icon:"question",
-        title: "¿Estás seguro?",
-        text: "Una vez eliminado la observación, no podrás recuperar este elemento.",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: '#0E823F',
-        reverseButtons: true, 
-      })
+      this.mensajePregunta('¿Deseas eliminarlo?','eliminado','question')
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
           this.patService.eliminarObservacionPat(idObservacionPat, this.auth.obtenerHeader()).subscribe(
             () => {
-              this.swalSatisfactorio('eliminado','la observación');
+              this.mostrarMensaje('Se ha eliminado la observación', 'success');
               this.cargarObservaciones(idPat)
             },
             (error) => {
@@ -535,17 +499,6 @@ export class PatListarComponent implements OnInit{
       return this.formObservacion.get('fecha')?.invalid && this.formObservacion.get('fecha')?.touched;
     }
 
-    swalSatisfactorio(metodo: string, tipo:string) {
-      Swal.fire({
-        title: `Se ha ${metodo}.`,
-        text: `El ${tipo} se ha ${metodo}!!`,
-        icon:'success',
-        position: "center",
-        showConfirmButton: false,
-        timer: 1000
-      }
-      );
-    }
     swalError(error: any) {
       Swal.fire(
         {
@@ -555,6 +508,28 @@ export class PatListarComponent implements OnInit{
           confirmButtonColor: '#0E823F',
         }
       );
+    } 
+    mensajePregunta(pregunta: string,metodo :string, tipo: 'question' | 'error') {
+      return Swal.fire({
+        title: tipo === 'question' ? pregunta : 'Hubo un error!!!',
+        icon: tipo,
+        text: "Una vez " + metodo + ", NO podrás recuperarlo.",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Confirmar",
+        confirmButtonColor: '#0E823F',
+        reverseButtons: true,
+      });
+    }
+    mostrarMensaje(mensaje: string, tipo: 'success' | 'error') {
+      Swal.fire({
+          title: tipo === 'success' ? mensaje : 'Hubo un error!!!',
+          icon: tipo,
+          confirmButtonColor: '#0E823F',
+          position: "center",
+          showConfirmButton: false,
+          timer: 2000
+      });
     }
     private obtenerFechaActual(): string {
       const currentDate = new Date();

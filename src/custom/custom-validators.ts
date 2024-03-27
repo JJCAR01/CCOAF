@@ -1,4 +1,4 @@
-import { Validators, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
+import { Validators, ValidatorFn, AbstractControl, ValidationErrors, AsyncValidatorFn } from '@angular/forms';
 
 
 export class CustomValidators extends Validators {
@@ -26,6 +26,17 @@ export class CustomValidators extends Validators {
     return /[a-z]+/.test(control.value) ? null : { atLeastOneLowercase: true };
   }
 
+  static minimoCaracteres(max: number): AsyncValidatorFn {
+    return (control: AbstractControl): Promise<ValidationErrors | null> => {
+      return new Promise((resolve) => {
+        if (control.value && control.value.length < max) {
+          resolve({ maxCharacters: true });
+        } else {
+          resolve(null);
+        }
+      });
+    };
+  }
   
   static mustBeDifferent(firstField: string, secondField: string): ValidatorFn {
     return (group: AbstractControl): ValidationErrors | null => {

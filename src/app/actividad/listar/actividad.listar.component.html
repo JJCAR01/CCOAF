@@ -22,7 +22,7 @@
           <p> {{ actividadNombre }} </p> 
         </div>
         <div class="responsable-info">
-          <h3 title="Porcentaje Actual" ><i class="bi bi-percent me-1 tamaño-iconos color-iconoPorcentaje"></i>Porcentaje actual:</h3>
+          <h3 title="Porcentaje Actual" ><i class="bi bi-percent me-1 tamaño-iconos color-iconoPorcentaje"></i>Porcentaje real:</h3>
           <p [ngClass]="colorPorcentaje(porcentajeEstrategica)">{{ porcentajeEstrategica | comasPipe  }} %</p>                                                               
         </div>
         <div class="responsable-info">
@@ -117,11 +117,11 @@
                   <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" (click)="eliminarProyecto(proyecto.idProyecto)" *ngIf="esAdmin || esDirector"
                   ><i class="bi bi-trash3-fill"></i></button>
                   <button title="Agregar documento" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#agregarDocumento"
-                  (click)="abrirModalAgregarDocumento(proyecto.idProyecto,'PROYECTO')" *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor"
+                  (click)="obtenerId(proyecto.idProyecto,'PROYECTO')" *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor"
                       ><i class="bi bi-folder-plus"></i>
                     </button>
                   <button title="Ver documento"  class="btn btn-outline-primary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalVerDocumentos" 
-                  (click)="obtenerDocumento(proyecto.idProyecto,'PROYECTO')">            
+                  (click)="verDocumentos(proyecto.idProyecto,'PROYECTO')">            
                     <i class="bi bi-file-earmark-check"></i></button>
                   <button title="Agregar Observación" class="btn btn-outline-success me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" 
                   (click)="obtenerProyecto(proyecto.idProyecto,proyecto)" *ngIf="esAdmin || esOperador || esDirector  || esOperadorEditor">
@@ -190,11 +190,11 @@
                   <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" (click)="eliminarGestion(gestion.idActividadGestionEstrategica)" *ngIf="esAdmin || esDirector"
                   ><i class="bi bi-trash3-fill"></i></button>
                   <button title="Agregar documento" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#agregarDocumento"
-                  (click)="abrirModalAgregarDocumento(gestion.idActividadGestionEstrategica,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')" *ngIf="esAdmin || esOperador || esDirector  || esOperadorEditor"
+                  (click)="obtenerId(gestion.idActividadGestionEstrategica,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')" *ngIf="esAdmin || esOperador || esDirector  || esOperadorEditor"
                       ><i class="bi bi-folder-plus"></i>
                     </button>
                   <button title="Ver documento"  class="btn btn-outline-primary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalVerDocumentos" 
-                  (click)="obtenerDocumento(gestion.idActividadGestionEstrategica,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')">            
+                  (click)="verDocumentos(gestion.idActividadGestionEstrategica,'ACTIVIDAD_GESTION_ACTIVIDAD_ESTRATEGICA')">            
                     <i class="bi bi-file-earmark-check"></i></button>
                   <button title="Agregar Observación" class="btn btn-outline-success me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" 
                   (click)="obtenerActividadGestionEstrategica(gestion.idActividadGestionEstrategica ,gestion)" *ngIf="esAdmin || esOperador || esDirector  || esOperadorEditor">
@@ -281,11 +281,11 @@
                           <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" (click)="eliminarTarea(tarea.idTarea, gestion.idActividadGestionEstrategica)" *ngIf="esAdmin || esDirector || esOperadorEditor"
                           ><i class="bi bi-trash3-fill"></i></button>
                           <button title="Agregar documento" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#agregarDocumento"
-                            (click)="abrirModalAgregarDocumento(tarea.idTarea,'TAREA')" *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor"
+                            (click)="obtenerId(tarea.idTarea,'TAREA')" *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor"
                                 ><i class="bi bi-folder-plus"></i>
                               </button>
                             <button title="Ver documento" class="btn btn-outline-primary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalVerDocumentos" 
-                            (click)="obtenerDocumento(tarea.idTarea, 'TAREA')">            
+                            (click)="verDocumentos(tarea.idTarea, 'TAREA')">            
                           <i class="bi bi-file-earmark-check"></i></button>
                           <button title="Agregar Observación" class="btn btn-outline-success me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" 
                           (click)="obtenerTarea(tarea.idTarea,tarea)" *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor"><i class="bi bi-node-plus-fill"></i></button>
@@ -326,9 +326,12 @@
                   </td> <!-- Nombre del archivo -->
                   <td>
                     <button title="Modificar" type="button" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modificarDocumento" 
-                      *ngIf="esAdmin" (click)="obtenerDocumento(documento,tipoFormulario)">
+                    *ngIf="esAdmin  || esDirector || esOperadorEditor" (click)="obtenerDocumento(documento,tipoFormulario)">
                       <i class="bi bi-pen-fill"></i>
                     </button>
+                    <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" data-bs-dismiss="modal"  
+                      (click)="eliminarDocumento(documento,tipoFormulario)" *ngIf="esAdmin  || esDirector || esOperadorEditor"
+                      ><i class="bi bi-trash3-fill"></i></button>
                   </td>
                 </tr>
               </ng-container>
@@ -340,9 +343,9 @@
         </div>
       </div>
     </div>
-  </div>  
+  </div>
   <div class="modal fade" id="agregarDocumento" tabindex="-1" aria-labelledby="modalAgregar" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="modalAgregar">Agregar entrega</h5>
@@ -382,7 +385,7 @@
               <div class="input-group" title="Click para cargar el archivo">
                   <label class="input-group-text" for="formFileMultiple">Cargar Archivo</label>
                   <input type="file" class="form-control campo-carga" id="formFileMultiple" accept=".pdf, .doc, .docx, .odt, .xls, .xlsx, .ppt, .pptx, .zip" style="display:none;" (change)="documento($event,tipoFormulario)">
-                  <span id="nombreArchivoSeleccionado" class="ml-2">{{ extraerNombreArchivo(nombreArchivoSeleccionado) }}</span>
+                  <span id="nombreArchivoSeleccionado" class="ml-2">{{ nombreArchivoSeleccionado }}</span>
               </div>
             </div>
             <div class="modal-footer">
@@ -512,7 +515,7 @@
                        *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor" (click)="obtenerObservacion(tipoFormulario ,observacion)">
                       <i class="bi bi-pen-fill"></i>
                     </button>
-                    <button title="Eliminar" class="btn btn-danger me-1 mb-1" 
+                    <button title="Eliminar" class="btn btn-danger me-1 mb-1" data-bs-dismiss="modal" 
                      *ngIf="esAdmin || esOperador || esDirector"><i class="bi bi-trash3-fill" (click)="eliminarObservacion(observacion,tipoFormulario)"
                     ></i></button>
                     </td>
@@ -612,10 +615,11 @@
                   <option *ngFor="let periodicidad of periodiciadEnumLista" [value]="periodicidad">{{ periodicidad | formatEnum  }}</option>
               </select>
           </div>
-            <div class="mb-3">
-              <label for="descripcion" class="form-label">Descripcion</label>
-              <input type="text" class="form-control" id="descripcion" formControlName="descripcion" >
-            </div>
+          <div class="form-floating mb-3">
+            <textarea type="text" id="descripcion" [class.is-invalid]="descripcionModificarTareaMinimoCaracteres" class="form-control form-control-lg" formControlName="descripcion" placeholder="descripcion"></textarea>
+            <label class="form-label" for="descripcion">Descripcion<span class="required-field">*</span></label>
+            <div *ngIf="descripcionModificarTareaMinimoCaracteres" class="text-danger"><small>{{ CAMPO_MINIMO_CARACTERES }}</small></div>
+          </div>
             <div class="mb-3">
               <label for="idUsuario" placeholder="usuario">Responsable:</label>
               <select class="form-select" id="idUsuario" formControlName="idUsuario">
@@ -695,9 +699,10 @@
               <small *ngIf="periodicidadVacio" class="text-danger">{{ CAMPO_OBLIGATORIO }}</small>
             </div> 
             <div class="form-floating mb-2">
-              <input type="text" id="descripcion" [class.is-invalid]="descripcionVacio" class="form-control" formControlName="descripcion" placeholder="descripcion">
-              <label for="descripcion" class="form-label">Descripcion<span class="required-field">*</span></label>
-              <small *ngIf="descripcionVacio" class="text-danger">{{ CAMPO_OBLIGATORIO }}</small>
+              <textarea type="text" id="descripcion" [class.is-invalid]="descripcionVacio || descripcionMinimoCaracteres" class="form-control form-control-lg" formControlName="descripcion" placeholder="descripcion"></textarea>
+              <label class="form-label" for="descripcion">Descripcion<span class="required-field">*</span></label>
+              <div *ngIf="descripcionVacio" class="text-danger"><small>{{ CAMPO_OBLIGATORIO_MINIMO_CARACTERES }}</small></div>
+              <div *ngIf="descripcionMinimoCaracteres" class="text-danger"><small>{{ CAMPO_MINIMO_CARACTERES }}</small></div>
             </div>
             <div class="form-floating mb-2">
               <select class="form-select" id="idUsuario" formControlName="idUsuario">

@@ -23,6 +23,7 @@ import { EPlaneacion } from 'src/enums/eplaneacion';
 import { EPeriodicidadMeta } from 'src/enums/eperiodicidadmeta';
 import { MENSAJE_TITULO } from 'src/app/utilitarios/mensaje/mensajetitulo';
 import { Observable } from 'rxjs';
+import { CustomValidators } from 'src/custom/custom-validators';
 
 @Component({
   selector: 'app-root:not(p)',
@@ -33,6 +34,8 @@ import { Observable } from 'rxjs';
 export class TipogeListarComponent implements OnInit {
   title = 'listarTipoGE';
   CAMPO_OBLIGATORIO = MENSAJE_TITULO.CAMPO_OBLIGATORIO;
+  CAMPO_OBLIGATORIO_MINIMO_CARACTERES = MENSAJE_TITULO.CAMPO_OBLIGATORIO_MINIMO_CARACTERES;
+  CAMPO_MINIMO_CARACTERES = MENSAJE_TITULO.MINIMO_CARACTERES_DESCRIPCION;
   DURACION=  MENSAJE_TITULO.DURACION;
   NOMBRE_ACTIVDIDAD_ESTRATEGICA = MENSAJE_TITULO.NOMBRE_ACTIVIDAD_ESTRATEGICA;
   NOMBRE_GESTION_AREA = MENSAJE_TITULO.NOMBRE_GESTION_AREA;
@@ -122,10 +125,11 @@ export class TipogeListarComponent implements OnInit {
   porcentajeTarea: number | 0 = 0;
   periodicidadTarea: string | undefined = '';
   descripcionTarea: string | undefined = '';
-  estadoEnumList: string[] = [];
+  listaEstados: string[] = [];
   periodiciadLista: string[] = [];
   periodiciadMetaLista: string[] = [];
   collapseSeleccionado : number | null = null;
+  fechaActual = new Date();
   gestiones: ActividadGestion[] = [];
   proyectosarea: ProyectoArea[] = [];
   actividades: ActividadEstrategica[] = [];
@@ -201,13 +205,13 @@ export class TipogeListarComponent implements OnInit {
     });
     this.formModificarTarea = this.formBuilder.group({
       nombre: ['', Validators.required],
-      descripcion: ['', Validators.required],
+      descripcion: ['', Validators.required, CustomValidators.minimoCaracteres(50)],
       periodicidad: ['', Validators.required],
       idUsuario: ['', Validators.required],
     });
     this.formTarea = this.formBuilder.group({
       nombre: ['', Validators.required],
-      descripcion: ['', Validators.required],
+      descripcion: ['', Validators.required, CustomValidators.minimoCaracteres(50)],
       periodicidad: ['', Validators.required],
       idUsuario: ['', Validators.required],
     });
@@ -216,9 +220,7 @@ export class TipogeListarComponent implements OnInit {
     }); 
   }
   
-
   ngOnInit() {
-
     // Usar Promise.all para esperar a que todas las promesas se resuelvan
     Promise.all([
       this.auth.esAdmin(),
@@ -226,37 +228,42 @@ export class TipogeListarComponent implements OnInit {
       this.auth.esOperador(),
       this.auth.esOperadorEditor(),
       this.auth.esConsultor()
-    ]).then(([esAdmin, esDirector, esOperador,esOperadorEditor, esConsultor]) => {
+    ]).then(([esAdmin, esDirector, esOperador, esOperadorEditor, esConsultor]) => {
       // Asignar los resultados a las propiedades correspondientes
       this.esAdmin = esAdmin;
       this.esDirector = esDirector;
       this.esOperador = esOperador;
       this.esOperadorEditor = esOperadorEditor;
       this.esConsultor = esConsultor;
-    });
-        // Obtén el valor de idPat de la URL
-    this.route.params.subscribe(params => {
-      const idPat = params['idPat'];
-      this.patService.listarPatPorId(idPat,this.auth.obtenerHeader()).subscribe(
-        (data: any) => {
-          this.nombrePat = data.nombre;
-          this.idPat = data.idPat; // Asignar el nombre del Pat a patNombre
-          this.porcentajeRealPat = data.porcentajeReal;
-          this.fechaAnualPat = data.fechaAnual;
-          this.usuarioPat = data.idUsuario;
-        }
-      );
-      this.cargarGestiones(idPat);
-      this.cargarActividadesEstrategicas(idPat);
-      this.cargarProyectosArea(idPat);
-      this.cargarUsuario();
+
+      // Obtén el valor de idPat de la URL
+      this.route.params.subscribe(params => {
+        const idPat = params['idPat'];
+        this.patService.listarPatPorId(idPat, this.auth.obtenerHeader()).subscribe(
+          (data: any) => {
+            this.nombrePat = data.nombre;
+            this.idPat = data.idPat; // Asignar el nombre del Pat a patNombre
+            this.porcentajeRealPat = data.porcentajeReal;
+            this.fechaAnualPat = data.fechaAnual;
+            this.usuarioPat = data.idUsuario;
+
+            // Después de obtener los datos del pat, cargar otras entidades relacionadas
+            this.cargarActividadesEstrategicas(idPat);
+            this.cargarDatos(idPat);
+            this.cargarUsuario();
+            // Calcular los porcentajes una vez que todos los datos estén disponibles
+          }
+        );
+      });
     });
 
-    this.crearTarea();
-
-    this.estadoEnumList = Object.values(EEstado);
+    this.listaEstados = Object.values(EEstado);
     this.periodiciadLista = Object.values(EPeriodicidad);
     this.periodiciadMetaLista = Object.values(EPeriodicidadMeta);
+  }
+
+  calcularPorcentajes() {
+    // Calcular los porcentajes una vez que todos los datos estén disponibles
     this.porcentajeRealActividadesYProyectos += (this.porcentajeRealActividadesGestion + this.porcentajeRealProyectosArea) / 2;
     this.porcentajeEsperadoActividadesYProyectos += (this.porcentajeEsperadoActividadesGestion + this.porcentajeEsperadoProyectosArea) / 2;
     this.porcentajeCumplimientoActividadesYProyectos += (this.porcentajeCumplimientoActividadesGestion + this.porcentajeCumplimientoProyectosArea) / 2;
@@ -276,15 +283,19 @@ export class TipogeListarComponent implements OnInit {
     this.gestionService
       .listarActividadEstrategicaPorIdPat(idPat, this.auth.obtenerHeader()).subscribe(
         (data: any) => {
-          this.actividades = data;
-          this.porcentajeRealActividadesEstrategica += this.actividades.reduce((total, actividad) => total + actividad.porcentajeReal, 0) / this.actividades.length;
-          this.porcentajeEsperadoActividadesEstrategica += this.actividades.reduce((total, actividad) => total + actividad.porcentajeEsperado, 0) / this.actividades.length ;
-          this.porcentajeCumplimientoActividadesEstrategica += this.actividades.reduce((total, actividad) => total + actividad.porcentajeCumplimiento, 0) / this.actividades.length;        
-          // Primero, obten la fecha actual
-          const fechaActual = new Date();
+          this.actividades = data;      
 
-          // Luego, filtra las actividades basándote en si la fecha inicial es menor a la fecha actual
-          const actividadesFiltradas = this.actividades.filter(actividad => new Date(actividad.fechaInicial) < fechaActual);
+          // Filtrar las actividades que tienen fecha inicial menor que la fecha actual
+          const actividadesFiltradas = this.actividades.filter(actividad => new Date(actividad.fechaInicial) < this.fechaActual);
+
+          // Calcular el promedio de porcentaje real de las actividades estratégicas con fecha inicial menor que la actual
+          this.porcentajeRealActividadesEstrategica += actividadesFiltradas.reduce((total, actividad) => total + actividad.porcentajeReal, 0) / actividadesFiltradas.length;
+
+          // Calcular el promedio de porcentaje esperado de las actividades estratégicas con fecha inicial menor que la actual
+          this.porcentajeEsperadoActividadesEstrategica += actividadesFiltradas.reduce((total, actividad) => total + actividad.porcentajeEsperado, 0) / actividadesFiltradas.length;
+
+          // Calcular el promedio de porcentaje de cumplimiento de las actividades estratégicas con fecha inicial menor que la actual
+          this.porcentajeCumplimientoActividadesEstrategica += actividadesFiltradas.reduce((total, actividad) => total + actividad.porcentajeCumplimiento, 0) / actividadesFiltradas.length;
 
           // Calcula el promedio solo para las actividades filtradas
           if (actividadesFiltradas.length > 0) {
@@ -293,27 +304,57 @@ export class TipogeListarComponent implements OnInit {
         }
       ); 
   }
-  cargarProyectosArea(idPat: number) {
-    // Utiliza idPat en tu solicitud para cargar las gestiones relacionadas
-    this.gestionService
-      .listarProyectoAreaPorIdPat(idPat, this.auth.obtenerHeader()).subscribe(
-        (data: any) => {
-          this.proyectosarea = data;
-          this.porcentajeRealProyectosArea += this.proyectosarea.reduce((total, actividad) => total + actividad.porcentajeReal, 0) / this.proyectosarea.length;
-          this.porcentajeEsperadoProyectosArea += this.proyectosarea.reduce((total, actividad) => total + actividad.porcentajeEsperado, 0) / this.proyectosarea.length ;
-          this.porcentajeCumplimientoProyectosArea += this.proyectosarea.reduce((total, actividad) => total + actividad.porcentajeCumplimiento, 0) / this.proyectosarea.length;
-        });
+  async cargarDatos(idPat: number) {
+    await this.cargarGestiones(idPat);
+    await this.cargarProyectosArea(idPat);
+    this.calcularPorcentajes();
   }
+
   cargarGestiones(idPat: number) {
-    // Utiliza idPat en tu solicitud para cargar las gestiones relacionadas
-    this.gestionService
-      .listarGestionPorIdPat(idPat, this.auth.obtenerHeader()).subscribe(
-        (data: any) => {
-          this.gestiones = data;
-          this.porcentajeRealActividadesGestion += this.gestiones.reduce((total, actividad) => total + actividad.porcentajeReal, 0) / this.gestiones.length;
-          this.porcentajeEsperadoActividadesGestion += this.gestiones.reduce((total, actividad) => total + actividad.porcentajeEsperado, 0) / this.gestiones.length;
-          this.porcentajeCumplimientoActividadesGestion += this.gestiones.reduce((total, actividad) => total + actividad.porcentajeCumplimiento, 0) / this.gestiones.length;
-        });
+      return new Promise<void>((resolve, reject) => {
+          this.gestionService.listarGestionPorIdPat(idPat, this.auth.obtenerHeader()).subscribe(
+              (data: any) => {
+                this.gestiones = data;
+                const gestionesFiltrados = this.gestiones.filter(gestion => new Date(gestion.fechaInicial) < this.fechaActual);
+                if (gestionesFiltrados.length > 0) {
+                    this.porcentajeRealActividadesGestion += gestionesFiltrados.reduce((total, actividad) => total + actividad.porcentajeReal, 0) / gestionesFiltrados.length;
+                    this.porcentajeEsperadoActividadesGestion += gestionesFiltrados.reduce((total, actividad) => total + actividad.porcentajeEsperado, 0) / gestionesFiltrados.length;
+                    this.porcentajeCumplimientoActividadesGestion += gestionesFiltrados.reduce((total, actividad) => total + actividad.porcentajeCumplimiento, 0) / gestionesFiltrados.length;
+                } else {
+                    this.porcentajeRealActividadesGestion = 0;
+                    this.porcentajeEsperadoActividadesGestion = 0;
+                    this.porcentajeCumplimientoActividadesGestion = 0;
+                }
+                resolve();
+              },
+              error => {
+                  reject(error);
+              }
+          );
+      });
+  }
+
+  cargarProyectosArea(idPat: number) {
+      return new Promise<void>((resolve, reject) => {
+          this.gestionService.listarProyectoAreaPorIdPat(idPat, this.auth.obtenerHeader()).subscribe(
+              (data: any) => {
+                this.proyectosarea = data;
+                const proyectosFiltrados = this.proyectosarea.filter(proyectoArea => new Date(proyectoArea.fechaInicial) < this.fechaActual);
+                if (proyectosFiltrados.length > 0) {
+                    this.porcentajeRealProyectosArea += proyectosFiltrados.reduce((total, proyectoArea) => total + proyectoArea.porcentajeReal, 0) / proyectosFiltrados.length;
+                    this.porcentajeEsperadoProyectosArea += proyectosFiltrados.reduce((total, proyectoArea) => total + proyectoArea.porcentajeEsperado, 0) / proyectosFiltrados.length;
+                    this.porcentajeCumplimientoProyectosArea += proyectosFiltrados.reduce((total, proyectoArea) => total + proyectoArea.porcentajeCumplimiento, 0) / proyectosFiltrados.length;
+                } else {
+                    this.porcentajeRealProyectosArea = 0;
+                    this.porcentajeEsperadoProyectosArea = 0;
+                    this.porcentajeCumplimientoProyectosArea = 0;
+                }resolve();
+              },
+              error => {
+                  reject(error);
+              }
+          );
+      });
   }
   cargarObservaciones(id:any,tipo:string) {
     const obtenerObservaciones = (observable: Observable<any>) => {
@@ -345,23 +386,14 @@ export class TipogeListarComponent implements OnInit {
     }
   }
   eliminarObservacion(observacion: any, tipo:string) {
-    Swal.fire({
-      icon:"question",
-      title: "¿Estás seguro?",
-      text: "Una vez eliminado la observación, no podrás recuperar este elemento.",
-      showCancelButton: true,
-      cancelButtonText: "Cancelar",
-      confirmButtonText: "Confirmar",
-      confirmButtonColor: '#0E823F',
-      reverseButtons: true, 
-    })
+    this.mensajePregunta('¿Deseas eliminarlo?','eliminado','question')
     .then((confirmacion) => {
       if (confirmacion.isConfirmed) {
         if(tipo === 'TAREA'){
           const idTarea = observacion.idTarea;
           this.tareaService.eliminarObservacionTarea(observacion.idObservacionTarea, this.auth.obtenerHeader()).subscribe(
             () => {
-              this.swalSatisfactorio('eliminado','la observación');
+              this.mostrarMensaje('Se ha eliminado la observación', 'success');
               this.cargarObservaciones(idTarea, 'TAREA')
             },
             (error) => {
@@ -373,7 +405,7 @@ export class TipogeListarComponent implements OnInit {
           this.gestionService
             .eliminarObservacionActividadGestion(observacion.idObservacionActividadGestion,this.auth.obtenerHeader()) .subscribe(
                 () => {
-                  this.swalSatisfactorio('eliminado','la observación');
+                  this.mostrarMensaje('Se ha eliminado la observación', 'success');
                   this.cargarObservaciones(idActividadGestion, 'ACTIVIDAD_GESTION')
                 },
                 (error) => {
@@ -385,7 +417,7 @@ export class TipogeListarComponent implements OnInit {
           this.gestionService
             .eliminarObservacionActividadEstrategica(observacion.idObservacionActividadEstrategica,this.auth.obtenerHeader()) .subscribe(
               () => {
-                this.swalSatisfactorio('eliminado','la observación');
+                this.mostrarMensaje('Se ha eliminado la observación', 'success');
                 this.cargarObservaciones(idActividadEstrategica, 'ACTIVIDAD_ESTRATEGICA');
               },
               (error) => {
@@ -397,7 +429,7 @@ export class TipogeListarComponent implements OnInit {
           this.gestionService
             .eliminarObservacionProyectoArea(observacion.idObservacionProyectoArea,this.auth.obtenerHeader()) .subscribe(
               () => {
-                this.swalSatisfactorio('eliminado','la observación');
+                this.mostrarMensaje('Se ha eliminado la observación', 'success');
                 this.cargarObservaciones(idProyectoArea, 'PROYECTO_AREA')
               },
               (error) => {
@@ -410,21 +442,12 @@ export class TipogeListarComponent implements OnInit {
     });
   } 
   eliminarGestion(idActividadGestion: number) {
-    Swal.fire({
-      icon:"question",
-      title: "¿Estás seguro?",
-      text: "Una vez eliminada la actividad de gestión, no podrás recuperar este elemento.",
-      showCancelButton: true,
-      cancelButtonText: "Cancelar",
-      confirmButtonText: "Confirmar",
-      confirmButtonColor: '#0E823F',
-      reverseButtons: true, 
-    })
+    this.mensajePregunta('¿Deseas eliminarlo?','eliminado','question')
     .then((confirmacion) => {
       if (confirmacion.isConfirmed) {
         this.gestionService.eliminarGestion(idActividadGestion, this.auth.obtenerHeader()).subscribe(
           () => {
-            this.swalSatisfactorio('eliminado','actividad del área')
+            this.mostrarMensaje('Se ha eliminado la actividad de gestión del área', 'success');
               this.cargarGestiones(this.idPat)
           },
           (error) => {this.swalError(error);}
@@ -433,21 +456,12 @@ export class TipogeListarComponent implements OnInit {
     });
   }
   eliminarActividadesEstrategica(idActividadEstrategica: number) {
-    Swal.fire({
-      icon:"question",
-      title: "¿Estás seguro?",
-      text: "Una vez eliminado la actividad estratégica, NO podrás recuperarlo.",
-      showCancelButton: true,
-      cancelButtonText: "Cancelar",
-      confirmButtonText: "Confirmar",
-      confirmButtonColor: '#0E823F',
-      reverseButtons: true, 
-    })
+    this.mensajePregunta('¿Deseas eliminarlo?','eliminado','question')
     .then((confirmacion) => {
       if (confirmacion.isConfirmed) {
         this.gestionService.eliminarActividadEstrategica(idActividadEstrategica, this.auth.obtenerHeader()).subscribe(
           () => {
-              this.swalSatisfactorio('eliminado','actividad estratégica')
+            this.mostrarMensaje('Se ha eliminado la actividad estratégica', 'success');
               this.cargarActividadesEstrategicas(this.idPat)
           },
           (error) => {this.swalError(error);}
@@ -456,21 +470,12 @@ export class TipogeListarComponent implements OnInit {
     });
   }
   eliminarProyectoArea(idProyectoArea: number) {
-    Swal.fire({
-      icon:"question",
-      title: "¿Estás seguro?",
-      text: "Una vez eliminado el proyecto del área, NO podrás recuperarlo.",
-      showCancelButton: true,
-      cancelButtonText: "Cancelar",
-      confirmButtonText: "Confirmar",
-      confirmButtonColor: '#0E823F',
-      reverseButtons: true, 
-    })
+    this.mensajePregunta('¿Deseas eliminarlo?','eliminado','question')
     .then((confirmacion) => {
       if (confirmacion.isConfirmed) {
         this.gestionService.eliminarProyectoArea(idProyectoArea, this.auth.obtenerHeader()).subscribe(
           () => {
-              this.swalSatisfactorio('eliminado','proyecto del área')
+            this.mostrarMensaje('Se ha eliminado el proyecto del área', 'success');
               this.cargarProyectosArea(this.idPat)
           },
           (error) => {this.swalError(error);}
@@ -493,22 +498,14 @@ export class TipogeListarComponent implements OnInit {
         idUsuario :idUsuario,
         idPat : idPat
       };
-      Swal.fire({
-        title: "¿Estás seguro de modificar?",
-        icon: "question",
-        text: "Una vez modificado no podrás revertir los cambios",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: '#0E823F',
-        reverseButtons: true, 
-      }).then((confirmacion) => {
+      this.mensajePregunta('¿Deseas modificarlo?','modificado','question')
+      .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
           this.gestionService
         .modificarActividadGestión(actividadGestion, this.idActividadGestionSeleccionado, this.auth.obtenerHeader())
         .subscribe(
           (response) => {
-            this.swalSatisfactorio('modificado','actividad del área')
+            this.mostrarMensaje('Se ha modificado la gestion del área' + nombre, 'success');
               this.cargarGestiones(this.idPat)
           },
           (error) => {this.swalError(error);}
@@ -540,22 +537,14 @@ export class TipogeListarComponent implements OnInit {
         idPat : idPat
       };
       
-      Swal.fire({
-        title: "¿Estás seguro de modificar?",
-        icon:"question",
-        text: "Una vez modificado no podrás revertir los cambios",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: '#0E823F',
-        reverseButtons: true, 
-      }).then((confirmacion) => {
+      this.mensajePregunta('¿Deseas modificarlo?','modificado','question')
+      .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
           if (this.idActividadEstrategicaSeleccionado != null) {
           this.gestionService.modificarActividadEstrategica(actividadEstrategica, this.idActividadEstrategicaSeleccionado, this.auth.obtenerHeader())
           .subscribe(
             () => {
-                this.swalSatisfactorio('modificado','actividad estratégica');
+              this.mostrarMensaje('Se ha modificado la actividad estratégica' + nombre, 'success');
                 this.cargarActividadesEstrategicas(this.idPat);
             },
             (error) => {this.swalError(error);}
@@ -587,22 +576,14 @@ export class TipogeListarComponent implements OnInit {
         idActividadEstrategica : idPat
       };
 
-      Swal.fire({
-        title: "¿Estás seguro de modificar?",
-        icon:"question",
-        text: "Una vez modificado no podrás revertir los cambios",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: '#0E823F',
-        reverseButtons: true, 
-      }).then((confirmacion) => {
+      this.mensajePregunta('¿Deseas modificarlo?','modificado','question')
+      .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
         this.gestionService
           .modificarProyectoArea(proyecto, this.idProyectoAreaSeleccionado, this.auth.obtenerHeader())
           .subscribe(
             (response) => {
-              this.swalSatisfactorio('modificado','proyecto')
+              this.mostrarMensaje('Se ha modificado el proyecto del área' + nombre, 'success');
                 this.cargarProyectosArea(idPat)
             },
             (error) => {this.swalError(error);}
@@ -617,21 +598,12 @@ export class TipogeListarComponent implements OnInit {
      const proyectoValorEjecutado = {
        valorEjecutado: valorEjecutado,
      };
-     console.log(proyectoValorEjecutado)
-     Swal.fire({
-       title: "¿Deseas modificarlo?",
-       icon: "question",
-       showCancelButton: true,
-       cancelButtonText: "Cancelar",
-       confirmButtonText: "Confirmar",
-       confirmButtonColor: '#0E823F',
-       reverseButtons: true, 
-     })
+     this.mensajePregunta('¿Deseas modificarlo?','modificado','question')
      .then((confirmacion) => {
        if (confirmacion.isConfirmed) {
          this.gestionService.modificarValorEjecutado(proyectoValorEjecutado, this.idProyectoAreaSeleccionado,this.auth.obtenerHeader()).subscribe(
              (response) => {
-               this.swalSatisfactorio('modificado','valor ejecutado')
+              this.mostrarMensaje('Se ha modificado el valor ejecutado del proyecto del área', 'success');
                  this.cargarProyectosArea(this.idPat);
                  this.formModificarValorEjecutado.reset();              
              },
@@ -644,7 +616,7 @@ export class TipogeListarComponent implements OnInit {
  cargarTareas(idASE: any, tipoASE: any) {
     // Si se hace clic en la misma gestión, la cerramos
     if (this.collapseSeleccionado === idASE) {
-    this.collapseSeleccionado = null;
+      this.collapseSeleccionado = null;
     } else {
       this.collapseSeleccionado = idASE;
       if(tipoASE === 'ACTIVIDAD_GESTION'){
@@ -684,9 +656,10 @@ export class TipogeListarComponent implements OnInit {
         .crearTarea(tarea,this.auth.obtenerHeader())
         .subscribe(
           (response) => {
-              this.swalSatisfactorio('creado','tarea')
-              this.cargarTareas(this.idActividadGestionSeleccionado,'ACTIVIDAD_GESTION')
-              this.formTarea.reset()
+            this.mostrarMensaje('Se ha creado la tarea' + nombre, 'success');
+                this.collapseSeleccionado = null;
+              this.cargarTareas(this.idActividadGestionSeleccionado,'ACTIVIDAD_GESTION');
+              this.formTarea.reset();
           },
           (error) => {this.swalError(error);}
         );
@@ -695,7 +668,6 @@ export class TipogeListarComponent implements OnInit {
     }
   }
   crearObservacion() {
-
     if (this.formObservacion.valid) {
       const fecha = this.formObservacion.get('fecha')?.value;
       const descripcion = this.formObservacion.get('descripcion')?.value;
@@ -711,7 +683,7 @@ export class TipogeListarComponent implements OnInit {
           .crearObservacion(observacion,this.auth.obtenerHeader())
           .subscribe(
             (response) => {
-                this.swalSatisfactorio('creado','observación')
+              this.mostrarMensaje('Se ha creado la observación ' + descripcion, 'success');
                 this.formObservacion.reset()
             },
             (error) => {this.swalError(error);}
@@ -726,8 +698,8 @@ export class TipogeListarComponent implements OnInit {
           .crearObservacionActividadGestion(observacion,this.auth.obtenerHeader())
           .subscribe(
             (response) => {
-                this.swalSatisfactorio('creado','observación')
-                this.formObservacion.reset()
+              this.mostrarMensaje('Se ha creado la observación ' + descripcion, 'success');
+                this.formObservacion.reset();
             },
             (error) => {this.swalError(error);}
           );
@@ -741,8 +713,8 @@ export class TipogeListarComponent implements OnInit {
           .crearObservacionActividadEstrategica(observacion,this.auth.obtenerHeader())
           .subscribe(
             (response) => {
-                this.swalSatisfactorio('creado','observación')
-                this.formObservacion.reset()
+              this.mostrarMensaje('Se ha creado la observación ' + descripcion, 'success');
+                this.formObservacion.reset();
             },
             (error) => {this.swalError(error);}
           );
@@ -756,8 +728,8 @@ export class TipogeListarComponent implements OnInit {
             .crearObservacionProyectoArea(observacion,this.auth.obtenerHeader())
             .subscribe(
               (response) => {
-                  this.swalSatisfactorio('creado','observación')
-                  this.formObservacion.reset()
+                this.mostrarMensaje('Se ha creado la observación ' + descripcion, 'success');
+                  this.formObservacion.reset();
               },
               (error) => {this.swalError(error);}
             );
@@ -773,23 +745,14 @@ export class TipogeListarComponent implements OnInit {
       const observacion = {
         descripcion: descripcion,
       }
-      Swal.fire({
-        icon: "question",
-        title: "¿Estás seguro de modificar?",
-        text: "Una vez modificado no podrás revertir los cambios",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: '#0E823F',
-        reverseButtons: true,
-      })
+      this.mensajePregunta('¿Deseas modificarlo?','modificado','question')
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
           switch (tipo) {
             case 'TAREA':
               this.tareaService.modificarObservacionTarea(observacion, this.idObservacionTareaSeleccionado, this.auth.obtenerHeader()).subscribe(
                 () => {
-                  this.swalSatisfactorio('modificado', 'tarea');
+                  this.mostrarMensaje('Se ha modificado la observación ' + descripcion, 'success');
                 },
                 (error) => {
                   this.swalError(error);
@@ -799,7 +762,7 @@ export class TipogeListarComponent implements OnInit {
             case 'ACTIVIDAD_ESTRATEGICA':
               this.gestionService.modificarObservacionActividadEstrategica(observacion, this.idObservacionActividadEstrategicaSeleccionado, this.auth.obtenerHeader()).subscribe(
                 () => {
-                  this.swalSatisfactorio('modificado', 'actividad estratégica');
+                  this.mostrarMensaje('Se ha modificado la observación ' + descripcion, 'success');
                 },
                 (error) => {
                   this.swalError(error);
@@ -809,7 +772,7 @@ export class TipogeListarComponent implements OnInit {
             case 'ACTIVIDAD_GESTION':
               this.gestionService.modificarObservacionActividadGestion(observacion, this.idObservacionActividadGestionSeleccionado, this.auth.obtenerHeader()).subscribe(
                 () => {
-                  this.swalSatisfactorio('modificado', 'actividad de gestión');
+                  this.mostrarMensaje('Se ha modificado la observación ' + descripcion, 'success');
                 },
                 (error) => {
                   this.swalError(error);
@@ -819,7 +782,7 @@ export class TipogeListarComponent implements OnInit {
             case 'PROYECTO_AREA':
               this.gestionService.modificarObservacionProyectoArea(observacion, this.idObservacionProyectoAreaSeleccionado, this.auth.obtenerHeader()).subscribe(
                 () => {
-                  this.swalSatisfactorio('modificado', 'proyecto de área');
+                  this.mostrarMensaje('Se ha modificado la observación ' + descripcion, 'success');
                 },
                 (error) => {
                   this.swalError(error);
@@ -842,7 +805,7 @@ export class TipogeListarComponent implements OnInit {
       };
       this.gestionService.modificarResultadoMetaActividadEstrategica(actividad, this.idActividadEstrategicaSeleccionado,this.auth.obtenerHeader()).subscribe(
               () => {
-                  this.swalSatisfactorio('Agregado!','resultado de la meta')
+                this.mostrarMensaje('Se ha agregado el resultado a la meta KPI', 'success');
                   this.cargarActividadesEstrategicas(this.idPat);
                   this.formAgregarEntregable.reset();           
               },
@@ -856,23 +819,15 @@ export class TipogeListarComponent implements OnInit {
       const tareaModificar = {
         estado: estado,
       };
-      Swal.fire({
-        title: "¿Deseas modificarlo?",
-        text: "Una vez modificado no podrás revertir los cambios",
-        icon: "question",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: '#0E823F',
-        reverseButtons: true, 
-      })
+      this.mensajePregunta('¿Deseas modificarlo?','modificado','question')
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
           this.tareaService.modificarEstadoTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
               () => {
-                  this.swalSatisfactorio('modificado','estado de la tarea')
-                  this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION');
-                  this.formModificarEstadoTarea.reset();           
+                this.mostrarMensaje('Se ha modificado el estado de la tarea', 'success');
+                this.collapseSeleccionado = null;
+                this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION');
+                this.formModificarEstadoTarea.reset();           
               },
               (error) => {this.swalError(error);}
             );
@@ -893,23 +848,15 @@ export class TipogeListarComponent implements OnInit {
       const tareaModificar = {
         porcentajeReal: porcentajeReal,
       };
-      Swal.fire({
-        title: "¿Deseas modificarlo?",
-        text: "Una vez modificado no podrás revertir los cambios",
-        icon: "question",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: '#0E823F',
-        reverseButtons: true, 
-      })
+      this.mensajePregunta('¿Deseas modificarlo?','modificado','question')
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
           this.tareaService.modificarPorcentajeTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
               () => {
-                  this.swalSatisfactorio('modificado','porcentaje de la actividad');
-                  this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION')
-                  this.formModificarPorcentaje.reset()              
+                this.mostrarMensaje('Se ha modificado el porcentaje de la tarea', 'success');
+                this.collapseSeleccionado = null;
+                this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION')
+                this.formModificarPorcentaje.reset()              
               },
               (error) => {this.swalError(error);}
             );
@@ -929,23 +876,15 @@ export class TipogeListarComponent implements OnInit {
         descripcion: descripcion,
         idUsuario: idUsuario,
       };
-      Swal.fire({
-        title: "¿Deseas modificarlo?",
-        text: "La gestión del área se ha modificado",
-        icon: "question",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: '#0E823F',
-        reverseButtons: true, 
-      })
+      this.mensajePregunta('¿Deseas modificarlo?','modificado','question')
       .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
           this.tareaService.modificarTarea(tareaModificar, this.idTareaSeleccionado,this.auth.obtenerHeader()).subscribe(
               () => {
-                this.swalSatisfactorio('modificado','tarea')
-                  this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION')
-                  this.formModificarEstadoTarea.reset()              
+                this.mostrarMensaje('Se ha modificado la tarea '+ nombre , 'success');
+                this.collapseSeleccionado = null;
+                this.cargarTareas(this.idTareaTipo,'ACTIVIDAD_GESTION');
+                this.formModificarEstadoTarea.reset();
               },
               (error) => {this.swalError(error);}
             );
@@ -955,21 +894,13 @@ export class TipogeListarComponent implements OnInit {
   }
   eliminarTarea(idTarea: number,idActividadGestion: number) {
     
-    Swal.fire({
-        title: "¿Estás seguro?",
-        text: "Una vez eliminado, no podrás recuperar este elemento.",
-        icon: "question",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Confirmar",
-        confirmButtonColor: '#0E823F',
-        reverseButtons: true, 
-      })
-      .then((confirmacion) => {
+    this.mensajePregunta('¿Deseas eliminarlo?','eliminado','question')
+    .then((confirmacion) => {
         if (confirmacion.isConfirmed) {
         this.tareaService.eliminarTarea(idTarea, this.auth.obtenerHeader()).subscribe(
           (response) => {
-            this.swalSatisfactorio('eliminado','tarea')
+            this.mostrarMensaje('Se ha eliminado la tarea', 'success');
+            this.collapseSeleccionado = null;
               this.cargarTareas(idActividadGestion,'ACTIVIDAD_GESTION')
           },
           (error) => {this.swalError(error);}
@@ -980,44 +911,45 @@ export class TipogeListarComponent implements OnInit {
   async documento(event: any, tipo: string): Promise<void> {
     if (tipo === 'ACTIVIDAD_ESTRATEGICA' || tipo === 'ACTIVIDAD_GESTION' || tipo === 'TAREA' || tipo === 'PROYECTO_AREA') {
       this.tipoFormulario = tipo;
+      if(tipo === 'ACTIVIDAD_ESTRATEGICA'){
+        this.idActividadEstrategicaSeleccionado;
+      } else if (tipo === 'ACTIVIDAD_GESTION'){
+        this.idActividadGestionSeleccionado ;
+      } else if (tipo === 'PROYECTO_AREA'){
+        this.idProyectoAreaSeleccionado;
+      } else if (tipo === 'TAREA'){
+        this.idTareaSeleccionado;
+      }
+      this.archivoSeleccionado = event.target.files[0];
+    
+      try {
+        await this.validarArchivo();
+        // Actualizar el nombre del archivo seleccionado
+        this.nombreArchivoSeleccionado = this.archivoSeleccionado ? this.archivoSeleccionado.name : '';
+        // Resto del código si la validación es exitosa
+      } catch (error) {
+        this.archivoSeleccionado = null;
+        this.nombreArchivoSeleccionado = '';
+      }
     } else {
       throw new Error(`Tipo inválido: ${tipo}`);
-    }
-    if(tipo === 'ACTIVIDAD_ESTRATEGICA'){
-      this.idActividadEstrategicaSeleccionado;
-    } else if (tipo === 'ACTIVIDAD_GESTION'){
-      this.idActividadGestionSeleccionado ;
-    } else if (tipo === 'PROYECTO_AREA'){
-      this.idProyectoAreaSeleccionado;
-    } else if (tipo === 'TAREA'){
-      this.idTareaSeleccionado;
-    }
-    this.archivoSeleccionado = event.target.files[0];
-  
-    try {
-      await this.validarArchivo();
-      // Actualizar el nombre del archivo seleccionado
-      this.nombreArchivoSeleccionado = this.archivoSeleccionado ? this.archivoSeleccionado.name : '';
-      // Resto del código si la validación es exitosa
-    } catch (error) {
-      this.archivoSeleccionado = null;
-      this.nombreArchivoSeleccionado = '';
     }
   }
   obtenerId(idRecibido: number,tipo:string): void {
     if (tipo === 'ACTIVIDAD_ESTRATEGICA' || tipo === 'ACTIVIDAD_GESTION' || tipo === 'TAREA' || tipo === 'PROYECTO_AREA') {
       this.tipoFormulario = tipo;
+
+      if(tipo === 'ACTIVIDAD_ESTRATEGICA'){
+        this.idActividadEstrategicaSeleccionado = idRecibido;
+      } else if (tipo === 'ACTIVIDAD_GESTION'){
+        this.idActividadGestionSeleccionado = idRecibido;
+      } else if (tipo === 'PROYECTO_AREA'){
+        this.idProyectoAreaSeleccionado = idRecibido;
+      }else if (tipo === 'TAREA'){
+        this.idTareaSeleccionado = idRecibido;
+      }
     } else {
       throw new Error(`Tipo inválido: ${tipo}`);
-    }
-    if(tipo === 'ACTIVIDAD_ESTRATEGICA'){
-      this.idActividadEstrategicaSeleccionado = idRecibido;
-    } else if (tipo === 'ACTIVIDAD_GESTION'){
-      this.idActividadGestionSeleccionado = idRecibido;
-    } else if (tipo === 'PROYECTO_AREA'){
-      this.idProyectoAreaSeleccionado = idRecibido;
-    }else if (tipo === 'TAREA'){
-      this.idTareaSeleccionado = idRecibido;
     }
   }
   async subirDocumento(formulario: any,tipo: string) {
@@ -1107,16 +1039,16 @@ export class TipogeListarComponent implements OnInit {
 
         switch (tipo) {
           case 'ACTIVIDAD_GESTION':
-                modificarDocumentoObservable = this.gestionService.modificarDocumentoActividadGestion(documento, this.idActividadGestionSeleccionado, this.auth.obtenerHeaderDocumento());
+                modificarDocumentoObservable = this.gestionService.modificarDocumentoActividadGestion(documento, this.idDocumentoActividadGestionSeleccionado, this.auth.obtenerHeaderDocumento());
                 break;
           case 'ACTIVIDAD_ESTRATEGICA':
                 modificarDocumentoObservable = this.gestionService.modificarDocumentoActividadEstrategica(documento, this.idDocumentoActividadEstrategicaSeleccionado, this.auth.obtenerHeaderDocumento());
                 break;
           case 'PROYECTO_AREA':
-                modificarDocumentoObservable = this.gestionService.modificarDocumentoProyectoArea(documento, this.idProyectoAreaSeleccionado, this.auth.obtenerHeaderDocumento());
+                modificarDocumentoObservable = this.gestionService.modificarDocumentoProyectoArea(documento, this.idDocumentoProyectoAreaSeleccionado, this.auth.obtenerHeaderDocumento());
                 break;
           case 'TAREA':
-                modificarDocumentoObservable = this.tareaService.modificarDocumentoTarea(documento, this.idTareaSeleccionado, this.auth.obtenerHeaderDocumento());
+                modificarDocumentoObservable = this.tareaService.modificarDocumentoTarea(documento, this.idDocumentoTareaSeleccionado, this.auth.obtenerHeaderDocumento());
                 break;
             default:
                 throw new Error(`Tipo de documento no válido: ${tipo}`);
@@ -1124,7 +1056,7 @@ export class TipogeListarComponent implements OnInit {
 
         modificarDocumentoObservable.subscribe(
             () => {
-                this.mostrarMensaje('Archivo cargado correctamente', 'success');
+                this.mostrarMensaje('Archivo modificado correctamente', 'success');
                 this.archivoSeleccionado = null; // Limpiar el archivo seleccionado
                 this.nombreArchivoSeleccionado = ''; // Limpiar el nombre del archivo seleccionado
             },
@@ -1141,35 +1073,36 @@ export class TipogeListarComponent implements OnInit {
   verDocumentos(id: number, tipo: string) {
     if (tipo === 'ACTIVIDAD_ESTRATEGICA' || tipo === 'ACTIVIDAD_GESTION' || tipo === 'TAREA' || tipo === 'PROYECTO_AREA') {
       this.tipoFormulario = tipo;
+
+      let obtenerDocumentoObservable;
+      switch (tipo) {
+        case 'ACTIVIDAD_GESTION':
+          obtenerDocumentoObservable = this.gestionService.obtenerDocumento(id, this.auth.obtenerHeaderDocumento());
+          break;
+        case 'ACTIVIDAD_ESTRATEGICA':
+          obtenerDocumentoObservable = this.gestionService.obtenerDocumentoActividadEstrategica(id, this.auth.obtenerHeaderDocumento());
+          break;
+        case 'PROYECTO_AREA':
+          obtenerDocumentoObservable = this.gestionService.obtenerDocumentoProyectoArea(id, this.auth.obtenerHeaderDocumento());
+          break;
+        default:
+          obtenerDocumentoObservable = null;
+          break;
+      }
+
+      if (obtenerDocumentoObservable) {
+        obtenerDocumentoObservable.subscribe(
+          (data: any) => {
+            this.documentoObtenido = data;
+          },
+          error => this.mostrarMensaje('Hubo un error: ' + error.error.mensajeTecnico, 'error')
+          
+        );
+      } else {
+        this.mostrarMensaje('Hubo un error durante al cargar el archivo', 'error');
+      }
     } else {
       throw new Error(`Tipo inválido: ${tipo}`);
-    }
-    let obtenerDocumentoObservable;
-    switch (tipo) {
-      case 'ACTIVIDAD_GESTION':
-        obtenerDocumentoObservable = this.gestionService.obtenerDocumento(id, this.auth.obtenerHeaderDocumento());
-        break;
-      case 'ACTIVIDAD_ESTRATEGICA':
-        obtenerDocumentoObservable = this.gestionService.obtenerDocumentoActividadEstrategica(id, this.auth.obtenerHeaderDocumento());
-        break;
-      case 'PROYECTO_AREA':
-        obtenerDocumentoObservable = this.gestionService.obtenerDocumentoProyectoArea(id, this.auth.obtenerHeaderDocumento());
-        break;
-      default:
-        obtenerDocumentoObservable = null;
-        break;
-    }
-
-    if (obtenerDocumentoObservable) {
-      obtenerDocumentoObservable.subscribe(
-        (data: any) => {
-          this.documentoObtenido = data;
-        },
-        error => this.mostrarMensaje('Hubo un error: ' + error.error.mensajeTecnico, 'error')
-        
-      );
-    } else {
-      this.mostrarMensaje('Hubo un error durante al cargar el archivo', 'error');
     }
   }
   
@@ -1265,16 +1198,8 @@ export class TipogeListarComponent implements OnInit {
     } else {
       throw new Error(`Tipo inválido: ${tipo}`);
     }
-    Swal.fire({
-      icon: "question",
-      title: "¿Estás seguro?",
-      text: "Una vez eliminado el proyecto del área, NO podrás recuperarlo.",
-      showCancelButton: true,
-      cancelButtonText: "Cancelar",
-      confirmButtonText: "Confirmar",
-      confirmButtonColor: '#0E823F',
-      reverseButtons: true,
-    }).then((confirmacion) => {
+    this.mensajePregunta('¿Deseas eliminarlo?','eliminado','question')
+    .then((confirmacion) => {
       if (confirmacion.isConfirmed) {
         let id;
         let eliminarDocumentoObservable;
@@ -1298,11 +1223,9 @@ export class TipogeListarComponent implements OnInit {
           default:
             throw new Error(`Tipo inválido: ${tipo}`);
         }
-  
-
           eliminarDocumentoObservable.subscribe(
             () => {
-              this.mostrarMensaje('eliminado', 'success');
+              this.mostrarMensajeDocumentoEliminado('Archivo eliminado!!!', 'success');
             },
           );
       }
@@ -1440,9 +1363,8 @@ export class TipogeListarComponent implements OnInit {
     }
   }
   colorPorcentajeDependiendoFechaInicial(porcentaje: number, fechaInicial: Date): string {
-    const fechaActual = new Date();
     const fechaInicioActividad = new Date(fechaInicial);
-    if (fechaInicioActividad  > fechaActual) {
+    if (fechaInicioActividad  > this.fechaActual) {
       return 'porcentaje-negro'; // Define las clases CSS para cuando la fecha es posterior a la fecha actual.
     } else {
       if (porcentaje < 80 ) {
@@ -1475,17 +1397,6 @@ export class TipogeListarComponent implements OnInit {
     return tareaEstado === estado;
   }
 
-  swalSatisfactorio(metodo: string, tipo:string) {
-      Swal.fire({
-        title: `Se ha ${metodo}.`,
-        text: `El ${tipo} se ha ${metodo}!!`,
-        icon:'success',
-        position: "center",
-        showConfirmButton: false,
-        timer: 1000
-      }
-    );
-  }
   swalError(error: any) {
     Swal.fire(
       {
@@ -1496,19 +1407,50 @@ export class TipogeListarComponent implements OnInit {
       }
     );
   } 
+  mensajePregunta(pregunta: string,metodo :string, tipo: 'question' | 'error') {
+    return Swal.fire({
+      title: tipo === 'question' ? pregunta : 'Hubo un error!!!',
+      icon: tipo,
+      text: "Una vez " + metodo + ", NO podrás recuperarlo.",
+      showCancelButton: true,
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Confirmar",
+      confirmButtonColor: '#0E823F',
+      reverseButtons: true,
+    });
+  }
   mostrarMensaje(mensaje: string, tipo: 'success' | 'error') {
     Swal.fire({
-        title: tipo === 'success' ? 'Archivo cargado!' : 'Hubo un error!!!',
-        text: mensaje,
+        title: tipo === 'success' ? mensaje : 'Hubo un error!!!',
         icon: tipo,
         confirmButtonColor: '#0E823F',
+        position: "center",
+        showConfirmButton: false,
+        timer: 2000
     });
-}
+  }
+  mostrarMensajeDocumentoEliminado(mensaje: string, tipo: 'success' | 'error') {
+    Swal.fire({
+        title: tipo === 'success' ? mensaje : 'Hubo un error!!!',
+        icon: tipo,
+        confirmButtonColor: '#0E823F',
+        iconHtml: '<i class="bi bi-trash"></i>',
+        position: "center",
+        showConfirmButton: false,
+        timer: 1500
+    });
+  }
   get nombreVacio(){
     return this.formTarea.get('nombre')?.invalid && this.formTarea.get('nombre')?.touched;
   }
   get descripcionVacio(){
     return this.formTarea.get('descripcion')?.invalid && this.formTarea.get('descripcion')?.touched;
+  }
+  get descripcionMinimoCaracteres() {
+    return this.formTarea.get('descripcion')?.hasError('maxCharacters');
+  }
+  get descripcionModificarTareaMinimoCaracteres() {
+    return this.formModificarTarea.get('descripcion')?.hasError('maxCharacters');
   }
   get periodicidadVacio(){
     return this.formTarea.get('periodicidad')?.invalid && this.formTarea.get('periodicidad')?.touched;

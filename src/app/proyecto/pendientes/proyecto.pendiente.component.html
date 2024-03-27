@@ -48,6 +48,7 @@
         <table class="table table-hover">
           <thead class="table-danger">
             <tr>
+              <th>Programa - PAT</th>
               <th class="column-nombre">Nombre</th>
               <th class="column-presupuesto">Presupuesto</th>
               <th class="column-modalidad">Modalidad</th>
@@ -65,6 +66,7 @@
           <tbody>
             <ng-container *ngFor="let proyecto of proyectosPendientes">
               <tr title="{{proyecto.nombre}}">
+                <td>{{ proyecto.nombrePat }}</td>
                 <td>{{ proyecto.nombre }}</td>
                 <td>{{ proyecto.presupuesto | currency : '$ ' : 'symbol' : '1.0-0' }}</td>
                 <td>{{ proyecto.modalidad | formatEnum }}</td>
@@ -88,6 +90,7 @@
         <table class="table table-hover">
           <thead class="table-danger">
             <tr>
+              <th>Programa - PAT</th>
               <th class="column-nombre" >Nombre</th>
               <th class="column-presupuesto" >Presupuesto</th>
               <th class="column-modalidad" >Modalidad</th>
@@ -105,6 +108,7 @@
           <tbody>
             <ng-container *ngFor="let proyecto of proyectosAreaPendientes">
               <tr title="{{proyecto.nombre}}">
+                <td>{{ proyecto.nombrePat }}</td>
                 <td  class="fila-nombre">
                       {{ proyecto.nombre }}</td>
                 <td >

@@ -20,6 +20,12 @@ export class SprintService {
   obtenerDocumento(idSprint:number,headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/sprints/archivo/${idSprint}`,{headers});
   }
+  modificarDocumentoSprint<T>(documento : any,idSprint:number,headers?:HttpHeaders):Observable<T>{
+    return this.http.put<T>(`${environment.apiUrl}/ccoa/sprints/archivo/modificar/${idSprint}`,documento,{headers});
+  }
+  eliminarDocumentoSprint<T>(idDocumentoSprint:number,headers?:HttpHeaders):Observable<T>{
+    return this.http.delete<T>(`${environment.apiUrl}/ccoa/sprints/archivo/eliminar/${idDocumentoSprint}`,{headers});
+  }
   listarSprint(headers?: HttpHeaders){
     return this.http.get(`${environment.apiUrl}/ccoa/sprints`,{headers});
   }

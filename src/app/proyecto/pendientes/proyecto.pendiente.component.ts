@@ -17,6 +17,7 @@ export class ProyectoPendienteListarComponent implements OnInit {
   usuarios: any[] = [];
   proyectosPendientes: any[] = [];
   actividadesEstrategicas: any[] = [];
+  nombresPatPorId: {[id: string]: string} = {};
   busqueda: any;
 
   constructor(private actividadService: ActividadService,
@@ -45,6 +46,9 @@ export class ProyectoPendienteListarComponent implements OnInit {
                               const promesaProyecto = this.actividadService.listarProyectoPorIdActividadEstrategica(idActividad, this.auth.obtenerHeader())
                                   .toPromise()
                                   .then((proyectos: any) => {
+                                        proyectos.forEach((proyecto: any) => {
+                                          proyecto.nombrePat = patsData.find(pat => pat.idPat === idPat).nombre;
+                                      });
                                       const proyectosPendientesActividad = proyectos.filter((proyecto: any) => proyecto.porcentajeReal < 100);
                                       todosProyectosPendientes.push(...proyectosPendientesActividad);
                                   });
@@ -55,6 +59,9 @@ export class ProyectoPendienteListarComponent implements OnInit {
                   this.tipoService.listarProyectoAreaPorIdPat(idPat, this.auth.obtenerHeader())
                       .toPromise()
                       .then((dataProyectosArea: any) => {
+                          dataProyectosArea.forEach((proyecto: any) => {
+                              proyecto.nombrePat = patsData.find(pat => pat.idPat === idPat).nombre;
+                          });
                           const proyectosPendientes = dataProyectosArea.filter((pendiente: any) => pendiente.porcentajeReal < 100);
                           todosProyectosAreaPendientes.push(...proyectosPendientes);
                           this.patService.setProyectosPendientesArea(this.proyectosAreaPendientes.length);

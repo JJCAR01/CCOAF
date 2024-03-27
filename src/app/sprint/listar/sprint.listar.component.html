@@ -23,7 +23,7 @@
         <p> {{ proyectoNombre }} </p> 
       </div> 
         <div class="responsable-info">
-          <h3 title="Porcentaje Actual" ><i class="bi bi-percent me-1 color-iconoPorcentaje"></i>Porcentaje actual:</h3>
+          <h3 title="Porcentaje Actual" ><i class="bi bi-percent me-1 color-iconoPorcentaje"></i>Porcentaje real:</h3>
           <p [ngClass]="colorPorcentaje(proyectoPorcentaje)">{{ proyectoPorcentaje | comasPipe }} %</p>                                                               
         </div>
         <div class="responsable-info">
@@ -94,11 +94,11 @@
                   <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" (click)="eliminarSprint(sprint.idSprint)" *ngIf="esAdmin || esDirector"
                   ><i class="bi bi-trash3-fill"></i></button>
                   <button title="Agregar documento" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#agregarDocumento"
-                  (click)="abrirModalAgregarDocumento(sprint.idSprint, 'SPRINT')" *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor"
+                  (click)="obtenerId(sprint.idSprint, 'SPRINT')" *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor"
                       ><i class="bi bi-folder-plus"></i>
                     </button>
                   <button title="Ver documento" class="btn btn-outline-primary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalVerDocumentos" 
-                  (click)="obtenerDocumento(sprint.idSprint, 'SPRINT')">            
+                  (click)="verDocumentos(sprint.idSprint, 'SPRINT')">            
                     <i class="bi bi-file-earmark-check"></i></button>
                     <button title="Agregar Observación" class="btn btn-outline-success me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion" 
                     (click)="obtenerSprint(sprint.idSprint,sprint)" *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor">
@@ -176,18 +176,19 @@
                         <td>{{ obtenerNombreUsuario(tarea.idUsuario) }}</td>
                         <td>
                           <button title="Modificar Tarea" class="btn btn-outline-secondary me-1 mb-1"  data-bs-toggle="modal" data-bs-target="#modalModificarTarea"
-                          (click)="obtenerTareaAModificar(tarea.idTarea,tarea)" *ngIf="esAdmin || esOperador|| esDirector"><i class="bi bi-pencil-square"></i></button>
+                          (click)="obtenerTareaAModificar(tarea.idTarea,tarea)" *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor"><i class="bi bi-pencil-square"></i></button>
                           <button title="Modificar estado" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalModificarEstado" 
                           (click)="obtenerTarea(tarea.idTarea,tarea)" *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor"
                           ><i class="bi bi-pen-fill"></i></button>
-                          <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" (click)="eliminarTarea(tarea.idTarea, sprint.idSprint)" *ngIf="esAdmin || esDirector || esOperadorEditor"
+                          <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" (click)="eliminarTarea(tarea.idTarea, sprint.idSprint)"
+                           *ngIf="esAdmin || esDirector || esOperadorEditor"
                           ><i class="bi bi-trash3-fill"></i></button>
-                          <button title="Agregar documento" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#agregarDocumentoTarea"
-                            (click)="abrirModalAgregarDocumento(tarea.idTarea,'TAREA')" *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor"
+                          <button title="Agregar documento" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#agregarDocumento"
+                            (click)="obtenerId(tarea.idTarea,'TAREA')" *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor"
                                 ><i class="bi bi-folder-plus"></i>
                               </button>
                             <button title="Ver documento" class="btn btn-outline-primary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalVerDocumentos" 
-                            (click)="obtenerDocumento(tarea.idTarea, 'TAREA')">            
+                            (click)="verDocumentos(tarea.idTarea, 'TAREA')">            
                           <i class="bi bi-file-earmark-check"></i></button>
                           <button title="Agregar Observación" class="btn btn-outline-success me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalAgregarObservacion"
                            (click)="obtenerTarea(tarea.idTarea,tarea)" *ngIf="esAdmin || esOperador|| esDirector || esOperadorEditor"><i class="bi bi-node-plus-fill"></i></button>
@@ -203,8 +204,51 @@
       </div>
     </main>
 
+    <div class="modal fade" id="modalVerDocumentos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Documentos adjuntos</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <table class="table table-bordered table-hover">
+              <thead class="table-color">
+                <tr>
+                  <th>Fecha de carga</th>
+                  <th>Documento</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let documento of documentoObtenido">
+                  <tr>
+                    <td>{{ documento.fecha }}</td> <!-- Fecha de carga del documento -->
+                    <td class="nombre-documento"><a [href]="documento.rutaDocumento" target="_blank">{{ extraerNombreArchivo(documento.rutaDocumento) }}</a>
+                    </td> <!-- Nombre del archivo -->
+                    <td>
+                      <button title="Modificar" type="button" class="btn btn-outline-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modificarDocumento" 
+                      *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor" (click)="obtenerDocumento(documento,tipoFormulario)" >
+                        <i class="bi bi-pen-fill"></i>
+                      </button>
+                      <button title="Eliminar" class="btn btn-outline-danger me-1 mb-1" data-bs-dismiss="modal"
+                        (click)="eliminarDocumento(documento,tipoFormulario)" *ngIf="esAdmin  || esDirector || esOperadorEditor"
+                        ><i class="bi bi-trash3-fill"></i></button>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="modal fade" id="agregarDocumento" tabindex="-1" aria-labelledby="modalAgregar" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="modalAgregar">Agregar entrega</h5>
@@ -216,25 +260,25 @@
                 <label>Adjuntar documento</label>
                 <div class="input-group" title="Click para cargar el archivo">
                     <label class="input-group-text" for="formFileMultiple">Cargar Archivo</label>
-                    <input type="file" class="form-control campo-carga" id="formFileMultiple" accept=".pdf, .doc, .docx, .odt, .xls, .xlsx, .ppt, .pptx, .zip" style="display:none;" (change)="documento($event, idSprintSeleccionado)">
+                    <input type="file" class="form-control campo-carga" id="formFileMultiple" accept=".pdf, .doc, .docx, .odt, .xls, .xlsx, .ppt, .pptx, .zip" style="display:none;" (change)="documento($event, tipoFormulario)">
                     <span id="nombreArchivoSeleccionado" class="ml-2">{{ nombreArchivoSeleccionado }}</span>
                 </div>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-success" (click)="subirDocumento($event,idSprintSeleccionado,'sprint')" data-bs-dismiss="modal">Guardar</button>
+                <button type="button" class="btn btn-success" (click)="subirDocumento($event,tipoFormulario)" data-bs-dismiss="modal">Guardar</button>
               </div>
             </form>
           </div>
         </div>
       </div>
     </div>
-
-    <div class="modal fade" id="agregarDocumentoTarea" tabindex="-1" aria-labelledby="modalAgregar" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
+  
+    <div class="modal fade" id="modificarDocumento" tabindex="-1" aria-labelledby="modalAgregar" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="modalAgregar">Agregar entrega</h5>
+            <h5 class="modal-title" id="modalAgregar">Modificar documento</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
@@ -243,13 +287,13 @@
                 <label>Adjuntar documento</label>
                 <div class="input-group" title="Click para cargar el archivo">
                     <label class="input-group-text" for="formFileMultiple">Cargar Archivo</label>
-                    <input type="file" class="form-control campo-carga" id="formFileMultiple" accept=".pdf, .doc, .docx, .odt, .xls, .xlsx, .ppt, .pptx, .zip" style="display:none;" (change)="documento($event, idTareaSeleccionado)">
+                    <input type="file" class="form-control campo-carga" id="formFileMultiple" accept=".pdf, .doc, .docx, .odt, .xls, .xlsx, .ppt, .pptx, .zip" style="display:none;" (change)="documento($event,tipoFormulario)">
                     <span id="nombreArchivoSeleccionado" class="ml-2">{{ nombreArchivoSeleccionado }}</span>
                 </div>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-success" (click)="subirDocumento($event,idTareaSeleccionado,'tarea')" data-bs-dismiss="modal">Guardar</button>
+                <button type="button" class="btn btn-success" (click)="modificarDocumento($event,tipoFormulario)" data-bs-dismiss="modal">Guardar</button>
               </div>
             </form>
           </div>
@@ -309,12 +353,13 @@
                     <td>{{ observacion.descripcion }} </td>
                     <td> 
                       <button title="Modificar" type="button" class="btn btn-secondary me-1 mb-1" data-bs-toggle="modal" data-bs-target="#modalModificarObservacion" 
-                       *ngIf="esAdmin || esOperador || esDirector || esOperadorEditor" (click)="obtenerObservacion(tipoFormulario ,observacion)">
+                       *ngIf="esAdmin  || esDirector || esOperadorEditor" (click)="obtenerObservacion(tipoFormulario ,observacion)">
                       <i class="bi bi-pen-fill"></i>
                     </button>
-                    <button title="Eliminar" class="btn btn-danger me-1 mb-1" 
-                     *ngIf="esAdmin || esOperador || esDirector"><i class="bi bi-trash3-fill" (click)="eliminarObservacion(observacion,tipoFormulario)"
-                    ></i></button>
+                    <button title="Eliminar" class="btn btn-danger me-1 mb-1" data-bs-dismiss="modal" 
+                    *ngIf="esAdmin || esDirector || esOperadorEditor" (click)="eliminarObservacion(observacion, tipoFormulario)">
+                        <i class="bi bi-trash3-fill"></i>
+                    </button>
                     </td>
                   </tr>
                 </ng-container>
@@ -346,37 +391,7 @@
       </div>
     </div>
   </div>
-  <div class="modal fade" id="modalVerDocumentos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Documentos adjuntos</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <table class="table table-bordered table-hover">
-            <thead class="table-color">
-              <tr>
-                <th>Fecha de carga</th>
-                <th>Nombre</th>
-              </tr>
-            </thead>
-            <tbody>
-              <ng-container *ngFor="let documento of documentoObtenido">
-                <tr>
-                  <td>{{ documento.fecha }}</td> <!-- Fecha de carga del documento -->
-                  <td class="nombre-documento"><a [href]="documento.rutaDocumento" target="_blank">{{ extraerNombreArchivo(documento.rutaDocumento) }}</a></td> <!-- Nombre del archivo -->
-                </tr>
-              </ng-container>
-            </tbody>
-          </table>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        </div>
-      </div>
-    </div>
-  </div>
+
   <div class="modal fade" id="modalAgregarObservacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
@@ -452,15 +467,16 @@
                   <option *ngFor="let periodicidad of periodiciadEnumLista" [value]="periodicidad">{{ periodicidad | formatEnum  }}</option>
               </select>
           </div>
-            <div class="mb-3">
-              <label for="descripcion" class="form-label">Descripcion</label>
-              <input type="text" class="form-control" id="descripcion" formControlName="descripcion" >
-            </div>
+          <div class="form-floating mb-3">
+            <textarea type="text" id="descripcion" [class.is-invalid]="descripcionModificarTareaMinimoCaracteres" class="form-control form-control-lg" formControlName="descripcion" placeholder="descripcion"></textarea>
+            <label class="form-label" for="descripcion">Descripcion<span class="required-field">*</span></label>
+            <div *ngIf="descripcionModificarTareaMinimoCaracteres" class="text-danger"><small>{{ CAMPO_MINIMO_CARACTERES }}</small></div>
+          </div>
             <div class="mb-3">
               <label for="idUsuario" placeholder="usuario">Responsable:</label>
               <select class="form-select" id="idUsuario" formControlName="idUsuario">
                   <option value="" disabled selected> Seleccione el usuario responsable<span class="required-field">*</span></option>
-                  <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario">{{ usuario.nombre + ' ' + usuario.apellidos | formatEnum }}</option>
+                  <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario">{{ usuario.nombre + ' ' + usuario.apellidos }}</option>
               </select>
           </div>
             <div class="modal-footer">
@@ -535,14 +551,15 @@
               <small *ngIf="periodicidadVacio" class="text-danger">{{ CAMPO_OBLIGATORIO }}</small>
             </div> 
             <div class="form-floating mb-2">
-              <input type="text" id="descripcion" [class.is-invalid]="descripcionVacio" class="form-control" formControlName="descripcion" placeholder="descripcion">
-              <label for="descripcion" class="form-label">Descripcion<span class="required-field">*</span></label>
-              <small *ngIf="descripcionVacio" class="text-danger">{{ CAMPO_OBLIGATORIO }}</small>
+              <textarea type="text" id="descripcion" [class.is-invalid]="descripcionVacio || descripcionMinimoCaracteres" class="form-control form-control-lg" formControlName="descripcion" placeholder="descripcion"></textarea>
+              <label class="form-label" for="descripcion">Descripcion<span class="required-field">*</span></label>
+              <div *ngIf="descripcionVacio" class="text-danger"><small>{{ CAMPO_OBLIGATORIO_MINIMO_CARACTERES }}</small></div>
+              <div *ngIf="descripcionMinimoCaracteres" class="text-danger"><small>{{ CAMPO_MINIMO_CARACTERES }}</small></div>
             </div>
             <div class="form-floating mb-2">
               <select class="form-select" id="idUsuario" formControlName="idUsuario">
                   <option value="" disabled selected> Seleccione el usuario responsable<span class="required-field">*</span></option>
-                  <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario">{{ usuario.nombre + ' ' + usuario.apellidos | formatEnum }}</option>
+                  <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario">{{ usuario.nombre + ' ' + usuario.apellidos }}</option>
               </select>
               <label for="idUsuario" placeholder="usuario">Responsable:<span class="required-field">*</span></label>
               <small *ngIf="idUsuarioVacio" class="text-danger">{{ CAMPO_OBLIGATORIO }}</small>
